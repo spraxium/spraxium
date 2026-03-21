@@ -1,0 +1,86 @@
+name: Feature Request
+description: Suggest a new feature or improvement to the framework
+title: "feat: "
+labels: ["enhancement", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Got an idea to improve Spraxium? Describe what you'd like to see and why it matters.
+
+  - type: dropdown
+    id: package
+    attributes:
+      label: Target Package
+      description: Which package would this feature belong to?
+      options:
+        - "@spraxium/core"
+        - "@spraxium/cli"
+        - "@spraxium/common"
+        - "@spraxium/components"
+        - "@spraxium/env"
+        - "@spraxium/i18n"
+        - "@spraxium/analytics"
+        - "@spraxium/cache"
+        - "@spraxium/schedule"
+        - "@spraxium/testing"
+        - "New package"
+        - "Not sure"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      description: Which part of the framework would this touch?
+      options:
+        - "Module system / DI"
+        - "Slash commands"
+        - "Prefix commands"
+        - "Guards"
+        - "Listeners / Events"
+        - "Modals"
+        - "Buttons / Selects"
+        - "Logger / Transports"
+        - "Config (spraxium.config.ts)"
+        - "CLI"
+        - "Sharding"
+        - "i18n / Localization"
+        - "Environment variables"
+        - "Developer experience"
+        - "Performance"
+        - "Other"
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem / Motivation
+      description: What problem does this solve? Why is it needed?
+      placeholder: "When building X, I always have to do Y manually because the framework doesn't support Z..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: Describe what you'd like and how it would work. Include API design if possible.
+      render: typescript
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: What workarounds or alternative designs have you thought about?
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Contribution
+      options:
+        - label: I'm willing to open a PR for this feature

@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Discord Server
+    url: https://discord.gg/spraxium
+    about: Questions, help, and general discussion — open a thread here before filing an issue.
+  - name: Documentation
+    url: https://spraxium.dev/docs
+    about: Check the docs first — your answer might already be there.

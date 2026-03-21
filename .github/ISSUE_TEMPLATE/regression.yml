@@ -1,0 +1,82 @@
+name: Regression
+description: Something that worked before and broke after an update
+title: "regression: "
+labels: ["regression", "bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        A regression is something that **used to work** but broke after a specific version update.
+        This helps us pinpoint breaking changes and prioritize fixes.
+
+  - type: dropdown
+    id: package
+    attributes:
+      label: Affected Package
+      options:
+        - "@spraxium/core"
+        - "@spraxium/cli"
+        - "@spraxium/common"
+        - "@spraxium/components"
+        - "@spraxium/env"
+        - "@spraxium/i18n"
+        - "@spraxium/analytics"
+        - "@spraxium/cache"
+        - "@spraxium/schedule"
+        - "@spraxium/testing"
+        - "Multiple packages"
+        - "Not sure"
+    validations:
+      required: true
+
+  - type: input
+    id: last-working-version
+    attributes:
+      label: Last Working Version
+      description: The last version where this worked correctly.
+      placeholder: "e.g. 0.1.2"
+    validations:
+      required: true
+
+  - type: input
+    id: broken-version
+    attributes:
+      label: Broken Since Version
+      description: The version where it stopped working.
+      placeholder: "e.g. 0.1.3"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What Broke
+      description: Describe the behavior before and after the regression.
+      placeholder: |
+        Before (v0.1.2): Guards ran correctly on all slash commands.
+        After (v0.1.3): Guards are never invoked.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: Code or steps to trigger the regression.
+      render: typescript
+    validations:
+      required: true
+
+  - type: textarea
+    id: error
+    attributes:
+      label: Error Output
+      render: shell
+
+  - type: input
+    id: node-version
+    attributes:
+      label: Node.js Version
+      placeholder: "e.g. 22.4.0"
+    validations:
+      required: true

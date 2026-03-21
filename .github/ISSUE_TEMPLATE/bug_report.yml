@@ -1,0 +1,122 @@
+name: Bug Report
+description: Report a bug or unexpected behavior in Spraxium
+title: "bug: "
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug. Please fill out the form below as completely as possible.
+
+  - type: dropdown
+    id: package
+    attributes:
+      label: Affected Package
+      description: Which package is the bug in?
+      options:
+        - "@spraxium/core"
+        - "@spraxium/cli"
+        - "@spraxium/common"
+        - "@spraxium/components"
+        - "@spraxium/env"
+        - "@spraxium/i18n"
+        - "@spraxium/analytics"
+        - "@spraxium/cache"
+        - "@spraxium/schedule"
+        - "@spraxium/testing"
+        - "Multiple packages"
+        - "Not sure"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      description: Which part of the framework is affected?
+      options:
+        - "Module system / DI"
+        - "Slash commands"
+        - "Prefix commands"
+        - "Guards"
+        - "Listeners / Events"
+        - "Modals"
+        - "Buttons / Selects"
+        - "Logger / Transports"
+        - "Config (spraxium.config.ts)"
+        - "CLI (spraxium dev / build)"
+        - "Sharding"
+        - "i18n / Localization"
+        - "Environment variables"
+        - "Presence"
+        - "Other"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: A clear description of the bug — what happened vs what you expected.
+      placeholder: |
+        What happened:
+        What I expected:
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal Reproduction
+      description: Code snippet or steps to reproduce the issue. The more minimal, the faster we can fix it.
+      render: typescript
+    validations:
+      required: true
+
+  - type: textarea
+    id: error
+    attributes:
+      label: Error Output
+      description: Paste any error messages or stack traces here.
+      render: shell
+
+  - type: input
+    id: spraxium-version
+    attributes:
+      label: Spraxium Version
+      placeholder: "e.g. 0.1.0"
+    validations:
+      required: true
+
+  - type: input
+    id: node-version
+    attributes:
+      label: Node.js Version
+      placeholder: "e.g. 22.4.0"
+    validations:
+      required: true
+
+  - type: input
+    id: discordjs-version
+    attributes:
+      label: discord.js Version
+      placeholder: "e.g. 14.17.0"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating System
+      options:
+        - Linux
+        - macOS
+        - Windows
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional Context
+      description: Anything else that might be relevant — config, module structure, etc.
