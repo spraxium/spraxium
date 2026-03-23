@@ -1,0 +1,16 @@
+export const METADATA_KEYS = {
+  MODULE: 'spraxium:module',
+  INJECTABLE: 'spraxium:injectable',
+  INJECT: 'spraxium:inject',
+  OPTIONAL: 'spraxium:optional',
+  GLOBAL: 'spraxium:global',
+  LISTENER: 'spraxium:listener',
+  LISTENER_EVENT: 'spraxium:listener_event',
+  ON_EVENT: 'spraxium:on_event',
+  ONCE_EVENT: 'spraxium:once_event',
+  CTX_PARAM: 'spraxium:ctx_param',
+  GUARD: 'spraxium:guard',
+  GUARD_OPTION: 'spraxium:guard_option',
+  USE_GUARDS: 'spraxium:use_guards',
+  EXCEPTION_LAYOUT: 'spraxium:exception_layout',
+} as const;

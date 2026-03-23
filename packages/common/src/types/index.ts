@@ -1,0 +1,1 @@
+export type { Constructor } from './constructor.type';
