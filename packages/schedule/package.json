@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "cron-parser": "^4.9.0",
+    "discord.js": "^14.17.0",
     "reflect-metadata": "^0.2.2"
   },
   "peerDependencies": {
