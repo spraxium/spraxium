@@ -1,0 +1,43 @@
+{
+  "name": "@spraxium/schedule",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "cron-parser": "^4.9.0",
+    "reflect-metadata": "^0.2.2"
+  },
+  "peerDependencies": {
+    "@spraxium/common": "workspace:*",
+    "@spraxium/core": "workspace:*",
+    "ioredis": ">=5.0.0"
+  },
+  "peerDependenciesMeta": {
+    "ioredis": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@spraxium/common": "workspace:*",
+    "@spraxium/core": "workspace:*",
+    "@types/node": "^22.13.0",
+    "tsdown": "^0.12.0",
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0"
+  },
+  "files": ["dist"],
+  "license": "MIT"
+}
