@@ -1,1 +1,1 @@
-export type JobType = 'cron' | 'interval' | 'timeout' | 'after-boot';
+export type JobType = 'cron' | 'interval' | 'timeout' | 'after-online';

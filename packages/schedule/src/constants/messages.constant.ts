@@ -11,9 +11,10 @@ export const MESSAGES = {
   TIMEOUT_REGISTERED: (name: string, ms: number) =>
     `Registered timeout job "${name}" \u2014 fires in ${ms}ms`,
 
-  AFTER_BOOT_NEGATIVE_MS: (ms: number) => `@AfterBoot requires a non-negative millisecond value, got ${ms}`,
-  AFTER_BOOT_REGISTERED: (name: string, ms: number) =>
-    `Registered after-boot job "${name}" \u2014 fires ${ms}ms after boot`,
+  AFTER_ONLINE_NEGATIVE_MS: (ms: number) =>
+    `@AfterOnline requires a non-negative millisecond value, got ${ms}`,
+  AFTER_ONLINE_REGISTERED: (name: string, ms: number) =>
+    `Registered after-online job "${name}" \u2014 fires ${ms}ms after online`,
 
   DUPLICATE_JOB_NAME: (name: string) =>
     `Duplicate job name "${name}" \u2014 job names must be unique across the module tree.`,

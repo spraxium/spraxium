@@ -1,5 +1,5 @@
-export type { AfterBootJobMetadata } from './after-boot-job-metadata.interface';
-export type { AfterBootOptions } from './after-boot-options.interface';
+export type { AfterOnlineJobMetadata } from './after-online-job-metadata.interface';
+export type { AfterOnlineOptions } from './after-online-options.interface';
 export type { CronJobMetadata } from './cron-job-metadata.interface';
 export type { CronOptions } from './cron-options.interface';
 export type { DiscoveredJob } from './discovered-job.interface';

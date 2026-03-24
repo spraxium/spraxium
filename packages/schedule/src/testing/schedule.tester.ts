@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { MESSAGES } from '../constants/messages.constant';
 import { SCHEDULE_METADATA_KEYS } from '../constants/metadata-keys.constant';
-import type { AfterBootJobMetadata } from '../interfaces/after-boot-job-metadata.interface';
+import type { AfterOnlineJobMetadata } from '../interfaces/after-online-job-metadata.interface';
 import type { CronJobMetadata } from '../interfaces/cron-job-metadata.interface';
 import type { DiscoveredJob } from '../interfaces/discovered-job.interface';
 import type { IntervalJobMetadata } from '../interfaces/interval-job-metadata.interface';
@@ -83,17 +83,17 @@ export class ScheduleTester {
         continue;
       }
 
-      const afterBootMeta = Reflect.getMetadata(SCHEDULE_METADATA_KEYS.AFTER_BOOT, proto, method) as
-        | AfterBootJobMetadata
+      const afterOnlineMeta = Reflect.getMetadata(SCHEDULE_METADATA_KEYS.AFTER_ONLINE, proto, method) as
+        | AfterOnlineJobMetadata
         | undefined;
 
-      if (afterBootMeta) {
+      if (afterOnlineMeta) {
         jobs.push({
           methodName: method,
-          type: 'after-boot',
-          intervalMs: afterBootMeta.ms,
-          name: afterBootMeta.name,
-          disabled: afterBootMeta.disabled ?? false,
+          type: 'after-online',
+          intervalMs: afterOnlineMeta.ms,
+          name: afterOnlineMeta.name,
+          disabled: afterOnlineMeta.disabled ?? false,
         });
       }
     }

@@ -13,7 +13,7 @@ import { getNextRunDate } from './utils/cron.parser';
 export class ScheduleRegistry {
   private readonly log = new Logger('ScheduleRegistry');
   private readonly jobs = new Map<string, JobEntry>();
-  private readonly pendingAfterBoot: Array<JobEntry> = [];
+  private readonly pendingAfterOnline: Array<JobEntry> = [];
   private readonly scanner: JobScanner;
   private readonly scannerFn: (instance: unknown) => void;
   private driver: ScheduleDriver = new MemoryDriver();
@@ -21,7 +21,7 @@ export class ScheduleRegistry {
   private driverInitialized = false;
 
   constructor() {
-    this.scanner = new JobScanner(this.jobs, this.pendingAfterBoot);
+    this.scanner = new JobScanner(this.jobs, this.pendingAfterOnline);
     this.scannerFn = this.scanner.scan.bind(this.scanner);
     ModuleLoader.instanceScanners.add(this.scannerFn);
   }
@@ -55,8 +55,8 @@ export class ScheduleRegistry {
   }
 
   async ready(): Promise<void> {
-    for (const job of this.pendingAfterBoot) {
-      if (!job.disabled) this.startAfterBootJob(job);
+    for (const job of this.pendingAfterOnline) {
+      if (!job.disabled) this.startAfterOnlineJob(job);
     }
   }
 
@@ -68,7 +68,7 @@ export class ScheduleRegistry {
     }
 
     this.jobs.clear();
-    this.pendingAfterBoot.length = 0;
+    this.pendingAfterOnline.length = 0;
     if (this.driverInitialized) await this.driver.destroy();
   }
 
@@ -104,8 +104,8 @@ export class ScheduleRegistry {
     this.clearJobTimers(job);
     this.jobs.delete(name);
 
-    const idx = this.pendingAfterBoot.indexOf(job);
-    if (idx !== -1) this.pendingAfterBoot.splice(idx, 1);
+    const idx = this.pendingAfterOnline.indexOf(job);
+    if (idx !== -1) this.pendingAfterOnline.splice(idx, 1);
 
     this.log.info(MESSAGES.JOB_DESTROYED(name));
   }
@@ -154,7 +154,7 @@ export class ScheduleRegistry {
     }
   }
 
-  private startAfterBootJob(job: JobEntry): void {
+  private startAfterOnlineJob(job: JobEntry): void {
     job.running = true;
     const ms = job.intervalMs ?? 0;
     job.nextRun = new Date(Date.now() + ms);

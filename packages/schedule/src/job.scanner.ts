@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import { ConfigurationException, Logger } from '@spraxium/core';
 import { MESSAGES } from './constants/messages.constant';
 import { SCHEDULE_METADATA_KEYS } from './constants/metadata-keys.constant';
-import type { AfterBootJobMetadata } from './interfaces/after-boot-job-metadata.interface';
+import type { AfterOnlineJobMetadata } from './interfaces/after-online-job-metadata.interface';
 import type { CronJobMetadata } from './interfaces/cron-job-metadata.interface';
 import type { IntervalJobMetadata } from './interfaces/interval-job-metadata.interface';
 import type { JobEntry } from './interfaces/job-entry.interface';
@@ -16,7 +16,7 @@ export class JobScanner {
 
   constructor(
     private readonly jobs: Map<string, JobEntry>,
-    private readonly pendingAfterBoot: Array<JobEntry>,
+    private readonly pendingAfterOnline: Array<JobEntry>,
   ) {}
 
   private autoName(type: JobType): string {
@@ -62,12 +62,12 @@ export class JobScanner {
       return;
     }
 
-    const afterBootMeta = Reflect.getMetadata(SCHEDULE_METADATA_KEYS.AFTER_BOOT, proto, method) as
-      | AfterBootJobMetadata
+    const afterOnlineMeta = Reflect.getMetadata(SCHEDULE_METADATA_KEYS.AFTER_ONLINE, proto, method) as
+      | AfterOnlineJobMetadata
       | undefined;
 
-    if (afterBootMeta) {
-      this.registerAfterBootJob(instance, method, afterBootMeta);
+    if (afterOnlineMeta) {
+      this.registerAfterOnlineJob(instance, method, afterOnlineMeta);
     }
   }
 
@@ -132,13 +132,13 @@ export class JobScanner {
     this.log.debug(MESSAGES.TIMEOUT_REGISTERED(name, meta.ms));
   }
 
-  private registerAfterBootJob(instance: unknown, method: string, meta: AfterBootJobMetadata): void {
-    const name = meta.name ?? this.autoName('after-boot');
+  private registerAfterOnlineJob(instance: unknown, method: string, meta: AfterOnlineJobMetadata): void {
+    const name = meta.name ?? this.autoName('after-online');
     this.assertUniqueName(name);
 
     const entry: JobEntry = {
       name,
-      type: 'after-boot',
+      type: 'after-online',
       intervalMs: meta.ms,
       fn: this.bindMethod(instance, method, name),
       running: false,
@@ -149,8 +149,8 @@ export class JobScanner {
     };
 
     this.jobs.set(name, entry);
-    this.pendingAfterBoot.push(entry);
-    this.log.debug(MESSAGES.AFTER_BOOT_REGISTERED(name, meta.ms));
+    this.pendingAfterOnline.push(entry);
+    this.log.debug(MESSAGES.AFTER_ONLINE_REGISTERED(name, meta.ms));
   }
 
   private assertUniqueName(name: string): void {
