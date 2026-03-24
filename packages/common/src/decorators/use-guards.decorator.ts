@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import { METADATA_KEYS } from '../constants/metadata-keys.constant';
 import type { GuardEntry } from '../interfaces/guard-entry.interface';
 import type { SpraxiumGuard } from '../interfaces/spraxium-guard.interface';
-import { GuardInput, GuardOptions } from '../types/guard-options.type';
+import type { GuardInput, GuardOptions } from '../types/guard-options.type';
 
 /**
  * Helper for passing typed options to a guard inside @UseGuards().

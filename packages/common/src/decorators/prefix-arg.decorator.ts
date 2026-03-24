@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { METADATA_KEYS } from '../constants/metadata-keys.constant';
 import type { PrefixArgDefinition, PrefixArgType } from '../interfaces/prefix-arg-metadata.interface';
-import { BaseArgConfig } from '../interfaces/prefix-base-arg-config.interface';
+import type { BaseArgConfig } from '../interfaces/prefix-base-arg-config.interface';
 
 function createArgDefinition(
   type: PrefixArgType,

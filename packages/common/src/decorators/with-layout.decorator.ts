@@ -1,5 +1,5 @@
 import { METADATA_KEYS } from '../constants/metadata-keys.constant';
-import { ExceptionLayoutClass } from '../types/exception-layout-class.type';
+import type { ExceptionLayoutClass } from '../types/exception-layout-class.type';
 
 /**
  * Links an exception class to a layout class.

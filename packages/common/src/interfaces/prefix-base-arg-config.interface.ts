@@ -1,4 +1,4 @@
-import { PrefixArgValidation } from './prefix-arg-metadata.interface';
+import type { PrefixArgValidation } from './prefix-arg-metadata.interface';
 
 export interface BaseArgConfig {
   required?: boolean;
