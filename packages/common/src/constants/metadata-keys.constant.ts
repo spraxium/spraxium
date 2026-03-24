@@ -13,4 +13,11 @@ export const METADATA_KEYS = {
   GUARD_OPTION: 'spraxium:guard_option',
   USE_GUARDS: 'spraxium:use_guards',
   EXCEPTION_LAYOUT: 'spraxium:exception_layout',
+
+  // ── Prefix Commands ────────────────────────────────────────────────────────
+  PREFIX_COMMAND: 'spraxium:prefix_command',
+  PREFIX_COMMAND_HANDLER: 'spraxium:prefix_command_handler',
+  PREFIX_ARG: 'spraxium:prefix_arg',
+  PREFIX_ARG_PARAM: 'spraxium:prefix_arg_param',
+  PREFIX_SUBCOMMAND: 'spraxium:prefix_subcommand',
 } as const;

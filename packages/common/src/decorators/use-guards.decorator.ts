@@ -2,14 +2,7 @@ import 'reflect-metadata';
 import { METADATA_KEYS } from '../constants/metadata-keys.constant';
 import type { GuardEntry } from '../interfaces/guard-entry.interface';
 import type { SpraxiumGuard } from '../interfaces/spraxium-guard.interface';
-
-export type GuardOptions<T extends SpraxiumGuard> = {
-  [K in keyof T as K extends 'canActivate'
-    ? never
-    : T[K] extends (...args: Array<unknown>) => unknown
-      ? never
-      : K]?: T[K];
-};
+import { GuardInput, GuardOptions } from '../types/guard-options.type';
 
 /**
  * Helper for passing typed options to a guard inside @UseGuards().
@@ -23,8 +16,6 @@ export function withOptions<T extends SpraxiumGuard>(
 ): [new () => T, Record<string, unknown>] {
   return [guard, options as Record<string, unknown>];
 }
-
-export type GuardInput = (new () => SpraxiumGuard) | [new () => SpraxiumGuard, Record<string, unknown>?];
 
 /**
  * Attaches guards to a class or a specific method.

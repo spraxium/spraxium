@@ -1,7 +1,5 @@
 import { METADATA_KEYS } from '../constants/metadata-keys.constant';
-
-// biome-ignore lint/suspicious/noExplicitAny: intentional loose type — full generics live in @spraxium/core
-type ExceptionLayoutClass = new () => { build(exception: any, ctx: any): any };
+import { ExceptionLayoutClass } from '../types/exception-layout-class.type';
 
 /**
  * Links an exception class to a layout class.
