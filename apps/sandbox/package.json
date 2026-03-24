@@ -1,0 +1,25 @@
+{
+  "name": "@spraxium/sandbox",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "spraxium dev",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@spraxium/analytics": "workspace:*",
+    "@spraxium/common": "workspace:*",
+    "@spraxium/core": "workspace:*",
+    "@spraxium/env": "workspace:*",
+    "@spraxium/schedule": "workspace:*",
+    "discord.js": "^14.17.0"
+  },
+  "devDependencies": {
+    "@spraxium/cli": "workspace:*",
+    "@types/node": "^22.13.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0"
+  }
+}
