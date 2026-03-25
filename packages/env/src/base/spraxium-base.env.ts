@@ -14,8 +14,8 @@ export class SpraxiumBaseEnv {
   clientId?: string;
 
   @Env('NODE_ENV', { default: 'development', secret: false })
-  @IsEnum(['development', 'production', 'test', 'staging'])
-  nodeEnv: 'development' | 'production' | 'test' | 'staging' = 'development';
+  @IsEnum(['development', 'neutral', 'staging', 'test', 'production'])
+  nodeEnv: 'development' | 'neutral' | 'staging' | 'test' | 'production' = 'development';
 
   get<K extends keyof this>(key: K): this[K] {
     return this[key];

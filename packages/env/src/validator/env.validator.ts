@@ -8,8 +8,8 @@ import { ENV_SCHEMA_METADATA_KEY } from '../constants/metadata-keys.constant';
 import type { FieldValidationResult } from '../interfaces/field-validation-result.interface';
 import type { ValidateOptions } from '../interfaces/validate-options.interface';
 import { EnvPrinter } from '../printer/env.printer';
-import { MetadataHelper } from '../utils/metadata.util';
 import { DotEnvParser } from '../utils/dotenv.parser';
+import { MetadataHelper } from '../utils/metadata.util';
 import { FieldValidator } from './field.validator';
 import type { EnvFieldError } from './validation.error';
 
