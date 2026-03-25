@@ -30,9 +30,12 @@
       "trailingCommas": "all",
       "semicolons": "always",
       "arrowParentheses": "always"
+    },
+    "parser": {
+      "unsafeParameterDecoratorsEnabled": true
     }
   },
   "files": {
-    "ignore": ["**/dist/**", "**/node_modules/**", "**/*.d.ts", "_old/**"]
+    "ignore": ["**/dist/**", "**/node_modules/**", "**/*.d.ts", "_old/**", "docs/.next/**", "apps/sandbox/*"]
   }
 }
