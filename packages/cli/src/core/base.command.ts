@@ -1,5 +1,5 @@
 import type { Command } from 'commander';
-import type { CommandInterface } from '../interfaces';
+import type { ICommand } from '../interfaces';
 import type { CliLogger } from '../ui/cli-logger';
 
 /**
@@ -7,7 +7,7 @@ import type { CliLogger } from '../ui/cli-logger';
  * SRP: handles error wrapping and exit, nothing else.
  * OCP: subclasses extend behavior by implementing register() and their own execute().
  */
-export abstract class BaseCommand implements CommandInterface {
+export abstract class BaseCommand implements ICommand {
   constructor(protected readonly logger: CliLogger) {}
 
   abstract register(program: Command): void;

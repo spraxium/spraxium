@@ -4,7 +4,7 @@ import chalk from 'chalk';
 import type { Command } from 'commander';
 import { MessageConstant } from '../constants';
 import { BaseCommand } from '../core/base.command';
-import type { SchematicInterface } from '../interfaces';
+import type { ISchematic } from '../interfaces';
 import { buildSchematicLookup } from '../schematics/schematic-registry';
 import type { FileSystem } from '../services/file-system';
 import type { ModuleRegistrar } from '../services/module-registrar';
@@ -14,11 +14,11 @@ import { toKebabCase, toPascalCase } from '../utils/case.utils';
 import { buildRelativeImport } from '../utils/path.utils';
 
 export class GenerateCommand extends BaseCommand {
-  private readonly lookup: Map<string, SchematicInterface>;
+  private readonly lookup: Map<string, ISchematic>;
 
   constructor(
     logger: CliLogger,
-    private readonly schematics: Array<SchematicInterface>,
+    private readonly schematics: Array<ISchematic>,
     private readonly fs: FileSystem,
     private readonly detector: ProjectDetector,
     private readonly registrar: ModuleRegistrar,
@@ -81,7 +81,7 @@ export class GenerateCommand extends BaseCommand {
     }
   }
 
-  private async resolveSchematic(arg?: string): Promise<SchematicInterface> {
+  private async resolveSchematic(arg?: string): Promise<ISchematic> {
     if (arg) {
       const found = this.lookup.get(arg);
       if (found) return found;
@@ -95,11 +95,11 @@ export class GenerateCommand extends BaseCommand {
         name: `${s.name.padEnd(16)} ${chalk.dim(s.description)}`,
       })),
     });
-    return this.lookup.get(chosen) as SchematicInterface;
+    return this.lookup.get(chosen) as ISchematic;
   }
 
   private async resolveName(
-    schematic: SchematicInterface,
+    schematic: ISchematic,
     arg?: string,
   ): Promise<{ pascalName: string; kebabName: string }> {
     const rawName =
@@ -119,14 +119,14 @@ export class GenerateCommand extends BaseCommand {
    * Prevents names like "boot-service" for a boot-service schematic,
    * which would generate "boot-service.service.ts" — redundant suffix.
    */
-  private validateNameDoesNotRepeatSuffix(kebabName: string, schematic: SchematicInterface): void {
+  private validateNameDoesNotRepeatSuffix(kebabName: string, schematic: ISchematic): void {
     const suffix = schematic.fileSuffix;
     if (kebabName === suffix || kebabName.endsWith(`-${suffix}`)) {
       throw new Error(MessageConstant.GENERATE_SUFFIX_ERROR(kebabName, suffix));
     }
   }
 
-  private resolveClassName(schematic: SchematicInterface, pascalName: string): string {
+  private resolveClassName(schematic: ISchematic, pascalName: string): string {
     const suffixMap: Record<string, string> = {
       service: 'Service',
       'boot-service': 'Service',
@@ -145,7 +145,7 @@ export class GenerateCommand extends BaseCommand {
 
   private async resolveTargetDir(
     srcRoot: string,
-    schematic: SchematicInterface,
+    schematic: ISchematic,
     kebabName: string,
   ): Promise<{ targetDir: string; chosenModuleDir: string | null }> {
     const modulesRoot = path.join(srcRoot, 'modules');

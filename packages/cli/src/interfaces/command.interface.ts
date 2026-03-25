@@ -1,5 +1,5 @@
 import type { Command } from 'commander';
 
-export interface CommandInterface {
+export interface ICommand {
   register(program: Command): void;
 }

@@ -1,9 +1,9 @@
-import type { SpraxiumDevConfigInterface } from './dev-config.interface';
+import type { SpraxiumDevConfig } from './dev-config.interface';
 
-export interface DevWatcherOptionsInterface {
+export interface DevWatcherOptions {
   cwd: string;
-  configReader: { readDevConfig(cwd: string): Promise<SpraxiumDevConfigInterface> };
-  initialConfig: SpraxiumDevConfigInterface;
+  configReader: { readDevConfig(cwd: string): Promise<SpraxiumDevConfig> };
+  initialConfig: SpraxiumDevConfig;
   onChange: (filePath: string) => void;
-  onConfigUpdate?: (config: SpraxiumDevConfigInterface) => void;
+  onConfigUpdate?: (config: SpraxiumDevConfig) => void;
 }

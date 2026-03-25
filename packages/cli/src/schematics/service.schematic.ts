@@ -1,6 +1,6 @@
-import type { SchematicInterface } from '../interfaces';
+import type { ISchematic } from '../interfaces';
 
-export class ServiceSchematic implements SchematicInterface {
+export class ServiceSchematic implements ISchematic {
   readonly name = 'service';
   readonly aliases = ['s'] as const;
   readonly description = 'Generate an @Injectable() service class';

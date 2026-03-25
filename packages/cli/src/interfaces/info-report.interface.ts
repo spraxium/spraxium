@@ -1,8 +1,8 @@
-import type { EnvInfoInterface } from './env-info.interface';
+import type { EnvInfo } from './env-info.interface';
 
-export interface InfoReportInterface {
+export interface InfoReport {
   cliVersion: string;
   projectName: string;
-  env: EnvInfoInterface;
+  env: EnvInfo;
   frameworkVersions: Record<string, string>;
 }

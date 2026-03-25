@@ -1,4 +1,4 @@
-export interface SpraxiumDevConfigInterface {
+export interface SpraxiumDevConfig {
   entrypoint?: string;
   include?: Array<string>;
   exclude?: Array<string>;

@@ -1,11 +1,11 @@
-import type { SchematicInterface } from '../interfaces';
+import type { ISchematic } from '../interfaces';
 import { BootServiceSchematic } from './boot-service.schematic';
 import { ListenerSchematic } from './listener.schematic';
 import { ModuleSchematic } from './module.schematic';
 import { ServiceSchematic } from './service.schematic';
 import { TaskSchematic } from './task.schematic';
 
-export const ALL_SCHEMATICS: SchematicInterface[] = [
+export const ALL_SCHEMATICS: ISchematic[] = [
   new ModuleSchematic(),
   new ServiceSchematic(),
   new TaskSchematic(),
@@ -13,8 +13,8 @@ export const ALL_SCHEMATICS: SchematicInterface[] = [
   new ListenerSchematic(),
 ];
 
-export function buildSchematicLookup(schematics: SchematicInterface[]): Map<string, SchematicInterface> {
-  const map = new Map<string, SchematicInterface>();
+export function buildSchematicLookup(schematics: ISchematic[]): Map<string, ISchematic> {
+  const map = new Map<string, ISchematic>();
   for (const s of schematics) {
     map.set(s.name, s);
     for (const alias of s.aliases) {

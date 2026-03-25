@@ -1,6 +1,6 @@
-import type { SchematicInterface } from '../interfaces';
+import type { ISchematic } from '../interfaces';
 
-export class ModuleSchematic implements SchematicInterface {
+export class ModuleSchematic implements ISchematic {
   readonly name = 'module';
   readonly aliases = ['m'] as const;
   readonly description = 'Generate a @Module() class';

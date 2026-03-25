@@ -5,10 +5,10 @@ import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { RegexConstant } from '../constants';
-import type { EnvInfoInterface, InfoReportInterface } from '../interfaces';
+import type { EnvInfo, InfoReport } from '../interfaces';
 
 export class InfoCollector {
-  collectReport(cwd: string): InfoReportInterface {
+  collectReport(cwd: string): InfoReport {
     const projectPkg = this.readNearestPackageJson(cwd);
 
     return {

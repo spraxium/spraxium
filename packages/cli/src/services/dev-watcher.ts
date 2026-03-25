@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { minimatch } from 'minimatch';
 import { RegexConstant } from '../constants';
-import type { DevWatcherOptionsInterface, SpraxiumDevConfigInterface } from '../interfaces';
+import type { DevWatcherOptions, SpraxiumDevConfig } from '../interfaces';
 
 export class DevWatcher {
   private readonly watchers: fs.FSWatcher[] = [];
@@ -10,7 +10,7 @@ export class DevWatcher {
   private excludePatterns: string[] = [];
   private reloadingConfig = false;
 
-  constructor(private readonly options: DevWatcherOptionsInterface) {
+  constructor(private readonly options: DevWatcherOptions) {
     this.applyConfig(options.initialConfig);
   }
 
@@ -77,7 +77,7 @@ export class DevWatcher {
     }
   }
 
-  private applyConfig(config: SpraxiumDevConfigInterface): void {
+  private applyConfig(config: SpraxiumDevConfig): void {
     this.includePatterns = (config.include ?? []).map((p) => this.toNormalizedPath(p)).filter(Boolean);
     this.excludePatterns = ['**/node_modules/**', '**/.git/**', ...(config.exclude ?? [])]
       .map((p) => this.toNormalizedPath(p))

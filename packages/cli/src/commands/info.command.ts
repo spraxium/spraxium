@@ -2,7 +2,7 @@ import chalk from 'chalk';
 import type { Command } from 'commander';
 import { MessageConstant } from '../constants';
 import { BaseCommand } from '../core/base.command';
-import type { EnvInfoInterface, InfoReportInterface } from '../interfaces';
+import type { EnvInfo, InfoReport } from '../interfaces';
 import type { InfoCollector } from '../services/info-collector';
 import type { CliLogger } from '../ui/cli-logger';
 
@@ -33,7 +33,7 @@ export class InfoCommand extends BaseCommand {
     this.printHuman(report);
   }
 
-  private printHuman(report: InfoReportInterface): void {
+  private printHuman(report: InfoReport): void {
     this.logger.blank();
     this.logger.star(MessageConstant.INFO_HEADER);
     this.logger.blank();
@@ -58,7 +58,7 @@ export class InfoCommand extends BaseCommand {
     this.logger.blank();
   }
 
-  private printPackageManagers(env: EnvInfoInterface): void {
+  private printPackageManagers(env: EnvInfo): void {
     for (const [name, version] of Object.entries(env.packageManagers)) {
       this.line(name, version);
     }

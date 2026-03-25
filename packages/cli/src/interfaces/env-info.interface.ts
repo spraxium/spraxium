@@ -1,4 +1,4 @@
-export interface EnvInfoInterface {
+export interface EnvInfo {
   os: string;
   node: string;
   runtime: string;
