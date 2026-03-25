@@ -15,7 +15,7 @@ function createOptionDecorator<T extends SlashBaseOptionConfig>(
 ): (name: string, config: T) => MethodDecorator {
   return (name: string, config: T): MethodDecorator => {
     return (target: object, propertyKey: string | symbol): void => {
-      const existing: SlashOptionMetadata[] =
+      const existing: Array<SlashOptionMetadata> =
         Reflect.getMetadata(METADATA_KEYS.SLASH_OPTION, target, propertyKey) ?? [];
 
       const meta: SlashOptionMetadata = {

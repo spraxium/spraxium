@@ -22,6 +22,7 @@ export type { SlashCommandHandlerMetadata } from './slash-command-handler-metada
 export type {
   SlashOptionType,
   SlashOptionChoice,
+  GuildChannelType,
   SlashBaseOptionConfig,
   SlashStringOptionConfig,
   SlashIntegerOptionConfig,
