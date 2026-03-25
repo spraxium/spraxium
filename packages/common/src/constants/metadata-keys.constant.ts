@@ -20,4 +20,16 @@ export const METADATA_KEYS = {
   PREFIX_ARG: 'spraxium:prefix_arg',
   PREFIX_ARG_PARAM: 'spraxium:prefix_arg_param',
   PREFIX_SUBCOMMAND: 'spraxium:prefix_subcommand',
+
+  // ── Slash Commands ─────────────────────────────────────────────────────────
+  SLASH_COMMAND: 'spraxium:slash_command',
+  SLASH_COMMAND_HANDLER: 'spraxium:slash_command_handler',
+  SLASH_OPTION: 'spraxium:slash_option',
+  SLASH_OPT_PARAM: 'spraxium:slash_opt_param',
+  SLASH_FOCUSED_PARAM: 'spraxium:slash_focused_param',
+  SLASH_SUBCOMMAND: 'spraxium:slash_subcommand',
+  SLASH_SUBCOMMANDS_LIST: 'spraxium:slash_subcommands_list',
+  SLASH_SUBCOMMAND_GROUP: 'spraxium:slash_subcommand_group',
+  SLASH_SUBCOMMAND_GROUPS: 'spraxium:slash_subcommand_groups',
+  SLASH_AUTOCOMPLETE_HANDLER: 'spraxium:slash_autocomplete_handler',
 } as const;

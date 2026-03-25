@@ -16,3 +16,21 @@ export type {
 export type { PrefixConfig } from './prefix-config.interface';
 export type { PrefixSubcommandConfig } from './prefix-subcommand-config.interface';
 export type { PrefixGuildEntry, PrefixGuildProvider } from './prefix-guild.interface';
+
+export type { SlashCommandConfig } from './slash-command-config.interface';
+export type { SlashCommandHandlerMetadata } from './slash-command-handler-metadata.interface';
+export type {
+  SlashOptionType,
+  SlashOptionChoice,
+  SlashBaseOptionConfig,
+  SlashStringOptionConfig,
+  SlashIntegerOptionConfig,
+  SlashNumberOptionConfig,
+  SlashChannelOptionConfig,
+  SlashOptionMetadata,
+} from './slash-option-metadata.interface';
+export type {
+  SlashSubcommandMetadata,
+  SlashSubcommandGroupMetadata,
+} from './slash-subcommand-metadata.interface';
+export type { SlashAutocompleteHandlerMetadata } from './slash-autocomplete-handler-metadata.interface';

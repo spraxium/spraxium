@@ -37,4 +37,7 @@ export interface PrefixConfig {
 
   /** Default cooldown in seconds applied to all commands. @default 0 */
   defaultCooldown?: number;
+
+  /** Whether to reply with "command not found" when no match is found. @default false */
+  replyOnNotFound?: boolean;
 }
