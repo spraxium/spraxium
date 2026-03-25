@@ -1,0 +1,19 @@
+import type { Constructor } from '@spraxium/common';
+import type { GatewayIntentBits, Partials } from 'discord.js';
+import type { ModuleLoader } from '../../bootstrap/module.loader';
+import type { PresenceOptions } from '../../client/interfaces/presence-options.interface';
+import type { ShardOptions } from '../../client/interfaces/shard-options.interface';
+
+/**
+ * Mutable state accumulated through the SpraxiumApplication fluent API
+ * before and during the boot sequence.
+ */
+export interface ApplicationState {
+  token?: string;
+  intents?: Array<GatewayIntentBits>;
+  partials?: Array<Partials>;
+  presence?: PresenceOptions;
+  sharding?: ShardOptions;
+  rootModule?: Constructor;
+  moduleLoader?: ModuleLoader;
+}
