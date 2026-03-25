@@ -36,7 +36,7 @@ export class GuardExecutor {
     const instance = GuardExecutor.resolveGuard(entry);
     return Promise.resolve(instance.canActivate(ctx));
   }
-  
+
   private static resolveGuard(entry: GuardEntry): SpraxiumGuard {
     const instance = new entry.guard() as Record<string, unknown> & SpraxiumGuard;
 

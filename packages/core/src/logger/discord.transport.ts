@@ -106,7 +106,9 @@ export class DiscordTransport implements ClientAwareTransport {
       if (!channel?.isTextBased() || !('send' in channel)) return;
 
       const embed = this.buildEmbed(entry);
-      await (channel as { send(opts: { embeds: Array<APIEmbed> }): Promise<unknown> }).send({ embeds: [embed] });
+      await (channel as { send(opts: { embeds: Array<APIEmbed> }): Promise<unknown> }).send({
+        embeds: [embed],
+      });
     } catch {
       nativeWarn('[Spraxium] Discord channel transport failed');
     }
