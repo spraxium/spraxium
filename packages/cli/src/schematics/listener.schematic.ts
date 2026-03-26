@@ -1,6 +1,6 @@
-import type { ISchematic } from '../interfaces';
+import type { Schematic } from '../interfaces';
 
-export class ListenerSchematic implements ISchematic {
+export class ListenerSchematic implements Schematic {
   readonly name = 'listener';
   readonly aliases = ['l'] as const;
   readonly description = 'Generate a @Listener() event listener class';

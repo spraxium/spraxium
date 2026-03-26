@@ -1,6 +1,6 @@
-import type { ISchematic } from '../interfaces';
+import type { Schematic } from '../interfaces';
 
-export class TaskSchematic implements ISchematic {
+export class TaskSchematic implements Schematic {
   readonly name = 'task';
   readonly aliases = ['t'] as const;
   readonly description = 'Generate a scheduled task service with @Cron()';

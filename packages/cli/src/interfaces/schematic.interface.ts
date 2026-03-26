@@ -1,4 +1,4 @@
-export interface ISchematic {
+export interface Schematic {
   readonly name: string;
   readonly aliases: ReadonlyArray<string>;
   readonly description: string;

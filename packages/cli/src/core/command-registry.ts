@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Command } from 'commander';
-import type { ICommand } from '../interfaces';
+import type { CliCommand } from '../interfaces';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -18,13 +18,13 @@ function readVersion(): string {
 }
 
 /**
- * Owns the Commander program instance and wires up all ICommand registrations.
+ * Owns the Commander program instance and wires up all CliCommand registrations.
  * OCP: new commands are added by passing them into the constructor array — never by modifying this class.
  */
 export class CommandRegistry {
   private readonly program: Command;
 
-  constructor(private readonly commands: Array<ICommand>) {
+  constructor(private readonly commands: Array<CliCommand>) {
     this.program = new Command()
       .name('spraxium')
       .description('Spraxium Framework CLI \u2014 build Discord bots at scale')

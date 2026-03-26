@@ -1,6 +1,6 @@
-import type { ISchematic } from '../interfaces';
+import type { Schematic } from '../interfaces';
 
-export class BootServiceSchematic implements ISchematic {
+export class BootServiceSchematic implements Schematic {
   readonly name = 'boot-service';
   readonly aliases = ['bs'] as const;
   readonly description = 'Generate a service with onBoot/onShutdown lifecycle hooks';
