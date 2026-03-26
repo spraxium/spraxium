@@ -17,10 +17,6 @@ function readVersion(): string {
   }
 }
 
-/**
- * Owns the Commander program instance and wires up all CliCommand registrations.
- * OCP: new commands are added by passing them into the constructor array — never by modifying this class.
- */
 export class CommandRegistry {
   private readonly program: Command;
 

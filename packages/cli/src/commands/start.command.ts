@@ -10,7 +10,7 @@ export class StartCommand extends BaseCommand {
   register(program: Command): void {
     program
       .command('start')
-      .description('Start the production build (requires a compiled dist/)')
+      .description('Start the production build (requires a compiled .spraxium/dist/)')
       .action(() => this.run(() => this.execute()));
   }
 
@@ -44,6 +44,8 @@ export class StartCommand extends BaseCommand {
 
   private async findEntry(cwd: string): Promise<string | null> {
     const candidates = [
+      path.join(cwd, '.spraxium', 'dist', 'src', 'main.js'),
+      path.join(cwd, '.spraxium', 'dist', 'main.js'),
       path.join(cwd, 'dist', 'src', 'main.js'),
       path.join(cwd, 'dist', 'main.js'),
       path.join(cwd, 'build', 'src', 'main.js'),

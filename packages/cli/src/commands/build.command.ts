@@ -1,9 +1,7 @@
-import fs from 'node:fs';
 import chalk from 'chalk';
 import type { Command } from 'commander';
 import { MessageConstant, UnicodeConstant } from '../constants';
 import { BaseCommand } from '../core/base.command';
-import type { EsmImportFixer } from '../services/esm-import-fixer';
 import type { ProcessRunner } from '../services/process-runner';
 import type { CliLogger } from '../ui/cli-logger';
 
@@ -11,7 +9,6 @@ export class BuildCommand extends BaseCommand {
   constructor(
     logger: CliLogger,
     private readonly runner: ProcessRunner,
-    private readonly esmFixer: EsmImportFixer,
   ) {
     super(logger);
   }
@@ -19,7 +16,7 @@ export class BuildCommand extends BaseCommand {
   register(program: Command): void {
     program
       .command('build')
-      .description('Type-check and compile the project with tsc for production')
+      .description('Type-check and bundle the project with tsdown for production')
       .action(() => this.run(() => this.execute()));
   }
 
@@ -35,20 +32,12 @@ export class BuildCommand extends BaseCommand {
     this.printResult(true, MessageConstant.BUILD_TYPE_CHECK_PASSED);
 
     this.printStep(MessageConstant.BUILD_COMPILING);
-    const outDir = this.esmFixer.resolveOutDir(process.cwd());
-    fs.mkdirSync(outDir, { recursive: true });
-    const buildOk = await this.runner.inherit('tsc');
+    const buildOk = await this.runner.silent('tsdown');
     if (!buildOk) {
       this.printResult(false, MessageConstant.BUILD_FAILED);
       process.exit(1);
     }
     this.printResult(true, MessageConstant.BUILD_COMPLETE);
-
-    if (fs.existsSync(outDir)) {
-      this.printStep(MessageConstant.BUILD_FIXING_IMPORTS);
-      const fixed = this.esmFixer.fix(outDir);
-      this.printResult(true, `${MessageConstant.BUILD_FIXED_IMPORTS} ${fixed} files`);
-    }
 
     this.logger.blank();
   }

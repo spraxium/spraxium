@@ -1,10 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-/**
- * Detects project metadata from the filesystem.
- * SRP: only responsible for project environment discovery.
- */
 export class ProjectDetector {
   findMainTs(cwd = process.cwd()): string | null {
     const candidates = [path.join(cwd, 'src', 'main.ts'), path.join(cwd, 'main.ts')];

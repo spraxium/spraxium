@@ -9,7 +9,6 @@ import { DevWatcher } from '../services/dev-watcher';
 import type { ProjectDetector } from '../services/project-detector';
 import type { CliLogger } from '../ui/cli-logger';
 
-// swc-loader.js sits alongside this file in dist/ after build
 const swcLoaderHref = new URL('./swc-loader.js', import.meta.url).href;
 
 export class DevCommand extends BaseCommand {

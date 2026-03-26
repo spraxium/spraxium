@@ -42,15 +42,4 @@ export class EsmImportFixer {
     walk(dir);
     return count;
   }
-
-  resolveOutDir(cwd: string): string {
-    try {
-      const raw = fs.readFileSync(path.join(cwd, 'tsconfig.json'), 'utf8');
-      const tsconfig = JSON.parse(raw) as { compilerOptions?: { outDir?: string } };
-      const outDir = tsconfig?.compilerOptions?.outDir ?? 'dist';
-      return path.resolve(cwd, outDir);
-    } catch {
-      return path.resolve(cwd, 'dist');
-    }
-  }
 }

@@ -2,11 +2,6 @@ import type { Command } from 'commander';
 import type { CliCommand } from '../interfaces';
 import type { CliLogger } from '../ui/cli-logger';
 
-/**
- * Base class for all CLI commands.
- * SRP: handles error wrapping and exit, nothing else.
- * OCP: subclasses extend behavior by implementing register() and their own execute().
- */
 export abstract class BaseCommand implements CliCommand {
   constructor(protected readonly logger: CliLogger) {}
 
