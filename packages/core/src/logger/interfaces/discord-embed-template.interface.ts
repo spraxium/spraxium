@@ -1,9 +1,23 @@
+export interface EmbedFooterTemplate {
+  text: string;
+}
+
+export interface EmbedThumbnailTemplate {
+  url: string;
+}
+
+export interface EmbedFieldTemplate {
+  name: string;
+  value: string;
+  inline?: boolean;
+}
+
 export interface DiscordEmbedTemplate {
   title?: string;
   description?: string;
   color?: number;
-  footer?: { text: string };
+  footer?: EmbedFooterTemplate;
   timestamp?: boolean;
-  thumbnail?: { url: string };
-  fields?: Array<{ name: string; value: string; inline?: boolean }>;
+  thumbnail?: EmbedThumbnailTemplate;
+  fields?: Array<EmbedFieldTemplate>;
 }

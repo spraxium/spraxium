@@ -4,7 +4,7 @@ import { type Shard, ShardingManager } from 'discord.js';
 import { logger } from '../logger';
 import { spraxiumFatal } from '../utils';
 import { DEFAULT_SPAWN_DELAY } from './constants';
-import type { ShardOptions, ShardStatus } from './interfaces';
+import type { ShardEvalContext, ShardOptions, ShardStatus } from './interfaces';
 
 export class SpraxiumShardManager {
   private manager: ShardingManager | undefined;
@@ -38,7 +38,7 @@ export class SpraxiumShardManager {
         new Promise<void>((resolve) => {
           shard.once('ready', () => {
             shard
-              .eval((c: { guilds: { cache: { size: number } } }) => c.guilds.cache.size)
+              .eval((c: ShardEvalContext) => c.guilds.cache.size)
               .then((count) => statuses.set(shard.id, { guildCount: count as number, ready: true }))
               .catch(() => statuses.set(shard.id, { ready: true }))
               .finally(() => resolve());

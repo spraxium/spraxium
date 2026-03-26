@@ -3,6 +3,7 @@ import type { Message } from 'discord.js';
 import { ArgumentException } from '../../exceptions/built-in/argument.exception';
 import { PREFIX_MESSAGES } from '../constants';
 import { runValidation } from '../helpers';
+import type { ParseFn } from '../types';
 import { parseBoolean } from './boolean.parser';
 import { parseColor } from './color.parser';
 import { parseChannel, parseMember, parseRole, parseSnowflake, parseUser } from './discord.parser';
@@ -12,8 +13,6 @@ import { parseInteger } from './integer.parser';
 import { parseNumber } from './number.parser';
 import { parseString } from './string.parser';
 import { parseUrl } from './url.parser';
-
-type ParseFn = (raw: string, meta: PrefixArgMetadata, message: Message) => unknown;
 
 const PARSER_MAP: Record<PrefixArgType, ParseFn> = {
   string: (raw, meta) => parseString(raw, meta),

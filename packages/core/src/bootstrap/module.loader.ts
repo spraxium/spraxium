@@ -6,10 +6,11 @@ import type {
   SpraxiumOnShutdown,
 } from '@spraxium/common';
 import { METADATA_KEYS } from '@spraxium/common';
-import type { Client } from 'discord.js';
+import { Client } from 'discord.js';
 import { ListenerDispatcher } from '../listeners';
 import { logger } from '../logger';
 import { PrefixDispatcher } from '../prefix';
+import { SlashDispatcher } from '../slash';
 import { spraxiumError } from '../utils';
 import { printBootTables } from './boot-table.printer';
 import type { ModuleRow } from './interfaces';
@@ -24,12 +25,15 @@ export class ModuleLoader {
   private readonly loadedModules = new Set<Constructor>();
   private readonly listenerDispatcher = new ListenerDispatcher();
   private readonly prefixDispatcher = new PrefixDispatcher();
+  private readonly slashDispatcher = new SlashDispatcher();
   private readonly moduleRows: Array<ModuleRow> = [];
 
-  load(rootModule: Constructor): void {
+  load(rootModule: Constructor, client: Client): void {
     // Make the dispatchers available for injection in any provider/handler.
     this.rootContainer.set(ListenerDispatcher, this.listenerDispatcher);
     this.rootContainer.set(PrefixDispatcher, this.prefixDispatcher);
+    this.rootContainer.set(SlashDispatcher, this.slashDispatcher);
+    this.rootContainer.set(Client, client);
     this.loadModule(rootModule, this.rootContainer);
     logger.debug('Module tree loaded');
   }
@@ -61,12 +65,15 @@ export class ModuleLoader {
 
     for (const commandCtor of metadata.commands ?? []) {
       this.prefixDispatcher.registerCommand(commandCtor);
+      this.slashDispatcher.registerCommand(commandCtor);
     }
 
     for (const handlerCtor of metadata.handlers ?? []) {
       const instance = this.instantiate(handlerCtor, container);
       container.set(handlerCtor, instance);
       this.prefixDispatcher.registerHandler(handlerCtor, instance);
+      this.slashDispatcher.registerHandler(handlerCtor, instance);
+      this.slashDispatcher.registerAutocompleteHandler(handlerCtor, instance);
       this.registerLifecycle(instance);
     }
 
@@ -184,11 +191,16 @@ export class ModuleLoader {
     return this.prefixDispatcher;
   }
 
+  getSlashDispatcher(): SlashDispatcher {
+    return this.slashDispatcher;
+  }
+
   printBootTables(): void {
     printBootTables(
       this.moduleRows,
       this.listenerDispatcher.getResolved(),
       this.prefixDispatcher.getResolved(),
+      this.slashDispatcher.getResolved(),
     );
   }
 }

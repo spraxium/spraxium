@@ -1,5 +1,5 @@
 import type { Client } from 'discord.js';
-import type { HandlerEntry } from './interfaces';
+import type { HandlerEntry, ParsedGroupKey } from './interfaces';
 import type { ListenerInvoker } from './listener.invoker';
 import type { ListenerRegistry } from './listener.registry';
 
@@ -38,7 +38,7 @@ export class ListenerBinder {
     return groups;
   }
 
-  private parseGroupKey(key: string): { event: string; once: boolean } {
+  private parseGroupKey(key: string): ParsedGroupKey {
     const separatorIndex = key.lastIndexOf(':');
     return {
       event: key.slice(0, separatorIndex),

@@ -1,4 +1,5 @@
 import type { PrefixArgMetadata } from '@spraxium/common';
+import type { PrefixSubcommandInfo } from './prefix-subcommand-info.interface';
 
 /** Structured command info for help rendering. */
 export interface PrefixCommandInfo {
@@ -9,10 +10,5 @@ export interface PrefixCommandInfo {
   usage: string;
   cooldown: number;
   args: Array<PrefixArgMetadata>;
-  subcommands: Array<{
-    name: string;
-    description: string;
-    handlerClass: string;
-    args: Array<PrefixArgMetadata>;
-  }>;
+  subcommands: Array<PrefixSubcommandInfo>;
 }

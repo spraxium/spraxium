@@ -10,7 +10,7 @@ export class PrefixParser {
     if (client.isReady()) {
       this.clientId = client.user.id;
     } else {
-      client.once('ready', (c) => {
+      client.once('clientReady', (c) => {
         this.clientId = c.user.id;
       });
     }

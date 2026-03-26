@@ -71,6 +71,24 @@ export class SpraxiumApplication {
     return this;
   }
 
+  /**
+   * Forces slash command registration with the Discord REST API, bypassing the
+   * dev-mode hash cache. Useful after modifying commands at runtime without
+   * restarting the application.
+   *
+   * No-op if the application has not yet booted or has no slash commands.
+   */
+  public async forceRegisterSlashCommands(): Promise<void> {
+    const dispatcher = this.state.moduleLoader?.getSlashDispatcher();
+    if (!dispatcher || dispatcher.commandCount === 0) return;
+
+    const token = this.state.token ?? process.env.DISCORD_TOKEN;
+    const clientId = this.state.client?.user?.id;
+    if (!token || !clientId) return;
+
+    await dispatcher.register(token, clientId, undefined, true);
+  }
+
   public async listen(): Promise<void> {
     if (this.booted) {
       spraxiumFatal(
@@ -90,10 +108,9 @@ export class SpraxiumApplication {
 
     if (await this.trySpawnShards(token)) return;
 
-    this.loadModules();
-    await this.runBootHooks();
-
     const client = this.buildClient();
+    this.loadModules(client);
+    await this.runBootHooks();
     await this.wireClient(client);
 
     ShutdownHandler.register(client, this.state.moduleLoader);
@@ -145,11 +162,12 @@ export class SpraxiumApplication {
     return true;
   }
 
-  private loadModules(): void {
+  private loadModules(client: Client): void {
     if (!this.state.rootModule) return;
 
+    this.state.client = client;
     this.state.moduleLoader = new ModuleLoader();
-    this.state.moduleLoader.load(this.state.rootModule);
+    this.state.moduleLoader.load(this.state.rootModule, client);
     this.state.moduleLoader.printBootTables();
   }
 
@@ -183,6 +201,12 @@ export class SpraxiumApplication {
       }
 
       dispatcher.bind(client, prefixConfig);
+    }
+
+    // Slash commands
+    const slashDispatcher = this.state.moduleLoader?.getSlashDispatcher();
+    if (slashDispatcher && slashDispatcher.size > 0) {
+      slashDispatcher.bind(client);
     }
   }
 
@@ -241,6 +265,15 @@ export class SpraxiumApplication {
         clearTimeout(timeout);
         PresenceManager.initialize(readyClient, this.state.presence);
         await this.state.moduleLoader?.runReadyHooks(readyClient);
+
+        // Register slash commands with Discord API
+        const slashDispatcher = this.state.moduleLoader?.getSlashDispatcher();
+        if (slashDispatcher && slashDispatcher.commandCount > 0) {
+          const token = this.state.token ?? process.env.DISCORD_TOKEN;
+          if (token) {
+            await slashDispatcher.register(token, readyClient.user.id);
+          }
+        }
 
         if (!isShardChild()) {
           const ms = Date.now() - this.startedAt;

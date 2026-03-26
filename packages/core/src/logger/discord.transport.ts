@@ -6,6 +6,7 @@ import type {
   DiscordEmbedTemplate,
   DiscordTransportConfig,
   LogEntry,
+  SendableChannel,
 } from './interfaces';
 import { formatDate, formatTime, interpolateTemplate } from './utils';
 
@@ -106,7 +107,7 @@ export class DiscordTransport implements ClientAwareTransport {
       if (!channel?.isTextBased() || !('send' in channel)) return;
 
       const embed = this.buildEmbed(entry);
-      await (channel as { send(opts: { embeds: Array<APIEmbed> }): Promise<unknown> }).send({
+      await (channel as SendableChannel).send({
         embeds: [embed],
       });
     } catch {

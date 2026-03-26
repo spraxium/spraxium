@@ -2,6 +2,7 @@ import chalk from 'chalk';
 import Table from 'cli-table3';
 import type { ResolvedListenerEntry } from '../listeners/interfaces';
 import type { ResolvedPrefixEntry } from '../prefix/interfaces';
+import type { ResolvedSlashEntry } from '../slash/interfaces';
 import { TABLE_STYLE } from './constants';
 import type { ModuleRow } from './interfaces';
 
@@ -9,6 +10,7 @@ export function printBootTables(
   moduleRows: Array<ModuleRow>,
   listenerEntries: Array<ResolvedListenerEntry>,
   prefixEntries: Array<ResolvedPrefixEntry>,
+  slashEntries: Array<ResolvedSlashEntry>,
 ): void {
   if (process.env.SHARDS !== undefined) return;
 
@@ -100,6 +102,36 @@ export function printBootTables(
     console.log(chalk.dim(' All @PrefixCommand() handlers registered for message-based dispatch.'));
     console.log('');
     console.log(cmdTable.toString());
+    console.log('');
+  }
+
+  if (slashEntries.length > 0) {
+    const slashTable = new Table({
+      head: [
+        chalk.bold.cyan('Command'),
+        chalk.bold.cyan('Handler'),
+        chalk.bold.cyan('Group'),
+        chalk.bold.cyan('Subcommand'),
+        chalk.bold.cyan('Options'),
+      ],
+      ...TABLE_STYLE,
+    });
+
+    for (const entry of slashEntries) {
+      slashTable.push([
+        chalk.cyan(`/${entry.commandName}`),
+        chalk.green(entry.handlerClass),
+        entry.group ? chalk.magenta(entry.group) : chalk.dim('—'),
+        entry.sub ? chalk.yellow(entry.sub) : chalk.dim('—'),
+        chalk.dim(String(entry.optionCount)),
+      ]);
+    }
+
+    console.log('');
+    console.log(chalk.bold(' Slash Commands'));
+    console.log(chalk.dim(' All @SlashCommand() handlers registered for interaction-based dispatch.'));
+    console.log('');
+    console.log(slashTable.toString());
     console.log('');
   }
 }
