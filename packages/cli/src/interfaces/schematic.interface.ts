@@ -1,6 +1,6 @@
 export interface ISchematic {
   readonly name: string;
-  readonly aliases: readonly string[];
+  readonly aliases: ReadonlyArray<string>;
   readonly description: string;
   readonly fileSuffix: string;
   readonly moduleArray: string;
