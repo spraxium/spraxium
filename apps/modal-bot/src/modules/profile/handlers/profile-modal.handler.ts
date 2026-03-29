@@ -1,17 +1,18 @@
 import { Ctx } from '@spraxium/common';
-import { type ModalContext, ModalHandler } from '@spraxium/components';
-import { ProfileModal } from '../modals/profile.modal';
+import { Field, type ModalContext, ModalHandler } from '@spraxium/components';
+import { ProfileModal } from '../components/profile.modal.component';
 
-// Handles ProfileModal submission — reads select, radio, checkbox, and boolean fields.
+// Handles ProfileModal submission, reads select, radio, checkbox, and boolean fields.
 
 @ModalHandler(ProfileModal)
 export class ProfileModalHandler {
-  async handle(@Ctx() ctx: ModalContext): Promise<void> {
-    const role = ctx.fields.getStringSelectValues('role')[0] ?? 'N/A';
-    const timezone = ctx.fields.getRadioGroup('timezone') ?? 'N/A';
-    const notifications = ctx.fields.getCheckboxGroup('notifications');
-    const acceptedRules = ctx.fields.getCheckbox('acceptedRules');
-
+  async handle(
+    @Ctx() ctx: ModalContext,
+    @Field('role') role: string,
+    @Field('timezone') timezone: string,
+    @Field('notifications') notifications: string[],
+    @Field('acceptedRules') acceptedRules: boolean,
+  ): Promise<void> {
     if (!acceptedRules) {
       await ctx.reply({
         content: '❌ You must accept the server rules to complete your profile setup.',

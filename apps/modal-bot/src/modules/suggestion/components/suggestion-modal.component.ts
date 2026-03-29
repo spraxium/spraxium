@@ -7,20 +7,7 @@ import {
   ModalWhen,
 } from '@spraxium/components';
 import type { ModalFieldDef } from '@spraxium/components';
-
-// ── SuggestionModal ───────────────────────────────────────────────────────────
-//
-// Demonstrates:
-//   @ModalDynamic<T>     — class decorator for data-driven modals
-//   @ModalWhen(fn)       — conditional field shown only when data allows it
-//   @ModalDynamicFields  — method that generates fields at runtime from data
-//   Modal.field.*        — programmatic field builders
-//   Modal.choice()       — programmatic choice builders
-
-export interface SuggestionData {
-  categories: Array<{ id: string; label: string }>;
-  includeUrl: boolean;
-}
+import type { SuggestionData } from '../interfaces/suggestion-data.interface';
 
 @ModalDynamic<SuggestionData>()
 @ModalComponent({ id: 'suggestion', title: 'Submit a Suggestion' })
@@ -47,7 +34,7 @@ export class SuggestionModal {
           label: `Impact on: ${cat.label}`,
           choices: [
             Modal.choice('Low', 'low'),
-            Modal.choice('Medium', 'medium', { default: true }),
+            Modal.choice('Medium', 'medium'),
             Modal.choice('High', 'high'),
           ],
         }),

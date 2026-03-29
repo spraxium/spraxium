@@ -1,6 +1,6 @@
 import { Ctx } from '@spraxium/common';
 import { Field, type ModalContext, ModalHandler } from '@spraxium/components';
-import { TicketModal } from '../modals/ticket.modal';
+import { TicketModal } from '../components/ticket-modal.component';
 
 // Handles TicketModal submission after all @ModalValidate rules pass.
 

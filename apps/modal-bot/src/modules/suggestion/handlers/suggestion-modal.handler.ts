@@ -1,10 +1,10 @@
 import { Ctx } from '@spraxium/common';
 import { Field, type ModalContext, ModalHandler } from '@spraxium/components';
-import { SuggestionModal } from '../modals/suggestion.modal';
+import { SuggestionModal } from '../components/suggestion-modal.component';
 
 // Handles SuggestionModal submission.
 // Dynamic radio groups are read via ctx.fields.getRadioGroup() using the ids
-// generated in SuggestionModal.buildRatingFields() — e.g. 'rate_ux'.
+// generated in SuggestionModal.buildRatingFields(), e.g. 'rate_ux'.
 
 @ModalHandler(SuggestionModal)
 export class SuggestionModalHandler {

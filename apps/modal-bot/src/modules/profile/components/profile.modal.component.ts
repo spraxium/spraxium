@@ -9,18 +9,10 @@ import {
   ModalTextDisplay,
 } from '@spraxium/components';
 
-// ── ProfileModal ──────────────────────────────────────────────────────────────
-//
-// Demonstrates:
-//   @ModalSelect     — string select dropdown with @ModalOption stacking
-//   @ModalRadioGroup — single-choice group with @ModalChoice stacking
-//   @ModalCheckboxGroup — multi-choice group with @ModalChoice stacking
-//   @ModalCheckbox   — single boolean checkbox (accept rules)
-//   @ModalTextDisplay — header text
-
-@ModalTextDisplay({ content: '🧑 Set up your public profile visible to server members.' })
+@ModalTextDisplay({ content: 'Set up your public profile visible to server members.' })
 @ModalComponent({ id: 'profile', title: 'Profile Setup' })
 export class ProfileModal {
+
   @ModalSelect({ label: 'Primary role', placeholder: 'Select your role…', required: true })
   @ModalOption({ label: 'Developer', value: 'dev', emoji: '💻', description: 'Software engineering' })
   @ModalOption({ label: 'Designer', value: 'design', emoji: '🎨', description: 'UI/UX and visual work' })

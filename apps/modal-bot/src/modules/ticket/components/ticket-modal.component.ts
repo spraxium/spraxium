@@ -9,15 +9,6 @@ import {
   minWords,
 } from '@spraxium/components';
 
-// ── TicketModal ───────────────────────────────────────────────────────────────
-//
-// Demonstrates:
-//   @ModalTextDisplay  — informational header inside the modal
-//   @ModalInput        — short text and paragraph inputs
-//   @ModalValidate     — per-field validation rules (minWords, emailFormat)
-//   @ModalValidationConfig — custom error embed on validation failure
-//   @ModalCache        — per-user field cache (pre-fill on re-open)
-
 @ModalValidationConfig({
   ephemeral: true,
   embed: (errors) => ({

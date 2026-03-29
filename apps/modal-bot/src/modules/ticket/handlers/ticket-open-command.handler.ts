@@ -2,17 +2,17 @@ import { Ctx, SlashCommandHandler } from '@spraxium/common';
 // biome-ignore lint/style/useImportType: DI requires runtime type for reflect-metadata
 import { ModalService } from '@spraxium/components';
 import type { ChatInputCommandInteraction } from 'discord.js';
-import { ProfileCommand } from '../commands/profile.command';
-import { ProfileModal } from '../modals/profile.modal';
+import { TicketCommand } from '../commands/ticket.command';
+import { TicketModal } from '../components/ticket-modal.component';
 
-// /profile setup — opens the ProfileModal with select/radio/checkbox fields
+// /ticket open, opens the TicketModal fresh (no pre-fill)
 
-@SlashCommandHandler(ProfileCommand, { sub: 'setup' })
-export class ProfileSetupHandler {
+@SlashCommandHandler(TicketCommand, { sub: 'open' })
+export class TicketOpenCommandHandler {
   constructor(private readonly modals: ModalService) {}
 
   async handle(@Ctx() interaction: ChatInputCommandInteraction): Promise<void> {
-    const modal = this.modals.build(ProfileModal);
+    const modal = this.modals.build(TicketModal);
     await interaction.showModal(modal);
   }
 }
