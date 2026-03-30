@@ -1,0 +1,34 @@
+{
+  "name": "@spraxium/signal",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Async unidirectional signal system for Spraxium bots via Discord webhooks",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "typecheck": "tsc --noEmit",
+    "lint": "biome check src/"
+  },
+  "dependencies": {
+    "@spraxium/common": "workspace:*",
+    "@spraxium/core": "workspace:*",
+    "discord.js": "^14.17.0",
+    "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsdown": "^0.12.0",
+    "typescript": "^5.7.0"
+  },
+  "files": ["dist"],
+  "license": "MIT"
+}
