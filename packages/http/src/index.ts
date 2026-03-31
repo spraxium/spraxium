@@ -14,6 +14,7 @@ export {
   Delete,
   Get,
   Header,
+  HttpClientModule,
   HttpStatus,
   Param,
   Patch,
@@ -35,12 +36,15 @@ export {
   TooManyRequestsError,
   UnauthorizedError,
   UnprocessableEntityError,
+  ValidationError,
 } from './errors';
+export type { ValidationDetail } from './errors';
 export { ApiKeyGuard, GuardExecutor } from './guards';
 export { defineHttp } from './http.config';
 export { HttpModule } from './http.module';
+export { BotBridge } from './interfaces';
 export type {
-  BotBridge,
+  HttpClientModuleMetadata,
   HttpConfig,
   HttpGuard,
   HttpMiddleware,
@@ -49,7 +53,14 @@ export type {
   RegisteredController,
 } from './interfaces';
 export { LoggerMiddleware, RateLimitMiddleware } from './middleware';
-export { HttpRegistry, HttpServer, ParamResolver, RouteBuilder, RouteRegistry } from './services';
+export {
+  HttpRegistry,
+  HttpServer,
+  ParamResolver,
+  RouteBuilder,
+  RouteRegistry,
+  ValidationPipe,
+} from './services';
 export type {
   BanOptions,
   Constructor,

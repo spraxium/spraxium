@@ -1,4 +1,5 @@
-export type { BotBridge } from './bot-bridge.interface';
+export { BotBridge } from './bot-bridge.interface';
+export type { HttpClientModuleMetadata } from './http-client-module-metadata.interface';
 export type { HttpConfig } from './http-config.interface';
 export type { HttpGuard } from './http-guard.interface';
 export type { HttpMiddleware } from './http-middleware.interface';

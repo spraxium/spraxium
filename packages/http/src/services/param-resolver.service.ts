@@ -2,8 +2,11 @@ import 'reflect-metadata';
 import type { Context } from 'hono';
 import { HTTP_METADATA_KEYS } from '../constants';
 import type { ParamDefinition } from '../types';
+import { ValidationPipe } from './validation-pipe.service';
 
 export class ParamResolver {
+  private readonly validation = new ValidationPipe();
+
   async resolve(instance: object, handlerName: string, ctx: Context): Promise<Array<unknown>> {
     const proto = Object.getPrototypeOf(instance) as object;
     const definitions: Array<ParamDefinition> =
@@ -29,7 +32,7 @@ export class ParamResolver {
           if (parsedBody === undefined) {
             parsedBody = await ctx.req.json().catch(() => ({}));
           }
-          args[def.index] = parsedBody;
+          args[def.index] = def.dto ? await this.validation.transform(def.dto, parsedBody) : parsedBody;
           break;
         case 'header':
           args[def.index] = def.key ? ctx.req.header(def.key) : ctx.req.header();

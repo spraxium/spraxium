@@ -6,4 +6,5 @@ export interface ParamDefinition {
   readonly index: number;
   readonly source: ParamSource;
   readonly key?: string;
+  readonly dto?: new (...args: Array<unknown>) => object;
 }

@@ -1,5 +1,5 @@
 import type { Client } from 'discord.js';
-import type { BotBridge } from '../interfaces';
+import { BotBridge } from '../interfaces';
 import type { BanOptions, SerializedBan, SerializedGuild, SerializedMember } from '../types';
 import { directBanMember, directGetBan, directGetBans, directUnbanMember } from './direct/ban.direct';
 import { directGetGuild } from './direct/guild.direct';
@@ -7,8 +7,10 @@ import { directGetMember, directGetMembers } from './direct/member.direct';
 import { directKickMember, directRemoveTimeoutMember, directTimeoutMember } from './direct/moderation.direct';
 import { directAddRole, directRemoveRole } from './direct/role.direct';
 
-export class DirectBotBridge implements BotBridge {
-  constructor(private readonly client: Client) {}
+export class DirectBotBridge extends BotBridge {
+  constructor(private readonly client: Client) {
+    super();
+  }
 
   getGuild(guildId: string): Promise<SerializedGuild | null> {
     return directGetGuild(this.client, guildId);

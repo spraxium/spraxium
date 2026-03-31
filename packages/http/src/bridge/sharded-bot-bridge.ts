@@ -1,5 +1,5 @@
 import type { ShardingManager } from 'discord.js';
-import type { BotBridge } from '../interfaces';
+import { BotBridge } from '../interfaces';
 import type { BanOptions, SerializedBan, SerializedGuild, SerializedMember } from '../types';
 import { shardedBanMember, shardedGetBan, shardedGetBans, shardedUnbanMember } from './sharded/ban.sharded';
 import { shardedGetGuild } from './sharded/guild.sharded';
@@ -11,8 +11,10 @@ import {
 } from './sharded/moderation.sharded';
 import { shardedAddRole, shardedRemoveRole } from './sharded/role.sharded';
 
-export class ShardedBotBridge implements BotBridge {
-  constructor(private readonly manager: ShardingManager) {}
+export class ShardedBotBridge extends BotBridge {
+  constructor(private readonly manager: ShardingManager) {
+    super();
+  }
 
   getGuild(guildId: string): Promise<SerializedGuild | null> {
     return shardedGetGuild(this.manager, guildId);

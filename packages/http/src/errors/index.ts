@@ -10,3 +10,5 @@ export { ServiceUnavailableError } from './service-unavailable.error';
 export { TooManyRequestsError } from './too-many-requests.error';
 export { UnauthorizedError } from './unauthorized.error';
 export { UnprocessableEntityError } from './unprocessable-entity.error';
+export { ValidationError } from './validation.error';
+export type { ValidationDetail } from './validation.error';

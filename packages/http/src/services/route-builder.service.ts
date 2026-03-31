@@ -41,10 +41,9 @@ export class RouteBuilder {
 
         const boundInstance = ctrl.instance;
         const boundHandlerName = route.handlerName;
-        const resolver = RouteBuilder.paramResolver;
 
         const routeHandler: Handler = async (ctx: Context) => {
-          const args = await resolver.resolve(boundInstance, boundHandlerName, ctx);
+          const args = await this.paramResolver.resolve(boundInstance, boundHandlerName, ctx);
           const result = await (handlerMethod as (...a: Array<unknown>) => unknown).apply(
             boundInstance,
             args,

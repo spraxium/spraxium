@@ -20,6 +20,8 @@
   },
   "dependencies": {
     "@hono/node-server": "^1.13.0",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.15.1",
     "hono": "^4.7.0",
     "reflect-metadata": "^0.2.2",
     "zod": "^3.22.0"
@@ -36,7 +38,9 @@
     "tsdown": "^0.12.0",
     "typescript": "^5.7.0"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "license": "MIT",
   "type": "module"
 }
