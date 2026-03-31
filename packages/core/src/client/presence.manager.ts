@@ -11,17 +11,17 @@ import type {
 } from './interfaces';
 
 /**
- * Static presence management API — accessible from anywhere in the application.
+ * Static presence management API , accessible from anywhere in the application.
  *
  * Activity names support `{{key}}` placeholder interpolation. The following
  * built-in variables are automatically resolved from the Discord client on every
- * presence update — no need to pass them manually:
+ * presence update , no need to pass them manually:
  *
- *   {{shardId}}       — Current shard ID (0-based)
- *   {{shardNumber}}   — Current shard number (1-based)
- *   {{totalShards}}   — Total number of shards
- *   {{totalServers}}  — Number of guilds on this shard
- *   {{ping}}          — WebSocket heartbeat latency (ms)
+ *   {{shardId}}       , Current shard ID (0-based)
+ *   {{shardNumber}}   , Current shard number (1-based)
+ *   {{totalShards}}   , Total number of shards
+ *   {{totalServers}}  , Number of guilds on this shard
+ *   {{ping}}          , WebSocket heartbeat latency (ms)
  *
  * Additional custom variables can be supplied via setShardActivity().
  *
@@ -41,7 +41,7 @@ export class PresenceManager {
   private static shardOverrides = new Map<number, ShardOverride>();
 
   /**
-   * @internal — Called once by SpraxiumApplication inside client.once('ready').
+   * @internal , Called once by SpraxiumApplication inside client.once('ready').
    * Application code must never call this directly.
    */
   public static initialize(client: Client<true>, presence?: PresenceOptions): void {
@@ -77,7 +77,7 @@ export class PresenceManager {
         ],
         [
           'Move this call inside a @Listener() handler for the clientReady event,',
-          'or inside an onBoot() lifecycle hook — both run after login completes.',
+          'or inside an onBoot() lifecycle hook , both run after login completes.',
           "Example: client.once('clientReady', () => PresenceManager.setActivity(...))",
         ],
       );
@@ -209,7 +209,7 @@ export class PresenceManager {
 
   /**
    * Restores the exact presence configured at boot time.
-   * Per-shard runtime overrides are NOT cleared — call clearShardPresence(id) first
+   * Per-shard runtime overrides are NOT cleared , call clearShardPresence(id) first
    * if you want a full reset.
    */
   public static reset(): void {

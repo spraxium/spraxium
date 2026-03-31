@@ -5,11 +5,11 @@ import { SpraxiumException } from '../spraxium.exception';
  *
  * The exception handler will render a usage/error layout with the following
  * {{placeholder}} variables available:
- * - `{{command}}` — the command name
- * - `{{expected}}` — the expected argument type
- * - `{{received}}` — the raw input received
- * - `{{usage}}` — the full usage string
- * - `{{argument}}` — the argument name
+ * - `{{command}}` , the command name
+ * - `{{expected}}` , the expected argument type
+ * - `{{received}}` , the raw input received
+ * - `{{usage}}` , the full usage string
+ * - `{{argument}}` , the argument name
  */
 export class ArgumentException extends SpraxiumException {
   constructor(props?: Record<string, unknown>) {

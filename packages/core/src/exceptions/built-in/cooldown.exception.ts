@@ -4,7 +4,7 @@ import { SpraxiumException } from '../spraxium.exception';
  * Thrown when a user triggers a command cooldown.
  *
  * Available props in layout templates:
- * - `{{seconds}}` — remaining wait time in seconds
+ * - `{{seconds}}` , remaining wait time in seconds
  *
  * @example
  * throw new CooldownException({ seconds: 10 });

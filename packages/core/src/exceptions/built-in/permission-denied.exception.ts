@@ -4,7 +4,7 @@ import { SpraxiumException } from '../spraxium.exception';
  * Thrown when the user lacks Discord permissions required for this command.
  *
  * Available props in layout templates:
- * - `{{permission}}` — the required Discord permission name (optional)
+ * - `{{permission}}` , the required Discord permission name (optional)
  *
  * @example
  * throw new PermissionDeniedException({ permission: 'BanMembers' });

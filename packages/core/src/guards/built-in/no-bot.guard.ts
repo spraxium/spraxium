@@ -5,11 +5,11 @@ import type { ExecutionContext, SpraxiumGuard } from '@spraxium/common';
  * Blocks invocations from bot accounts.
  * Works with all interaction types and Message-based handlers.
  *
- * @example — per handler:
+ * @example , per handler:
  *   @UseGuards(NoBotGuard)
  *   export class EchoPrefixHandler { ... }
  *
- * @example — global:
+ * @example , global:
  *   app.useGlobalGuards(NoBotGuard);
  */
 @Guard()

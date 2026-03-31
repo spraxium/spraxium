@@ -8,11 +8,6 @@ import type {
   User,
 } from 'discord.js';
 
-/**
- * Concrete implementation of ExecutionContext built from any Discord.js
- * BaseInteraction (slash command, button, select menu, modal, context menu…)
- * or a raw Message (prefix/listener commands).
- */
 export class SpraxiumExecutionContext implements ExecutionContext {
   constructor(
     private readonly raw: BaseInteraction | Message,
@@ -48,11 +43,9 @@ export class SpraxiumExecutionContext implements ExecutionContext {
   }
 
   public getMemberPermissions(): Readonly<PermissionsBitField> | null {
-    // BaseInteraction subclasses expose .memberPermissions directly
     if ('memberPermissions' in this.raw) {
       return (this.raw as BaseInteraction).memberPermissions ?? null;
     }
-    // Message exposes permissions via .member.permissions
     return (this.raw as Message).member?.permissions ?? null;
   }
 
@@ -69,7 +62,6 @@ export class SpraxiumExecutionContext implements ExecutionContext {
   }
 
   public isPrefixCommand(): boolean {
-    // Messages do not carry Discord's interaction methods
     return !('isChatInputCommand' in this.raw);
   }
 }

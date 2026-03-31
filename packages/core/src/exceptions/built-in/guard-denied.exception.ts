@@ -4,11 +4,11 @@ import { SpraxiumException } from '../spraxium.exception';
  * Thrown when a guard denies access to a command.
  *
  * Prefer throwing this over returning `false` when you want the exception
- * system to handle the reply — it keeps guards lean and reply logic out of guard code.
+ * system to handle the reply , it keeps guards lean and reply logic out of guard code.
  *
  * Available props in layout templates:
- * - `{{guardName}}` — the class name of the guard that denied (optional)
- * - `{{reason}}` — machine-readable reason string (optional)
+ * - `{{guardName}}` , the class name of the guard that denied (optional)
+ * - `{{reason}}` , machine-readable reason string (optional)
  *
  * @example
  * async canActivate(ctx: ExecutionContext): Promise<boolean> {

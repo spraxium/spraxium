@@ -5,6 +5,7 @@ import { logger } from '../logger';
 import { spraxiumFatal } from '../utils';
 import { DEFAULT_SPAWN_DELAY } from './constants';
 import type { ShardEvalContext, ShardOptions, ShardStatus } from './interfaces';
+import { ParentHookRegistry } from './parent-hook.registry';
 
 export class SpraxiumShardManager {
   private manager: ShardingManager | undefined;
@@ -27,7 +28,6 @@ export class SpraxiumShardManager {
 
     this.manager = manager;
 
-    // Statuses are collected silently and only printed after all shards are ready.
     const statuses = new Map<number, ShardStatus>();
     const readyPromises: Array<Promise<void>> = [];
 
@@ -46,16 +46,14 @@ export class SpraxiumShardManager {
         }),
       );
 
-      // Runtime lifecycle, logged immediately as they occur post-boot
       shard.on('disconnect', () => logger.warn(`Shard ${shard.id} disconnected`));
       shard.on('reconnecting', () => logger.warn(`Shard ${shard.id} reconnecting`));
       shard.on('death', () => {
-        if (respawn) logger.error(`Shard ${shard.id} died — respawning`);
-        else logger.error(`Shard ${shard.id} died — respawn disabled`);
+        if (respawn) logger.error(`Shard ${shard.id} died , respawning`);
+        else logger.error(`Shard ${shard.id} died , respawn disabled`);
       });
     });
 
-    // Single "spawning" announcement, no per-shard lines until all are ready
     const shardLabel = totalShards === 'auto' ? 'auto' : String(totalShards);
     const plural = totalShards === 1 ? 'shard' : 'shards';
     console.log(
@@ -69,8 +67,8 @@ export class SpraxiumShardManager {
     }
 
     await Promise.all(readyPromises);
+    await ParentHookRegistry.run(manager);
 
-    // Print all shard statuses at once, grouped, no interleaving
     console.log();
     for (const [shardId, { guildCount, ready }] of [...statuses.entries()].sort(([a], [b]) => a - b)) {
       const detail =
@@ -186,7 +184,7 @@ export class SpraxiumShardManager {
 
   private registerShutdownHandlers(): void {
     const shutdown = async (signal: string): Promise<void> => {
-      logger.info(`Received ${signal} — killing all shards`);
+      logger.info(`Received ${signal} , killing all shards`);
       if (this.manager) {
         for (const [, shard] of this.manager.shards) {
           shard.kill();

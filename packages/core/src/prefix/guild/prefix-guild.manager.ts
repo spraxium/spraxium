@@ -8,7 +8,7 @@ import { PREFIX_MESSAGES } from '../constants';
  * During bootstrap, the framework loads initial data via a
  * `PrefixGuildProvider` if one is configured. After boot, use the
  * mutation API (`set`, `update`, `remove`) to change prefixes
- * dynamically — no restart required.
+ * dynamically , no restart required.
  *
  * The `PrefixParser` reads from this manager on every message to
  * determine the active prefix for a guild.

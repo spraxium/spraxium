@@ -7,7 +7,7 @@ import { SpraxiumException } from '../spraxium.exception';
  * details. The original error cause is always logged via the framework logger.
  *
  * Available props in layout templates:
- * - `{{cause}}` — the raw error message (NOT shown to users by default layout)
+ * - `{{cause}}` , the raw error message (NOT shown to users by default layout)
  *
  * @example
  * try {

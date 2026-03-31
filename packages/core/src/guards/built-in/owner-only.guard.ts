@@ -4,10 +4,10 @@ import type { ExecutionContext, SpraxiumGuard } from '@spraxium/common';
 /**
  * Restricts a command to a predefined list of bot owner user IDs.
  *
- * @example — per command:
+ * @example , per command:
  *   @UseGuards(withOptions(OwnerOnly, { ownerIds: ['123456789012345678'] }))
  *
- * @example — global:
+ * @example , global:
  *   app.useGlobalGuards(OwnerOnly, { ownerIds: process.env.OWNER_IDS?.split(',') ?? [] });
  */
 @Guard()

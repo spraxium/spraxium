@@ -4,8 +4,8 @@ import { SpraxiumException } from '../spraxium.exception';
  * Thrown when user-supplied input fails validation.
  *
  * Available props in layout templates:
- * - `{{field}}` — the name of the invalid field
- * - `{{reason}}` — human-readable reason for the failure (optional)
+ * - `{{field}}` , the name of the invalid field
+ * - `{{reason}}` , human-readable reason for the failure (optional)
  *
  * @example
  * throw new ValidationException({ field: 'username', reason: 'must be at least 3 characters' });

@@ -17,7 +17,7 @@ import { SpraxiumException } from './spraxium.exception';
  *   4. Build the Discord reply payload
  *   5. Send the reply via DiscordReplyStrategy
  *
- * Steps 3–5 are individually guarded — a layout/reply failure will never
+ * Steps 3–5 are individually guarded , a layout/reply failure will never
  * propagate out or produce a secondary unhandled rejection.
  */
 export class ExceptionHandler {

@@ -6,10 +6,5 @@ export interface SpraxiumOptions {
   partials?: Array<Partials>;
   clientOptions?: Omit<ClientOptions, 'intents' | 'partials'>;
   intents?: Array<GatewayIntentBits>;
-  /**
-   * Enable sharding. When set, SpraxiumApplication.listen() will spawn a
-   * Discord.js ShardingManager in the parent process instead of connecting
-   * directly. Each child process re-runs the entry script and boots normally.
-   */
   sharding?: ShardOptions;
 }

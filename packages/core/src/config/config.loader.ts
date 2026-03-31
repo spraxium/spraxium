@@ -32,16 +32,25 @@ export class ConfigLoader {
   }
 
   private static findConfigFile(root: string): string | null {
+    const isProd = process.env.NODE_ENV === 'production';
+
+    if (isProd) {
+      const prodCandidates = [
+        join(root, '.spraxium', 'dist', 'spraxium.config.js'),
+        join(root, 'dist', 'spraxium.config.js'),
+        join(root, 'spraxium.config.js'),
+        join(root, 'spraxium.config.mjs'),
+      ];
+      for (const p of prodCandidates) {
+        if (existsSync(p)) return p;
+      }
+    }
+
     for (const name of CONFIG_FILE_NAMES) {
       const filePath = join(root, name);
       if (existsSync(filePath)) {
         return filePath;
       }
-    }
-
-    const distPath = join(root, 'dist', 'spraxium.config.js');
-    if (existsSync(distPath)) {
-      return distPath;
     }
 
     return null;

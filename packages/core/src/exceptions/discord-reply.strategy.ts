@@ -16,7 +16,7 @@ export class DiscordReplyStrategy {
         await DiscordReplyStrategy.replyToMessage(raw as Message, payload);
       }
     } catch {
-      // Intentionally swallowed — exception reply failures must never cascade.
+      // Intentionally swallowed , exception reply failures must never cascade.
     }
   }
 

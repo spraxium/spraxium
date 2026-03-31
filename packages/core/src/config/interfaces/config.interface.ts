@@ -28,7 +28,7 @@ export interface SpraxiumCoreConfig {
   dev?: SpraxiumDevConfig;
   logger?: SpraxiumLoggerConfig;
   /**
-   * Exception handler configuration — layout mapping and logging behavior.
+   * Exception handler configuration , layout mapping and logging behavior.
    *
    * Declare here (in `spraxium.config.ts`) rather than in the bootstrap options.
    *

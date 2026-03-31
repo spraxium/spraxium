@@ -5,8 +5,8 @@ import { SpraxiumException } from '../spraxium.exception';
  * Can be caught by a fallback layout to show a "command not found" message.
  *
  * Available {{placeholder}} variables:
- * - `{{command}}` — the attempted command name
- * - `{{prefix}}` — the prefix that was used
+ * - `{{command}}` , the attempted command name
+ * - `{{prefix}}` , the prefix that was used
  */
 export class CommandNotFoundException extends SpraxiumException {
   constructor(props?: Record<string, unknown>) {

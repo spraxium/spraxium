@@ -13,7 +13,7 @@ type InteractionFlag =
 /**
  * The Discord-compatible reply payload produced by an exception layout.
  *
- * All fields are optional — a layout may return just `content`, just `embeds`,
+ * All fields are optional , a layout may return just `content`, just `embeds`,
  * or any combination. When `ephemeral` is omitted it defaults to `true`.
  */
 export interface ExceptionLayoutPayload {
@@ -59,11 +59,11 @@ export interface ExceptionLayout {
  * Maps exception class names (or 'default') to layout constructor classes.
  *
  * Resolution order:
- *   1. `exception.layout` — per-instance override in the throw/constructor
- *   2. `layouts[ExceptionClassName]` — layout mapped to this exception type
- *   3. `@WithLayout(LayoutClass)` — decorator on the exception class itself
- *   4. `layouts.default` — global user-configured fallback
- *   5. `DefaultExceptionLayout` — framework built-in fallback (always present)
+ *   1. `exception.layout` , per-instance override in the throw/constructor
+ *   2. `layouts[ExceptionClassName]` , layout mapped to this exception type
+ *   3. `@WithLayout(LayoutClass)` , decorator on the exception class itself
+ *   4. `layouts.default` , global user-configured fallback
+ *   5. `DefaultExceptionLayout` , framework built-in fallback (always present)
  *
  * @example
  * exceptions: {
@@ -106,7 +106,7 @@ export interface SpraxiumExceptionOptions {
 
   /**
    * Human-readable description. Supports {{placeholder}} interpolation.
-   * NOT automatically shown to users — the layout decides what to display.
+   * NOT automatically shown to users , the layout decides what to display.
    * @example 'Wait {{seconds}}s before using this command again.'
    */
   message?: string;

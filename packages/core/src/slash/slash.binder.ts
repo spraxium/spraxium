@@ -23,7 +23,7 @@ export class SlashBinder {
       void this.handleInteraction(interaction);
     });
 
-    logger.debug(`Slash binder bound — ${this.registry.size} handler(s)`);
+    logger.debug(`Slash binder bound , ${this.registry.size} handler(s)`);
   }
 
   private async handleInteraction(interaction: Interaction): Promise<void> {

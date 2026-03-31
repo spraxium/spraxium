@@ -14,7 +14,7 @@ import type { ExceptionLayoutClass } from './types';
  *   }
  * }
  *
- * // At the throw site — no embed/content logic here:
+ * // At the throw site , no embed/content logic here:
  * throw new CooldownException({ seconds: 10 });
  */
 export class SpraxiumException extends Error {
@@ -32,8 +32,7 @@ export class SpraxiumException extends Error {
     this.shouldReply = options.shouldReply ?? true;
     this.shouldLog = options.shouldLog ?? false;
     this.layout = options.layout;
-
-    // Fix prototype chain for instanceof checks under transpilers (SWC, tsc, esbuild)
+    
     Object.setPrototypeOf(this, new.target.prototype);
   }
 }

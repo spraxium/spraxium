@@ -27,7 +27,7 @@ export class SlashRegistrar {
     if (payloads.length === 0) return;
 
     if (!force && process.env.NODE_ENV === 'development' && this.isUnchanged(payloads)) {
-      logger.raw(`${chalk.yellow('⊘')}  Slash commands unchanged — skipped REST registration (dev)`);
+      logger.raw(`${chalk.yellow('⊘')}  Slash commands unchanged , skipped REST registration (dev)`);
       return;
     }
 

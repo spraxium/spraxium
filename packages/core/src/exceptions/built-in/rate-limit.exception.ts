@@ -4,8 +4,8 @@ import { SpraxiumException } from '../spraxium.exception';
  * Thrown when the bot is being rate limited and cannot fulfill a request.
  *
  * Available props in layout templates:
- * - `{{retryAfter}}` — milliseconds until the rate limit resets (optional)
- * - `{{route}}` — the API route that was rate limited (optional)
+ * - `{{retryAfter}}` , milliseconds until the rate limit resets (optional)
+ * - `{{route}}` , the API route that was rate limited (optional)
  *
  * @example
  * throw new RateLimitException({ retryAfter: 5000 });

@@ -29,7 +29,6 @@ export class ModuleLoader {
   private readonly moduleRows: Array<ModuleRow> = [];
 
   load(rootModule: Constructor, client: Client): void {
-    // Make the dispatchers available for injection in any provider/handler.
     this.rootContainer.set(ListenerDispatcher, this.listenerDispatcher);
     this.rootContainer.set(PrefixDispatcher, this.prefixDispatcher);
     this.rootContainer.set(SlashDispatcher, this.slashDispatcher);
@@ -51,7 +50,8 @@ export class ModuleLoader {
       this.loadModule(imported, container);
     }
 
-    for (const provider of metadata.providers ?? []) {
+    const sortedProviders = this.sortProviders(metadata.providers ?? [], container);
+    for (const provider of sortedProviders) {
       const instance = this.instantiate(provider, container);
       container.set(provider, instance);
       this.registerLifecycle(instance);
@@ -146,6 +146,59 @@ export class ModuleLoader {
         ],
       );
     }
+  }
+
+  private sortProviders(providers: Array<Constructor>, container: SpraxiumContainer): Array<Constructor> {
+    if (providers.length <= 1) return providers;
+
+    const indexMap = new Map<Constructor, number>(providers.map((c, i) => [c, i]));
+    const dependents: Array<Array<number>> = providers.map(() => []);
+    const inDegree = new Array<number>(providers.length).fill(0);
+
+    for (let i = 0; i < providers.length; i++) {
+      const ctor = providers[i];
+      const injectMap: Map<number, unknown> = Reflect.getOwnMetadata(METADATA_KEYS.INJECT, ctor) ?? new Map();
+      const paramTypes: Array<Constructor> = Reflect.getMetadata('design:paramtypes', ctor) ?? [];
+
+      for (let j = 0; j < paramTypes.length; j++) {
+        const token = (injectMap.get(j) ?? paramTypes[j]) as Constructor;
+        const depIdx = indexMap.get(token);
+
+        if (depIdx !== undefined && container.get(token) === undefined) {
+          dependents[depIdx].push(i);
+          inDegree[i]++;
+        }
+      }
+    }
+
+    const queue: Array<number> = [];
+    for (let i = 0; i < providers.length; i++) {
+      if (inDegree[i] === 0) queue.push(i);
+    }
+
+    const sorted: Array<Constructor> = [];
+    while (queue.length > 0) {
+      const idx = queue.shift() as number;
+      sorted.push(providers[idx]);
+      for (const dependentIdx of dependents[idx]) {
+        if (--inDegree[dependentIdx] === 0) queue.push(dependentIdx);
+      }
+    }
+
+    if (sorted.length !== providers.length) {
+      const unresolved = providers
+        .filter((_, i) => inDegree[i] > 0)
+        .map((c) => c.name)
+        .join(', ');
+      spraxiumError(
+        'ModuleLoader',
+        'circular dependency detected in providers',
+        [`A circular dependency was found among: ${unresolved}`],
+        ['Review the constructor dependencies of your providers for circular references.'],
+      );
+    }
+
+    return sorted;
   }
 
   private registerLifecycle(instance: unknown): void {

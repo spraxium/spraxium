@@ -69,7 +69,6 @@ export class DiscordTransport implements ClientAwareTransport {
 
     this.recentlySent.set(signature, now);
 
-    // Keep the map compact.
     for (const [key, ts] of this.recentlySent) {
       if (now - ts > 5000) {
         this.recentlySent.delete(key);
@@ -152,7 +151,7 @@ export class DiscordTransport implements ClientAwareTransport {
 
   private defaultEmbed(entry: LogEntry, vars: Record<string, string>): APIEmbed {
     return {
-      title: `${vars.level}${entry.context ? ` — ${entry.context}` : ''}`,
+      title: `${vars.level}${entry.context ? ` , ${entry.context}` : ''}`,
       description: entry.message,
       color: DISCORD_LEVEL_COLORS[entry.level.toUpperCase()] ?? 0x95a5a6,
       timestamp: entry.timestamp.toISOString(),

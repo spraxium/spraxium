@@ -57,7 +57,7 @@ export class SpraxiumApplication {
   }
 
   /**
-   * Registers a guard to be applied globally — before every command handler,
+   * Registers a guard to be applied globally , before every command handler,
    * regardless of class- or method-level @UseGuards().
    *
    * Chainable: call multiple times to stack global guards in registration order.
@@ -137,8 +137,8 @@ export class SpraxiumApplication {
           'No token was found in options or in the DISCORD_TOKEN environment variable.',
         ],
         [
-          'Option A — pass it directly: SpraxiumFactory.create({ token: "your-token" })',
-          'Option B — set DISCORD_TOKEN in your .env file and ensure it is loaded.',
+          'Option A , pass it directly: SpraxiumFactory.create({ token: "your-token" })',
+          'Option B , set DISCORD_TOKEN in your .env file and ensure it is loaded.',
           'Get or regenerate your token at: discord.com/developers/applications',
         ],
       );
@@ -152,7 +152,7 @@ export class SpraxiumApplication {
 
     if (process.env.NODE_ENV === 'development') {
       logger.warn(
-        'Sharding in dev mode is not recommended — multiple shard processes slow down restarts ' +
+        'Sharding in dev mode is not recommended , multiple shard processes slow down restarts ' +
           'and may hit Discord rate limits. Consider using a single instance during development.',
       );
     }
@@ -189,13 +189,11 @@ export class SpraxiumApplication {
     if (raw.logger?.commandLogging) CommandLogger.bind(client);
     this.state.moduleLoader?.bindListeners(client);
 
-    // Prefix commands
     const prefixConfig = this.resolvePrefixConfig(raw.prefix);
     const dispatcher = this.state.moduleLoader?.getPrefixDispatcher();
     if (dispatcher && dispatcher.size > 0 && prefixConfig) {
       this.validateMessageContentIntent(client);
 
-      // Load per-guild prefixes from provider if configured
       if (prefixConfig.guildPrefixProvider) {
         await dispatcher.guildPrefixes.loadFromProvider(prefixConfig.guildPrefixProvider);
       }
@@ -203,28 +201,17 @@ export class SpraxiumApplication {
       dispatcher.bind(client, prefixConfig);
     }
 
-    // Slash commands
     const slashDispatcher = this.state.moduleLoader?.getSlashDispatcher();
     if (slashDispatcher && slashDispatcher.size > 0) {
       slashDispatcher.bind(client);
     }
   }
 
-  /**
-   * Resolves the prefix config from the core config or factory options.
-   * Returns undefined if no prefix configuration is found.
-   */
   private resolvePrefixConfig(configPrefix?: PrefixConfig): PrefixConfig | undefined {
     if (configPrefix) return configPrefix;
-    // No prefix config — prefix commands won't be bound
     return undefined;
   }
 
-  /**
-   * Validates that the MessageContent privileged intent is enabled when
-   * prefix commands are registered. Without it, message.content is empty
-   * and no prefix command can be parsed.
-   */
   private validateMessageContentIntent(client: Client): void {
     const intents = client.options.intents;
     const hasMessageContent = intents.has(GatewayIntentBits.MessageContent);
@@ -266,7 +253,6 @@ export class SpraxiumApplication {
         PresenceManager.initialize(readyClient, this.state.presence);
         await this.state.moduleLoader?.runReadyHooks(readyClient);
 
-        // Register slash commands with Discord API
         const slashDispatcher = this.state.moduleLoader?.getSlashDispatcher();
         if (slashDispatcher && slashDispatcher.commandCount > 0) {
           const token = this.state.token ?? process.env.DISCORD_TOKEN;
