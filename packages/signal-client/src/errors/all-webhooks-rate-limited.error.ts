@@ -1,5 +1,5 @@
-import type { WebhookStatus } from './interfaces/webhook-status.interface';
-import { SignalClientError } from './signal-client-error';
+import type { WebhookStatus } from '../interfaces/webhook-status.interface';
+import { SignalClientError } from './signal-client.error';
 
 /**
  * Thrown when all webhooks in the pool are currently rate-limited and the

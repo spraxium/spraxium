@@ -1,6 +1,6 @@
 export { SignalClient } from './signal-client';
-export { SignalClientError } from './signal-client-error';
-export { AllWebhooksRateLimitedError } from './all-webhooks-rate-limited.error';
+export { SignalClientError } from './errors/signal-client.error';
+export { AllWebhooksRateLimitedError } from './errors/all-webhooks-rate-limited.error';
 export { WebhookPool } from './webhook-pool';
 
 export type { SignalClientConfig } from './interfaces/signal-client-config.interface';

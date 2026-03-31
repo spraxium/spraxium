@@ -1,8 +1,8 @@
-﻿import { AllWebhooksRateLimitedError } from './all-webhooks-rate-limited.error';
+﻿import { AllWebhooksRateLimitedError } from './errors/all-webhooks-rate-limited.error';
 import type { SendOptions } from './interfaces/send-options.interface';
 import type { SignalClientConfig } from './interfaces/signal-client-config.interface';
 import type { SignalEnvelope } from './interfaces/signal-envelope.interface';
-import { SignalClientError } from './signal-client-error';
+import { SignalClientError } from './errors/signal-client.error';
 import { SignalEnvelopeBuilder } from './signal-envelope-builder';
 import type { RateLimitStrategy } from './types/rate-limit-strategy.type';
 import { WebhookPool } from './webhook-pool';
