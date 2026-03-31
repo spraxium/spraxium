@@ -32,7 +32,7 @@ export class SpraxiumException extends Error {
     this.shouldReply = options.shouldReply ?? true;
     this.shouldLog = options.shouldLog ?? false;
     this.layout = options.layout;
-    
+
     Object.setPrototypeOf(this, new.target.prototype);
   }
 }

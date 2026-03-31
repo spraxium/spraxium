@@ -1,7 +1,11 @@
-export class SpraxiumContainer {
+import { ReadonlyContainer } from '@spraxium/common';
+
+export class SpraxiumContainer extends ReadonlyContainer {
   private readonly instances = new Map<unknown, unknown>();
 
-  constructor(private readonly parent?: SpraxiumContainer) {}
+  constructor(private readonly parent?: SpraxiumContainer) {
+    super();
+  }
 
   set(token: unknown, instance: unknown): void {
     this.instances.set(token, instance);

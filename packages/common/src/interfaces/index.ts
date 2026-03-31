@@ -1,5 +1,6 @@
 export type { ModuleMetadata } from './module-metadata.interface';
 export type { SpraxiumOnBoot, SpraxiumOnReady, SpraxiumOnShutdown } from './lifecycle.interface';
+export { ReadonlyContainer } from './readonly-container.interface';
 export type { ExecutionContext } from './execution-context.interface';
 export type { SpraxiumGuard } from './spraxium-guard.interface';
 export type { GuardEntry } from './guard-entry.interface';

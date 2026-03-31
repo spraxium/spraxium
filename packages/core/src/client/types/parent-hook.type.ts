@@ -1,3 +1,3 @@
-import { ShardingManager } from 'discord.js';
+import type { ShardingManager } from 'discord.js';
 
 export type ParentHook = (manager: ShardingManager) => Promise<void> | void;

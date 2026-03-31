@@ -6,6 +6,7 @@ import type {
   SpraxiumOnShutdown,
 } from '@spraxium/common';
 import { METADATA_KEYS } from '@spraxium/common';
+import { ReadonlyContainer } from '@spraxium/common';
 import { Client } from 'discord.js';
 import { ListenerDispatcher } from '../listeners';
 import { logger } from '../logger';
@@ -33,6 +34,7 @@ export class ModuleLoader {
     this.rootContainer.set(PrefixDispatcher, this.prefixDispatcher);
     this.rootContainer.set(SlashDispatcher, this.slashDispatcher);
     this.rootContainer.set(Client, client);
+    this.rootContainer.set(ReadonlyContainer, this.rootContainer);
     this.loadModule(rootModule, this.rootContainer);
     logger.debug('Module tree loaded');
   }
