@@ -14,9 +14,12 @@ export interface SlashOptionChoice<V extends string | number = string | number> 
   value: V;
 }
 
+import type { SlashI18nKeys } from './slash-i18n-keys.interface';
+
 export interface SlashBaseOptionConfig {
   description: string;
   required?: boolean;
+  i18n?: SlashI18nKeys;
 }
 
 export interface SlashStringOptionConfig extends SlashBaseOptionConfig {
@@ -66,4 +69,5 @@ export interface SlashOptionMetadata {
   max?: number;
   choices?: Array<SlashOptionChoice>;
   channelTypes?: Array<GuildChannelType>;
+  i18n?: SlashI18nKeys;
 }

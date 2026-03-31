@@ -8,7 +8,7 @@ import type {
 } from 'discord.js';
 
 /**
- * Represents whatever triggered the handler — could be an interaction or a message.
+ * Represents whatever triggered the handler , could be an interaction or a message.
  * Passed into every guard's canActivate().
  */
 export interface ExecutionContext {

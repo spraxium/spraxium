@@ -5,11 +5,11 @@ import type { PrefixCommandConfig } from '../interfaces/prefix-command-config.in
 /**
  * Marks a class as a prefix command **definition** (structure only).
  *
- * The class itself holds no execution logic — it is a metadata container
+ * The class itself holds no execution logic , it is a metadata container
  * that declares the command name, aliases, and argument schema.
  *
- * **Simple commands** — stack `@PrefixArg.*()` decorators on a `build()` method.
- * **Subcommand commands** — use `@PrefixSubcommand()` + `@PrefixArg.*()` on methods.
+ * **Simple commands** , stack `@PrefixArg.*()` decorators on a `build()` method.
+ * **Subcommand commands** , use `@PrefixSubcommand()` + `@PrefixArg.*()` on methods.
  *
  * Execution logic belongs in a separate `@PrefixCommandHandler()` class.
  *

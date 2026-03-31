@@ -5,7 +5,7 @@ import type { SlashCommandConfig } from '../interfaces/slash-command-config.inte
 /**
  * Marks a class as a Discord slash command.
  *
- * The decorated class defines the command's schema — its name, description,
+ * The decorated class defines the command's schema , its name, description,
  * options, and subcommands. It does **not** contain handler logic; use
  * `@SlashCommandHandler` on a separate class for that.
  *

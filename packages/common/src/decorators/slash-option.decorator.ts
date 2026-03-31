@@ -30,6 +30,7 @@ function createOptionDecorator<T extends SlashBaseOptionConfig>(
         max: (config as SlashIntegerOptionConfig).max ?? (config as SlashNumberOptionConfig).max,
         choices: (config as SlashStringOptionConfig).choices,
         channelTypes: (config as SlashChannelOptionConfig).channelTypes,
+        i18n: config.i18n,
       };
 
       Reflect.defineMetadata(METADATA_KEYS.SLASH_OPTION, [meta, ...existing], target, propertyKey);
@@ -61,14 +62,14 @@ export const SlashOption = {
   Number: createOptionDecorator<SlashNumberOptionConfig>('NUMBER'),
   /** Adds a `BOOLEAN` option. */
   Boolean: createOptionDecorator<SlashBaseOptionConfig>('BOOLEAN'),
-  /** Adds a `USER` option — resolves to a Discord `User` object. */
+  /** Adds a `USER` option , resolves to a Discord `User` object. */
   User: createOptionDecorator<SlashBaseOptionConfig>('USER'),
   /** Adds a `CHANNEL` option. Use `channelTypes` to restrict which channel types are accepted. */
   Channel: createOptionDecorator<SlashChannelOptionConfig>('CHANNEL'),
-  /** Adds a `ROLE` option — resolves to a Discord `Role` object. */
+  /** Adds a `ROLE` option , resolves to a Discord `Role` object. */
   Role: createOptionDecorator<SlashBaseOptionConfig>('ROLE'),
-  /** Adds a `MENTIONABLE` option — resolves to either a `User` or `Role`. */
+  /** Adds a `MENTIONABLE` option , resolves to either a `User` or `Role`. */
   Mentionable: createOptionDecorator<SlashBaseOptionConfig>('MENTIONABLE'),
-  /** Adds an `ATTACHMENT` option — resolves to a Discord `Attachment` object. */
+  /** Adds an `ATTACHMENT` option , resolves to a Discord `Attachment` object. */
   Attachment: createOptionDecorator<SlashBaseOptionConfig>('ATTACHMENT'),
 } as const;

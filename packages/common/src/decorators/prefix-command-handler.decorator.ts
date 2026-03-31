@@ -14,13 +14,13 @@ import type { PrefixCommandHandlerMetadata } from '../interfaces/prefix-command-
  *
  * @example
  * ```ts
- * // Root handler — handles `!ban <user> [reason]`
+ * // Root handler , handles `!ban <user> [reason]`
  * @PrefixCommandHandler(BanCommand)
  * export class BanHandler {
  *   handle(@Ctx() msg: Message, @PrefixArg('target') user: User) { }
  * }
  *
- * // Subcommand handler — handles `!mod warn <user>`
+ * // Subcommand handler , handles `!mod warn <user>`
  * @PrefixCommandHandler(ModCommand, { subcommand: 'warn' })
  * export class ModWarnHandler {
  *   handle(@Ctx() msg: Message, @PrefixArg('target') user: User) { }

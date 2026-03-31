@@ -1,5 +1,5 @@
 /**
- * Configuration for `@PrefixSubcommand()` — declares a subcommand within
+ * Configuration for `@PrefixSubcommand()` , declares a subcommand within
  * a `@PrefixCommand()` class.
  *
  * Each decorated method returns a `PrefixArgDefinition[]` defining the

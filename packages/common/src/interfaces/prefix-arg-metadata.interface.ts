@@ -24,7 +24,7 @@ export interface PrefixArgValidation {
 
 /**
  * User-facing argument definition returned by a command's `build()` method
- * or a `@PrefixSubcommand()` method. Omits `position` — the framework
+ * or a `@PrefixSubcommand()` method. Omits `position` , the framework
  * assigns position from the array index.
  */
 export type PrefixArgDefinition = Omit<PrefixArgMetadata, 'position' | 'required'> & {
@@ -38,7 +38,7 @@ export type PrefixArgDefinition = Omit<PrefixArgMetadata, 'position' | 'required
 export interface PrefixArgMetadata {
   /** Argument name used for lookup via `@Arg('name')` on the handler. */
   name: string;
-  /** Expected type — determines coercion and validation logic. */
+  /** Expected type , determines coercion and validation logic. */
   type: PrefixArgType;
   /** Positional index in the raw argv array. */
   position: number;

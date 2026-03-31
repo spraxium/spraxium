@@ -38,7 +38,7 @@ function argMethodDecorator(type: PrefixArgType, name: string, config: BaseArgCo
 }
 
 /**
- * **Parameter decorator** — injects a parsed prefix argument into a handler's
+ * **Parameter decorator** , injects a parsed prefix argument into a handler's
  * `handle()` method parameter by name.
  *
  * @example
@@ -60,7 +60,7 @@ export function PrefixArg(name: string): ParameterDecorator {
 }
 
 /**
- * **Method decorators** — declare argument schemas on a command's `build()`
+ * **Method decorators** , declare argument schemas on a command's `build()`
  * method or `@PrefixSubcommand()` methods. Stack top-to-bottom to define
  * positional order.
  *
@@ -84,7 +84,7 @@ export function PrefixArg(name: string): ParameterDecorator {
  */
 export namespace PrefixArg {
   /** String argument. */
-  // biome-ignore lint/suspicious/noShadowRestrictedNames: Intentional API — PrefixArg.String mirrors the type name
+  // biome-ignore lint/suspicious/noShadowRestrictedNames: Intentional API , PrefixArg.String mirrors the type name
   export function String(name: string, config?: BaseArgConfig): MethodDecorator {
     return argMethodDecorator('string', name, config);
   }
@@ -95,13 +95,13 @@ export namespace PrefixArg {
   }
 
   /** Floating-point number argument. */
-  // biome-ignore lint/suspicious/noShadowRestrictedNames: Intentional API — PrefixArg.Number mirrors the type name
+  // biome-ignore lint/suspicious/noShadowRestrictedNames: Intentional API , PrefixArg.Number mirrors the type name
   export function Number(name: string, config?: BaseArgConfig): MethodDecorator {
     return argMethodDecorator('number', name, config);
   }
 
   /** Boolean argument (`true`/`false`/`yes`/`no`/`1`/`0`). */
-  // biome-ignore lint/suspicious/noShadowRestrictedNames: Intentional API — PrefixArg.Boolean mirrors the type name
+  // biome-ignore lint/suspicious/noShadowRestrictedNames: Intentional API , PrefixArg.Boolean mirrors the type name
   export function Boolean(name: string, config?: BaseArgConfig): MethodDecorator {
     return argMethodDecorator('boolean', name, config);
   }
@@ -151,7 +151,7 @@ export namespace PrefixArg {
     return argMethodDecorator('emoji', name, config);
   }
 
-  /** Variadic rest — all remaining tokens joined into a single string. */
+  /** Variadic rest , all remaining tokens joined into a single string. */
   export function Rest(name: string, config?: BaseArgConfig): MethodDecorator {
     return argMethodDecorator('rest', name, config);
   }

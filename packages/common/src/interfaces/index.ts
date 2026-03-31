@@ -18,6 +18,7 @@ export type { PrefixSubcommandConfig } from './prefix-subcommand-config.interfac
 export type { PrefixGuildEntry, PrefixGuildProvider } from './prefix-guild.interface';
 
 export type { SlashCommandConfig } from './slash-command-config.interface';
+export type { SlashI18nKeys } from './slash-i18n-keys.interface';
 export type { SlashCommandHandlerMetadata } from './slash-command-handler-metadata.interface';
 export type {
   SlashOptionType,

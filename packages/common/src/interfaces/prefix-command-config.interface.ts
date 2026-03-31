@@ -1,5 +1,5 @@
 /**
- * Configuration for `@PrefixCommand()` — structure-only declaration.
+ * Configuration for `@PrefixCommand()` , structure-only declaration.
  *
  * The class decorated with `@PrefixCommand()` acts as a metadata container:
  * it defines the command name, aliases, argument schema, and description.

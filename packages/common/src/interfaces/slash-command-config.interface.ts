@@ -1,3 +1,5 @@
+import type { SlashI18nKeys } from './slash-i18n-keys.interface';
+
 export interface SlashCommandConfig {
   name: string;
   description: string;
@@ -5,5 +7,5 @@ export interface SlashCommandConfig {
   dmPermission?: boolean;
   defaultMemberPermissions?: bigint | number | null;
   nsfw?: boolean;
-  i18n?: string;
+  i18n?: SlashI18nKeys;
 }
