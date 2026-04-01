@@ -1,6 +1,6 @@
 import type { ShardingManager } from 'discord.js';
-import { BotBridge } from '../interfaces';
 import type { BanOptions, SerializedBan, SerializedGuild, SerializedMember } from '../types';
+import { BotBridge } from './bridge-factory';
 import { shardedBanMember, shardedGetBan, shardedGetBans, shardedUnbanMember } from './sharded/ban.sharded';
 import { shardedGetGuild } from './sharded/guild.sharded';
 import { shardedGetMember, shardedGetMembers } from './sharded/member.sharded';

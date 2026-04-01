@@ -9,17 +9,30 @@ import { Client } from 'discord.js';
 import type { ShardingManager } from 'discord.js';
 import { Hono } from 'hono';
 import type { Context, Next } from 'hono';
-import { BridgeFactory } from '../bridge';
-import { HTTP_MESSAGES, HTTP_METADATA_KEYS } from '../constants';
+import { BotBridge, BridgeFactory } from '../bridge';
+import type { HttpClientModuleMetadata } from '../decorators/http-client-module.decorator';
+import { HTTP_METADATA_KEYS } from '../decorators/route.decorator';
 import { HttpError } from '../errors';
-import { ValidationError } from '../errors/validation.error';
+import { ValidationError } from '../errors';
 import { GuardExecutor } from '../guards';
-import { defineHttp } from '../http.config';
-import { BotBridge } from '../interfaces';
-import type { HttpClientModuleMetadata } from '../interfaces';
+import { SECURITY_DEFAULTS, defineHttp } from '../http.config';
+import { BodyLimitMiddleware } from '../middleware/body-limit.middleware';
+import { CorsMiddleware } from '../middleware/cors.middleware';
+import { SecurityHeadersMiddleware } from '../middleware/security-headers.middleware';
 import { HttpRegistry } from './http-registry.service';
 import { RouteBuilder } from './route-builder.service';
 import { RouteRegistry } from './route-registry.service';
+
+const HTTP_MESSAGES = {
+  noConfig: 'HttpModule instantiated but no configuration found. Call defineHttp() in spraxium.config.ts.',
+  noClient: 'HttpServer: Discord Client not injected and sharding is disabled.',
+  shardingNoManager: '[spraxium/http] Sharding enabled but no ShardingManager was provided.',
+  noClientNoShard: '[spraxium/http] No Discord Client provided and sharding is disabled.',
+  poolRequiresUrl: 'WebhookPool requires at least one webhook URL.',
+  started: (host: string, port: number) => `HTTP server listening on ${host}:${port}`,
+  stopped: 'HTTP server stopped.',
+  unhandledError: (msg: string) => `Unhandled error: ${msg}`,
+} as const;
 
 @Injectable()
 export class HttpServer implements SpraxiumOnBoot, SpraxiumOnShutdown {
@@ -82,6 +95,31 @@ export class HttpServer implements SpraxiumOnBoot, SpraxiumOnShutdown {
     if (client) deps.set(Client, client);
 
     const app = new Hono();
+
+    const sec = config.security;
+
+    if (sec?.hidePoweredBy !== false) {
+      app.use('*', async (ctx: Context, next: Next) => {
+        await next();
+        ctx.res.headers.delete('X-Powered-By');
+        ctx.res.headers.delete('Server');
+      });
+    }
+
+    if (sec?.headers !== false) {
+      const headersMiddleware = new SecurityHeadersMiddleware(sec?.headers);
+      app.use('*', (ctx: Context, next: Next) => headersMiddleware.handle(ctx, next));
+    }
+
+    if (sec?.cors) {
+      const corsMiddleware = new CorsMiddleware(sec.cors);
+      app.use('*', (ctx: Context, next: Next) => corsMiddleware.handle(ctx, next));
+    }
+
+    if (sec?.bodyLimit !== false) {
+      const bodyLimitMiddleware = new BodyLimitMiddleware(sec?.bodyLimit || SECURITY_DEFAULTS.bodyLimit);
+      app.use('*', (ctx: Context, next: Next) => bodyLimitMiddleware.handle(ctx, next));
+    }
 
     const globalMiddleware = moduleMeta.middleware ?? [];
     for (const mw of globalMiddleware) {

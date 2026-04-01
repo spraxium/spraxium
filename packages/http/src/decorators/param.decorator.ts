@@ -1,6 +1,6 @@
 import 'reflect-metadata';
-import { HTTP_METADATA_KEYS } from '../constants';
 import type { ParamDefinition, ParamSource } from '../types';
+import { HTTP_METADATA_KEYS } from './route.decorator';
 
 function createParamDecorator(
   source: ParamSource,

@@ -1,5 +1,8 @@
 import type { Context, Next } from 'hono';
-import type { HttpMiddleware } from '../interfaces';
+
+export interface HttpMiddleware {
+  handle(ctx: Context, next: Next): Promise<void | Response>;
+}
 
 export class LoggerMiddleware implements HttpMiddleware {
   async handle(ctx: Context, next: Next): Promise<void> {

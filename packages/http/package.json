@@ -38,9 +38,7 @@
     "tsdown": "^0.12.0",
     "typescript": "^5.7.0"
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "license": "MIT",
   "type": "module"
 }

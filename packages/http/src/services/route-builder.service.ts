@@ -1,10 +1,10 @@
 import 'reflect-metadata';
 import type { Context, Handler, Hono, Next } from 'hono';
-import { HTTP_METADATA_KEYS } from '../constants';
-import type { HttpMiddleware } from '../interfaces';
-import type { RegisteredController } from '../interfaces';
+import { HTTP_METADATA_KEYS } from '../decorators/route.decorator';
+import type { HttpMiddleware } from '../middleware/logger.middleware';
 import type { Constructor } from '../types';
 import { ParamResolver } from './param-resolver.service';
+import type { RegisteredController } from './route-registry.service';
 
 export class RouteBuilder {
   private static readonly paramResolver = new ParamResolver();

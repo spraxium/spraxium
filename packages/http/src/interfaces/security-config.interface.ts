@@ -1,11 +1,3 @@
-import { definePlugin } from '@spraxium/core';
-import type { Constructor } from './types';
-
-export const HTTP_DEFAULTS = {
-  HOST: '0.0.0.0',
-  PORT: 3000,
-} as const;
-
 export interface CorsConfig {
   /** Allowed origins. Use `'*'` to allow all (not recommended for production). @default [] */
   readonly origins: ReadonlyArray<string>;
@@ -73,22 +65,6 @@ export interface SecurityConfig {
   readonly hidePoweredBy?: boolean;
 }
 
-export interface RateLimitConfig {
-  readonly windowMs: number;
-  readonly max: number;
-}
-
-export interface HttpConfig {
-  readonly enabled: boolean;
-  readonly port: number;
-  readonly host: string;
-  readonly apiKey: string;
-  readonly rateLimit?: RateLimitConfig;
-  readonly security?: SecurityConfig;
-  readonly sharding: boolean;
-  readonly module?: Constructor;
-}
-
 export const SECURITY_DEFAULTS: Required<Pick<SecurityConfig, 'hidePoweredBy'>> & {
   headers: Required<SecurityHeadersConfig>;
   cors: null;
@@ -115,5 +91,3 @@ export const SECURITY_DEFAULTS: Required<Pick<SecurityConfig, 'hidePoweredBy'>> 
   bodyLimit: { maxSize: 102_400 },
   trustedProxies: { proxies: ['127.0.0.1', '::1'] },
 };
-
-export const defineHttp = definePlugin<'http', HttpConfig>('http');

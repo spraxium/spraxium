@@ -1,4 +1,5 @@
 export {
+  BotBridge,
   BridgeFactory,
   DirectBotBridge,
   ShardedBotBridge,
@@ -6,7 +7,17 @@ export {
   GuildSerializer,
   MemberSerializer,
 } from './bridge';
-export { HTTP_DEFAULTS, HTTP_MESSAGES, HTTP_METADATA_KEYS } from './constants';
+export { HTTP_DEFAULTS, SECURITY_DEFAULTS } from './http.config';
+export type {
+  BodyLimitConfig,
+  CorsConfig,
+  HttpConfig,
+  RateLimitConfig,
+  SecurityConfig,
+  SecurityHeadersConfig,
+  TrustedProxyConfig,
+} from './http.config';
+export { HTTP_METADATA_KEYS } from './decorators/route.decorator';
 export {
   Body,
   Controller,
@@ -23,6 +34,7 @@ export {
   Query,
   UseMiddleware,
 } from './decorators';
+export type { HttpClientModuleMetadata } from './decorators/http-client-module.decorator';
 export {
   BadRequestError,
   ConflictError,
@@ -40,19 +52,18 @@ export {
 } from './errors';
 export type { ValidationDetail } from './errors';
 export { ApiKeyGuard, GuardExecutor } from './guards';
+export type { HttpGuard } from './guards';
 export { defineHttp } from './http.config';
 export { HttpModule } from './http.module';
-export { BotBridge } from './interfaces';
-export type {
-  HttpClientModuleMetadata,
-  HttpConfig,
-  HttpGuard,
-  HttpMiddleware,
-  HttpModuleOptions,
-  RateLimitConfig,
-  RegisteredController,
-} from './interfaces';
-export { LoggerMiddleware, RateLimitMiddleware } from './middleware';
+export type { HttpModuleOptions } from './http.module';
+export {
+  BodyLimitMiddleware,
+  CorsMiddleware,
+  LoggerMiddleware,
+  RateLimitMiddleware,
+  SecurityHeadersMiddleware,
+} from './middleware';
+export type { HttpMiddleware } from './middleware';
 export {
   HttpRegistry,
   HttpServer,
@@ -61,6 +72,7 @@ export {
   RouteRegistry,
   ValidationPipe,
 } from './services';
+export type { RegisteredController } from './services/route-registry.service';
 export type {
   BanOptions,
   Constructor,

@@ -1,6 +1,11 @@
 import type { Context, Next } from 'hono';
-import type { HttpMiddleware, WindowEntry } from '../interfaces';
-import type { RateLimitConfig } from '../interfaces';
+import type { RateLimitConfig } from '../http.config';
+import type { HttpMiddleware } from './logger.middleware';
+
+interface WindowEntry {
+  count: number;
+  windowStart: number;
+}
 
 export class RateLimitMiddleware implements HttpMiddleware {
   private readonly store = new Map<string, WindowEntry>();
