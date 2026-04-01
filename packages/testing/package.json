@@ -17,7 +17,9 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "discord.js": "^14.0.0"
+    "@spraxium/common": "workspace:*",
+    "discord.js": "^14.26.0",
+    "reflect-metadata": "^0.2.2"
   },
   "devDependencies": {
     "@types/node": "^22.13.0",
