@@ -1,0 +1,4 @@
+import { PrefixCommand } from '@spraxium/common';
+
+@PrefixCommand({ name: '{{kebabName}}', aliases: [], description: 'TODO: describe this command' })
+export class {{pascalName}}Command {}

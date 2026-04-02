@@ -1,0 +1,12 @@
+import { Button, ButtonHandler } from '@spraxium/components';
+import type { ButtonInteraction } from 'discord.js';
+
+@Button({ customId: '{{kebabName}}', style: 'primary', label: '{{pascalName}}' })
+export class {{pascalName}}Button {}
+
+@ButtonHandler({{pascalName}}Button)
+export class {{pascalName}}ButtonHandler {
+  async handle(interaction: ButtonInteraction): Promise<void> {
+    await interaction.reply({ content: 'Button clicked!', ephemeral: true });
+  }
+}

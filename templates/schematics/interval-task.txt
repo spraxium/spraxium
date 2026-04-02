@@ -1,0 +1,10 @@
+import { Injectable } from '@spraxium/common';
+import { Interval, IntervalExpression } from '@spraxium/schedule';
+
+@Injectable()
+export class {{pascalName}}Task {
+  @Interval(IntervalExpression.EVERY_MINUTE)
+  async execute(): Promise<void> {
+    // TODO: implement interval task
+  }
+}

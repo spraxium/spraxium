@@ -1,0 +1,12 @@
+import { Injectable } from '@spraxium/common';
+import { SignalListener, OnSignal } from '@spraxium/signal';
+import type { SignalEnvelope } from '@spraxium/signal';
+
+@Injectable()
+@SignalListener()
+export class {{pascalName}}Signal {
+  @OnSignal('{{kebabName}}.update')
+  async onUpdate(payload: unknown, envelope: SignalEnvelope): Promise<void> {
+    // TODO: handle signal for guild ${envelope.guildId}
+  }
+}

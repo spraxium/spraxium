@@ -1,0 +1,10 @@
+import { Guard } from '@spraxium/common';
+import type { ExecutionContext, SpraxiumGuard } from '@spraxium/common';
+
+@Guard()
+export class {{pascalName}}Guard implements SpraxiumGuard {
+  canActivate(ctx: ExecutionContext): boolean | Promise<boolean> {
+    // TODO: implement guard logic
+    return true;
+  }
+}

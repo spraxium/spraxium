@@ -1,0 +1,17 @@
+import { StringSelect, SelectOption, StringSelectHandler, SelectedValues } from '@spraxium/components';
+import type { StringSelectMenuInteraction } from 'discord.js';
+
+@SelectOption({ label: 'Option A', value: 'a', description: 'First option' })
+@SelectOption({ label: 'Option B', value: 'b', description: 'Second option' })
+@StringSelect({ customId: '{{kebabName}}', placeholder: 'Select an option' })
+export class {{pascalName}}Select {}
+
+@StringSelectHandler({{pascalName}}Select)
+export class {{pascalName}}SelectHandler {
+  async handle(
+    interaction: StringSelectMenuInteraction,
+    @SelectedValues() values: Array<string>,
+  ): Promise<void> {
+    await interaction.reply({ content: `Selected: ${values.join(', ')}`, ephemeral: true });
+  }
+}

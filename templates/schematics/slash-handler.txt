@@ -1,0 +1,10 @@
+import { SlashCommandHandler } from '@spraxium/common';
+import type { ChatInputCommandInteraction } from 'discord.js';
+import { {{pascalName}}Command } from './{{kebabName}}.command';
+
+@SlashCommandHandler({{pascalName}}Command)
+export class {{pascalName}}Handler {
+  async handle(interaction: ChatInputCommandInteraction): Promise<void> {
+    await interaction.reply({ content: 'Pong!', ephemeral: true });
+  }
+}

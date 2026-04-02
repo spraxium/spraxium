@@ -1,0 +1,21 @@
+import { Embed, EmbedTitle, EmbedColor, EmbedField, EmbedTimestamp } from '@spraxium/components';
+
+interface {{pascalName}}Data {
+  title: string;
+  description: string;
+}
+
+@Embed()
+export class {{pascalName}}Embed {
+  @EmbedTitle((data: {{pascalName}}Data) => data.title)
+  title!: string;
+
+  @EmbedColor(0x5865f2)
+  color!: number;
+
+  @EmbedField({ name: 'Info', value: (data: {{pascalName}}Data) => data.description, inline: true })
+  info!: string;
+
+  @EmbedTimestamp()
+  timestamp!: Date;
+}

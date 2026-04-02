@@ -1,0 +1,23 @@
+import { Controller, Get, Post, Param, Body, Ctx, HttpClientModule } from '@spraxium/http';
+import type { Context } from 'hono';
+
+@Controller('/{{kebabName}}')
+export class {{pascalName}}Controller {
+  @Get('/')
+  async list(@Ctx() ctx: Context): Promise<Response> {
+    return ctx.json({ message: 'TODO: list {{kebabName}}' });
+  }
+
+  @Get('/:id')
+  async findOne(@Param('id') id: string, @Ctx() ctx: Context): Promise<Response> {
+    return ctx.json({ id });
+  }
+
+  @Post('/')
+  async create(@Body() body: unknown, @Ctx() ctx: Context): Promise<Response> {
+    return ctx.json({ created: true }, 201);
+  }
+}
+
+@HttpClientModule({ controllers: [{{pascalName}}Controller] })
+export class {{pascalName}}HttpModule {}

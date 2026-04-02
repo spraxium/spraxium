@@ -1,0 +1,18 @@
+import { ModalComponent, ModalInput, ModalHandler, Field } from '@spraxium/components';
+import type { ModalSubmitInteraction } from 'discord.js';
+
+@ModalComponent({ id: '{{kebabName}}', title: '{{pascalName}}' })
+export class {{pascalName}}Modal {
+  @ModalInput({ label: 'Input', placeholder: 'Type here...' })
+  input!: string;
+}
+
+@ModalHandler({{pascalName}}Modal)
+export class {{pascalName}}ModalHandler {
+  async handle(
+    interaction: ModalSubmitInteraction,
+    @Field('input') input: string,
+  ): Promise<void> {
+    await interaction.reply({ content: `Received: ${input}`, ephemeral: true });
+  }
+}

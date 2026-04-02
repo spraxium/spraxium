@@ -1,0 +1,11 @@
+import { Events, Listener, On } from '@spraxium/common';
+import type { Message } from 'discord.js';
+
+@Listener(Events.MessageCreate)
+export class {{pascalName}}Listener {
+  @On()
+  async onMessage(message: Message): Promise<void> {
+    if (message.author.bot) return;
+    // TODO: implement listener logic
+  }
+}

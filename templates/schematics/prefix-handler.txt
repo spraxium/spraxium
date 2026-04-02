@@ -1,0 +1,10 @@
+import { Ctx, PrefixCommandHandler } from '@spraxium/common';
+import type { Message } from 'discord.js';
+import { {{pascalName}}Command } from './{{kebabName}}.command';
+
+@PrefixCommandHandler({{pascalName}}Command)
+export class {{pascalName}}Handler {
+  async handle(@Ctx() message: Message): Promise<void> {
+    await message.reply('Pong!');
+  }
+}

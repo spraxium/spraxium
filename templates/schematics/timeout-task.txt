@@ -1,0 +1,10 @@
+import { Injectable } from '@spraxium/common';
+import { Timeout } from '@spraxium/schedule';
+
+@Injectable()
+export class {{pascalName}}Task {
+  @Timeout(5_000)
+  async execute(): Promise<void> {
+    // TODO: implement timeout task (runs once after delay)
+  }
+}

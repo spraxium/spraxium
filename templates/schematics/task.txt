@@ -1,0 +1,10 @@
+import { Injectable } from '@spraxium/common';
+import { Cron, CronExpression } from '@spraxium/schedule';
+
+@Injectable()
+export class {{pascalName}}Task {
+  @Cron(CronExpression.EVERY_HOUR)
+  async execute(): Promise<void> {
+    // TODO: implement scheduled task
+  }
+}
