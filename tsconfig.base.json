@@ -13,6 +13,7 @@
 
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
+    "useDefineForClassFields": false,
 
     "strict": true,
     "noImplicitOverride": true,

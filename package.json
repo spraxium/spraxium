@@ -10,11 +10,16 @@
     "format": "biome format . --write",
     "changeset": "changeset",
     "version": "changeset version",
-    "release": "pnpm run build && changeset publish"
+    "release": "pnpm run build && changeset publish",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.0",
     "@changesets/cli": "^2.27.0",
+    "@commitlint/cli": "^20.5.0",
+    "@commitlint/config-conventional": "^20.5.0",
+    "@commitlint/types": "^20.5.0",
+    "husky": "^9.1.7",
     "tsdown": "^0.12.0",
     "tsx": "^4.19.0",
     "typescript": "^5.7.0",
