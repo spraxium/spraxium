@@ -1,15 +1,9 @@
 import 'reflect-metadata';
 import { METADATA_KEYS } from '@spraxium/common';
 import type { ReadonlyContainer } from '@spraxium/common';
-import { HTTP_METADATA_KEYS } from '../decorators/route.decorator';
+import { HTTP_METADATA_KEYS } from '../constants';
+import type { RegisteredController } from '../interfaces';
 import type { AnyConstructor, Constructor, RouteDefinition } from '../types';
-
-export interface RegisteredController {
-  readonly instance: object;
-  readonly prefix: string;
-  readonly routes: Array<RouteDefinition>;
-  readonly classMiddlewares: Array<Constructor>;
-}
 
 export class RouteRegistry {
   resolveServices(

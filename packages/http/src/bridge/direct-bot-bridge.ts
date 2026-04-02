@@ -1,6 +1,6 @@
 import type { Client } from 'discord.js';
+import { BotBridge } from '../interfaces';
 import type { BanOptions, SerializedBan, SerializedGuild, SerializedMember } from '../types';
-import { BotBridge } from './bridge-factory';
 import { directBanMember, directGetBan, directGetBans, directUnbanMember } from './direct/ban.direct';
 import { directGetGuild } from './direct/guild.direct';
 import { directGetMember, directGetMembers } from './direct/member.direct';

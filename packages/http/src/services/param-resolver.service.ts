@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import type { Context } from 'hono';
-import { HTTP_METADATA_KEYS } from '../decorators/route.decorator';
+import { HTTP_METADATA_KEYS } from '../constants';
 import type { ParamDefinition } from '../types';
 import { ValidationPipe } from './validation-pipe.service';
 

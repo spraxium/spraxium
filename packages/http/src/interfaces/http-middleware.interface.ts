@@ -1,5 +1,5 @@
 import type { Context, Next } from 'hono';
 
 export interface HttpMiddleware {
-  handle(ctx: Context, next: Next): Promise<void | Response>;
+  handle(ctx: Context, next: Next): Promise<undefined | Response>;
 }

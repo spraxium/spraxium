@@ -1,11 +1,5 @@
 import type { Context, Next } from 'hono';
-import type { RateLimitConfig } from '../http.config';
-import type { HttpMiddleware } from './logger.middleware';
-
-interface WindowEntry {
-  count: number;
-  windowStart: number;
-}
+import type { HttpMiddleware, RateLimitConfig, WindowEntry } from '../interfaces';
 
 export class RateLimitMiddleware implements HttpMiddleware {
   private readonly store = new Map<string, WindowEntry>();
@@ -16,7 +10,7 @@ export class RateLimitMiddleware implements HttpMiddleware {
     if (this.cleanupInterval.unref) this.cleanupInterval.unref();
   }
 
-  async handle(ctx: Context, next: Next): Promise<void> {
+  async handle(ctx: Context, next: Next): Promise<undefined> {
     const ip = ctx.req.header('x-forwarded-for') ?? 'unknown';
     const now = Date.now();
     const entry = this.store.get(ip);

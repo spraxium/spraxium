@@ -1,9 +1,6 @@
 import { timingSafeEqual } from 'node:crypto';
 import type { Context } from 'hono';
-
-export interface HttpGuard {
-  canActivate(ctx: Context): Promise<boolean>;
-}
+import type { HttpGuard } from '../interfaces';
 
 export class ApiKeyGuard implements HttpGuard {
   private readonly keyBuffer: Buffer;

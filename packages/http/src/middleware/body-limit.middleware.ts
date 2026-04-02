@@ -1,7 +1,7 @@
 import type { Context, Next } from 'hono';
 import { bodyLimit } from 'hono/body-limit';
-import { type BodyLimitConfig, SECURITY_DEFAULTS } from '../http.config';
-import type { HttpMiddleware } from './logger.middleware';
+import { SECURITY_DEFAULTS } from '../constants';
+import type { BodyLimitConfig, HttpMiddleware } from '../interfaces';
 
 export class BodyLimitMiddleware implements HttpMiddleware {
   private readonly handler: ReturnType<typeof bodyLimit>;
@@ -14,7 +14,7 @@ export class BodyLimitMiddleware implements HttpMiddleware {
     });
   }
 
-  handle(ctx: Context, next: Next): Promise<void | Response> {
-    return this.handler(ctx, next) as Promise<void | Response>;
+  handle(ctx: Context, next: Next): Promise<undefined | Response> {
+    return this.handler(ctx, next) as Promise<undefined | Response>;
   }
 }

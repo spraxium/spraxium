@@ -9,30 +9,20 @@ import { Client } from 'discord.js';
 import type { ShardingManager } from 'discord.js';
 import { Hono } from 'hono';
 import type { Context, Next } from 'hono';
-import { BotBridge, BridgeFactory } from '../bridge';
-import type { HttpClientModuleMetadata } from '../decorators/http-client-module.decorator';
-import { HTTP_METADATA_KEYS } from '../decorators/route.decorator';
+import { BridgeFactory } from '../bridge';
+import { HTTP_MESSAGES, HTTP_METADATA_KEYS, SECURITY_DEFAULTS } from '../constants';
 import { HttpError } from '../errors';
 import { ValidationError } from '../errors';
 import { GuardExecutor } from '../guards';
-import { SECURITY_DEFAULTS, defineHttp } from '../http.config';
+import { defineHttp } from '../http.config';
+import { BotBridge } from '../interfaces';
+import type { HttpClientModuleMetadata } from '../interfaces';
 import { BodyLimitMiddleware } from '../middleware/body-limit.middleware';
 import { CorsMiddleware } from '../middleware/cors.middleware';
 import { SecurityHeadersMiddleware } from '../middleware/security-headers.middleware';
 import { HttpRegistry } from './http-registry.service';
 import { RouteBuilder } from './route-builder.service';
 import { RouteRegistry } from './route-registry.service';
-
-const HTTP_MESSAGES = {
-  noConfig: 'HttpModule instantiated but no configuration found. Call defineHttp() in spraxium.config.ts.',
-  noClient: 'HttpServer: Discord Client not injected and sharding is disabled.',
-  shardingNoManager: '[spraxium/http] Sharding enabled but no ShardingManager was provided.',
-  noClientNoShard: '[spraxium/http] No Discord Client provided and sharding is disabled.',
-  poolRequiresUrl: 'WebhookPool requires at least one webhook URL.',
-  started: (host: string, port: number) => `HTTP server listening on ${host}:${port}`,
-  stopped: 'HTTP server stopped.',
-  unhandledError: (msg: string) => `Unhandled error: ${msg}`,
-} as const;
 
 @Injectable()
 export class HttpServer implements SpraxiumOnBoot, SpraxiumOnShutdown {

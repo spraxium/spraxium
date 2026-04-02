@@ -1,5 +1,5 @@
 import type { Context } from 'hono';
-import type { HttpGuard } from './api-key.guard';
+import type { HttpGuard } from '../interfaces';
 
 export class GuardExecutor {
   constructor(private readonly guards: ReadonlyArray<HttpGuard>) {}

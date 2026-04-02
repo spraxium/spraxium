@@ -1,10 +1,9 @@
 import 'reflect-metadata';
 import type { Context, Handler, Hono, Next } from 'hono';
-import { HTTP_METADATA_KEYS } from '../decorators/route.decorator';
-import type { HttpMiddleware } from '../middleware/logger.middleware';
+import { HTTP_METADATA_KEYS } from '../constants';
+import type { HttpMiddleware, RegisteredController } from '../interfaces';
 import type { Constructor } from '../types';
 import { ParamResolver } from './param-resolver.service';
-import type { RegisteredController } from './route-registry.service';
 
 export class RouteBuilder {
   private static readonly paramResolver = new ParamResolver();
@@ -43,7 +42,7 @@ export class RouteBuilder {
         const boundHandlerName = route.handlerName;
 
         const routeHandler: Handler = async (ctx: Context) => {
-          const args = await this.paramResolver.resolve(boundInstance, boundHandlerName, ctx);
+          const args = await RouteBuilder.paramResolver.resolve(boundInstance, boundHandlerName, ctx);
           const result = await (handlerMethod as (...a: Array<unknown>) => unknown).apply(
             boundInstance,
             args,

@@ -1,7 +1,7 @@
 import type { Context, Next } from 'hono';
 import { secureHeaders } from 'hono/secure-headers';
-import { SECURITY_DEFAULTS, type SecurityHeadersConfig } from '../http.config';
-import type { HttpMiddleware } from './logger.middleware';
+import { SECURITY_DEFAULTS } from '../constants';
+import type { HttpMiddleware, SecurityHeadersConfig } from '../interfaces';
 
 export class SecurityHeadersMiddleware implements HttpMiddleware {
   private readonly handler: ReturnType<typeof secureHeaders>;
@@ -35,7 +35,7 @@ export class SecurityHeadersMiddleware implements HttpMiddleware {
     });
   }
 
-  handle(ctx: Context, next: Next): Promise<void | Response> {
-    return this.handler(ctx, next) as Promise<void | Response>;
+  handle(ctx: Context, next: Next): Promise<undefined | Response> {
+    return this.handler(ctx, next) as Promise<undefined | Response>;
   }
 }
