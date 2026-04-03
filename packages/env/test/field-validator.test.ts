@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { EnvFieldMeta } from '../src/interfaces/env-field.interface';
-import { EnvFieldError } from '../src/validator/validation.error';
 import { FieldValidator } from '../src/validator/field.validator';
+import { EnvFieldError } from '../src/validator/validation.error';
 
 afterEach(() => {
   vi.unstubAllEnvs();
@@ -22,8 +22,8 @@ describe('FieldValidator — missing values', () => {
   it('returns an EnvFieldError for a missing required field', () => {
     const result = FieldValidator.validate(buildMeta());
     expect(result.error).toBeInstanceOf(EnvFieldError);
-    expect(result.error!.reason).toBe('missing');
-    expect(result.error!.key).toBe('TEST_VAR');
+    expect(result.error?.reason).toBe('missing');
+    expect(result.error?.key).toBe('TEST_VAR');
   });
 
   it('returns no error for a missing optional field', () => {
@@ -89,8 +89,8 @@ describe('FieldValidator — transform rules', () => {
     });
     const result = FieldValidator.validate(meta);
     expect(result.error).toBeInstanceOf(EnvFieldError);
-    expect(result.error!.reason).toBe('invalid_value');
-    expect(result.error!.received).toBe('not-a-number');
+    expect(result.error?.reason).toBe('invalid_value');
+    expect(result.error?.received).toBe('not-a-number');
   });
 });
 
@@ -110,8 +110,8 @@ describe('FieldValidator — validate rules', () => {
     });
     const result = FieldValidator.validate(meta);
     expect(result.error).toBeInstanceOf(EnvFieldError);
-    expect(result.error!.reason).toBe('invalid_value');
-    expect(result.error!.message).toBe('Too short');
+    expect(result.error?.reason).toBe('invalid_value');
+    expect(result.error?.message).toBe('Too short');
   });
 
   it('skips transform if no transform property on rule', () => {
@@ -130,6 +130,6 @@ describe('FieldValidator — secret flag', () => {
     const meta = buildMeta({ secret: true });
     const result = FieldValidator.validate(meta);
     expect(result.error).toBeInstanceOf(EnvFieldError);
-    expect(result.error!.secret).toBe(true);
+    expect(result.error?.secret).toBe(true);
   });
 });
