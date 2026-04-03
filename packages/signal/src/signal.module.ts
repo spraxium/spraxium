@@ -1,6 +1,6 @@
 import { Global, Module } from '@spraxium/common';
 import { NonceCache } from './security';
-import { SignalProcessor, SignalRegistry, SignalRouter, SignalValidator } from './services';
+import { SignalProcessor, SignalRegistry, SignalRouter, SignalValidator } from './service';
 
 @Global()
 @Module({

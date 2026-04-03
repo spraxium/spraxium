@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { WebhookPool } from '../src/webhook-pool';
+import { WebhookPool } from '../src/webhook.pool';
 
 const URL_1 = 'https://discord.com/api/webhooks/1';
 const URL_2 = 'https://discord.com/api/webhooks/2';

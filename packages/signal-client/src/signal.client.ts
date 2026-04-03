@@ -1,13 +1,13 @@
 import { AllWebhooksRateLimitedError } from './errors/all-webhooks-rate-limited.error';
 import { SignalClientError } from './errors/signal-client.error';
-import { FallbackWorker } from './fallback/fallback-worker';
+import { FallbackWorker } from './fallback/fallback.worker';
 import type { FallbackConfig, FallbackStore } from './fallback/interfaces';
 import type { SendOptions } from './interfaces/send-options.interface';
 import type { SignalClientConfig } from './interfaces/signal-client-config.interface';
 import type { SignalEnvelope } from './interfaces/signal-envelope.interface';
-import { SignalEnvelopeBuilder } from './signal-envelope-builder';
+import { SignalEnvelopeBuilder } from './signal-envelope.builder';
 import type { RateLimitStrategy } from './types/rate-limit-strategy.type';
-import { WebhookPool } from './webhook-pool';
+import { WebhookPool } from './webhook.pool';
 
 const DEFAULT_RATE_LIMIT_MS = 1_000;
 

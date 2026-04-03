@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { HmacService } from '../../signal/src/security/hmac.service';
-import { SignalEnvelopeBuilder } from '../src/signal-envelope-builder';
+import { SignalEnvelopeBuilder } from '../src/signal-envelope.builder';
 
 const SECRET = 'integration-test-secret';
 

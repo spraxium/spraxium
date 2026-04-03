@@ -1,6 +1,6 @@
 import type { SignalEnvelope } from '../interfaces/signal-envelope.interface';
-import type { SignalClient } from '../signal-client';
-import { FileFallbackStore } from './file-store';
+import type { SignalClient } from '../signal.client';
+import { FileFallbackStore } from './file.store';
 import type { FallbackConfig, FallbackEntry, FallbackStore } from './interfaces';
 import { FALLBACK_DEFAULTS } from './interfaces';
 
