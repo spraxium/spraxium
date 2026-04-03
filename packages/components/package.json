@@ -21,10 +21,25 @@
     "reflect-metadata": "^0.2.2"
   },
   "peerDependencies": {
-    "@spraxium/common": "workspace:*"
+    "@spraxium/common": "workspace:*",
+    "@spraxium/core": "workspace:*",
+    "better-sqlite3": ">=9",
+    "ioredis": ">=5"
+  },
+  "peerDependenciesMeta": {
+    "@spraxium/core": {
+      "optional": true
+    },
+    "better-sqlite3": {
+      "optional": true
+    },
+    "ioredis": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@spraxium/common": "workspace:*",
+    "@spraxium/core": "workspace:*",
     "@types/node": "^22.13.0",
     "tsdown": "^0.12.0",
     "typescript": "^5.7.0"

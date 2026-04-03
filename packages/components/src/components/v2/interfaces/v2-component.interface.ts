@@ -1,0 +1,101 @@
+import type { SeparatorSpacingSize } from 'discord.js';
+import type { AnyConstructor } from '../../../types';
+import type { DescriptionBuilder } from '../../embed';
+
+export type V2ChildType =
+  | 'textDisplay'
+  | 'section'
+  | 'separator'
+  | 'mediaGallery'
+  | 'thumbnail'
+  | 'file'
+  | 'actionRow'
+  | 'dynamic';
+
+export interface V2TextDisplayConfig {
+  // biome-ignore lint/suspicious/noExplicitAny: generic callable type required
+  content: string | DescriptionBuilder | ((data: any) => string | DescriptionBuilder);
+}
+
+export interface V2MediaGalleryItem {
+  url: string;
+  description?: string;
+  spoiler?: boolean;
+}
+
+export interface V2MediaGalleryConfig {
+  // biome-ignore lint/suspicious/noExplicitAny: generic callable type required
+  items: Array<V2MediaGalleryItem> | ((data: any) => Array<V2MediaGalleryItem>);
+}
+
+export interface V2SectionConfig {
+  // biome-ignore lint/suspicious/noExplicitAny: generic callable type required
+  text: string | DescriptionBuilder | ((data: any) => string | DescriptionBuilder);
+  button?: AnyConstructor;
+  thumbnail?: V2ThumbnailConfig;
+}
+
+export interface V2SeparatorConfig {
+  divider?: boolean;
+  spacing?: SeparatorSpacingSize;
+}
+
+export interface V2ThumbnailConfig {
+  // biome-ignore lint/suspicious/noExplicitAny: generic callable type required
+  url: string | ((data: any) => string);
+  description?: string;
+  spoiler?: boolean;
+}
+
+export interface V2FileConfig {
+  // biome-ignore lint/suspicious/noExplicitAny: generic callable type required
+  url: string | ((data: any) => string);
+  spoiler?: boolean;
+}
+
+export interface V2ActionRowConfig {
+  // biome-ignore lint/suspicious/noExplicitAny: factory receives caller-defined data types
+  components: Array<AnyConstructor> | ((data: any) => Array<AnyConstructor>);
+  rowData?: unknown;
+}
+
+export type V2DynamicChildSpec =
+  | { type: 'textDisplay'; config: V2TextDisplayConfig }
+  | { type: 'separator'; config: V2SeparatorConfig }
+  | { type: 'section'; config: V2SectionConfig }
+  | { type: 'mediaGallery'; config: V2MediaGalleryConfig }
+  | { type: 'thumbnail'; config: V2ThumbnailConfig }
+  | { type: 'file'; config: V2FileConfig }
+  | { type: 'actionRow'; config: V2ActionRowConfig };
+
+export interface V2DynamicConfig {
+  // biome-ignore lint/suspicious/noExplicitAny: generic callable type required
+  factory: (data: any) => Array<V2DynamicChildSpec>;
+}
+
+export interface V2ChildDef {
+  type: V2ChildType;
+  propertyKey: string;
+  order: number;
+  config:
+    | V2TextDisplayConfig
+    | V2MediaGalleryConfig
+    | V2SectionConfig
+    | V2SeparatorConfig
+    | V2ThumbnailConfig
+    | V2FileConfig
+    | V2ActionRowConfig
+    | V2DynamicConfig;
+  // biome-ignore lint/suspicious/noExplicitAny: generic callable type required
+  when?: (data: any) => boolean;
+}
+
+export interface V2ContainerMeta {
+  accentColor?: number | string;
+  spoiler?: boolean;
+}
+
+export interface V2SectionFluentConfig {
+  text: string;
+  button?: AnyConstructor;
+}

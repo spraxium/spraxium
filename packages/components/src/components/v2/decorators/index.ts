@@ -1,0 +1,12 @@
+export { V2Container } from './v2-container.decorator';
+export { V2When } from './v2-when.decorator';
+export { V2Text } from './v2-text.decorator';
+export { V2Section } from './v2-section.decorator';
+export { V2Separator } from './v2-separator.decorator';
+export { V2MediaGallery } from './v2-media-gallery.decorator';
+export { V2Thumbnail } from './v2-thumbnail.decorator';
+export { V2File } from './v2-file.decorator';
+export { V2Row } from './v2-row.decorator';
+export { V2Dynamic } from './v2-dynamic.decorator';
+export { registerChild, getChildren } from './register-child';
+export { v2text, v2sep, v2separator, v2section, v2gallery, v2row } from './helpers';
