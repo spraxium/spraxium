@@ -3,7 +3,7 @@
  * Serialised as JSON in the Discord message's `content` field.
  */
 export interface SignalEnvelope {
-  /** Protocol version — always 1. */
+  /** Protocol version , always 1. */
   readonly v: 1;
   /** Event identifier in the format "domain.action". */
   readonly event: string;

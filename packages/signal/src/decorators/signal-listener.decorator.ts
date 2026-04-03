@@ -6,7 +6,7 @@ import { SIGNAL_METADATA_KEYS } from '../constants';
  * Marks a class as a signal listener.
  * Methods within the class may be decorated with @OnSignal() to handle events.
  *
- * No need to also apply @Injectable() — this decorator covers it.
+ * No need to also apply @Injectable() , this decorator covers it.
  *
  * Users must add the class to the `providers` array of their @Module().
  *

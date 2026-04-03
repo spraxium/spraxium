@@ -23,7 +23,7 @@ export interface SignalConfig {
 
   /**
    * Whether to delete the signal message from the channel after processing.
-   * Uses fire-and-forget semantics — failures are silently ignored.
+   * Uses fire-and-forget semantics , failures are silently ignored.
    * Defaults to false.
    */
   deleteAfterProcessing?: boolean;
