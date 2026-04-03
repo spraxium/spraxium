@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@spraxium/common';
-import type { JobStatus } from './interfaces/job-status.interface';
+import type { JobStatus } from '../interfaces/job-status.interface';
 import { ScheduleRegistry } from './schedule.registry';
 
 @Injectable()

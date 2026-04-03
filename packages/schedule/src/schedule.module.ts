@@ -1,7 +1,7 @@
 import { Global, Module } from '@spraxium/common';
-import { ScheduleLifecycle } from './schedule.lifecycle';
-import { ScheduleRegistry } from './schedule.registry';
-import { ScheduleService } from './schedule.service';
+import { ScheduleLifecycle } from './runtime/schedule.lifecycle';
+import { ScheduleRegistry } from './runtime/schedule.registry';
+import { ScheduleService } from './runtime/schedule.service';
 
 @Global()
 @Module({

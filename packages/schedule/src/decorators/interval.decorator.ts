@@ -12,7 +12,7 @@ import type { IntervalOptions } from '../interfaces/interval-options.interface';
  * without any drift accumulation. If the previous execution takes longer than
  * the interval, the next tick still fires on schedule.
  *
- * Unlike `@Cron`, there is no expression parsing — this is a simple `setInterval` under the hood,
+ * Unlike `@Cron`, there is no expression parsing , this is a simple `setInterval` under the hood,
  * wrapped with the distributed lock so only one instance runs per tick in a cluster.
  *
  * @param ms - Interval in milliseconds. Must be greater than 0.

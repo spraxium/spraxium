@@ -9,7 +9,7 @@ import type { TimeoutOptions } from '../interfaces/timeout-options.interface';
  * Schedules a method to run once, after a delay from boot time.
  *
  * The method is called exactly once after `ms` milliseconds from when the bot finishes
- * booting (`onBoot`). After execution, the job is automatically unregistered — it will
+ * booting (`onBoot`). After execution, the job is automatically unregistered , it will
  * not appear in `ScheduleService.getAll()` afterwards.
  *
  * Use this for deferred one-shot work that depends on the application being ready,

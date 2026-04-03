@@ -1,13 +1,13 @@
 import { Injectable } from '@spraxium/common';
 import { ConfigStore, Logger, ModuleLoader } from '@spraxium/core';
-import { MESSAGES } from './constants/messages.constant';
-import { MemoryDriver } from './drivers/memory.driver';
-import type { JobEntry } from './interfaces/job-entry.interface';
-import type { JobStatus } from './interfaces/job-status.interface';
-import type { ScheduleDriver } from './interfaces/schedule-driver.interface';
+import { MESSAGES } from '../constants/messages.constant';
+import { MemoryDriver } from '../drivers/memory.driver';
+import type { JobEntry } from '../interfaces/job-entry.interface';
+import type { JobStatus } from '../interfaces/job-status.interface';
+import type { ScheduleDriver } from '../interfaces/schedule-driver.interface';
+import { defineSchedule } from '../schedule.config';
+import { getNextRunDate } from '../utils/cron.parser';
 import { JobScanner } from './job.scanner';
-import { defineSchedule } from './schedule.config';
-import { getNextRunDate } from './utils/cron.parser';
 
 @Injectable()
 export class ScheduleRegistry {
@@ -103,10 +103,8 @@ export class ScheduleRegistry {
     }
     this.clearJobTimers(job);
     this.jobs.delete(name);
-
     const idx = this.pendingAfterOnline.indexOf(job);
     if (idx !== -1) this.pendingAfterOnline.splice(idx, 1);
-
     this.log.info(MESSAGES.JOB_DESTROYED(name));
   }
 
