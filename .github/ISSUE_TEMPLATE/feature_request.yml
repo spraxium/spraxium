@@ -15,14 +15,16 @@ body:
       description: Which package would this feature belong to?
       options:
         - "@spraxium/core"
-        - "@spraxium/cli"
         - "@spraxium/common"
         - "@spraxium/components"
+        - "@spraxium/cli"
         - "@spraxium/env"
+        - "@spraxium/http"
         - "@spraxium/i18n"
         - "@spraxium/analytics"
-        - "@spraxium/cache"
         - "@spraxium/schedule"
+        - "@spraxium/signal"
+        - "@spraxium/signal-client"
         - "@spraxium/testing"
         - "New package"
         - "Not sure"

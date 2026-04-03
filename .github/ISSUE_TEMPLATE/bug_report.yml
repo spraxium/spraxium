@@ -15,14 +15,16 @@ body:
       description: Which package is the bug in?
       options:
         - "@spraxium/core"
-        - "@spraxium/cli"
         - "@spraxium/common"
         - "@spraxium/components"
+        - "@spraxium/cli"
         - "@spraxium/env"
+        - "@spraxium/http"
         - "@spraxium/i18n"
         - "@spraxium/analytics"
-        - "@spraxium/cache"
         - "@spraxium/schedule"
+        - "@spraxium/signal"
+        - "@spraxium/signal-client"
         - "@spraxium/testing"
         - "Multiple packages"
         - "Not sure"
@@ -57,7 +59,7 @@ body:
     id: description
     attributes:
       label: Description
-      description: A clear description of the bug — what happened vs what you expected.
+      description: A clear description of the bug. What happened vs what you expected.
       placeholder: |
         What happened:
         What I expected:
@@ -119,4 +121,4 @@ body:
     id: context
     attributes:
       label: Additional Context
-      description: Anything else that might be relevant — config, module structure, etc.
+      description: Anything else that might be relevant. Config, module structure, etc.

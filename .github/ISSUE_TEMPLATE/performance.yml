@@ -1,0 +1,95 @@
+name: Performance Issue
+description: Report unexpectedly slow behavior or high resource usage
+title: "perf: "
+labels: ["performance", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Performance issues are hard to track down without context. Please include as many details as you can.
+
+  - type: dropdown
+    id: package
+    attributes:
+      label: Affected Package
+      options:
+        - "@spraxium/core"
+        - "@spraxium/common"
+        - "@spraxium/components"
+        - "@spraxium/cli"
+        - "@spraxium/env"
+        - "@spraxium/http"
+        - "@spraxium/i18n"
+        - "@spraxium/analytics"
+        - "@spraxium/schedule"
+        - "@spraxium/signal"
+        - "@spraxium/signal-client"
+        - "@spraxium/testing"
+        - "Multiple packages"
+        - "Not sure"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      options:
+        - "Startup / boot time"
+        - "High memory usage"
+        - "High CPU usage"
+        - "Slow command response"
+        - "Slow HTTP endpoint"
+        - "Slow DI resolution"
+        - "Scheduler overhead"
+        - "Other"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Describe what is slow and under what conditions. Include any metrics or profiling data you have.
+      placeholder: |
+        Observed behavior:
+        Expected behavior:
+        Conditions (guild size, shard count, etc.):
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: Minimal code or steps to trigger the issue.
+      render: typescript
+
+  - type: textarea
+    id: profiling
+    attributes:
+      label: Profiling Data
+      description: Paste flamegraph output, heap snapshots, or benchmark results if available.
+      render: shell
+
+  - type: input
+    id: spraxium-version
+    attributes:
+      label: Spraxium Version
+      placeholder: "e.g. 0.1.0"
+    validations:
+      required: true
+
+  - type: input
+    id: node-version
+    attributes:
+      label: Node.js Version
+      placeholder: "e.g. 22.4.0"
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional Context
+      description: Bot scale, deployment environment, sharding config, or anything else relevant.

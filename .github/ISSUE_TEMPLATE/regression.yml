@@ -15,14 +15,16 @@ body:
       label: Affected Package
       options:
         - "@spraxium/core"
-        - "@spraxium/cli"
         - "@spraxium/common"
         - "@spraxium/components"
+        - "@spraxium/cli"
         - "@spraxium/env"
+        - "@spraxium/http"
         - "@spraxium/i18n"
         - "@spraxium/analytics"
-        - "@spraxium/cache"
         - "@spraxium/schedule"
+        - "@spraxium/signal"
+        - "@spraxium/signal-client"
         - "@spraxium/testing"
         - "Multiple packages"
         - "Not sure"
