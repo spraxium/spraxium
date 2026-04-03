@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { toKebabCase, toPascalCase } from '../src/utils/case.utils';
+import { toKebabCase, toPascalCase } from '../src/utils/case.util';
 
 describe('toPascalCase', () => {
   it('capitalizes a single lowercase word', () => {

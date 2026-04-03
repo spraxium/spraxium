@@ -3,8 +3,8 @@ import type { Command } from 'commander';
 import { MessageConstant } from '../constants';
 import { BaseCommand } from '../core/base.command';
 import type { EnvInfo, InfoReport } from '../interfaces';
-import type { InfoCollector } from '../services/info-collector';
-import type { CliLogger } from '../ui/cli-logger';
+import type { InfoCollector } from '../services/info-collector.service';
+import type { CliLogger } from '../ui/cli.logger';
 
 export class InfoCommand extends BaseCommand {
   constructor(

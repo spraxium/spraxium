@@ -2,8 +2,8 @@ import chalk from 'chalk';
 import type { Command } from 'commander';
 import { MessageConstant, UnicodeConstant } from '../constants';
 import { BaseCommand } from '../core/base.command';
-import type { ProcessRunner } from '../services/process-runner';
-import type { CliLogger } from '../ui/cli-logger';
+import type { ProcessRunner } from '../services/process-runner.service';
+import type { CliLogger } from '../ui/cli.logger';
 
 export class BuildCommand extends BaseCommand {
   constructor(

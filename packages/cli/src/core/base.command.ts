@@ -1,6 +1,6 @@
 import type { Command } from 'commander';
 import type { CliCommand } from '../interfaces';
-import type { CliLogger } from '../ui/cli-logger';
+import type { CliLogger } from '../ui/cli.logger';
 
 export abstract class BaseCommand implements CliCommand {
   constructor(protected readonly logger: CliLogger) {}

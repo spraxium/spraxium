@@ -5,13 +5,13 @@ import type { Command } from 'commander';
 import { MessageConstant } from '../constants';
 import { BaseCommand } from '../core/base.command';
 import type { Schematic } from '../interfaces';
-import { buildSchematicLookup } from '../schematics/schematic-registry';
-import type { FileSystem } from '../services/file-system';
-import type { ModuleRegistrar } from '../services/module-registrar';
-import type { ProjectDetector } from '../services/project-detector';
-import type { CliLogger } from '../ui/cli-logger';
-import { toKebabCase, toPascalCase } from '../utils/case.utils';
-import { buildRelativeImport } from '../utils/path.utils';
+import { buildSchematicLookup } from '../schematics/schematic.registry';
+import type { FileSystem } from '../services/file-system.service';
+import type { ModuleRegistrar } from '../services/module-registrar.service';
+import type { ProjectDetector } from '../services/project-detector.service';
+import type { CliLogger } from '../ui/cli.logger';
+import { toKebabCase, toPascalCase } from '../utils/case.util';
+import { buildRelativeImport } from '../utils/path.util';
 
 export class GenerateCommand extends BaseCommand {
   private readonly lookup: Map<string, Schematic>;

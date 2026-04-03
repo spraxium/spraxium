@@ -1,5 +1,5 @@
 import path from 'node:path';
-import type { FileSystem } from './file-system';
+import type { FileSystem } from './file-system.service';
 
 export class ModuleRegistrar {
   constructor(private readonly fs: FileSystem) {}

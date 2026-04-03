@@ -1,5 +1,5 @@
-export { UnicodeConstant } from './unicode.constants';
-export { RegexConstant } from './regex.constants';
-export { MessageConstant } from './message.constants';
-export { WatcherConstant } from './watcher.constants';
-export { BuildConstant } from './build.constants';
+export { UnicodeConstant } from './unicode.constant';
+export { RegexConstant } from './regex.constant';
+export { MessageConstant } from './message.constant';
+export { WatcherConstant } from './watcher.constant';
+export { BuildConstant } from './build.constant';

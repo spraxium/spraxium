@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildRelativeImport, toForwardSlash } from '../src/utils/path.utils';
+import { buildRelativeImport, toForwardSlash } from '../src/utils/path.util';
 
 describe('toForwardSlash', () => {
   it('converts backslashes to forward slashes', () => {

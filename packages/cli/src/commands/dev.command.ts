@@ -4,12 +4,12 @@ import type { Command } from 'commander';
 import { type ResultPromise, execa } from 'execa';
 import { MessageConstant, UnicodeConstant } from '../constants';
 import { BaseCommand } from '../core/base.command';
-import type { ConfigReader } from '../services/config-reader';
-import { DevWatcher } from '../services/dev-watcher';
-import type { ProjectDetector } from '../services/project-detector';
-import type { CliLogger } from '../ui/cli-logger';
+import type { ConfigReader } from '../services/config-reader.service';
+import { DevWatcher } from '../services/dev-watcher.service';
+import type { ProjectDetector } from '../services/project-detector.service';
+import type { CliLogger } from '../ui/cli.logger';
 
-const swcLoaderHref = new URL('./swc-loader.js', import.meta.url).href;
+const swcLoaderHref = new URL('./swc.loader.js', import.meta.url).href;
 
 export class DevCommand extends BaseCommand {
   constructor(
