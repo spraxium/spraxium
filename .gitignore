@@ -6,3 +6,7 @@ dist/
 !.env.example
 apps/sandbox/.spraxium
 /docs
+
+# Temporary legacy files from previous development phase (migrated from an older repository).
+# These files are intentionally kept for reference but should not be tracked by Git.
+/_old
