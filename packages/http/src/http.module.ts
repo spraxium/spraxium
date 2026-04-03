@@ -1,5 +1,5 @@
 import { Global, Module } from '@spraxium/common';
-import { HttpServer } from './services/http-server.service';
+import { HttpServer } from './service/http-server.service';
 
 @Global()
 @Module({

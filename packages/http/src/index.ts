@@ -71,7 +71,7 @@ export {
   RouteBuilder,
   RouteRegistry,
   ValidationPipe,
-} from './services';
+} from './service';
 export type {
   BanOptions,
   Constructor,
