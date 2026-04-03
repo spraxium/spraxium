@@ -5,7 +5,7 @@ import type { SignalEnvelope } from './interfaces/signal-envelope.interface';
  * Builds and cryptographically signs signal envelopes.
  *
  * Signature algorithm: HMAC-SHA256 over the message string
- * `${nonce}.${sentAt}.${JSON.stringify(payload)}` — identical to the
+ * `${nonce}.${sentAt}.${JSON.stringify(payload)}` , identical to the
  * verification formula used by @spraxium/signal on the receiver side.
  */
 export class SignalEnvelopeBuilder {

@@ -1,3 +1,4 @@
+import type { FallbackConfig } from '../fallback/interfaces';
 import type { RateLimitStrategy } from '../types/rate-limit-strategy.type';
 
 /**
@@ -20,10 +21,16 @@ export interface SignalClientConfig {
   /**
    * How to behave when all webhooks are rate-limited simultaneously.
    *
-   * - `'skip'` *(default)* — throws `AllWebhooksRateLimitedError` immediately.
-   * - `'wait'` — waits for the soonest webhook to cool down, then retries once.
+   * - `'skip'` *(default)* , throws `AllWebhooksRateLimitedError` immediately.
+   * - `'wait'` , waits for the soonest webhook to cool down, then retries once.
    *
    * @default 'skip'
    */
   rateLimitStrategy?: RateLimitStrategy;
+
+  /**
+   * Enables the fallback system for reliable signal delivery.
+   * Failed signals are persisted and retried with exponential backoff.
+   */
+  fallback?: FallbackConfig;
 }

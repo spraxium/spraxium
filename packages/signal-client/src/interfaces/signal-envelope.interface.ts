@@ -1,7 +1,7 @@
 /**
  * The complete signal protocol envelope.
  * Mirrors the type in @spraxium/signal without creating a cross-package
- * dependency — both packages are intentionally standalone.
+ * dependency , both packages are intentionally standalone.
  */
 export interface SignalEnvelope {
   readonly v: 1;

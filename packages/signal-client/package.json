@@ -15,13 +15,15 @@
   "scripts": {
     "build": "tsdown",
     "dev": "tsdown --watch",
+    "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "lint": "biome check src/"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
     "tsdown": "^0.12.0",
-    "typescript": "^5.7.0"
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0"
   },
   "engines": {
     "node": ">=20.0.0"

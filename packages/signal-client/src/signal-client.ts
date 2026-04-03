@@ -1,8 +1,10 @@
-﻿import { AllWebhooksRateLimitedError } from './errors/all-webhooks-rate-limited.error';
+import { AllWebhooksRateLimitedError } from './errors/all-webhooks-rate-limited.error';
+import { SignalClientError } from './errors/signal-client.error';
+import { FallbackWorker } from './fallback/fallback-worker';
+import type { FallbackConfig, FallbackStore } from './fallback/interfaces';
 import type { SendOptions } from './interfaces/send-options.interface';
 import type { SignalClientConfig } from './interfaces/signal-client-config.interface';
 import type { SignalEnvelope } from './interfaces/signal-envelope.interface';
-import { SignalClientError } from './errors/signal-client.error';
 import { SignalEnvelopeBuilder } from './signal-envelope-builder';
 import type { RateLimitStrategy } from './types/rate-limit-strategy.type';
 import { WebhookPool } from './webhook-pool';
@@ -43,19 +45,29 @@ export class SignalClient {
   private readonly builder: SignalEnvelopeBuilder;
   private readonly _pool: WebhookPool;
   private readonly strategy: RateLimitStrategy;
+  private readonly _fallback: FallbackWorker | undefined;
 
-  constructor(config: SignalClientConfig) {
+  constructor(config: SignalClientConfig, fallbackStore?: FallbackStore) {
     this.builder = new SignalEnvelopeBuilder(config.hmacSecret);
     this._pool = new WebhookPool(config.webhookUrls);
     this.strategy = config.rateLimitStrategy ?? 'skip';
+
+    if (config.fallback?.enabled) {
+      this._fallback = new FallbackWorker(this, config.fallback, fallbackStore);
+      this._fallback.start();
+    }
   }
 
-  /**
-   * Read-only access to the webhook pool.
-   * Use `client.pool.status()` to inspect rate-limit state for each webhook.
-   */
   get pool(): WebhookPool {
     return this._pool;
+  }
+
+  get fallback(): FallbackWorker | undefined {
+    return this._fallback;
+  }
+
+  destroy(): void {
+    this._fallback?.stop();
   }
 
   /**
@@ -84,18 +96,26 @@ export class SignalClient {
   ): Promise<void> {
     const envelope = this.builder.build(event, guildId, payload);
 
-    if (options.webhookIndex !== undefined) {
-      await this.deliver(this._pool.get(options.webhookIndex), options.webhookIndex, envelope);
-      return;
-    }
+    try {
+      if (options.webhookIndex !== undefined) {
+        await this.deliver(this._pool.get(options.webhookIndex), options.webhookIndex, envelope);
+        return;
+      }
 
-    const entry = this._pool.next();
-    if (!entry) {
-      await this.handleAllRateLimited(envelope);
-      return;
-    }
+      const entry = this._pool.next();
+      if (!entry) {
+        await this.handleAllRateLimited(envelope);
+        return;
+      }
 
-    await this.deliver(entry.url, entry.index, envelope);
+      await this.deliver(entry.url, entry.index, envelope);
+    } catch (err) {
+      if (this._fallback?.shouldTrack(event) && !options.skipFallback) {
+        await this._fallback.enqueue(envelope, event, guildId);
+        return;
+      }
+      throw err;
+    }
   }
 
   private async deliver(url: string, index: number, envelope: SignalEnvelope): Promise<void> {
@@ -121,7 +141,7 @@ export class SignalClient {
     if (!response.ok) {
       const body = await response.text().catch(() => '');
       throw new SignalClientError(
-        `Signal delivery failed: HTTP ${response.status} — ${response.statusText}`,
+        `Signal delivery failed: HTTP ${response.status} , ${response.statusText}`,
         response.status,
         body,
       );

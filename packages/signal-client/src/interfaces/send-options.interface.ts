@@ -4,4 +4,7 @@ export interface SendOptions {
    * round-robin rotation. Zero-based. Throws RangeError if out of bounds.
    */
   webhookIndex?: number;
+
+  /** @internal Used by FallbackWorker to avoid re-enqueue loops. */
+  skipFallback?: boolean;
 }

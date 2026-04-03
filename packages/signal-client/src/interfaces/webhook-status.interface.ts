@@ -1,6 +1,6 @@
 /**
  * Status snapshot of a single webhook in the pool.
- * Returned by `WebhookPool.status()` — use it for monitoring or custom routing.
+ * Returned by `WebhookPool.status()` , use it for monitoring or custom routing.
  */
 export interface WebhookStatus {
   /** Zero-based index in the pool. */
