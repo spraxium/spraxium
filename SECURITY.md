@@ -6,7 +6,7 @@ Spraxium is currently in early development. Only the current release (`0.0.1`) r
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 0.0.1   | ✅ |
+| 0.1.0   | ✅ |
 
 ## Reporting a Vulnerability
 

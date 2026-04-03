@@ -5,3 +5,4 @@ dist/
 .env.*
 !.env.example
 apps/sandbox/.spraxium
+/docs
