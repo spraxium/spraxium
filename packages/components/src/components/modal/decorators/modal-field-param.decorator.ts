@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { METADATA_KEYS } from '@spraxium/common';
+import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys';
 
 /**
  * Parameter decorator — injects the submitted value of a text field directly
@@ -18,8 +18,8 @@ export function Field(fieldId: string): ParameterDecorator {
   return (target, methodKey, parameterIndex): void => {
     const key = methodKey ?? 'handle';
     const existing: Array<{ index: number; fieldId: string }> =
-      Reflect.getMetadata(METADATA_KEYS.MODAL_FIELD_PARAM, target, key) ?? [];
+      Reflect.getMetadata(COMPONENT_METADATA_KEYS.MODAL_FIELD_PARAM, target, key) ?? [];
     existing.push({ index: parameterIndex, fieldId });
-    Reflect.defineMetadata(METADATA_KEYS.MODAL_FIELD_PARAM, existing, target, key);
+    Reflect.defineMetadata(COMPONENT_METADATA_KEYS.MODAL_FIELD_PARAM, existing, target, key);
   };
 }

@@ -1,12 +1,12 @@
 import 'reflect-metadata';
-import { METADATA_KEYS } from '@spraxium/common';
+import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys';
 import type { AnyConstructor } from '../../../types';
 import type { SelectHandlerMeta } from '../interfaces';
 
 function makeSelectHandler(component: AnyConstructor): ClassDecorator {
   return (target): void => {
     const meta: SelectHandlerMeta = { component };
-    Reflect.defineMetadata(METADATA_KEYS.SELECT_HANDLER, meta, target);
+    Reflect.defineMetadata(COMPONENT_METADATA_KEYS.SELECT_HANDLER, meta, target);
   };
 }
 

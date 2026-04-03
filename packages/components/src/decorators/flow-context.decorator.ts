@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { METADATA_KEYS } from '@spraxium/common';
+import { COMPONENT_METADATA_KEYS } from '../component-metadata-keys';
 
 /**
  * Parameter decorator that injects the `SpraxiumContext` associated with the current interaction.
@@ -17,6 +17,11 @@ import { METADATA_KEYS } from '@spraxium/common';
  */
 export function FlowContext(): ParameterDecorator {
   return (target: object, propertyKey: string | symbol | undefined, parameterIndex: number): void => {
-    Reflect.defineMetadata(METADATA_KEYS.FLOW_CONTEXT_PARAM, parameterIndex, target, propertyKey ?? 'handle');
+    Reflect.defineMetadata(
+      COMPONENT_METADATA_KEYS.FLOW_CONTEXT_PARAM,
+      parameterIndex,
+      target,
+      propertyKey ?? 'handle',
+    );
   };
 }

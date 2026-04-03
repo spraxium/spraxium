@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { METADATA_KEYS } from '@spraxium/common';
+import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys';
 import type { ModalValidationRule } from '../interfaces';
 
 /**
@@ -18,6 +18,6 @@ import type { ModalValidationRule } from '../interfaces';
  */
 export function ModalValidate(rules: Array<ModalValidationRule>): PropertyDecorator {
   return (target, propertyKey): void => {
-    Reflect.defineMetadata(METADATA_KEYS.MODAL_VALIDATOR, rules, target, propertyKey);
+    Reflect.defineMetadata(COMPONENT_METADATA_KEYS.MODAL_VALIDATOR, rules, target, propertyKey);
   };
 }

@@ -1,6 +1,6 @@
 import 'reflect-metadata';
-import { METADATA_KEYS } from '@spraxium/common';
 import type { ModalSubmitInteraction } from 'discord.js';
+import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys';
 import type { AnyConstructor } from '../../../types';
 import type {
   ModalErrorEmbed,
@@ -19,20 +19,20 @@ export class ModalValidatorRunner {
     interaction: ModalSubmitInteraction,
   ): Array<ModalValidationError> {
     const propertyList: Array<string> =
-      Reflect.getMetadata(METADATA_KEYS.MODAL_FIELDS_LIST, builderCtor) ?? [];
+      Reflect.getMetadata(COMPONENT_METADATA_KEYS.MODAL_FIELDS_LIST, builderCtor) ?? [];
     const proto = builderCtor.prototype as object;
     const errors: Array<ModalValidationError> = [];
 
     for (const propKey of propertyList) {
       const rules: Array<ModalValidationRule> | undefined = Reflect.getMetadata(
-        METADATA_KEYS.MODAL_VALIDATOR,
+        COMPONENT_METADATA_KEYS.MODAL_VALIDATOR,
         proto,
         propKey,
       );
       if (!rules || rules.length === 0) continue;
 
       const fieldMeta: ModalFieldMetadata | undefined = Reflect.getMetadata(
-        METADATA_KEYS.MODAL_FIELD,
+        COMPONENT_METADATA_KEYS.MODAL_FIELD,
         proto,
         propKey,
       );

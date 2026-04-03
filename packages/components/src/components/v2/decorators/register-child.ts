@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { METADATA_KEYS } from '@spraxium/common';
+import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys';
 import type { V2ChildDef } from '../interfaces';
 
 /**
@@ -7,10 +7,13 @@ import type { V2ChildDef } from '../interfaces';
  * creating it if it does not exist yet.
  */
 export function getChildren(target: object): Array<V2ChildDef> {
-  const existing: Array<V2ChildDef> | undefined = Reflect.getMetadata(METADATA_KEYS.V2_CHILDREN, target);
+  const existing: Array<V2ChildDef> | undefined = Reflect.getMetadata(
+    COMPONENT_METADATA_KEYS.V2_CHILDREN,
+    target,
+  );
   if (existing) return existing;
   const fresh: Array<V2ChildDef> = [];
-  Reflect.defineMetadata(METADATA_KEYS.V2_CHILDREN, fresh, target);
+  Reflect.defineMetadata(COMPONENT_METADATA_KEYS.V2_CHILDREN, fresh, target);
   return fresh;
 }
 

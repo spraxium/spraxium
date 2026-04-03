@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import { METADATA_KEYS } from '@spraxium/common';
 import { type ButtonInteraction, type Client, Events, type Interaction } from 'discord.js';
+import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys';
 import type { ButtonComponentMeta, ButtonHandlerMeta, DynamicButtonConfig } from '../../../components/button';
 import { ContextStore } from '../../context';
 import type { ComponentsConfig, SpraxiumContext } from '../../lifecycle';
@@ -27,14 +28,14 @@ export class ButtonDispatcher {
 
   registerStatic(ctor: Constructor, instance: unknown): void {
     const handlerMeta: ButtonHandlerMeta | undefined = Reflect.getMetadata(
-      METADATA_KEYS.BUTTON_HANDLER,
+      COMPONENT_METADATA_KEYS.BUTTON_HANDLER,
       ctor,
     );
     if (!handlerMeta) return;
 
     const componentClass = handlerMeta.component as Constructor;
     const componentMeta: ButtonComponentMeta | undefined = Reflect.getMetadata(
-      METADATA_KEYS.BUTTON_COMPONENT,
+      COMPONENT_METADATA_KEYS.BUTTON_COMPONENT,
       componentClass,
     );
     if (!componentMeta) {
@@ -57,14 +58,14 @@ export class ButtonDispatcher {
 
   registerDynamic(ctor: Constructor, instance: unknown): void {
     const handlerMeta: ButtonHandlerMeta | undefined = Reflect.getMetadata(
-      METADATA_KEYS.DYNAMIC_BUTTON_HANDLER,
+      COMPONENT_METADATA_KEYS.DYNAMIC_BUTTON_HANDLER,
       ctor,
     );
     if (!handlerMeta) return;
 
     const componentClass = handlerMeta.component as Constructor;
     const componentMeta: DynamicButtonConfig | undefined = Reflect.getMetadata(
-      METADATA_KEYS.DYNAMIC_BUTTON_COMPONENT,
+      COMPONENT_METADATA_KEYS.DYNAMIC_BUTTON_COMPONENT,
       componentClass,
     );
     if (!componentMeta) {
@@ -116,7 +117,7 @@ export class ButtonDispatcher {
       const proto = resolved.handlerCtor.prototype as Record<string | symbol, unknown>;
       const ctxIndex: number | undefined = Reflect.getMetadata(METADATA_KEYS.CTX_PARAM, proto, 'handle');
       const flowCtxIndex: number | undefined = Reflect.getMetadata(
-        METADATA_KEYS.FLOW_CONTEXT_PARAM,
+        COMPONENT_METADATA_KEYS.FLOW_CONTEXT_PARAM,
         proto,
         'handle',
       );
@@ -147,12 +148,12 @@ export class ButtonDispatcher {
       const proto = resolved.handlerCtor.prototype as Record<string | symbol, unknown>;
       const ctxIndex: number | undefined = Reflect.getMetadata(METADATA_KEYS.CTX_PARAM, proto, 'handle');
       const flowCtxIndex: number | undefined = Reflect.getMetadata(
-        METADATA_KEYS.FLOW_CONTEXT_PARAM,
+        COMPONENT_METADATA_KEYS.FLOW_CONTEXT_PARAM,
         proto,
         'handle',
       );
       const selectedIndex: number | undefined = Reflect.getMetadata(
-        METADATA_KEYS.SELECTED_PARAM,
+        COMPONENT_METADATA_KEYS.SELECTED_PARAM,
         proto,
         'handle',
       );

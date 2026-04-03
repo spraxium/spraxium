@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { METADATA_KEYS } from '@spraxium/common';
+import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys';
 import type { SelectOptionConfig } from '../interfaces';
 
 /**
@@ -11,7 +11,7 @@ import type { SelectOptionConfig } from '../interfaces';
 export function SelectOption(config: SelectOptionConfig): ClassDecorator {
   return (target): void => {
     const existing: Array<SelectOptionConfig> =
-      Reflect.getMetadata(METADATA_KEYS.SELECT_OPTIONS_LIST, target) ?? [];
+      Reflect.getMetadata(COMPONENT_METADATA_KEYS.SELECT_OPTIONS_LIST, target) ?? [];
     existing.push({
       label: config.label,
       value: config.value,
@@ -19,6 +19,6 @@ export function SelectOption(config: SelectOptionConfig): ClassDecorator {
       default: config.default,
       emoji: config.emoji,
     });
-    Reflect.defineMetadata(METADATA_KEYS.SELECT_OPTIONS_LIST, existing, target);
+    Reflect.defineMetadata(COMPONENT_METADATA_KEYS.SELECT_OPTIONS_LIST, existing, target);
   };
 }

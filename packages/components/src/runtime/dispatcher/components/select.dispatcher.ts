@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import { METADATA_KEYS } from '@spraxium/common';
 import { type AnySelectMenuInteraction, type Client, Events, type Interaction } from 'discord.js';
+import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys';
 import type { SelectComponentMeta, SelectHandlerMeta } from '../../../components/select';
 import { ContextStore } from '../../context';
 import type { ComponentsConfig, SpraxiumContext } from '../../lifecycle';
@@ -26,14 +27,14 @@ export class SelectDispatcher {
 
   register(ctor: Constructor, instance: unknown): void {
     const handlerMeta: SelectHandlerMeta | undefined = Reflect.getMetadata(
-      METADATA_KEYS.SELECT_HANDLER,
+      COMPONENT_METADATA_KEYS.SELECT_HANDLER,
       ctor,
     );
     if (!handlerMeta) return;
 
     const componentClass = handlerMeta.component as Constructor;
     const componentMeta: SelectComponentMeta | undefined = Reflect.getMetadata(
-      METADATA_KEYS.SELECT_COMPONENT,
+      COMPONENT_METADATA_KEYS.SELECT_COMPONENT,
       componentClass,
     );
     if (!componentMeta) {
@@ -107,9 +108,9 @@ export class SelectDispatcher {
       const proto = resolved.handlerCtor.prototype as Record<string | symbol, unknown>;
       const ctxIndex: number | undefined = Reflect.getMetadata(METADATA_KEYS.CTX_PARAM, proto, 'handle');
       const selectedValuesIndices: Array<number> =
-        Reflect.getMetadata(METADATA_KEYS.SELECT_SELECTED_VALUES_PARAM, proto, 'handle') ?? [];
+        Reflect.getMetadata(COMPONENT_METADATA_KEYS.SELECT_SELECTED_VALUES_PARAM, proto, 'handle') ?? [];
       const flowCtxIndex: number | undefined = Reflect.getMetadata(
-        METADATA_KEYS.FLOW_CONTEXT_PARAM,
+        COMPONENT_METADATA_KEYS.FLOW_CONTEXT_PARAM,
         proto,
         'handle',
       );

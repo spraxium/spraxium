@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { METADATA_KEYS } from '@spraxium/common';
+import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys';
 import type { ModalCacheConfig } from '../interfaces';
 
 /**
@@ -16,6 +16,6 @@ import type { ModalCacheConfig } from '../interfaces';
  */
 export function ModalCache(config: ModalCacheConfig): ClassDecorator {
   return (target): void => {
-    Reflect.defineMetadata(METADATA_KEYS.MODAL_CACHE_CONFIG, config, target);
+    Reflect.defineMetadata(COMPONENT_METADATA_KEYS.MODAL_CACHE_CONFIG, config, target);
   };
 }

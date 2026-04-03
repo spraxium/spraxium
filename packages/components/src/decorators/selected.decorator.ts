@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { METADATA_KEYS } from '@spraxium/common';
+import { COMPONENT_METADATA_KEYS } from '../component-metadata-keys';
 
 /**
  * Parameter decorator that injects the full select-menu interaction into a handler method.
@@ -17,6 +17,11 @@ import { METADATA_KEYS } from '@spraxium/common';
  */
 export function Selected(): ParameterDecorator {
   return (target: object, propertyKey: string | symbol | undefined, parameterIndex: number): void => {
-    Reflect.defineMetadata(METADATA_KEYS.SELECTED_PARAM, parameterIndex, target, propertyKey ?? 'handle');
+    Reflect.defineMetadata(
+      COMPONENT_METADATA_KEYS.SELECTED_PARAM,
+      parameterIndex,
+      target,
+      propertyKey ?? 'handle',
+    );
   };
 }

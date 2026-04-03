@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { METADATA_KEYS } from '@spraxium/common';
+import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys';
 import type { MentionableSelectConfig, SelectComponentMeta } from '../interfaces';
 
 /**
@@ -10,7 +10,7 @@ import type { MentionableSelectConfig, SelectComponentMeta } from '../interfaces
 export function MentionableSelect(config: MentionableSelectConfig): ClassDecorator {
   return (target): void => {
     Reflect.defineMetadata(
-      METADATA_KEYS.SELECT_COMPONENT,
+      COMPONENT_METADATA_KEYS.SELECT_COMPONENT,
       { type: 'mentionable', ...config } as SelectComponentMeta,
       target,
     );

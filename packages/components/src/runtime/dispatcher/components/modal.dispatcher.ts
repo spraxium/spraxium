@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import { METADATA_KEYS } from '@spraxium/common';
 import { type Client, Events, type Interaction, type ModalSubmitInteraction } from 'discord.js';
+import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys';
 import type {
   ModalCacheConfig,
   ModalComponentMetadata,
@@ -31,14 +32,14 @@ export class ModalDispatcher {
 
   register(ctor: Constructor, instance: unknown): void {
     const handlerMeta: ModalHandlerMetadata | undefined = Reflect.getMetadata(
-      METADATA_KEYS.MODAL_HANDLER,
+      COMPONENT_METADATA_KEYS.MODAL_HANDLER,
       ctor,
     );
     if (!handlerMeta) return;
 
     const builderCtor = handlerMeta.builder as Constructor;
     const componentMeta: ModalComponentMetadata | undefined = Reflect.getMetadata(
-      METADATA_KEYS.MODAL_COMPONENT,
+      COMPONENT_METADATA_KEYS.MODAL_COMPONENT,
       builderCtor,
     );
     if (!componentMeta) {
@@ -101,7 +102,7 @@ export class ModalDispatcher {
     config?: ComponentsConfig,
   ): Promise<void> {
     const cacheConfig: ModalCacheConfig | undefined = Reflect.getMetadata(
-      METADATA_KEYS.MODAL_CACHE_CONFIG,
+      COMPONENT_METADATA_KEYS.MODAL_CACHE_CONFIG,
       resolved.builderCtor,
     );
     if (cacheConfig) {
@@ -113,7 +114,7 @@ export class ModalDispatcher {
     }
 
     const validationConfig: ModalValidationOptions | undefined = Reflect.getMetadata(
-      METADATA_KEYS.MODAL_VALIDATION_CONFIG,
+      COMPONENT_METADATA_KEYS.MODAL_VALIDATION_CONFIG,
       resolved.builderCtor,
     );
     const embedFn = validationConfig?.embed ?? config?.modal?.validationEmbed;
@@ -130,7 +131,7 @@ export class ModalDispatcher {
     const proto = resolved.handlerCtor.prototype as Record<string | symbol, unknown>;
     const ctxIndex: number | undefined = Reflect.getMetadata(METADATA_KEYS.CTX_PARAM, proto, 'handle');
     const fieldParams: Array<{ index: number; fieldId: string }> =
-      Reflect.getMetadata(METADATA_KEYS.MODAL_FIELD_PARAM, proto, 'handle') ?? [];
+      Reflect.getMetadata(COMPONENT_METADATA_KEYS.MODAL_FIELD_PARAM, proto, 'handle') ?? [];
 
     const fieldDefById = this.buildFieldDefMap(resolved.builderCtor);
 
@@ -146,12 +147,13 @@ export class ModalDispatcher {
 
   private buildFieldDefMap(builderCtor: Constructor): Map<string, ModalFieldDef> {
     const modalProto = builderCtor.prototype;
-    const fieldKeys: Array<string> = Reflect.getMetadata(METADATA_KEYS.MODAL_FIELDS_LIST, builderCtor) ?? [];
+    const fieldKeys: Array<string> =
+      Reflect.getMetadata(COMPONENT_METADATA_KEYS.MODAL_FIELDS_LIST, builderCtor) ?? [];
 
     return new Map<string, ModalFieldDef>(
       fieldKeys.flatMap((key): Array<[string, ModalFieldDef]> => {
         const meta: ModalFieldMetadata | undefined = Reflect.getMetadata(
-          METADATA_KEYS.MODAL_FIELD,
+          COMPONENT_METADATA_KEYS.MODAL_FIELD,
           modalProto,
           key,
         );
@@ -204,7 +206,7 @@ export class ModalDispatcher {
 
   private clearCacheOnSuccess(resolved: ResolvedModalHandler, modal: ModalSubmitInteraction): void {
     const cacheConfig: ModalCacheConfig | undefined = Reflect.getMetadata(
-      METADATA_KEYS.MODAL_CACHE_CONFIG,
+      COMPONENT_METADATA_KEYS.MODAL_CACHE_CONFIG,
       resolved.builderCtor,
     );
     if (cacheConfig) {

@@ -1,17 +1,17 @@
 import 'reflect-metadata';
-import { METADATA_KEYS } from '@spraxium/common';
+import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys';
 import type { AnyConstructor } from '../../../types';
 import type { EmbedFieldDef } from '../interfaces';
 import type { EmbedFieldConfig } from '../interfaces';
 import type { EmbedSchema } from '../interfaces';
 
 function ensureFieldsList(target: object): Array<EmbedFieldDef> {
-  const existing = Reflect.getMetadata(METADATA_KEYS.EMBED_FIELDS_LIST, target) as
+  const existing = Reflect.getMetadata(COMPONENT_METADATA_KEYS.EMBED_FIELDS_LIST, target) as
     | Array<EmbedFieldDef>
     | undefined;
   if (existing) return existing;
   const fresh: Array<EmbedFieldDef> = [];
-  Reflect.defineMetadata(METADATA_KEYS.EMBED_FIELDS_LIST, fresh, target);
+  Reflect.defineMetadata(COMPONENT_METADATA_KEYS.EMBED_FIELDS_LIST, fresh, target);
   return fresh;
 }
 
@@ -29,9 +29,9 @@ export function Embed(target: AnyConstructor): void;
 export function Embed(schema?: EmbedSchema): ClassDecorator;
 export function Embed(schemaOrTarget?: EmbedSchema | AnyConstructor): ClassDecorator | undefined {
   const apply = (target: AnyConstructor, schema: EmbedSchema) => {
-    Reflect.defineMetadata(METADATA_KEYS.EMBED_COMPONENT, schema, target);
-    if (!Reflect.hasMetadata(METADATA_KEYS.EMBED_FIELDS_LIST, target)) {
-      Reflect.defineMetadata(METADATA_KEYS.EMBED_FIELDS_LIST, [], target);
+    Reflect.defineMetadata(COMPONENT_METADATA_KEYS.EMBED_COMPONENT, schema, target);
+    if (!Reflect.hasMetadata(COMPONENT_METADATA_KEYS.EMBED_FIELDS_LIST, target)) {
+      Reflect.defineMetadata(COMPONENT_METADATA_KEYS.EMBED_FIELDS_LIST, [], target);
     }
   };
 
@@ -80,7 +80,7 @@ export function EmbedField<T = unknown>(config: EmbedFieldConfig<T>): PropertyDe
 export function EmbedWhen<T = unknown>(predicate: (data: T) => boolean): PropertyDecorator {
   return (target, propertyKey) => {
     Reflect.defineMetadata(
-      `${METADATA_KEYS.EMBED_WHEN}:${String(propertyKey)}`,
+      `${COMPONENT_METADATA_KEYS.EMBED_WHEN}:${String(propertyKey)}`,
       predicate,
       target.constructor,
     );

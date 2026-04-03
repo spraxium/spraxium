@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { METADATA_KEYS } from '@spraxium/common';
+import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys';
 import type { V2ChildDef, V2ContainerMeta } from '../interfaces';
 
 /**
@@ -10,9 +10,9 @@ import type { V2ChildDef, V2ContainerMeta } from '../interfaces';
  */
 export function V2Container(config: V2ContainerMeta = {}): ClassDecorator {
   return (target) => {
-    Reflect.defineMetadata(METADATA_KEYS.V2_CONTAINER, config, target);
-    if (!Reflect.hasMetadata(METADATA_KEYS.V2_CHILDREN, target)) {
-      Reflect.defineMetadata(METADATA_KEYS.V2_CHILDREN, [], target);
+    Reflect.defineMetadata(COMPONENT_METADATA_KEYS.V2_CONTAINER, config, target);
+    if (!Reflect.hasMetadata(COMPONENT_METADATA_KEYS.V2_CHILDREN, target)) {
+      Reflect.defineMetadata(COMPONENT_METADATA_KEYS.V2_CHILDREN, [], target);
     }
   };
 }

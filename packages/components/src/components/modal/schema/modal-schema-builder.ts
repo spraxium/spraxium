@@ -1,6 +1,6 @@
 import 'reflect-metadata';
-import { METADATA_KEYS } from '@spraxium/common';
 import type { ModalBuilder } from 'discord.js';
+import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys';
 import type { AnyConstructor } from '../../../types';
 import type {
   ModalCheckboxGroupFieldDef,
@@ -20,7 +20,7 @@ export class ModalSchemaBuilder {
     cachedValues?: Record<string, string>,
   ): ModalSchema {
     const componentMeta: ModalComponentMetadata | undefined = Reflect.getMetadata(
-      METADATA_KEYS.MODAL_COMPONENT,
+      COMPONENT_METADATA_KEYS.MODAL_COMPONENT,
       ModalClass,
     );
     if (!componentMeta) {
@@ -30,16 +30,16 @@ export class ModalSchemaBuilder {
     }
 
     const textDisplays: Array<{ content: string }> =
-      Reflect.getMetadata(METADATA_KEYS.MODAL_TEXT_DISPLAYS, ModalClass) ?? [];
+      Reflect.getMetadata(COMPONENT_METADATA_KEYS.MODAL_TEXT_DISPLAYS, ModalClass) ?? [];
 
     const propertyList: Array<string> =
-      Reflect.getMetadata(METADATA_KEYS.MODAL_FIELDS_LIST, ModalClass) ?? [];
+      Reflect.getMetadata(COMPONENT_METADATA_KEYS.MODAL_FIELDS_LIST, ModalClass) ?? [];
     const proto = ModalClass.prototype as object;
     const staticFields: Array<ModalFieldDef> = [];
 
     for (const propKey of propertyList) {
       const meta: ModalFieldMetadata | undefined = Reflect.getMetadata(
-        METADATA_KEYS.MODAL_FIELD,
+        COMPONENT_METADATA_KEYS.MODAL_FIELD,
         proto,
         propKey,
       );
@@ -48,7 +48,7 @@ export class ModalSchemaBuilder {
       if (data !== undefined) {
         // biome-ignore lint/suspicious/noExplicitAny: predicate callback shape is user-defined
         const predicate: ((d: any) => boolean) | undefined = Reflect.getMetadata(
-          METADATA_KEYS.MODAL_WHEN,
+          COMPONENT_METADATA_KEYS.MODAL_WHEN,
           proto,
           propKey,
         );
@@ -66,7 +66,7 @@ export class ModalSchemaBuilder {
     }
 
     const dynamicMethodKey: string | undefined = Reflect.getMetadata(
-      METADATA_KEYS.MODAL_DYNAMIC_FIELDS,
+      COMPONENT_METADATA_KEYS.MODAL_DYNAMIC_FIELDS,
       ModalClass,
     );
     let dynamicFields: Array<ModalFieldDef> = [];

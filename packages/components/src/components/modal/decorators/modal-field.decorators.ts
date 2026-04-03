@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { METADATA_KEYS } from '@spraxium/common';
+import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys';
 import type {
   ModalChannelSelectFieldConfig,
   ModalCheckboxFieldConfig,
@@ -20,10 +20,11 @@ import type {
 
 function registerField(target: object, propertyKey: string | symbol, field: ModalFieldDef): void {
   const key = String(propertyKey);
-  const list: Array<string> = Reflect.getMetadata(METADATA_KEYS.MODAL_FIELDS_LIST, target.constructor) ?? [];
+  const list: Array<string> =
+    Reflect.getMetadata(COMPONENT_METADATA_KEYS.MODAL_FIELDS_LIST, target.constructor) ?? [];
 
   const existing: ModalFieldMetadata | undefined = Reflect.getMetadata(
-    METADATA_KEYS.MODAL_FIELD,
+    COMPONENT_METADATA_KEYS.MODAL_FIELD,
     target,
     propertyKey,
   );
@@ -32,14 +33,14 @@ function registerField(target: object, propertyKey: string | symbol, field: Moda
 
   if (!existing) {
     list.push(key);
-    Reflect.defineMetadata(METADATA_KEYS.MODAL_FIELDS_LIST, list, target.constructor);
+    Reflect.defineMetadata(COMPONENT_METADATA_KEYS.MODAL_FIELDS_LIST, list, target.constructor);
   }
 
   // Collect any choices that were stored before the field decorator ran.
   // With experimentalDecorators, @ModalChoice/@ModalOption run bottom-to-top
   // BEFORE the field decorator, so choices may already be pending.
   const pendingChoices: Array<ModalChoiceItem> =
-    Reflect.getMetadata(METADATA_KEYS.MODAL_PENDING_CHOICES, target, propertyKey) ?? [];
+    Reflect.getMetadata(COMPONENT_METADATA_KEYS.MODAL_PENDING_CHOICES, target, propertyKey) ?? [];
 
   const meta: ModalFieldMetadata = {
     propertyKey: key,
@@ -48,23 +49,23 @@ function registerField(target: object, propertyKey: string | symbol, field: Moda
     choices: [...(existing?.choices ?? []), ...pendingChoices],
   };
 
-  Reflect.defineMetadata(METADATA_KEYS.MODAL_FIELD, meta, target, propertyKey);
+  Reflect.defineMetadata(COMPONENT_METADATA_KEYS.MODAL_FIELD, meta, target, propertyKey);
 
   if (pendingChoices.length > 0) {
-    Reflect.deleteMetadata(METADATA_KEYS.MODAL_PENDING_CHOICES, target, propertyKey);
+    Reflect.deleteMetadata(COMPONENT_METADATA_KEYS.MODAL_PENDING_CHOICES, target, propertyKey);
   }
 }
 
 function appendChoice(target: object, propertyKey: string | symbol, choice: ModalChoiceItem): void {
   const existing: ModalFieldMetadata | undefined = Reflect.getMetadata(
-    METADATA_KEYS.MODAL_FIELD,
+    COMPONENT_METADATA_KEYS.MODAL_FIELD,
     target,
     propertyKey,
   );
 
   if (existing) {
     Reflect.defineMetadata(
-      METADATA_KEYS.MODAL_FIELD,
+      COMPONENT_METADATA_KEYS.MODAL_FIELD,
       { ...existing, choices: [choice, ...existing.choices] },
       target,
       propertyKey,
@@ -74,9 +75,9 @@ function appendChoice(target: object, propertyKey: string | symbol, choice: Moda
 
   // Field decorator hasn't run yet — store choices in a pending key.
   const pending: Array<ModalChoiceItem> =
-    Reflect.getMetadata(METADATA_KEYS.MODAL_PENDING_CHOICES, target, propertyKey) ?? [];
+    Reflect.getMetadata(COMPONENT_METADATA_KEYS.MODAL_PENDING_CHOICES, target, propertyKey) ?? [];
   pending.unshift(choice);
-  Reflect.defineMetadata(METADATA_KEYS.MODAL_PENDING_CHOICES, pending, target, propertyKey);
+  Reflect.defineMetadata(COMPONENT_METADATA_KEYS.MODAL_PENDING_CHOICES, pending, target, propertyKey);
 }
 
 /**
@@ -330,9 +331,9 @@ export function ModalFileUpload(config: ModalFileUploadFieldConfig): PropertyDec
 export function ModalTextDisplay(config: ModalTextDisplayConfig): ClassDecorator {
   return (target): void => {
     const existing: Array<{ content: string }> =
-      Reflect.getMetadata(METADATA_KEYS.MODAL_TEXT_DISPLAYS, target) ?? [];
+      Reflect.getMetadata(COMPONENT_METADATA_KEYS.MODAL_TEXT_DISPLAYS, target) ?? [];
     existing.push({ content: config.content });
-    Reflect.defineMetadata(METADATA_KEYS.MODAL_TEXT_DISPLAYS, existing, target);
+    Reflect.defineMetadata(COMPONENT_METADATA_KEYS.MODAL_TEXT_DISPLAYS, existing, target);
   };
 }
 

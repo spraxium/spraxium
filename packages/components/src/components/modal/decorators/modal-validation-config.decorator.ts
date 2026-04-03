@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { METADATA_KEYS } from '@spraxium/common';
+import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys';
 import type { ModalValidationOptions } from '../interfaces';
 
 /**
@@ -17,6 +17,6 @@ import type { ModalValidationOptions } from '../interfaces';
  */
 export function ModalValidationConfig(options: ModalValidationOptions): ClassDecorator {
   return (target): void => {
-    Reflect.defineMetadata(METADATA_KEYS.MODAL_VALIDATION_CONFIG, options, target);
+    Reflect.defineMetadata(COMPONENT_METADATA_KEYS.MODAL_VALIDATION_CONFIG, options, target);
   };
 }

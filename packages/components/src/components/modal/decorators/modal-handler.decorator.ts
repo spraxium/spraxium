@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { METADATA_KEYS } from '@spraxium/common';
+import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys';
 import type { ModalHandlerMetadata } from '../interfaces';
 
 /**
@@ -17,6 +17,6 @@ export function ModalHandler(
 ): ClassDecorator {
   return (target): void => {
     const meta: ModalHandlerMetadata = { builder };
-    Reflect.defineMetadata(METADATA_KEYS.MODAL_HANDLER, meta, target);
+    Reflect.defineMetadata(COMPONENT_METADATA_KEYS.MODAL_HANDLER, meta, target);
   };
 }

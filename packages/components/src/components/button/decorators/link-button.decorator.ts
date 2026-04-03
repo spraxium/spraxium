@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { METADATA_KEYS } from '@spraxium/common';
+import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys';
 import type { ButtonComponentMeta, LinkButtonConfig } from '../interfaces';
 
 /**
@@ -10,6 +10,6 @@ import type { ButtonComponentMeta, LinkButtonConfig } from '../interfaces';
 export function LinkButton(config: LinkButtonConfig): ClassDecorator {
   return (target): void => {
     const meta: ButtonComponentMeta = { isLink: true, isDynamic: false, ...config };
-    Reflect.defineMetadata(METADATA_KEYS.BUTTON_COMPONENT, meta, target);
+    Reflect.defineMetadata(COMPONENT_METADATA_KEYS.BUTTON_COMPONENT, meta, target);
   };
 }

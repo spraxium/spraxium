@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { METADATA_KEYS } from '@spraxium/common';
+import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys';
 import type { EmbedAuthorConfig, EmbedFooterConfig } from '../interfaces';
 
 /**
@@ -13,7 +13,7 @@ import type { EmbedAuthorConfig, EmbedFooterConfig } from '../interfaces';
  */
 export function EmbedTitle<T = unknown>(value: string | ((data: T) => string)): PropertyDecorator {
   return (target) => {
-    Reflect.defineMetadata(METADATA_KEYS.EMBED_TITLE, value, target.constructor);
+    Reflect.defineMetadata(COMPONENT_METADATA_KEYS.EMBED_TITLE, value, target.constructor);
   };
 }
 
@@ -31,7 +31,7 @@ export function EmbedColor<T = unknown>(
   value: number | string | ((data: T) => number | string),
 ): PropertyDecorator {
   return (target) => {
-    Reflect.defineMetadata(METADATA_KEYS.EMBED_COLOR, value, target.constructor);
+    Reflect.defineMetadata(COMPONENT_METADATA_KEYS.EMBED_COLOR, value, target.constructor);
   };
 }
 
@@ -48,7 +48,7 @@ export function EmbedFooter<T = unknown>(
   value: string | EmbedFooterConfig | ((data: T) => string | EmbedFooterConfig),
 ): PropertyDecorator {
   return (target) => {
-    Reflect.defineMetadata(METADATA_KEYS.EMBED_FOOTER, value, target.constructor);
+    Reflect.defineMetadata(COMPONENT_METADATA_KEYS.EMBED_FOOTER, value, target.constructor);
   };
 }
 
@@ -63,7 +63,7 @@ export function EmbedFooter<T = unknown>(
  */
 export function EmbedTimestamp<T = unknown>(value?: boolean | Date | ((data: T) => Date)): PropertyDecorator {
   return (target) => {
-    Reflect.defineMetadata(METADATA_KEYS.EMBED_TIMESTAMP, value ?? true, target.constructor);
+    Reflect.defineMetadata(COMPONENT_METADATA_KEYS.EMBED_TIMESTAMP, value ?? true, target.constructor);
   };
 }
 
@@ -80,7 +80,7 @@ export function EmbedAuthor<T = unknown>(
   value: EmbedAuthorConfig | ((data: T) => EmbedAuthorConfig),
 ): PropertyDecorator {
   return (target) => {
-    Reflect.defineMetadata(METADATA_KEYS.EMBED_AUTHOR, value, target.constructor);
+    Reflect.defineMetadata(COMPONENT_METADATA_KEYS.EMBED_AUTHOR, value, target.constructor);
   };
 }
 
@@ -89,7 +89,7 @@ export function EmbedAuthor<T = unknown>(
  */
 export function EmbedThumbnail<T = unknown>(value: string | ((data: T) => string)): PropertyDecorator {
   return (target) => {
-    Reflect.defineMetadata(METADATA_KEYS.EMBED_THUMBNAIL, value, target.constructor);
+    Reflect.defineMetadata(COMPONENT_METADATA_KEYS.EMBED_THUMBNAIL, value, target.constructor);
   };
 }
 
@@ -98,7 +98,7 @@ export function EmbedThumbnail<T = unknown>(value: string | ((data: T) => string
  */
 export function EmbedImage<T = unknown>(value: string | ((data: T) => string)): PropertyDecorator {
   return (target) => {
-    Reflect.defineMetadata(METADATA_KEYS.EMBED_IMAGE, value, target.constructor);
+    Reflect.defineMetadata(COMPONENT_METADATA_KEYS.EMBED_IMAGE, value, target.constructor);
   };
 }
 
@@ -107,6 +107,6 @@ export function EmbedImage<T = unknown>(value: string | ((data: T) => string)): 
  */
 export function EmbedUrl<T = unknown>(value: string | ((data: T) => string)): PropertyDecorator {
   return (target) => {
-    Reflect.defineMetadata(METADATA_KEYS.EMBED_URL, value, target.constructor);
+    Reflect.defineMetadata(COMPONENT_METADATA_KEYS.EMBED_URL, value, target.constructor);
   };
 }

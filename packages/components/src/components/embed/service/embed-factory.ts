@@ -1,5 +1,5 @@
-import { METADATA_KEYS } from '@spraxium/common';
 import { EmbedBuilder } from 'discord.js';
+import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys';
 import type { AnyConstructor } from '../../../types';
 import type { DescriptionBuilder } from '../builder';
 import type {
@@ -36,7 +36,9 @@ export class EmbedFactory {
   }
 
   private static getSchema(EmbedClass: AnyConstructor): EmbedSchema {
-    const schema = Reflect.getMetadata(METADATA_KEYS.EMBED_COMPONENT, EmbedClass) as EmbedSchema | undefined;
+    const schema = Reflect.getMetadata(COMPONENT_METADATA_KEYS.EMBED_COMPONENT, EmbedClass) as
+      | EmbedSchema
+      | undefined;
     if (!schema) throw new Error(`[EmbedService] ${EmbedClass.name} is not decorated with @Embed().`);
     return schema;
   }
@@ -56,7 +58,7 @@ export class EmbedFactory {
     d: unknown,
   ): void {
     const val =
-      EmbedFactory.prop<string | ((d: unknown) => string)>(EmbedClass, METADATA_KEYS.EMBED_TITLE) ??
+      EmbedFactory.prop<string | ((d: unknown) => string)>(EmbedClass, COMPONENT_METADATA_KEYS.EMBED_TITLE) ??
       schema.title;
     if (val) builder.setTitle(EmbedFactory.resolve(val, d));
   }
@@ -70,7 +72,7 @@ export class EmbedFactory {
     const val =
       EmbedFactory.prop<number | string | ((d: unknown) => number | string)>(
         EmbedClass,
-        METADATA_KEYS.EMBED_COLOR,
+        COMPONENT_METADATA_KEYS.EMBED_COLOR,
       ) ?? schema.color;
     if (val !== undefined) builder.setColor(ColorResolver.resolve(EmbedFactory.resolve(val, d)));
   }
@@ -82,7 +84,8 @@ export class EmbedFactory {
     d: unknown,
   ): void {
     const val =
-      EmbedFactory.prop<string | ((d: unknown) => string)>(EmbedClass, METADATA_KEYS.EMBED_URL) ?? schema.url;
+      EmbedFactory.prop<string | ((d: unknown) => string)>(EmbedClass, COMPONENT_METADATA_KEYS.EMBED_URL) ??
+      schema.url;
     if (val) builder.setURL(EmbedFactory.resolve(val, d));
   }
 
@@ -93,8 +96,10 @@ export class EmbedFactory {
     d: unknown,
   ): void {
     const val =
-      EmbedFactory.prop<boolean | Date | ((d: unknown) => Date)>(EmbedClass, METADATA_KEYS.EMBED_TIMESTAMP) ??
-      schema.timestamp;
+      EmbedFactory.prop<boolean | Date | ((d: unknown) => Date)>(
+        EmbedClass,
+        COMPONENT_METADATA_KEYS.EMBED_TIMESTAMP,
+      ) ?? schema.timestamp;
     if (!val) return;
     if (typeof val === 'function') builder.setTimestamp(val(d));
     else if (val instanceof Date) builder.setTimestamp(val);
@@ -108,8 +113,10 @@ export class EmbedFactory {
     d: unknown,
   ): void {
     const val =
-      EmbedFactory.prop<string | ((d: unknown) => string)>(EmbedClass, METADATA_KEYS.EMBED_THUMBNAIL) ??
-      schema.thumbnail;
+      EmbedFactory.prop<string | ((d: unknown) => string)>(
+        EmbedClass,
+        COMPONENT_METADATA_KEYS.EMBED_THUMBNAIL,
+      ) ?? schema.thumbnail;
     if (val) builder.setThumbnail(EmbedFactory.resolve(val, d));
   }
 
@@ -120,7 +127,7 @@ export class EmbedFactory {
     d: unknown,
   ): void {
     const val =
-      EmbedFactory.prop<string | ((d: unknown) => string)>(EmbedClass, METADATA_KEYS.EMBED_IMAGE) ??
+      EmbedFactory.prop<string | ((d: unknown) => string)>(EmbedClass, COMPONENT_METADATA_KEYS.EMBED_IMAGE) ??
       schema.image;
     if (val) builder.setImage(EmbedFactory.resolve(val, d));
   }
@@ -134,7 +141,7 @@ export class EmbedFactory {
     const val =
       EmbedFactory.prop<EmbedAuthorConfig | ((d: unknown) => EmbedAuthorConfig)>(
         EmbedClass,
-        METADATA_KEYS.EMBED_AUTHOR,
+        COMPONENT_METADATA_KEYS.EMBED_AUTHOR,
       ) ?? schema.author;
     if (!val) return;
     const cfg = EmbedFactory.resolve(val, d);
@@ -150,7 +157,7 @@ export class EmbedFactory {
     const raw =
       EmbedFactory.prop<string | EmbedFooterConfig | ((d: unknown) => string | EmbedFooterConfig)>(
         EmbedClass,
-        METADATA_KEYS.EMBED_FOOTER,
+        COMPONENT_METADATA_KEYS.EMBED_FOOTER,
       ) ?? schema.footer;
     if (raw === undefined) return;
     const resolved = EmbedFactory.resolve(raw, d);
@@ -164,7 +171,7 @@ export class EmbedFactory {
     schema: EmbedSchema,
     d: unknown,
   ): void {
-    const descDef = Reflect.getMetadata(METADATA_KEYS.EMBED_DESCRIPTION_FIELD, EmbedClass) as
+    const descDef = Reflect.getMetadata(COMPONENT_METADATA_KEYS.EMBED_DESCRIPTION_FIELD, EmbedClass) as
       | EmbedDescriptionDef
       | undefined;
     if (descDef) {
@@ -182,14 +189,15 @@ export class EmbedFactory {
   }
 
   private static applyFields(builder: EmbedBuilder, EmbedClass: AnyConstructor, d: unknown): void {
-    const fieldDefs = (Reflect.getMetadata(METADATA_KEYS.EMBED_FIELDS_LIST, EmbedClass) ??
+    const fieldDefs = (Reflect.getMetadata(COMPONENT_METADATA_KEYS.EMBED_FIELDS_LIST, EmbedClass) ??
       []) as Array<EmbedFieldDef>;
     const sorted = [...fieldDefs].sort((a, b) => a.order - b.order);
 
     for (const field of sorted) {
-      const when = Reflect.getMetadata(`${METADATA_KEYS.EMBED_WHEN}:${field.propertyKey}`, EmbedClass) as
-        | ((d: unknown) => boolean)
-        | undefined;
+      const when = Reflect.getMetadata(
+        `${COMPONENT_METADATA_KEYS.EMBED_WHEN}:${field.propertyKey}`,
+        EmbedClass,
+      ) as ((d: unknown) => boolean) | undefined;
       if (when && !when(d)) continue;
 
       const name = EmbedFactory.resolve(field.name, d);

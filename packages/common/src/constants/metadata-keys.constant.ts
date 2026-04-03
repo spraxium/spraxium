@@ -30,18 +30,5 @@ export const METADATA_KEYS = {
   SLASH_SUBCOMMAND_GROUP: 'spraxium:slash_subcommand_group',
   SLASH_SUBCOMMAND_GROUPS: 'spraxium:slash_subcommand_groups',
   SLASH_AUTOCOMPLETE_HANDLER: 'spraxium:slash_autocomplete_handler',
-
-  EMBED_COMPONENT: 'spraxium:embed_component',
-  EMBED_FIELD: 'spraxium:embed_field',
-  EMBED_FIELDS_LIST: 'spraxium:embed_fields_list',
-  EMBED_WHEN: 'spraxium:embed_when',
-  EMBED_DESCRIPTION_FIELD: 'spraxium:embed_description_field',
-  EMBED_TITLE: 'spraxium:embed_title',
-  EMBED_COLOR: 'spraxium:embed_color',
-  EMBED_FOOTER: 'spraxium:embed_footer',
-  EMBED_TIMESTAMP: 'spraxium:embed_timestamp',
-  EMBED_AUTHOR: 'spraxium:embed_author',
-  EMBED_THUMBNAIL: 'spraxium:embed_thumbnail',
-  EMBED_IMAGE: 'spraxium:embed_image',
-  EMBED_URL: 'spraxium:embed_url',
+  
 } as const;

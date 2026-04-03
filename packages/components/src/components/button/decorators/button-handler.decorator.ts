@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { METADATA_KEYS } from '@spraxium/common';
+import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys';
 import type { AnyConstructor } from '../../../types';
 import type { ButtonHandlerMeta } from '../interfaces';
 
@@ -11,6 +11,6 @@ import type { ButtonHandlerMeta } from '../interfaces';
 export function ButtonHandler(component: AnyConstructor): ClassDecorator {
   return (target): void => {
     const meta: ButtonHandlerMeta = { component };
-    Reflect.defineMetadata(METADATA_KEYS.BUTTON_HANDLER, meta, target);
+    Reflect.defineMetadata(COMPONENT_METADATA_KEYS.BUTTON_HANDLER, meta, target);
   };
 }

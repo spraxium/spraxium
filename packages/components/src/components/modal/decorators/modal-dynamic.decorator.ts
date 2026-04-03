@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { METADATA_KEYS } from '@spraxium/common';
+import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys';
 import type { ModalFieldDef } from '../interfaces';
 
 /**
@@ -13,7 +13,7 @@ import type { ModalFieldDef } from '../interfaces';
  */
 export function ModalDynamic<_T = unknown>(): ClassDecorator {
   return (target): void => {
-    Reflect.defineMetadata(METADATA_KEYS.MODAL_DYNAMIC, true, target);
+    Reflect.defineMetadata(COMPONENT_METADATA_KEYS.MODAL_DYNAMIC, true, target);
   };
 }
 
@@ -29,7 +29,7 @@ export function ModalDynamic<_T = unknown>(): ClassDecorator {
  */
 export function ModalDynamicFields(): MethodDecorator {
   return (target, propertyKey): void => {
-    Reflect.defineMetadata(METADATA_KEYS.MODAL_DYNAMIC_FIELDS, propertyKey, target.constructor);
+    Reflect.defineMetadata(COMPONENT_METADATA_KEYS.MODAL_DYNAMIC_FIELDS, propertyKey, target.constructor);
   };
 }
 
@@ -43,7 +43,7 @@ export function ModalDynamicFields(): MethodDecorator {
  */
 export function ModalWhen<T = unknown>(predicate: (data: T) => boolean): PropertyDecorator {
   return (target, propertyKey): void => {
-    Reflect.defineMetadata(METADATA_KEYS.MODAL_WHEN, predicate, target, propertyKey);
+    Reflect.defineMetadata(COMPONENT_METADATA_KEYS.MODAL_WHEN, predicate, target, propertyKey);
   };
 }
 

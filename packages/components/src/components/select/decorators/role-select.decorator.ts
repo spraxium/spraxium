@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { METADATA_KEYS } from '@spraxium/common';
+import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys';
 import type { RoleSelectConfig, SelectComponentMeta } from '../interfaces';
 
 /**
@@ -10,7 +10,7 @@ import type { RoleSelectConfig, SelectComponentMeta } from '../interfaces';
 export function RoleSelect(config: RoleSelectConfig): ClassDecorator {
   return (target): void => {
     Reflect.defineMetadata(
-      METADATA_KEYS.SELECT_COMPONENT,
+      COMPONENT_METADATA_KEYS.SELECT_COMPONENT,
       { type: 'role', ...config } as SelectComponentMeta,
       target,
     );

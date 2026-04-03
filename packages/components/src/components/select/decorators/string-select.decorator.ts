@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { METADATA_KEYS } from '@spraxium/common';
+import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys';
 import type { SelectComponentMeta, StringSelectConfig } from '../interfaces';
 
 /**
@@ -10,6 +10,6 @@ import type { SelectComponentMeta, StringSelectConfig } from '../interfaces';
 export function StringSelect(config: StringSelectConfig): ClassDecorator {
   return (target): void => {
     const meta: SelectComponentMeta = { type: 'string', ...config };
-    Reflect.defineMetadata(METADATA_KEYS.SELECT_COMPONENT, meta, target);
+    Reflect.defineMetadata(COMPONENT_METADATA_KEYS.SELECT_COMPONENT, meta, target);
   };
 }

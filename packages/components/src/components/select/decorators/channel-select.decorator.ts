@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { METADATA_KEYS } from '@spraxium/common';
+import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys';
 import type { ChannelSelectConfig, SelectComponentMeta } from '../interfaces';
 
 /**
@@ -18,6 +18,6 @@ export function ChannelSelect(config: ChannelSelectConfig): ClassDecorator {
       disabled: config.disabled,
       channelTypes: config.channelTypes,
     };
-    Reflect.defineMetadata(METADATA_KEYS.SELECT_COMPONENT, meta, target);
+    Reflect.defineMetadata(COMPONENT_METADATA_KEYS.SELECT_COMPONENT, meta, target);
   };
 }

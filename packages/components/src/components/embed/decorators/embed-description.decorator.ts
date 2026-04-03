@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { METADATA_KEYS } from '@spraxium/common';
+import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys';
 import type { DescriptionBuilder } from '../builder';
 import type { EmbedDescriptionDef } from '../interfaces';
 
@@ -21,6 +21,6 @@ export function EmbedDescription<T = unknown>(
       propertyKey: String(propertyKey),
       value: value as string | ((data: unknown) => string | DescriptionBuilder),
     };
-    Reflect.defineMetadata(METADATA_KEYS.EMBED_DESCRIPTION_FIELD, def, target.constructor);
+    Reflect.defineMetadata(COMPONENT_METADATA_KEYS.EMBED_DESCRIPTION_FIELD, def, target.constructor);
   };
 }

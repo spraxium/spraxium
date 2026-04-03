@@ -1,6 +1,7 @@
 import 'reflect-metadata';
-import { Injectable, METADATA_KEYS } from '@spraxium/common';
+import { Injectable } from '@spraxium/common';
 import type { ModalBuilder, ModalSubmitInteraction } from 'discord.js';
+import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys';
 import type { AnyConstructor } from '../../../types';
 import { ModalFieldCache } from '../cache';
 import type { ModalCacheConfig, ModalComponentMetadata } from '../interfaces';
@@ -30,7 +31,7 @@ export class ModalService {
     data?: T,
   ): ModalBuilder {
     const meta: ModalComponentMetadata | undefined = Reflect.getMetadata(
-      METADATA_KEYS.MODAL_COMPONENT,
+      COMPONENT_METADATA_KEYS.MODAL_COMPONENT,
       ModalClass,
     );
 
@@ -44,7 +45,7 @@ export class ModalService {
   /** Manually clears the per-user cache for a modal. */
   clearCacheFor(ModalClass: AnyConstructor, interaction: ModalSubmitInteraction): void {
     const meta: ModalComponentMetadata | undefined = Reflect.getMetadata(
-      METADATA_KEYS.MODAL_COMPONENT,
+      COMPONENT_METADATA_KEYS.MODAL_COMPONENT,
       ModalClass,
     );
     if (!meta) return;
@@ -57,7 +58,7 @@ export class ModalService {
     interaction: { user: { id: string } },
   ): Record<string, string> | null {
     const meta: ModalComponentMetadata | undefined = Reflect.getMetadata(
-      METADATA_KEYS.MODAL_COMPONENT,
+      COMPONENT_METADATA_KEYS.MODAL_COMPONENT,
       ModalClass,
     );
     if (!meta) return null;
@@ -71,13 +72,13 @@ export class ModalService {
     values: Record<string, string>,
   ): void {
     const cacheCfg: ModalCacheConfig | undefined = Reflect.getMetadata(
-      METADATA_KEYS.MODAL_CACHE_CONFIG,
+      COMPONENT_METADATA_KEYS.MODAL_CACHE_CONFIG,
       ModalClass,
     );
     if (!cacheCfg) return;
 
     const meta: ModalComponentMetadata | undefined = Reflect.getMetadata(
-      METADATA_KEYS.MODAL_COMPONENT,
+      COMPONENT_METADATA_KEYS.MODAL_COMPONENT,
       ModalClass,
     );
     if (!meta) return;

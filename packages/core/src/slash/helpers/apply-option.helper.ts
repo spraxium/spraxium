@@ -1,10 +1,7 @@
 import type { SlashOptionMetadata } from '@spraxium/common';
-import type { ChannelType, SlashCommandBuilder, SlashCommandSubcommandBuilder } from 'discord.js';
+import type { SlashCommandBuilder, SlashCommandSubcommandBuilder } from 'discord.js';
 import type { GuildChannelTypeResolvable } from '../types';
 
-/**
- * Applies a single `SlashOptionMetadata` entry to a command or subcommand builder.
- */
 export function applyOption(
   builder: SlashCommandBuilder | SlashCommandSubcommandBuilder,
   opt: SlashOptionMetadata,
@@ -57,7 +54,7 @@ export function applyOption(
       builder.addChannelOption((o) => {
         o.setName(opt.name).setDescription(opt.description).setRequired(opt.required);
         if (opt.channelTypes?.length) {
-          o.addChannelTypes(...(opt.channelTypes as unknown as GuildChannelTypeResolvable[]));
+          o.addChannelTypes(...(opt.channelTypes as unknown as Array<GuildChannelTypeResolvable>));
         }
         return o;
       });

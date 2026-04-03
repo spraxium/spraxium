@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { Injectable, METADATA_KEYS } from '@spraxium/common';
+import { Inject, Injectable } from '@spraxium/common';
 import {
   type ActionRowBuilder,
   ButtonBuilder,
@@ -13,6 +13,7 @@ import {
   TextDisplayBuilder,
   ThumbnailBuilder,
 } from 'discord.js';
+import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys';
 import type { SpraxiumContext } from '../../../runtime/context';
 import type { AnyConstructor } from '../../../types';
 import { ButtonService } from '../../button';
@@ -36,20 +37,26 @@ import type {
 
 @Injectable()
 export class V2Service {
-  private readonly buttons = new ButtonService();
-  private readonly selects = new SelectService();
+  constructor(
+    @Inject(ButtonService) private readonly buttons: ButtonService,
+    @Inject(SelectService) private readonly selects: SelectService,
+  ) {}
 
   build<T = unknown>(
     ContainerClass: AnyConstructor,
     data?: T,
     context?: SpraxiumContext<unknown>,
   ): ContainerBuilder {
-    const meta: V2ContainerMeta | undefined = Reflect.getMetadata(METADATA_KEYS.V2_CONTAINER, ContainerClass);
+    const meta: V2ContainerMeta | undefined = Reflect.getMetadata(
+      COMPONENT_METADATA_KEYS.V2_CONTAINER,
+      ContainerClass,
+    );
     if (!meta) {
       throw new Error(`[V2Service] ${ContainerClass.name} is not decorated with @V2Container.`);
     }
 
-    const children: Array<V2ChildDef> = Reflect.getMetadata(METADATA_KEYS.V2_CHILDREN, ContainerClass) ?? [];
+    const children: Array<V2ChildDef> =
+      Reflect.getMetadata(COMPONENT_METADATA_KEYS.V2_CHILDREN, ContainerClass) ?? [];
     const sorted = [...children].sort((a, b) => a.order - b.order);
 
     const built = sorted
@@ -202,7 +209,7 @@ export class V2Service {
         }
 
         const firstClass = rawComponents[0];
-        if (Reflect.hasMetadata(METADATA_KEYS.SELECT_COMPONENT, firstClass)) {
+        if (Reflect.hasMetadata(COMPONENT_METADATA_KEYS.SELECT_COMPONENT, firstClass)) {
           return this.selects.build(
             firstClass,
             cfg.rowData,

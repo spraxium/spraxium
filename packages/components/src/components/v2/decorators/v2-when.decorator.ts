@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { METADATA_KEYS } from '@spraxium/common';
+import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys';
 import type { V2ChildDef } from '../interfaces';
 
 /**
@@ -11,7 +11,7 @@ import type { V2ChildDef } from '../interfaces';
 export function V2When(predicate: NonNullable<V2ChildDef['when']>): PropertyDecorator {
   return (target, propertyKey) => {
     const children: Array<V2ChildDef> =
-      Reflect.getMetadata(METADATA_KEYS.V2_CHILDREN, target.constructor) ?? [];
+      Reflect.getMetadata(COMPONENT_METADATA_KEYS.V2_CHILDREN, target.constructor) ?? [];
     const child = children.find((c) => c.propertyKey === String(propertyKey));
     if (child) child.when = predicate;
   };

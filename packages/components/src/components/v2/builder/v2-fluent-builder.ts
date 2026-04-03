@@ -16,7 +16,7 @@ import type { V2ContainerMeta, V2InnerBuilder, V2MediaGalleryItem, V2SeparatorCo
 import { buildContainer } from './build-container';
 
 export class V2ContainerFluentBuilder {
-  private readonly _components: Array<V2InnerBuilder> = [];
+  private readonly components: Array<V2InnerBuilder> = [];
 
   constructor(
     private readonly meta: V2ContainerMeta,
@@ -24,7 +24,7 @@ export class V2ContainerFluentBuilder {
   ) {}
 
   add(component: V2InnerBuilder): this {
-    this._components.push(component);
+    this.components.push(component);
     return this;
   }
 
@@ -69,7 +69,7 @@ export class V2ContainerFluentBuilder {
   }
 
   render(): ContainerBuilder {
-    return buildContainer(this.meta, this._components);
+    return buildContainer(this.meta, this.components);
   }
 
   toReply(): { components: Array<ContainerBuilder>; flags: MessageFlags.IsComponentsV2 } {

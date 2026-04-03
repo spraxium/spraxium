@@ -1,6 +1,7 @@
 import 'reflect-metadata';
-import { Injectable, METADATA_KEYS } from '@spraxium/common';
+import { Injectable } from '@spraxium/common';
 import { ActionRowBuilder, type ButtonBuilder } from 'discord.js';
+import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys';
 import type { SpraxiumContext } from '../../../runtime/context';
 import type { AnyConstructor } from '../../../types';
 import type { ButtonComponentMeta, DynamicButtonConfig } from '../interfaces';
@@ -61,7 +62,7 @@ export class ButtonService {
   }
 
   private getMeta(ButtonClass: AnyConstructor): ButtonComponentMeta {
-    const meta = Reflect.getOwnMetadata(METADATA_KEYS.BUTTON_COMPONENT, ButtonClass) as
+    const meta = Reflect.getOwnMetadata(COMPONENT_METADATA_KEYS.BUTTON_COMPONENT, ButtonClass) as
       | ButtonComponentMeta
       | undefined;
 
@@ -72,7 +73,7 @@ export class ButtonService {
   }
 
   private getDynamicMeta(DynamicClass: AnyConstructor): DynamicButtonConfig {
-    const meta = Reflect.getOwnMetadata(METADATA_KEYS.DYNAMIC_BUTTON_COMPONENT, DynamicClass) as
+    const meta = Reflect.getOwnMetadata(COMPONENT_METADATA_KEYS.DYNAMIC_BUTTON_COMPONENT, DynamicClass) as
       | ButtonComponentMeta
       | undefined;
 
