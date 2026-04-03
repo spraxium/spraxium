@@ -4,9 +4,9 @@ import type { Command } from 'commander';
 import { type ResultPromise, execa } from 'execa';
 import { MessageConstant, UnicodeConstant } from '../constants';
 import { BaseCommand } from '../core/base.command';
-import type { ConfigReader } from '../services/config-reader.service';
-import { DevWatcher } from '../services/dev-watcher.service';
-import type { ProjectDetector } from '../services/project-detector.service';
+import type { ConfigReader } from '../service/config-reader.service';
+import { DevWatcher } from '../service/dev-watcher.service';
+import type { ProjectDetector } from '../service/project-detector.service';
 import type { CliLogger } from '../ui/cli.logger';
 
 const swcLoaderHref = new URL('./swc.loader.js', import.meta.url).href;

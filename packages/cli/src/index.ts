@@ -7,12 +7,12 @@ import { InfoCommand } from './commands/info.command';
 import { StartCommand } from './commands/start.command';
 import { CommandRegistry } from './core/command.registry';
 import { ALL_SCHEMATICS } from './schematics/schematic.registry';
-import { ConfigReader } from './services/config-reader.service';
-import { FileSystem } from './services/file-system.service';
-import { InfoCollector } from './services/info-collector.service';
-import { ModuleRegistrar } from './services/module-registrar.service';
-import { ProcessRunner } from './services/process-runner.service';
-import { ProjectDetector } from './services/project-detector.service';
+import { ConfigReader } from './service/config-reader.service';
+import { FileSystem } from './service/file-system.service';
+import { InfoCollector } from './service/info-collector.service';
+import { ModuleRegistrar } from './service/module-registrar.service';
+import { ProcessRunner } from './service/process-runner.service';
+import { ProjectDetector } from './service/project-detector.service';
 import { CliLogger } from './ui/cli.logger';
 
 const logger = new CliLogger();
