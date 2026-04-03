@@ -117,7 +117,7 @@ export class GenerateCommand extends BaseCommand {
 
   /**
    * Prevents names like "boot-service" for a boot-service schematic,
-   * which would generate "boot-service.service.ts" — redundant suffix.
+   * which would generate "boot-service.service.ts" , redundant suffix.
    */
   private validateNameDoesNotRepeatSuffix(kebabName: string, schematic: Schematic): void {
     const suffix = schematic.fileSuffix;

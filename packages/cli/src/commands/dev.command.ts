@@ -83,7 +83,7 @@ export class DevCommand extends BaseCommand {
           }
         })
         .catch(() => {
-          // crashed or killed — watcher will trigger restart
+          // crashed or killed , watcher will trigger restart
         });
     };
 
