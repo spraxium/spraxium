@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { METADATA_KEYS } from '@spraxium/common';
 import { type Client, Events, type Interaction, type ModalSubmitInteraction } from 'discord.js';
-import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys';
+import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys.constant';
 import type {
   ModalCacheConfig,
   ModalComponentMetadata,

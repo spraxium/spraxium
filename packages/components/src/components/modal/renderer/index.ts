@@ -1,1 +1,1 @@
-export { ModalRenderer } from './modal-renderer';
+export { ModalRenderer } from './modal.renderer';

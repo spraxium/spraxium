@@ -9,4 +9,4 @@ export {
   EmbedThumbnail,
   EmbedImage,
   EmbedUrl,
-} from './embed-props.decorators';
+} from './embed-props.decorator';

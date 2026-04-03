@@ -15,7 +15,7 @@ export {
   ModalTextDisplay,
   ModalChoice,
   ModalOption,
-} from './modal-field.decorators';
+} from './modal-field.decorator';
 export { ModalHandler } from './modal-handler.decorator';
 export { ModalValidate } from './modal-validate.decorator';
 export { ModalValidationConfig } from './modal-validation-config.decorator';

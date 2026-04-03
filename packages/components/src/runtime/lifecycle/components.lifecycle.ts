@@ -2,8 +2,8 @@ import { Inject, Injectable } from '@spraxium/common';
 import type { SpraxiumOnBoot } from '@spraxium/common';
 import { ConfigStore } from '@spraxium/core';
 import { Client } from 'discord.js';
-import { ComponentDispatcher } from '../../dispatcher';
-import { defineComponents } from '../components.config';
+import { defineComponents } from '../../components.config';
+import { ComponentDispatcher } from '../dispatcher';
 import { initContextAdapter } from './context-adapter.factory';
 
 /**

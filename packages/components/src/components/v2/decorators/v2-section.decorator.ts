@@ -1,5 +1,5 @@
 import type { V2SectionConfig } from '../interfaces';
-import { registerChild } from './register-child';
+import { registerChild } from './register-child.helper';
 
 /**
  * Property decorator that registers a section child within a V2 container.

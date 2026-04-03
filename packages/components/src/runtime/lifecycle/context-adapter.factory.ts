@@ -4,8 +4,8 @@ import {
   MemoryContextAdapter,
   RedisContextAdapter,
   SqliteContextAdapter,
-} from '../../context';
-import type { ContextStorageConfig } from '../interfaces';
+} from '../context';
+import type { ContextStorageConfig } from './types';
 
 export async function initContextAdapter(
   cfg: ContextStorageConfig | undefined,

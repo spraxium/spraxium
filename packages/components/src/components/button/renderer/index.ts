@@ -1,1 +1,1 @@
-export { ButtonRenderer } from './button-renderer';
+export { ButtonRenderer } from './button.renderer';

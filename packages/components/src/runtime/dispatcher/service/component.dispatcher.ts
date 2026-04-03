@@ -3,7 +3,7 @@ import type { ComponentsConfig } from '../../lifecycle';
 import { ButtonDispatcher } from '../components/button.dispatcher';
 import { ModalDispatcher } from '../components/modal.dispatcher';
 import { SelectDispatcher } from '../components/select.dispatcher';
-import { pendingInstances } from './pending-store';
+import { pendingInstances } from './pending.store';
 
 /**
  * Coordinates all component interaction dispatchers (modal, select, button).

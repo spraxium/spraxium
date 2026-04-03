@@ -2,7 +2,7 @@ import { Injectable } from '@spraxium/common';
 import { EmbedBuilder } from 'discord.js';
 import type { AnyConstructor } from '../../../types';
 import { ColorResolver } from '../utils';
-import { EmbedFactory } from './embed-factory';
+import { EmbedFactory } from './embed.factory';
 
 /**
  * Builds Discord embeds from `@Embed` schema classes.

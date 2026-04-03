@@ -13,7 +13,7 @@ import {
 import type { SpraxiumContext } from '../../../runtime/context';
 import type { DescriptionBuilder } from '../../embed';
 import type { V2ContainerMeta, V2InnerBuilder, V2MediaGalleryItem, V2SeparatorConfig } from '../interfaces';
-import { buildContainer } from './build-container';
+import { buildContainer } from './build-container.util';
 
 export class V2ContainerFluentBuilder {
   private readonly components: Array<V2InnerBuilder> = [];

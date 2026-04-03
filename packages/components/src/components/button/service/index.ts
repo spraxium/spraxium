@@ -1,1 +1,1 @@
-export { ButtonService } from './button-service';
+export { ButtonService } from './button.service';

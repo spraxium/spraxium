@@ -8,5 +8,5 @@ export { V2Thumbnail } from './v2-thumbnail.decorator';
 export { V2File } from './v2-file.decorator';
 export { V2Row } from './v2-row.decorator';
 export { V2Dynamic } from './v2-dynamic.decorator';
-export { registerChild, getChildren } from './register-child';
-export { v2text, v2sep, v2separator, v2section, v2gallery, v2row } from './helpers';
+export { registerChild, getChildren } from './register-child.helper';
+export { v2text, v2sep, v2separator, v2section, v2gallery, v2row } from './v2-decorator.helper';

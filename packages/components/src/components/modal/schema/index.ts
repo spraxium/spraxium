@@ -1,1 +1,1 @@
-export { ModalSchemaBuilder } from './modal-schema-builder';
+export { ModalSchemaBuilder } from './modal-schema.builder';

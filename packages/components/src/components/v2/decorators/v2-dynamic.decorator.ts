@@ -1,5 +1,5 @@
 import type { V2DynamicConfig } from '../interfaces';
-import { registerChild } from './register-child';
+import { registerChild } from './register-child.helper';
 
 /**
  * Property decorator that registers a dynamic child factory within a V2 container.

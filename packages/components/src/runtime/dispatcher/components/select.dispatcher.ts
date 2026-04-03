@@ -1,12 +1,12 @@
 import 'reflect-metadata';
 import { METADATA_KEYS } from '@spraxium/common';
 import { type AnySelectMenuInteraction, type Client, Events, type Interaction } from 'discord.js';
-import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys';
+import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys.constant';
 import type { SelectComponentMeta, SelectHandlerMeta } from '../../../components/select';
 import { ContextStore } from '../../context';
 import type { ComponentsConfig, SpraxiumContext } from '../../lifecycle';
 import { resolveContextError } from '../helpers/context-error.helper';
-import { splitCustomId } from '../helpers/split-custom-id';
+import { splitCustomId } from '../helpers/split-custom-id.helper';
 import type { Constructor, ResolvedSelectHandler } from '../interfaces';
 
 /**

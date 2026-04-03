@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { Injectable } from '@spraxium/common';
 import type { ModalBuilder, ModalSubmitInteraction } from 'discord.js';
-import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys';
+import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys.constant';
 import type { AnyConstructor } from '../../../types';
 import { ModalFieldCache } from '../cache';
 import type { ModalCacheConfig, ModalComponentMetadata } from '../interfaces';

@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import type { V2TextDisplayConfig } from '../interfaces';
-import { registerChild } from './register-child';
+import { registerChild } from './register-child.helper';
 
 /**
  * Marks a property as a text display child within a V2 container.

@@ -1,5 +1,5 @@
 import type { V2FileConfig } from '../interfaces';
-import { registerChild } from './register-child';
+import { registerChild } from './register-child.helper';
 
 /**
  * Property decorator that registers a file attachment child within a V2 container.

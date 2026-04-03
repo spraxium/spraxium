@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys';
+import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys.constant';
 
 /**
  * Parameter decorator — injects the submitted value of a text field directly

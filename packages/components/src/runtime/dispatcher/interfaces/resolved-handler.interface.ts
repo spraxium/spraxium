@@ -1,4 +1,4 @@
-import type { Constructor } from './constructor.type';
+import type { Constructor } from '../types/constructor.type';
 
 export interface ResolvedModalHandler {
   customId: string;

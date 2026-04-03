@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { Injectable } from '@spraxium/common';
 import { ActionRowBuilder, type ButtonBuilder } from 'discord.js';
-import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys';
+import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys.constant';
 import type { SpraxiumContext } from '../../../runtime/context';
 import type { AnyConstructor } from '../../../types';
 import type { ButtonComponentMeta, DynamicButtonConfig } from '../interfaces';

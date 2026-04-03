@@ -14,5 +14,5 @@ export type {
   V2DynamicConfig,
   V2DynamicChildSpec,
 } from './v2-component.interface';
-export type { V2InnerBuilder } from './v2-inner-builder.type';
+export type { V2InnerBuilder } from '../types';
 export type { V2ReplyPayload } from './v2-reply-payload.interface';

@@ -1,6 +1,6 @@
 import type { ModalErrorEmbed, ModalValidationError } from '../../../components/modal';
-import type { ContextErrorMessage } from './context-error-message.type';
-import type { ContextStorageConfig } from './context-storage-config.type';
+import type { ContextErrorMessage } from '../types/context-error-message.type';
+import type { ContextStorageConfig } from '../types/context-storage-config.type';
 
 export interface ComponentsConfig {
   modal?: {

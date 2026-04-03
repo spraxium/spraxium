@@ -1,5 +1,5 @@
 import type { V2ActionRowConfig } from '../interfaces';
-import { registerChild } from './register-child';
+import { registerChild } from './register-child.helper';
 
 /**
  * Property decorator that registers an action row child within a V2 container.

@@ -1,1 +1,1 @@
-export { SelectRenderer } from './select-renderer';
+export { SelectRenderer } from './select.renderer';

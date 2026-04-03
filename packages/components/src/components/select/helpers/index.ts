@@ -1,1 +1,1 @@
-export { Selects, SelectDefBuilder } from './select.helpers';
+export { Selects, SelectDefBuilder } from './select.helper';

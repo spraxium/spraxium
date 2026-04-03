@@ -1,4 +1,4 @@
-import type { ContextErrorMessage } from '../../lifecycle/interfaces';
+import type { ContextErrorMessage } from '../../lifecycle/types';
 import type { ErrorReplyOptions } from '../types';
 /**
  * Resolves a `ContextErrorMessage` (plain string or embed factory) into

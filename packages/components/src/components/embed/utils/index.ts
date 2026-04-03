@@ -1,2 +1,2 @@
-export { ColorResolver } from './color-resolver';
-export * from './format';
+export { ColorResolver } from './color-resolver.util';
+export * from './format.util';

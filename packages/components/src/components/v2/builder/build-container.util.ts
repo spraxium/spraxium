@@ -9,7 +9,7 @@ import {
 } from 'discord.js';
 import type { V2ContainerMeta } from '../interfaces';
 import type { V2InnerBuilder } from '../interfaces';
-import { resolveAccentColor } from './resolve-accent-color';
+import { resolveAccentColor } from './resolve-accent-color.util';
 
 /**
  * Assembles a Discord `ContainerBuilder` from V2 metadata and a list of child components.

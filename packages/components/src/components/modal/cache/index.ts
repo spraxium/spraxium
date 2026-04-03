@@ -1,1 +1,1 @@
-export { ModalFieldCache } from './modal-field-cache';
+export { ModalFieldCache } from './modal-field.cache';

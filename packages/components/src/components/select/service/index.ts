@@ -1,1 +1,1 @@
-export { SelectService } from './select-service';
+export { SelectService } from './select.service';

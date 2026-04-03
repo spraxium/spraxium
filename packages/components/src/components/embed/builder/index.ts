@@ -1,1 +1,1 @@
-export { DescriptionBuilder, desc } from './description-builder';
+export { DescriptionBuilder, desc } from './description.builder';

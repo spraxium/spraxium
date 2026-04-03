@@ -1,1 +1,1 @@
-export { Colors, type ColorName } from './colors.constants';
+export { Colors, type ColorName } from './colors.constant';

@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys';
+import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys.constant';
 import type { V2ChildDef } from '../interfaces';
 
 /**

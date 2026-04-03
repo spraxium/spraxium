@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { COMPONENT_METADATA_KEYS } from '../component-metadata-keys';
+import { COMPONENT_METADATA_KEYS } from '../component-metadata-keys.constant';
 
 /**
  * Parameter decorator that injects the selected values (`string[]`) from a select-menu interaction.

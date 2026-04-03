@@ -1,5 +1,5 @@
 import type { V2MediaGalleryConfig } from '../interfaces';
-import { registerChild } from './register-child';
+import { registerChild } from './register-child.helper';
 
 /**
  * Property decorator that registers a media gallery child within a V2 container.
