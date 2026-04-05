@@ -1,7 +1,7 @@
 ﻿import { Module } from '@spraxium/common';
 import { LocaleCommand } from './commands/locale.command';
-import { LocaleInfoHandler } from './handlers/locale-info.handler';
-import { LocaleSetHandler } from './handlers/locale-set.handler';
+import { LocaleInfoHandler } from './handlers/locale-info-command.handler';
+import { LocaleSetHandler } from './handlers/locale-set-command.handler';
 
 @Module({
   commands: [LocaleCommand],

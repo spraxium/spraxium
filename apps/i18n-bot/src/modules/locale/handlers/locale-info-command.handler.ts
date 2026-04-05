@@ -1,5 +1,6 @@
 ﻿import { Ctx, SlashCommandHandler } from '@spraxium/common';
-import { type I18nService, LocaleRegistry } from '@spraxium/i18n';
+// biome-ignore lint/style/useImportType: DI requires runtime type for reflect-metadata
+import { I18nService, LocaleRegistry } from '@spraxium/i18n';
 import type { ChatInputCommandInteraction } from 'discord.js';
 import { LocaleCommand } from '../commands/locale.command';
 
