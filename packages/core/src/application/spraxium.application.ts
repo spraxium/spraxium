@@ -22,6 +22,7 @@ export class SpraxiumApplication {
     this.state = {
       token: options.token,
       sharding: options.sharding,
+      globalProviders: new Map(),
     };
   }
 
@@ -66,6 +67,24 @@ export class SpraxiumApplication {
    *   app.useGlobalGuards(GuildOnly);
    *   app.useGlobalGuards(OwnerOnly, { ownerIds: ['123456789012345678'] });
    */
+  /**
+   * Registers a pre-built instance in the root DI container under the given token.
+   * Use this to inject value-providers such as validated environment schemas.
+   *
+   * Chainable. Must be called before `listen()`.
+   *
+   * @example
+   *   const env = EnvValidator.validate(AppEnv);
+   *   SpraxiumFactory.create({ token: env.token })
+   *     .useModule(AppModule)
+   *     .provide(AppEnv, env)
+   *     .listen();
+   */
+  public provide(token: unknown, instance: unknown): this {
+    this.state.globalProviders.set(token, instance);
+    return this;
+  }
+
   public useGlobalGuards(guardClass: new () => SpraxiumGuard, options: Record<string, unknown> = {}): this {
     GuardRegistry.register(guardClass, options);
     return this;
@@ -167,7 +186,7 @@ export class SpraxiumApplication {
 
     this.state.client = client;
     this.state.moduleLoader = new ModuleLoader();
-    this.state.moduleLoader.load(this.state.rootModule, client);
+    this.state.moduleLoader.load(this.state.rootModule, client, this.state.globalProviders);
     this.state.moduleLoader.printBootTables();
   }
 

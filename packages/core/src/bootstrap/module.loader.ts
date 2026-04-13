@@ -29,7 +29,10 @@ export class ModuleLoader {
   private readonly slashDispatcher = new SlashDispatcher();
   private readonly moduleRows: Array<ModuleRow> = [];
 
-  load(rootModule: Constructor, client: Client): void {
+  load(rootModule: Constructor, client: Client, globalProviders: Map<unknown, unknown> = new Map()): void {
+    for (const [token, instance] of globalProviders) {
+      this.rootContainer.set(token, instance);
+    }
     this.rootContainer.set(ListenerDispatcher, this.listenerDispatcher);
     this.rootContainer.set(PrefixDispatcher, this.prefixDispatcher);
     this.rootContainer.set(SlashDispatcher, this.slashDispatcher);

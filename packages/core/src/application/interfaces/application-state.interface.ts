@@ -13,4 +13,5 @@ export interface ApplicationState {
   rootModule?: Constructor;
   moduleLoader?: ModuleLoader;
   client?: Client;
+  globalProviders: Map<unknown, unknown>;
 }
