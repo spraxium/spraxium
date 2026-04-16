@@ -19,12 +19,7 @@ export class PluralResolver {
     }
   }
 
-  static resolve(
-    key: string,
-    locale: string,
-    count: number,
-    vars?: InterpolationVars,
-  ): string {
+  static resolve(key: string, locale: string, count: number, vars?: InterpolationVars): string {
     const category = PluralResolver.getCategory(locale, count);
     const map = LocaleRegistry.get(locale);
     const sep = I18N_DEFAULTS.PLURAL_SEPARATOR;

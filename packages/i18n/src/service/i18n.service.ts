@@ -58,12 +58,7 @@ export class I18nService {
   /**
    * Translate `key` for a user. Resolves locale via: user > guild > default.
    */
-  async tUser(
-    userId: string,
-    key: string,
-    vars?: InterpolationVars,
-    guildId?: string,
-  ): Promise<string> {
+  async tUser(userId: string, key: string, vars?: InterpolationVars, guildId?: string): Promise<string> {
     const locale = await this.getResolver().resolve(userId, guildId);
     return this.t(key, locale, vars);
   }

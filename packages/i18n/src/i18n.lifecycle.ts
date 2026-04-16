@@ -1,13 +1,13 @@
 import { Inject, Injectable, type SpraxiumOnBoot } from '@spraxium/common';
 import { ConfigStore, SlashLocalizationBridge, logger } from '@spraxium/core';
 import chalk from 'chalk';
+import { buildSlashLocalizations } from './helpers/slash-localizations';
 import { defineI18n } from './i18n.config';
 import { ReferenceLoader } from './loaders/reference-loader';
 import { LocaleRegistry } from './registry/locale-registry';
 import { PluralResolver } from './resolvers/plural-resolver';
 import { I18nService } from './service/i18n.service';
 import { I18nStoreRegistry } from './stores/i18n-store.registry';
-import { buildSlashLocalizations } from './helpers/slash-localizations';
 
 @Injectable()
 export class I18nLifecycle implements SpraxiumOnBoot {
