@@ -16,8 +16,8 @@
     "dev": "tsdown --watch"
   },
   "dependencies": {
-    "@discordjs/builders": "^1.10.0",
-    "discord.js": "^14.26.0",
+    "@discordjs/builders": "^1.14.1",
+    "discord.js": "^14.26.3",
     "reflect-metadata": "^0.2.2"
   },
   "peerDependencies": {
