@@ -2,7 +2,7 @@ import path from 'node:path';
 import chalk from 'chalk';
 import type { Command } from 'commander';
 import { type ResultPromise, execa } from 'execa';
-import { MessageConstant, UnicodeConstant } from '../constants';
+import { DevConstant, MessageConstant, UnicodeConstant } from '../constants';
 import { BaseCommand } from '../core/base.command';
 import type { ConfigReader } from '../service/config-reader.service';
 import { DevWatcher } from '../service/dev-watcher.service';
@@ -46,8 +46,6 @@ export class DevCommand extends BaseCommand {
     let restartPending = '';
     let lastSpawnTime = 0;
     let crashCount = 0;
-    const CRASH_THRESHOLD_MS = 2000;
-    const MAX_CRASH_BACKOFF_MS = 10000;
 
     const spawnChild = (restartReason?: string): void => {
       restarting = false;
@@ -72,9 +70,9 @@ export class DevCommand extends BaseCommand {
         .then(() => {
           if (stopping || restarting) return;
           const lifetime = Date.now() - lastSpawnTime;
-          if (lifetime < CRASH_THRESHOLD_MS) {
+          if (lifetime < DevConstant.CRASH_THRESHOLD_MS) {
             crashCount++;
-            const backoff = Math.min(1000 * 2 ** crashCount, MAX_CRASH_BACKOFF_MS);
+            const backoff = Math.min(1000 * 2 ** crashCount, DevConstant.MAX_CRASH_BACKOFF_MS);
             this.logger.warn(`Process exited too quickly (${lifetime}ms). Retrying in ${backoff}ms…`);
             setTimeout(() => spawnChild(), backoff);
           } else {
@@ -82,9 +80,7 @@ export class DevCommand extends BaseCommand {
             setTimeout(() => spawnChild(), 500);
           }
         })
-        .catch(() => {
-          // crashed or killed , watcher will trigger restart
-        });
+        .catch(() => {});
     };
 
     const killAndRestart = (reason: string): void => {

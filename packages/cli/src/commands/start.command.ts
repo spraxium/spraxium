@@ -56,9 +56,7 @@ export class StartCommand extends BaseCommand {
       try {
         await access(c);
         return c;
-      } catch {
-        // candidate not found, try next
-      }
+      } catch {}
     }
     return null;
   }

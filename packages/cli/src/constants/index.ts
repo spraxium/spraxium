@@ -1,5 +1,10 @@
-export { UnicodeConstant } from './unicode.constant';
-export { RegexConstant } from './regex.constant';
-export { MessageConstant } from './messages.constant';
-export { WatcherConstant } from './watcher.constant';
 export { BuildConstant } from './build.constant';
+export { ConfigConstant } from './config.constant';
+export { DevConstant } from './dev.constant';
+export { GenerateConstant } from './generate.constant';
+export { MessageConstant } from './messages.constant';
+export { NewCommandConstant } from './new-command.constant';
+export { RegexConstant } from './regex.constant';
+export { TemplateConstant } from './template.constant';
+export { UnicodeConstant } from './unicode.constant';
+export { WatcherConstant } from './watcher.constant';

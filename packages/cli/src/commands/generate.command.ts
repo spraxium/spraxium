@@ -2,13 +2,14 @@ import path from 'node:path';
 import { confirm, input, select } from '@inquirer/prompts';
 import chalk from 'chalk';
 import type { Command } from 'commander';
-import { MessageConstant } from '../constants';
+import { GenerateConstant, MessageConstant } from '../constants';
 import { BaseCommand } from '../core/base.command';
 import type { Schematic } from '../interfaces';
 import { buildSchematicLookup } from '../schematics/schematic.registry';
 import type { FileSystem } from '../service/file-system.service';
 import type { ModuleRegistrar } from '../service/module-registrar.service';
 import type { ProjectDetector } from '../service/project-detector.service';
+import type { SchematicLoader } from '../service/schematic-loader.service';
 import type { CliLogger } from '../ui/cli.logger';
 import { toKebabCase, toPascalCase } from '../utils/case.util';
 import { buildRelativeImport } from '../utils/path.util';
@@ -22,6 +23,7 @@ export class GenerateCommand extends BaseCommand {
     private readonly fs: FileSystem,
     private readonly detector: ProjectDetector,
     private readonly registrar: ModuleRegistrar,
+    private readonly loader: SchematicLoader,
   ) {
     super(logger);
     this.lookup = buildSchematicLookup(schematics);
@@ -56,10 +58,9 @@ export class GenerateCommand extends BaseCommand {
       }
     }
 
-    await this.fs.writeFile(destPath, schematic.render(pascalName, kebabName));
+    await this.fs.writeFile(destPath, this.loader.render(schematic.name, pascalName, kebabName));
     this.logger.success(`Created  ${path.relative(process.cwd(), destPath)}`);
 
-    // Auto-register in the module's @Module() decorator
     if (schematic.moduleArray && chosenModuleDir) {
       const moduleFile = await this.registrar.findModuleFile(chosenModuleDir);
       if (moduleFile) {
@@ -115,10 +116,6 @@ export class GenerateCommand extends BaseCommand {
     return { pascalName: toPascalCase(rawName), kebabName };
   }
 
-  /**
-   * Prevents names like "boot-service" for a boot-service schematic,
-   * which would generate "boot-service.service.ts" , redundant suffix.
-   */
   private validateNameDoesNotRepeatSuffix(kebabName: string, schematic: Schematic): void {
     const suffix = schematic.fileSuffix;
     if (kebabName === suffix || kebabName.endsWith(`-${suffix}`)) {
@@ -127,13 +124,7 @@ export class GenerateCommand extends BaseCommand {
   }
 
   private resolveClassName(schematic: Schematic, pascalName: string): string {
-    const suffixMap: Record<string, string> = {
-      service: 'Service',
-      'boot-service': 'Service',
-      task: 'Task',
-      listener: 'Listener',
-    };
-    const classSuffix = suffixMap[schematic.name] ?? toPascalCase(schematic.name);
+    const classSuffix = GenerateConstant.CLASS_SUFFIX_MAP[schematic.name] ?? toPascalCase(schematic.name);
     return `${pascalName}${classSuffix}`;
   }
 
@@ -150,7 +141,6 @@ export class GenerateCommand extends BaseCommand {
   ): Promise<{ targetDir: string; chosenModuleDir: string | null }> {
     const modulesRoot = path.join(srcRoot, 'modules');
 
-    // Modules go into their own folder at the root
     if (schematic.name === 'module') {
       return { targetDir: path.join(modulesRoot, kebabName), chosenModuleDir: null };
     }
@@ -176,13 +166,6 @@ export class GenerateCommand extends BaseCommand {
   }
 
   private subDirFor(schematicName: string): string {
-    switch (schematicName) {
-      case 'listener':
-        return 'listeners';
-      case 'task':
-        return 'tasks';
-      default:
-        return 'services';
-    }
+    return GenerateConstant.SUB_DIR_MAP[schematicName] ?? GenerateConstant.DEFAULT_SUB_DIR;
   }
 }

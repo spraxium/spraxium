@@ -4,5 +4,4 @@ export interface Schematic {
   readonly description: string;
   readonly fileSuffix: string;
   readonly moduleArray: string;
-  render(pascalName: string, kebabName: string): string;
 }
