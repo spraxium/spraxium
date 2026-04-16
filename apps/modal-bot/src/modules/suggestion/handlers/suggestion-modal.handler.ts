@@ -1,0 +1,36 @@
+import { Ctx } from '@spraxium/common';
+import { Field, type ModalContext, ModalHandler } from '@spraxium/components';
+import { SuggestionModal } from '../modals/suggestion.modal';
+
+// Handles SuggestionModal submission.
+// Dynamic radio groups are read via ctx.fields.getRadioGroup() using the ids
+// generated in SuggestionModal.buildRatingFields() — e.g. 'rate_ux'.
+
+@ModalHandler(SuggestionModal)
+export class SuggestionModalHandler {
+  async handle(
+    @Field('title') title: string,
+    @Field('details') details: string,
+    @Field('url') url: string,
+    @Ctx() ctx: ModalContext,
+  ): Promise<void> {
+    const uxRating = ctx.fields.getRadioGroup('rate_ux') ?? 'N/A';
+    const perfRating = ctx.fields.getRadioGroup('rate_perf') ?? 'N/A';
+    const docsRating = ctx.fields.getRadioGroup('rate_docs') ?? 'N/A';
+
+    const lines = [
+      '💡 **Suggestion submitted!**',
+      `**Title:** ${title}`,
+      `**Details:** ${details}`,
+      `**UX impact:** ${uxRating}`,
+      `**Performance impact:** ${perfRating}`,
+      `**Docs impact:** ${docsRating}`,
+    ];
+
+    if (url) {
+      lines.push(`**Reference:** ${url}`);
+    }
+
+    await ctx.reply({ content: lines.join('\n'), flags: 'Ephemeral' });
+  }
+}

@@ -1,0 +1,29 @@
+import { Ctx } from '@spraxium/common';
+import { Field, type ModalContext, ModalHandler } from '@spraxium/components';
+import { TicketModal } from '../modals/ticket.modal';
+
+// Handles TicketModal submission after all @ModalValidate rules pass.
+
+@ModalHandler(TicketModal)
+export class TicketModalHandler {
+  async handle(
+    @Field('subject') subject: string,
+    @Field('description') description: string,
+    @Field('email') email: string,
+    @Ctx() ctx: ModalContext,
+  ): Promise<void> {
+    const ticketId = `TICKET-${Date.now().toString(36).toUpperCase()}`;
+
+    const lines = [
+      `✅ **Ticket created!** ID: \`${ticketId}\``,
+      `**Subject:** ${subject}`,
+      `**Description:** ${description}`,
+    ];
+
+    if (email) {
+      lines.push(`**Contact:** ${email}`);
+    }
+
+    await ctx.reply({ content: lines.join('\n'), flags: 'Ephemeral' });
+  }
+}
