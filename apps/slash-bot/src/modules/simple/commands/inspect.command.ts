@@ -1,18 +1,6 @@
 import { SlashCommand, SlashOption } from '@spraxium/common';
 import { ChannelType } from 'discord.js';
 
-// Demonstrates all 9 Discord slash option types in one command.
-//
-//   String      — plain text
-//   Integer     — whole number, with min/max
-//   Number      — decimal, with min/max
-//   Boolean     — true/false toggle
-//   User        — resolves to User object
-//   Channel     — restricted to GuildText
-//   Role        — resolves to Role object
-//   Mentionable — user or role (Union)
-//   Attachment  — uploaded file
-
 @SlashCommand({ name: 'inspect', description: 'Inspect every slash option type.' })
 export class InspectCommand {
   @SlashOption.String('text', { description: 'A plain text value', required: true })

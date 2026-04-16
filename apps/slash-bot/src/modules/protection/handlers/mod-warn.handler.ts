@@ -3,10 +3,6 @@ import { CooldownGuard, GuildOnly, PermissionGuard } from '@spraxium/core';
 import type { ChatInputCommandInteraction, User } from 'discord.js';
 import { ModCommand } from '../commands/mod.command';
 
-// Guard stack (outer-to-inner execution order):
-//   1. GuildOnly       — blocks DM invocations
-//   2. PermissionGuard — runtime check: ManageMessages (belt-and-suspenders with defaultMemberPermissions)
-//   3. CooldownGuard   — 10-second per-user rate limit
 @UseGuards(
   GuildOnly,
   withOptions(PermissionGuard, { permissions: ['ManageMessages'] }),

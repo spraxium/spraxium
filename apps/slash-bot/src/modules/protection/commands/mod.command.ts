@@ -1,10 +1,6 @@
 import { SlashCommand, SlashOption, SlashSubcommand } from '@spraxium/common';
 import { PermissionFlagsBits } from 'discord.js';
 
-// Moderation command that showcases:
-//   - defaultMemberPermissions: Discord hides the command from members without ManageMessages
-//   - @UseGuards on handlers for runtime enforcement (GuildOnly, PermissionGuard, CooldownGuard)
-
 @SlashCommand({
   name: 'mod',
   description: 'Moderation commands.',

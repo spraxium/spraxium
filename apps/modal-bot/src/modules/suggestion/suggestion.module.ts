@@ -8,8 +8,8 @@ import { SuggestionOpenCommandHandler } from './handlers/suggestion-open-command
   providers: [ModalService],
   commands: [SuggestionCommand],
   handlers: [
-    SuggestionOpenCommandHandler, // /suggestion submit — build() with SuggestionData
-    SuggestionModalHandler, // handles SuggestionModal submission
+    SuggestionOpenCommandHandler,
+    SuggestionModalHandler,
   ],
 })
 export class SuggestionModule {}

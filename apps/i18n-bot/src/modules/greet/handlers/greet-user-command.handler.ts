@@ -1,12 +1,8 @@
 ﻿import { Ctx, SlashCommandHandler, SlashOpt } from '@spraxium/common';
-// biome-ignore lint/style/useImportType: DI requires runtime type for reflect-metadata
+
 import { I18nService } from '@spraxium/i18n';
 import type { ChatInputCommandInteraction, User } from 'discord.js';
 import { GreetCommand } from '../commands/greet.command';
-
-// /greet user <target>
-// Demonstrates: t() with explicit locale — the reply uses the *author's* locale,
-// so the greeted user sees the language the author speaks.
 
 @SlashCommandHandler(GreetCommand, { sub: 'user' })
 export class GreetUserHandler {

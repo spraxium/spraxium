@@ -1,9 +1,5 @@
 import { SlashCommand, SlashOption } from '@spraxium/common';
 
-// Demonstrates autocomplete on a String option.
-// @SlashAutocompleteHandler(SearchCommand, 'query') handles the suggesions.
-// Discord calls the autocomplete handler on every keystroke.
-
 @SlashCommand({ name: 'search', description: 'Search the knowledge base.' })
 export class SearchCommand {
   @SlashOption.String('query', {

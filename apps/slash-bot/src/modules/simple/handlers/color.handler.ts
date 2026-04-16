@@ -2,7 +2,6 @@ import { Ctx, SlashCommandHandler, SlashOpt } from '@spraxium/common';
 import type { ChatInputCommandInteraction } from 'discord.js';
 import { ColorCommand } from '../commands/color.command';
 
-// Color hex map indexed by [name][shade].
 const HEX: Record<string, Record<number, string>> = {
   red: { 100: '#ffcdd2', 500: '#f44336', 900: '#b71c1c' },
   green: { 100: '#c8e6c9', 500: '#4caf50', 900: '#1b5e20' },

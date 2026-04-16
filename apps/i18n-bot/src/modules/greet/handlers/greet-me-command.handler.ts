@@ -1,11 +1,8 @@
 ﻿import { Ctx, SlashCommandHandler } from '@spraxium/common';
-// biome-ignore lint/style/useImportType: DI requires runtime type for reflect-metadata
+
 import { I18nService } from '@spraxium/i18n';
 import type { ChatInputCommandInteraction } from 'discord.js';
 import { GreetCommand } from '../commands/greet.command';
-
-// /greet me
-// Demonstrates: tUser() — resolves the user's stored locale automatically.
 
 @SlashCommandHandler(GreetCommand, { sub: 'me' })
 export class GreetMeHandler {

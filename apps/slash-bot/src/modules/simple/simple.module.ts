@@ -9,9 +9,9 @@ import { PingHandler } from './handlers/ping.handler';
 @Module({
   commands: [PingCommand, InspectCommand, ColorCommand],
   handlers: [
-    PingHandler, // /ping
-    InspectHandler, // /inspect — all 9 option types
-    ColorHandler, // /color  — String + Integer with choices
+    PingHandler,
+    InspectHandler,
+    ColorHandler,
   ],
 })
 export class SimpleModule {}

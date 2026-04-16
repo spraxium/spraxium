@@ -1,11 +1,8 @@
 ﻿import { Ctx, SlashCommandHandler, SlashOpt } from '@spraxium/common';
-// biome-ignore lint/style/useImportType: DI requires runtime type for reflect-metadata
+
 import { I18nService } from '@spraxium/i18n';
 import type { ChatInputCommandInteraction } from 'discord.js';
 import { LocaleCommand } from '../commands/locale.command';
-
-// /locale set <language>
-// Demonstrates: setUserLocale() + getUserLocale() + has() + t() with explicit locale.
 
 @SlashCommandHandler(LocaleCommand, { sub: 'set' })
 export class LocaleSetHandler {
@@ -37,7 +34,6 @@ export class LocaleSetHandler {
 
     await this.i18n.setUserLocale(userId, language);
 
-    // Reply uses the *new* locale immediately — t() with explicit locale.
     const msg = this.i18n.t('commands.locale.set.done', language, { locale: language });
     await interaction.reply({ content: msg, flags: 'Ephemeral' });
   }

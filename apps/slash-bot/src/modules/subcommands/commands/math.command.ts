@@ -1,12 +1,5 @@
 import { SlashCommand, SlashOption, SlashSubcommand } from '@spraxium/common';
 
-// Flat subcommands — no subcommand groups.
-// Each subcommand has its own @SlashOption decorators and its own handler.
-//
-//   /math add <a> <b>
-//   /math subtract <a> <b>
-//   /math multiply <a> <b>
-
 @SlashCommand({ name: 'math', description: 'Basic math operations.' })
 export class MathCommand {
   @SlashOption.Number('a', { description: 'First number', required: true })

@@ -6,13 +6,6 @@ import {
   SlashSubcommandGroups,
 } from '@spraxium/common';
 
-// Mixes flat subcommands (info, icon) with a subcommand group (settings).
-//
-//   /server info
-//   /server icon
-//   /server settings prefix <prefix>
-//   /server settings language <locale>
-
 @SlashSubcommandGroup({ name: 'settings', description: 'Adjust server configuration.' })
 export class ServerSettingsGroup {
   @SlashOption.String('prefix', { description: 'New command prefix', required: true, maxLength: 5 })

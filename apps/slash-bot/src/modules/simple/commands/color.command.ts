@@ -1,8 +1,5 @@
 import { SlashCommand, SlashOption } from '@spraxium/common';
 
-// Demonstrates String options with named choices and Integer options with choices.
-// Discord displays these as dropdowns; the user cannot type a free value.
-
 @SlashCommand({ name: 'color', description: 'Pick a color and shade level.' })
 export class ColorCommand {
   @SlashOption.String('name', {

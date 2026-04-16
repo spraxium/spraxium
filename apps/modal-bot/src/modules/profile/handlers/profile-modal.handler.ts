@@ -2,8 +2,6 @@ import { Ctx } from '@spraxium/common';
 import { Field, type ModalContext, ModalHandler } from '@spraxium/components';
 import { ProfileModal } from '../components/profile.modal.component';
 
-// Handles ProfileModal submission, reads select, radio, checkbox, and boolean fields.
-
 @ModalHandler(ProfileModal)
 export class ProfileModalHandler {
   async handle(

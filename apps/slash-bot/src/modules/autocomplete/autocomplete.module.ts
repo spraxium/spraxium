@@ -6,8 +6,8 @@ import { SearchHandler } from './handlers/search.handler';
 @Module({
   commands: [SearchCommand],
   handlers: [
-    SearchHandler, // /search — executes the query
-    SearchQueryAutocomplete, // fires on every keystroke for the 'query' option
+    SearchHandler,
+    SearchQueryAutocomplete,
   ],
 })
 export class AutocompleteModule {}

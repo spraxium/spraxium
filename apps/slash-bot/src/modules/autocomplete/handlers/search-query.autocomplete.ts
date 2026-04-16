@@ -2,7 +2,6 @@ import { Ctx, SlashAutocompleteHandler, SlashFocused } from '@spraxium/common';
 import type { AutocompleteInteraction } from 'discord.js';
 import { SearchCommand } from '../commands/search.command';
 
-// Full list of knowledge base topics used for autocomplete suggestions.
 const TOPICS = [
   'Getting started',
   'Installation guide',
@@ -21,8 +20,6 @@ const TOPICS = [
   'Button components',
 ];
 
-// Autocomplete handler for the "query" option on /search.
-// Discord calls this on every keystroke — must respond in under 3 seconds.
 @SlashAutocompleteHandler(SearchCommand, 'query')
 export class SearchQueryAutocomplete {
   async handle(@SlashFocused() focused: string, @Ctx() interaction: AutocompleteInteraction): Promise<void> {

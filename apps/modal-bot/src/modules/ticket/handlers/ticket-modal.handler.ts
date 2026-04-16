@@ -2,8 +2,6 @@ import { Ctx } from '@spraxium/common';
 import { Field, type ModalContext, ModalHandler } from '@spraxium/components';
 import { TicketModal } from '../components/ticket-modal.component';
 
-// Handles TicketModal submission after all @ModalValidate rules pass.
-
 @ModalHandler(TicketModal)
 export class TicketModalHandler {
   async handle(
