@@ -3,15 +3,13 @@ import type { SlashCommandBuilder, SlashCommandSubcommandBuilder } from 'discord
 import { SlashLocalizationBridge } from '../slash-localization.bridge';
 import type { GuildChannelTypeResolvable } from '../types';
 
-function applyOptionLocalizations<
-  T extends { setNameLocalizations: Function; setDescriptionLocalizations: Function },
->(o: T, opt: SlashOptionMetadata): T {
-  if (!opt.i18n) return o;
+// biome-ignore lint/suspicious/noExplicitAny: all discord.js option builders share setNameLocalizations/setDescriptionLocalizations
+function applyOptionLocalizations(o: any, opt: SlashOptionMetadata): void {
+  if (!opt.i18n) return;
   const locs = SlashLocalizationBridge.resolve(opt.i18n);
-  if (!locs) return o;
+  if (!locs) return;
   o.setNameLocalizations(locs.name_localizations);
   o.setDescriptionLocalizations(locs.description_localizations);
-  return o;
 }
 
 export function applyOption(
@@ -58,13 +56,15 @@ export function applyOption(
     case 'BOOLEAN':
       builder.addBooleanOption((o) => {
         o.setName(opt.name).setDescription(opt.description).setRequired(opt.required);
-        return applyOptionLocalizations(o, opt);
+        applyOptionLocalizations(o, opt);
+        return o;
       });
       break;
     case 'USER':
       builder.addUserOption((o) => {
         o.setName(opt.name).setDescription(opt.description).setRequired(opt.required);
-        return applyOptionLocalizations(o, opt);
+        applyOptionLocalizations(o, opt);
+        return o;
       });
       break;
     case 'CHANNEL':
@@ -80,19 +80,22 @@ export function applyOption(
     case 'ROLE':
       builder.addRoleOption((o) => {
         o.setName(opt.name).setDescription(opt.description).setRequired(opt.required);
-        return applyOptionLocalizations(o, opt);
+        applyOptionLocalizations(o, opt);
+        return o;
       });
       break;
     case 'MENTIONABLE':
       builder.addMentionableOption((o) => {
         o.setName(opt.name).setDescription(opt.description).setRequired(opt.required);
-        return applyOptionLocalizations(o, opt);
+        applyOptionLocalizations(o, opt);
+        return o;
       });
       break;
     case 'ATTACHMENT':
       builder.addAttachmentOption((o) => {
         o.setName(opt.name).setDescription(opt.description).setRequired(opt.required);
-        return applyOptionLocalizations(o, opt);
+        applyOptionLocalizations(o, opt);
+        return o;
       });
       break;
   }
