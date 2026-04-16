@@ -30,5 +30,4 @@ export const METADATA_KEYS = {
   SLASH_SUBCOMMAND_GROUP: 'spraxium:slash_subcommand_group',
   SLASH_SUBCOMMAND_GROUPS: 'spraxium:slash_subcommand_groups',
   SLASH_AUTOCOMPLETE_HANDLER: 'spraxium:slash_autocomplete_handler',
-  
 } as const;
