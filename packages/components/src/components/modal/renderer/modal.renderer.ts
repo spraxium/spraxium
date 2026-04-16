@@ -1,39 +1,23 @@
-import { createRequire } from 'node:module';
-import type {
+import {
   ChannelSelectMenuBuilder,
   CheckboxBuilder,
   CheckboxGroupBuilder,
+  CheckboxGroupOptionBuilder,
   FileUploadBuilder,
   LabelBuilder,
   MentionableSelectMenuBuilder,
+  ModalBuilder as DjsModalBuilder,
   RadioGroupBuilder,
+  RadioGroupOptionBuilder,
   RoleSelectMenuBuilder,
   StringSelectMenuBuilder,
+  StringSelectMenuOptionBuilder,
+  TextDisplayBuilder,
   TextInputBuilder,
   UserSelectMenuBuilder,
 } from '@discordjs/builders';
 import { TextInputStyle } from 'discord.js';
 import type { ModalBuilder } from 'discord.js';
-
-const _require = createRequire(import.meta.url);
-const {
-  ChannelSelectMenuBuilder: _ChannelSelectMenuBuilder,
-  CheckboxBuilder: _CheckboxBuilder,
-  CheckboxGroupBuilder: _CheckboxGroupBuilder,
-  CheckboxGroupOptionBuilder: _CheckboxGroupOptionBuilder,
-  FileUploadBuilder: _FileUploadBuilder,
-  LabelBuilder: _LabelBuilder,
-  MentionableSelectMenuBuilder: _MentionableSelectMenuBuilder,
-  ModalBuilder: _ModalBuilder,
-  RadioGroupBuilder: _RadioGroupBuilder,
-  RadioGroupOptionBuilder: _RadioGroupOptionBuilder,
-  RoleSelectMenuBuilder: _RoleSelectMenuBuilder,
-  StringSelectMenuBuilder: _StringSelectMenuBuilder,
-  StringSelectMenuOptionBuilder: _StringSelectMenuOptionBuilder,
-  TextDisplayBuilder: _TextDisplayBuilder,
-  TextInputBuilder: _TextInputBuilder,
-  UserSelectMenuBuilder: _UserSelectMenuBuilder,
-} = _require('@discordjs/builders') as typeof import('@discordjs/builders');
 import type {
   ModalChannelSelectFieldDef,
   ModalCheckboxFieldDef,
@@ -54,15 +38,15 @@ type LabelFieldDef = Exclude<ModalFieldDef, ModalTextDisplayDef>;
 
 export class ModalRenderer {
   render(schema: ModalSchema): ModalBuilder {
-    const modal = new _ModalBuilder().setCustomId(schema.id).setTitle(schema.title);
+    const modal = new DjsModalBuilder().setCustomId(schema.id).setTitle(schema.title);
 
     for (const display of schema.textDisplays) {
-      modal.addTextDisplayComponents(new _TextDisplayBuilder({ content: display.content }));
+      modal.addTextDisplayComponents(new TextDisplayBuilder({ content: display.content }));
     }
 
     for (const field of schema.fields) {
       if (field.type === 'text_display') {
-        modal.addTextDisplayComponents(new _TextDisplayBuilder({ content: field.content }));
+        modal.addTextDisplayComponents(new TextDisplayBuilder({ content: field.content }));
         continue;
       }
       modal.addLabelComponents(this.buildLabel(field));
@@ -72,7 +56,7 @@ export class ModalRenderer {
   }
 
   private buildLabel(field: LabelFieldDef): LabelBuilder {
-    const label = new _LabelBuilder().setLabel(field.label);
+    const label = new LabelBuilder().setLabel(field.label);
     if ('description' in field && field.description) label.setDescription(field.description);
 
     switch (field.type) {
@@ -102,7 +86,7 @@ export class ModalRenderer {
   }
 
   private buildTextInput(field: ModalTextFieldDef): TextInputBuilder {
-    const input = new _TextInputBuilder()
+    const input = new TextInputBuilder()
       .setCustomId(field.id)
       .setStyle(field.style === 'paragraph' ? TextInputStyle.Paragraph : TextInputStyle.Short);
 
@@ -116,7 +100,7 @@ export class ModalRenderer {
   }
 
   private buildStringSelect(field: ModalStringSelectFieldDef): StringSelectMenuBuilder {
-    const select = new _StringSelectMenuBuilder().setCustomId(field.id);
+    const select = new StringSelectMenuBuilder().setCustomId(field.id);
     if (field.placeholder) select.setPlaceholder(field.placeholder);
     if (field.minValues !== undefined) select.setMinValues(field.minValues);
     if (field.maxValues !== undefined) select.setMaxValues(field.maxValues);
@@ -126,7 +110,7 @@ export class ModalRenderer {
     if (field.options.length > 0) {
       select.addOptions(
         field.options.map((o) => {
-          const opt = new _StringSelectMenuOptionBuilder().setLabel(o.label).setValue(o.value);
+          const opt = new StringSelectMenuOptionBuilder().setLabel(o.label).setValue(o.value);
           if (o.description) opt.setDescription(o.description);
           if (o.default) opt.setDefault(o.default);
           if (o.emoji) opt.setEmoji(typeof o.emoji === 'string' ? { name: o.emoji } : o.emoji);
@@ -139,7 +123,7 @@ export class ModalRenderer {
   }
 
   private buildUserSelect(field: ModalUserSelectFieldDef): UserSelectMenuBuilder {
-    const select = new _UserSelectMenuBuilder().setCustomId(field.id);
+    const select = new UserSelectMenuBuilder().setCustomId(field.id);
     if (field.placeholder) select.setPlaceholder(field.placeholder);
     if (field.minValues !== undefined) select.setMinValues(field.minValues);
     if (field.maxValues !== undefined) select.setMaxValues(field.maxValues);
@@ -149,7 +133,7 @@ export class ModalRenderer {
   }
 
   private buildRoleSelect(field: ModalRoleSelectFieldDef): RoleSelectMenuBuilder {
-    const select = new _RoleSelectMenuBuilder().setCustomId(field.id);
+    const select = new RoleSelectMenuBuilder().setCustomId(field.id);
     if (field.placeholder) select.setPlaceholder(field.placeholder);
     if (field.minValues !== undefined) select.setMinValues(field.minValues);
     if (field.maxValues !== undefined) select.setMaxValues(field.maxValues);
@@ -159,7 +143,7 @@ export class ModalRenderer {
   }
 
   private buildMentionableSelect(field: ModalMentionableSelectFieldDef): MentionableSelectMenuBuilder {
-    const select = new _MentionableSelectMenuBuilder().setCustomId(field.id);
+    const select = new MentionableSelectMenuBuilder().setCustomId(field.id);
     if (field.placeholder) select.setPlaceholder(field.placeholder);
     if (field.minValues !== undefined) select.setMinValues(field.minValues);
     if (field.maxValues !== undefined) select.setMaxValues(field.maxValues);
@@ -169,7 +153,7 @@ export class ModalRenderer {
   }
 
   private buildChannelSelect(field: ModalChannelSelectFieldDef): ChannelSelectMenuBuilder {
-    const select = new _ChannelSelectMenuBuilder().setCustomId(field.id);
+    const select = new ChannelSelectMenuBuilder().setCustomId(field.id);
     if (field.placeholder) select.setPlaceholder(field.placeholder);
     if (field.minValues !== undefined) select.setMinValues(field.minValues);
     if (field.maxValues !== undefined) select.setMaxValues(field.maxValues);
@@ -183,7 +167,7 @@ export class ModalRenderer {
   }
 
   private buildFileUpload(field: ModalFileUploadFieldDef): FileUploadBuilder {
-    const upload = new _FileUploadBuilder().setCustomId(field.id);
+    const upload = new FileUploadBuilder().setCustomId(field.id);
     if (field.minFiles !== undefined) upload.setMinValues(field.minFiles);
     if (field.maxFiles !== undefined) upload.setMaxValues(field.maxFiles);
     if (field.required !== undefined) upload.setRequired(field.required);
@@ -191,12 +175,12 @@ export class ModalRenderer {
   }
 
   private buildRadioGroup(field: ModalRadioGroupFieldDef): RadioGroupBuilder {
-    const group = new _RadioGroupBuilder().setCustomId(field.id);
+    const group = new RadioGroupBuilder().setCustomId(field.id);
     if (field.required !== undefined) group.setRequired(field.required);
     if (field.choices.length > 0) {
       group.addOptions(
         field.choices.map((c) => {
-          const opt = new _RadioGroupOptionBuilder().setLabel(c.label).setValue(c.value);
+          const opt = new RadioGroupOptionBuilder().setLabel(c.label).setValue(c.value);
           if (c.description) opt.setDescription(c.description);
           if (c.default) opt.setDefault(c.default);
           return opt;
@@ -207,14 +191,14 @@ export class ModalRenderer {
   }
 
   private buildCheckboxGroup(field: ModalCheckboxGroupFieldDef): CheckboxGroupBuilder {
-    const group = new _CheckboxGroupBuilder().setCustomId(field.id);
+    const group = new CheckboxGroupBuilder().setCustomId(field.id);
     if (field.required !== undefined) group.setRequired(field.required);
     if (field.minValues !== undefined) group.setMinValues(field.minValues);
     if (field.maxValues !== undefined) group.setMaxValues(field.maxValues);
     if (field.choices.length > 0) {
       group.addOptions(
         field.choices.map((c) => {
-          const opt = new _CheckboxGroupOptionBuilder().setLabel(c.label).setValue(c.value);
+          const opt = new CheckboxGroupOptionBuilder().setLabel(c.label).setValue(c.value);
           if (c.description) opt.setDescription(c.description);
           if (c.default) opt.setDefault(c.default);
           return opt;
@@ -225,7 +209,7 @@ export class ModalRenderer {
   }
 
   private buildCheckbox(field: ModalCheckboxFieldDef): CheckboxBuilder {
-    const checkbox = new _CheckboxBuilder().setCustomId(field.id);
+    const checkbox = new CheckboxBuilder().setCustomId(field.id);
     if (field.defaultChecked !== undefined) checkbox.setDefault(field.defaultChecked);
     return checkbox;
   }
