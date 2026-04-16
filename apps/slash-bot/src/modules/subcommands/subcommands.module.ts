@@ -12,14 +12,11 @@ import { ServerSettingsPrefixHandler } from './handlers/server-settings-prefix.h
 @Module({
   commands: [MathCommand, ServerCommand],
   handlers: [
-
     MathAddHandler,
     MathSubtractHandler,
     MathMultiplyHandler,
-
     ServerInfoHandler,
     ServerIconHandler,
-
     ServerSettingsPrefixHandler,
     ServerSettingsLanguageHandler,
   ],

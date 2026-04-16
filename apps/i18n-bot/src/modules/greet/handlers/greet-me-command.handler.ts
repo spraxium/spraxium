@@ -1,6 +1,5 @@
 ﻿import { Ctx, SlashCommandHandler } from '@spraxium/common';
-
-import { I18nService } from '@spraxium/i18n';
+import type { I18nService } from '@spraxium/i18n';
 import type { ChatInputCommandInteraction } from 'discord.js';
 import { GreetCommand } from '../commands/greet.command';
 

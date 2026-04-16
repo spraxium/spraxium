@@ -5,9 +5,6 @@ import { SearchHandler } from './handlers/search.handler';
 
 @Module({
   commands: [SearchCommand],
-  handlers: [
-    SearchHandler,
-    SearchQueryAutocomplete,
-  ],
+  handlers: [SearchHandler, SearchQueryAutocomplete],
 })
 export class AutocompleteModule {}

@@ -6,10 +6,6 @@ import { ModWarnHandler } from './handlers/mod-warn.handler';
 
 @Module({
   commands: [ModCommand],
-  handlers: [
-    ModWarnHandler,
-    ModKickHandler,
-    ModTimeoutHandler,
-  ],
+  handlers: [ModWarnHandler, ModKickHandler, ModTimeoutHandler],
 })
 export class ProtectionModule {}

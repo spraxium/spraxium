@@ -12,7 +12,6 @@ import type { SuggestionData } from '../interfaces/suggestion-data.interface';
 @ModalDynamic<SuggestionData>()
 @ModalComponent({ id: 'suggestion', title: 'Submit a Suggestion' })
 export class SuggestionModal {
-
   @ModalInput({ label: 'Title', placeholder: 'Short description', required: true, maxLength: 100 })
   title!: string;
 

@@ -1,6 +1,5 @@
 import { Ctx, SlashCommandHandler } from '@spraxium/common';
-
-import { ModalService } from '@spraxium/components';
+import type { ModalService } from '@spraxium/components';
 import type { ChatInputCommandInteraction } from 'discord.js';
 import { TicketCommand } from '../commands/ticket.command';
 import { TicketModal } from '../components/ticket-modal.component';

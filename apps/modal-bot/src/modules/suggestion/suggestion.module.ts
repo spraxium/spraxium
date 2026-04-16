@@ -7,9 +7,6 @@ import { SuggestionOpenCommandHandler } from './handlers/suggestion-open-command
 @Module({
   providers: [ModalService],
   commands: [SuggestionCommand],
-  handlers: [
-    SuggestionOpenCommandHandler,
-    SuggestionModalHandler,
-  ],
+  handlers: [SuggestionOpenCommandHandler, SuggestionModalHandler],
 })
 export class SuggestionModule {}
