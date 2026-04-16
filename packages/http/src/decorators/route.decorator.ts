@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import { HTTP_METADATA_KEYS } from '../constants';
 import type { Constructor, HttpMethod, RouteDefinition } from '../types';
 
-export function Controller(prefix: string): ClassDecorator {
+export function HttpController(prefix: string): ClassDecorator {
   return (target): void => {
     Reflect.defineMetadata(HTTP_METADATA_KEYS.PREFIX, prefix, target);
   };
@@ -17,27 +17,29 @@ function createRouteDecorator(method: HttpMethod, path: string): MethodDecorator
   };
 }
 
-export function Get(path = '/'): MethodDecorator {
+export function HttpGet(path = '/'): MethodDecorator {
   return createRouteDecorator('GET', path);
 }
 
-export function Post(path = '/'): MethodDecorator {
+export function HttpPost(path = '/'): MethodDecorator {
   return createRouteDecorator('POST', path);
 }
 
-export function Put(path = '/'): MethodDecorator {
+export function HttpPut(path = '/'): MethodDecorator {
   return createRouteDecorator('PUT', path);
 }
 
-export function Patch(path = '/'): MethodDecorator {
+export function HttpPatch(path = '/'): MethodDecorator {
   return createRouteDecorator('PATCH', path);
 }
 
-export function Delete(path = '/'): MethodDecorator {
+export function HttpDelete(path = '/'): MethodDecorator {
   return createRouteDecorator('DELETE', path);
 }
 
-export function UseMiddleware(...middlewareClasses: Array<Constructor>): ClassDecorator & MethodDecorator {
+export function HttpUseMiddleware(
+  ...middlewareClasses: Array<Constructor>
+): ClassDecorator & MethodDecorator {
   return (target: object, propertyKey?: string | symbol): void => {
     if (propertyKey !== undefined) {
       const existing: Array<Constructor> =
@@ -58,5 +60,18 @@ export function UseMiddleware(...middlewareClasses: Array<Constructor>): ClassDe
 export function HttpStatus(code: number): MethodDecorator {
   return (target, propertyKey): void => {
     Reflect.defineMetadata(HTTP_METADATA_KEYS.STATUS_CODE, code, target, propertyKey as string);
+  };
+}
+
+export function HttpGuards(...guardClasses: Array<Constructor>): ClassDecorator & MethodDecorator {
+  return (target: object, propertyKey?: string | symbol): void => {
+    if (propertyKey !== undefined) {
+      const existing: Array<Constructor> =
+        Reflect.getMetadata(HTTP_METADATA_KEYS.GUARDS, target, propertyKey) ?? [];
+      Reflect.defineMetadata(HTTP_METADATA_KEYS.GUARDS, [...existing, ...guardClasses], target, propertyKey);
+    } else {
+      const existing: Array<Constructor> = Reflect.getMetadata(HTTP_METADATA_KEYS.GUARDS, target) ?? [];
+      Reflect.defineMetadata(HTTP_METADATA_KEYS.GUARDS, [...existing, ...guardClasses], target);
+    }
   };
 }

@@ -15,22 +15,22 @@ function createParamDecorator(
   };
 }
 
-export function Param(key: string): ParameterDecorator {
+export function HttpParam(key: string): ParameterDecorator {
   return createParamDecorator('param', key);
 }
 
-export function Query(key: string): ParameterDecorator {
+export function HttpQuery(key: string): ParameterDecorator {
   return createParamDecorator('query', key);
 }
 
-export function Body(dto?: new (...args: Array<unknown>) => object): ParameterDecorator {
+export function HttpBody(dto?: new (...args: Array<unknown>) => object): ParameterDecorator {
   return createParamDecorator('body', undefined, dto);
 }
 
-export function Header(key: string): ParameterDecorator {
+export function HttpHeader(key: string): ParameterDecorator {
   return createParamDecorator('header', key);
 }
 
-export function Ctx(): ParameterDecorator {
+export function HttpCtx(): ParameterDecorator {
   return createParamDecorator('ctx');
 }

@@ -19,6 +19,14 @@ export class RouteRegistry {
     }
   }
 
+  resolveGuards(
+    guardClasses: Array<Constructor>,
+    deps: Map<unknown, unknown>,
+    fallback?: ReadonlyContainer,
+  ): Array<object> {
+    return guardClasses.map((cls) => this.instantiate(cls as AnyConstructor, deps, fallback));
+  }
+
   resolveAll(
     controllerClasses: Array<Constructor>,
     deps: Map<unknown, unknown>,
@@ -36,9 +44,10 @@ export class RouteRegistry {
     const routes: Array<RouteDefinition> = Reflect.getMetadata(HTTP_METADATA_KEYS.ROUTES, ctor) ?? [];
     const classMiddlewares: Array<Constructor> =
       Reflect.getMetadata(HTTP_METADATA_KEYS.MIDDLEWARE, ctor) ?? [];
+    const classGuards: Array<Constructor> = Reflect.getMetadata(HTTP_METADATA_KEYS.GUARDS, ctor) ?? [];
 
     const instance = this.instantiate(ctor, deps, fallback);
-    return { instance, prefix, routes, classMiddlewares };
+    return { instance, prefix, routes, classMiddlewares, classGuards };
   }
 
   private sortByDependency(

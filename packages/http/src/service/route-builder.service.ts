@@ -1,9 +1,12 @@
 import 'reflect-metadata';
+import type { ReadonlyContainer } from '@spraxium/common';
 import type { Context, Handler, Hono, Next } from 'hono';
 import { HTTP_METADATA_KEYS } from '../constants';
-import type { HttpMiddleware, RegisteredController } from '../interfaces';
+import { GuardExecutor } from '../guards';
+import type { HttpGuard, HttpMiddleware, RegisteredController } from '../interfaces';
 import type { Constructor } from '../types';
 import { ParamResolver } from './param-resolver.service';
+import { RouteRegistry } from './route-registry.service';
 
 export class RouteBuilder {
   private static readonly paramResolver = new ParamResolver();
@@ -12,7 +15,11 @@ export class RouteBuilder {
     app: Hono,
     controllers: Array<RegisteredController>,
     middlewareProviders: Map<Constructor, HttpMiddleware> = new Map(),
+    deps: Map<unknown, unknown> = new Map(),
+    fallback?: ReadonlyContainer,
   ): void {
+    const registry = new RouteRegistry();
+
     for (const ctrl of controllers) {
       for (const route of ctrl.routes) {
         const fullPath = ctrl.prefix + route.path;
@@ -31,6 +38,23 @@ export class RouteBuilder {
           .map((mw) => async (ctx: Context, next: Next): Promise<void> => {
             await mw.handle(ctx, next);
           });
+
+        const routeGuardClasses: Array<Constructor> =
+          Reflect.getMetadata(HTTP_METADATA_KEYS.GUARDS, proto, route.handlerName) ?? [];
+        const allGuardClasses = [...ctrl.classGuards, ...routeGuardClasses];
+
+        let guardHandlers: Array<Handler> = [];
+        if (allGuardClasses.length > 0) {
+          const guardInstances = registry.resolveGuards(allGuardClasses, deps, fallback) as Array<HttpGuard>;
+          const executor = new GuardExecutor(guardInstances);
+          guardHandlers = [
+            async (ctx: Context, next: Next): Promise<void> => {
+              const passed = await executor.execute(ctx);
+              if (!passed) return;
+              await next();
+            },
+          ];
+        }
 
         const statusCode: number | undefined = Reflect.getMetadata(
           HTTP_METADATA_KEYS.STATUS_CODE,
@@ -54,7 +78,7 @@ export class RouteBuilder {
           return ctx.json(result, status as Parameters<typeof ctx.json>[1]);
         };
 
-        app.on([route.method], [fullPath], ...middlewareHandlers, routeHandler);
+        app.on([route.method], [fullPath], ...guardHandlers, ...middlewareHandlers, routeHandler);
       }
     }
   }

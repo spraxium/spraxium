@@ -5,7 +5,7 @@ import type { HttpMiddleware } from './http-middleware.interface';
 export interface HttpClientModuleMetadata {
   readonly services?: Array<Constructor>;
   readonly controllers?: Array<Constructor>;
-  readonly guards?: Array<HttpGuard>;
+  readonly guards?: Array<Constructor<HttpGuard>>;
   readonly middleware?: Array<HttpMiddleware>;
   readonly middlewareProviders?: Map<Constructor, HttpMiddleware>;
 }

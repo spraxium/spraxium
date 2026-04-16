@@ -13,10 +13,10 @@ import { BridgeFactory } from '../bridge';
 import { HTTP_MESSAGES, HTTP_METADATA_KEYS, SECURITY_DEFAULTS } from '../constants';
 import { HttpError } from '../errors';
 import { ValidationError } from '../errors';
-import { GuardExecutor } from '../guards';
+import { ApiKeyGuard, GuardExecutor } from '../guards';
 import { defineHttp } from '../http.config';
 import { BotBridge } from '../interfaces';
-import type { HttpClientModuleMetadata } from '../interfaces';
+import type { HttpClientModuleMetadata, HttpGuard } from '../interfaces';
 import { BodyLimitMiddleware } from '../middleware/body-limit.middleware';
 import { CorsMiddleware } from '../middleware/cors.middleware';
 import { SecurityHeadersMiddleware } from '../middleware/security-headers.middleware';
@@ -116,7 +116,21 @@ export class HttpServer implements SpraxiumOnBoot, SpraxiumOnShutdown {
       app.use('*', (ctx: Context, next: Next) => mw.handle(ctx, next));
     }
 
-    const globalGuards = moduleMeta.guards ?? [];
+    const moduleGuards = moduleMeta.guards ?? [];
+    const apiKeyGuard = config.apiKey ? [new ApiKeyGuard(config.apiKey)] : [];
+
+    const controllers = moduleMeta.controllers ?? [];
+    const services = moduleMeta.services ?? [];
+    const middlewareProviders = moduleMeta.middlewareProviders ?? new Map();
+
+    const routeRegistry = new RouteRegistry();
+    routeRegistry.resolveServices(services, deps, this.coreContainer);
+    const instantiatedModuleGuards = routeRegistry.resolveGuards(
+      moduleGuards,
+      deps,
+      this.coreContainer,
+    ) as Array<HttpGuard>;
+    const globalGuards = [...apiKeyGuard, ...instantiatedModuleGuards];
     if (globalGuards.length > 0) {
       const executor = new GuardExecutor(globalGuards);
       app.use('*', async (ctx: Context, next: Next) => {
@@ -126,14 +140,8 @@ export class HttpServer implements SpraxiumOnBoot, SpraxiumOnShutdown {
       });
     }
 
-    const controllers = moduleMeta.controllers ?? [];
-    const services = moduleMeta.services ?? [];
-    const middlewareProviders = moduleMeta.middlewareProviders ?? new Map();
-
-    const routeRegistry = new RouteRegistry();
-    routeRegistry.resolveServices(services, deps, this.coreContainer);
     const controllerEntries = routeRegistry.resolveAll(controllers, deps, this.coreContainer);
-    RouteBuilder.register(app, controllerEntries, middlewareProviders);
+    RouteBuilder.register(app, controllerEntries, middlewareProviders, deps, this.coreContainer);
 
     app.notFound((ctx) => {
       return ctx.json({ ok: false, error: 'Not Found' }, 404);

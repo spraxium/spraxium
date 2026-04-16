@@ -23,20 +23,21 @@ export type {
 } from './interfaces';
 export { BotBridge } from './interfaces';
 export {
-  Body,
-  Controller,
-  Ctx,
-  Delete,
-  Get,
-  Header,
+  HttpBody,
   HttpClientModule,
+  HttpController,
+  HttpCtx,
+  HttpDelete,
+  HttpGet,
+  HttpGuards,
+  HttpHeader,
+  HttpPatch,
+  HttpPost,
+  HttpPut,
+  HttpParam,
+  HttpQuery,
   HttpStatus,
-  Param,
-  Patch,
-  Post,
-  Put,
-  Query,
-  UseMiddleware,
+  HttpUseMiddleware,
 } from './decorators';
 export {
   BadRequestError,
