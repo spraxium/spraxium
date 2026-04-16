@@ -1,0 +1,217 @@
+{
+  "orms": [
+    {
+      "id": "prisma",
+      "label": "Prisma ORM",
+      "description": "Schema-first ORM with type-safe auto-generated client (v7.x)",
+      "databases": [
+        {
+          "id": "postgresql",
+          "label": "PostgreSQL",
+          "runtimePackages": ["@prisma/client", "@prisma/adapter-pg", "pg"],
+          "devPackages": ["prisma", "@types/pg"],
+          "postInstall": ["npx prisma generate"],
+          "envKeys": [{ "key": "DATABASE_URL" }],
+          "nextSteps": [
+            "Run `npx prisma migrate dev --name init` to apply the schema",
+            "Import the generated module in your AppModule imports array",
+            "Inject DatabaseService wherever you need database access"
+          ]
+        },
+        {
+          "id": "mysql",
+          "label": "MySQL",
+          "runtimePackages": ["@prisma/client", "@prisma/adapter-mariadb", "mariadb"],
+          "devPackages": ["prisma"],
+          "postInstall": ["npx prisma generate"],
+          "envKeys": [{ "key": "DATABASE_URL" }],
+          "nextSteps": [
+            "Run `npx prisma migrate dev --name init` to apply the schema",
+            "Import the generated module in your AppModule imports array",
+            "Inject DatabaseService wherever you need database access"
+          ]
+        },
+        {
+          "id": "sqlite",
+          "label": "SQLite",
+          "runtimePackages": ["@prisma/client", "@prisma/adapter-better-sqlite3", "better-sqlite3"],
+          "devPackages": ["prisma", "@types/better-sqlite3"],
+          "postInstall": ["npx prisma generate"],
+          "envKeys": [{ "key": "DATABASE_URL", "default": "file:./dev.db" }],
+          "nextSteps": [
+            "Run `npx prisma migrate dev --name init` to apply the schema",
+            "Import the generated module in your AppModule imports array",
+            "Inject DatabaseService wherever you need database access"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "drizzle",
+      "label": "Drizzle ORM",
+      "description": "Lightweight SQL-native TypeScript ORM",
+      "databases": [
+        {
+          "id": "postgresql",
+          "label": "PostgreSQL",
+          "runtimePackages": ["drizzle-orm", "pg"],
+          "devPackages": ["drizzle-kit", "@types/pg"],
+          "postInstall": [],
+          "envKeys": [{ "key": "DATABASE_URL" }],
+          "nextSteps": [
+            "Run `npx drizzle-kit push` to sync the schema to your database",
+            "Import the generated module in your AppModule imports array",
+            "Inject DatabaseService and call `.getDb()` to use the drizzle query builder"
+          ]
+        },
+        {
+          "id": "mysql",
+          "label": "MySQL",
+          "runtimePackages": ["drizzle-orm", "mysql2"],
+          "devPackages": ["drizzle-kit"],
+          "postInstall": [],
+          "envKeys": [{ "key": "DATABASE_URL" }],
+          "nextSteps": [
+            "Run `npx drizzle-kit push` to sync the schema to your database",
+            "Import the generated module in your AppModule imports array",
+            "Inject DatabaseService and call `.getDb()` to use the drizzle query builder"
+          ]
+        },
+        {
+          "id": "sqlite",
+          "label": "SQLite",
+          "runtimePackages": ["drizzle-orm", "better-sqlite3"],
+          "devPackages": ["drizzle-kit", "@types/better-sqlite3"],
+          "postInstall": [],
+          "envKeys": [{ "key": "DATABASE_PATH", "default": "./dev.db" }],
+          "nextSteps": [
+            "Run `npx drizzle-kit push` to sync the schema to your database",
+            "Import the generated module in your AppModule imports array",
+            "Inject DatabaseService and call `.getDb()` to use the drizzle query builder"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "typeorm",
+      "label": "TypeORM",
+      "description": "Decorator-based ORM with Active Record / Data Mapper patterns",
+      "databases": [
+        {
+          "id": "postgresql",
+          "label": "PostgreSQL",
+          "runtimePackages": ["typeorm", "reflect-metadata", "pg"],
+          "devPackages": ["@types/pg"],
+          "postInstall": [],
+          "envKeys": [{ "key": "DATABASE_URL" }],
+          "nextSteps": [
+            "With synchronize:true, tables are created automatically on first boot",
+            "For production, set synchronize:false and manage migrations with TypeORM CLI",
+            "Import the generated module in your AppModule imports array",
+            "Inject DatabaseService and use `.dataSource.getRepository(User)` for queries",
+            "Add `import \"reflect-metadata\";` as the first line of your src/main.ts"
+          ]
+        },
+        {
+          "id": "mysql",
+          "label": "MySQL",
+          "runtimePackages": ["typeorm", "reflect-metadata", "mysql2"],
+          "devPackages": [],
+          "postInstall": [],
+          "envKeys": [{ "key": "DATABASE_URL" }],
+          "nextSteps": [
+            "With synchronize:true, tables are created automatically on first boot",
+            "For production, set synchronize:false and manage migrations with TypeORM CLI",
+            "Import the generated module in your AppModule imports array",
+            "Inject DatabaseService and use `.dataSource.getRepository(User)` for queries",
+            "Add `import \"reflect-metadata\";` as the first line of your src/main.ts"
+          ]
+        },
+        {
+          "id": "sqlite",
+          "label": "SQLite",
+          "runtimePackages": ["typeorm", "reflect-metadata", "better-sqlite3"],
+          "devPackages": ["@types/better-sqlite3"],
+          "postInstall": [],
+          "envKeys": [{ "key": "DATABASE_PATH", "default": "./dev.db" }],
+          "nextSteps": [
+            "With synchronize:true, tables are created automatically on first boot",
+            "For production, set synchronize:false and manage migrations with TypeORM CLI",
+            "Import the generated module in your AppModule imports array",
+            "Inject DatabaseService and use `.dataSource.getRepository(User)` for queries",
+            "Add `import \"reflect-metadata\";` as the first line of your src/main.ts"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mongoose",
+      "label": "Mongoose",
+      "description": "Elegant MongoDB object modeling for Node.js",
+      "databases": [
+        {
+          "id": "mongodb",
+          "label": "MongoDB",
+          "runtimePackages": ["mongoose"],
+          "devPackages": [],
+          "postInstall": [],
+          "envKeys": [{ "key": "DATABASE_URL" }],
+          "nextSteps": [
+            "Set DATABASE_URL to your MongoDB connection string (mongodb+srv://...)",
+            "Import the generated module in your AppModule imports array",
+            "Import UserModel from the schema file and use it directly for CRUD operations"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mikro-orm",
+      "label": "MikroORM",
+      "description": "TypeScript ORM based on Data Mapper, Unit of Work, and Identity Map",
+      "databases": [
+        {
+          "id": "postgresql",
+          "label": "PostgreSQL",
+          "runtimePackages": ["@mikro-orm/core", "@mikro-orm/postgresql"],
+          "devPackages": ["@mikro-orm/cli"],
+          "postInstall": [],
+          "envKeys": [{ "key": "DATABASE_URL" }],
+          "nextSteps": [
+            "Run `npx mikro-orm migration:create --initial` to generate your first migration",
+            "Run `npx mikro-orm migration:up` to apply pending migrations",
+            "Import the generated module in your AppModule imports array",
+            "Inject DatabaseService and use `.em` to get a forked EntityManager for queries"
+          ]
+        },
+        {
+          "id": "mysql",
+          "label": "MySQL",
+          "runtimePackages": ["@mikro-orm/core", "@mikro-orm/mysql"],
+          "devPackages": ["@mikro-orm/cli"],
+          "postInstall": [],
+          "envKeys": [{ "key": "DATABASE_URL" }],
+          "nextSteps": [
+            "Run `npx mikro-orm migration:create --initial` to generate your first migration",
+            "Run `npx mikro-orm migration:up` to apply pending migrations",
+            "Import the generated module in your AppModule imports array",
+            "Inject DatabaseService and use `.em` to get a forked EntityManager for queries"
+          ]
+        },
+        {
+          "id": "sqlite",
+          "label": "SQLite",
+          "runtimePackages": ["@mikro-orm/core", "@mikro-orm/sqlite"],
+          "devPackages": ["@mikro-orm/cli"],
+          "postInstall": [],
+          "envKeys": [{ "key": "DATABASE_PATH", "default": "./dev.db" }],
+          "nextSteps": [
+            "Run `npx mikro-orm migration:create --initial` to generate your first migration",
+            "Run `npx mikro-orm migration:up` to apply pending migrations",
+            "Import the generated module in your AppModule imports array",
+            "Inject DatabaseService and use `.em` to get a forked EntityManager for queries"
+          ]
+        }
+      ]
+    }
+  ]
+}
