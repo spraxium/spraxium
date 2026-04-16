@@ -1,0 +1,46 @@
+﻿{
+  "greet": {
+    "name": "cumprimentar",
+    "description": "Cumprimente a si mesmo ou outro usuário.",
+    "me": {
+      "name": "eu",
+      "description": "Cumprimente a si mesmo no seu idioma preferido.",
+      "reply": "👋 Olá, **{{user}}**! Você está usando o idioma `{{locale}}`.",
+      "tip": "💡 Use `/locale definir` para mudar seu idioma."
+    },
+    "user": {
+      "name": "usuario",
+      "description": "Cumprimente outro usuário.",
+      "options": {
+        "target": {
+          "name": "alvo",
+          "description": "O usuário a ser cumprimentado."
+        }
+      },
+      "reply": "👋 Ei, {{target}}! **{{author}}** te manda um olá em `{{locale}}`.",
+      "self": "❌ Você não pode se cumprimentar assim — use `/cumprimentar eu`."
+    }
+  },
+  "locale": {
+    "name": "idioma",
+    "description": "Gerencie sua preferência de idioma.",
+    "set": {
+      "name": "definir",
+      "description": "Defina seu idioma preferido.",
+      "options": {
+        "language": {
+          "name": "idioma",
+          "description": "O idioma a ser usado."
+        }
+      },
+      "done": "✅ Seu idioma foi definido para **{{locale}}**.",
+      "already_set": "ℹ️ Seu idioma já está definido como **{{locale}}**.",
+      "invalid": "❌ Idioma desconhecido `{{locale}}`. Disponíveis: {{available}}."
+    },
+    "info": {
+      "name": "info",
+      "description": "Exibe detalhes do seu idioma atual.",
+      "reply": "🌐 **Seu idioma:** `{{locale}}`\n📋 **Idiomas disponíveis:** {{available}}\n🔤 **Idioma padrão:** `{{default}}`\n\n*Esta mensagem foi renderizada com `tUser()` — usa a sua preferência salva.*"
+    }
+  }
+}

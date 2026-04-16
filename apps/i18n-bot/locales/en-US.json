@@ -1,0 +1,46 @@
+﻿{
+  "greet": {
+    "name": "greet",
+    "description": "Greet yourself or another user.",
+    "me": {
+      "name": "me",
+      "description": "Greet yourself in your preferred language.",
+      "reply": "👋 Hello, **{{user}}**! You are using locale `{{locale}}`.",
+      "tip": "💡 Use `/locale set` to change your language."
+    },
+    "user": {
+      "name": "user",
+      "description": "Greet another user.",
+      "options": {
+        "target": {
+          "name": "target",
+          "description": "The user to greet."
+        }
+      },
+      "reply": "👋 Hey, {{target}}! **{{author}}** says hello to you in `{{locale}}`.",
+      "self": "❌ You cannot greet yourself with this command — use `/greet me` instead."
+    }
+  },
+  "locale": {
+    "name": "locale",
+    "description": "Manage your language preference.",
+    "set": {
+      "name": "set",
+      "description": "Set your preferred language.",
+      "options": {
+        "language": {
+          "name": "language",
+          "description": "The language to use."
+        }
+      },
+      "done": "✅ Your language has been set to **{{locale}}**.",
+      "already_set": "ℹ️ Your language is already **{{locale}}**.",
+      "invalid": "❌ Unknown locale `{{locale}}`. Available: {{available}}."
+    },
+    "info": {
+      "name": "info",
+      "description": "Show your current locale details.",
+      "reply": "🌐 **Your locale:** `{{locale}}`\n📋 **Available locales:** {{available}}\n🔤 **Default locale:** `{{default}}`\n\n*This message was rendered with `tUser()` — it uses your stored preference.*"
+    }
+  }
+}
