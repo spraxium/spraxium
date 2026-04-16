@@ -58,16 +58,6 @@ export class SpraxiumApplication {
   }
 
   /**
-   * Registers a guard to be applied globally , before every command handler,
-   * regardless of class- or method-level @UseGuards().
-   *
-   * Chainable: call multiple times to stack global guards in registration order.
-   *
-   * @example
-   *   app.useGlobalGuards(GuildOnly);
-   *   app.useGlobalGuards(OwnerOnly, { ownerIds: ['123456789012345678'] });
-   */
-  /**
    * Registers a pre-built instance in the root DI container under the given token.
    * Use this to inject value-providers such as validated environment schemas.
    *
@@ -85,6 +75,16 @@ export class SpraxiumApplication {
     return this;
   }
 
+  /**
+   * Registers a guard to be applied globally , before every command handler,
+   * regardless of class- or method-level @UseGuards().
+   *
+   * Chainable: call multiple times to stack global guards in registration order.
+   *
+   * @example
+   *   app.useGlobalGuards(GuildOnly);
+   *   app.useGlobalGuards(OwnerOnly, { ownerIds: ['123456789012345678'] });
+   */
   public useGlobalGuards(guardClass: new () => SpraxiumGuard, options: Record<string, unknown> = {}): this {
     GuardRegistry.register(guardClass, options);
     return this;

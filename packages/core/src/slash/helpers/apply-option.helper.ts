@@ -1,6 +1,18 @@
 import type { SlashOptionMetadata } from '@spraxium/common';
 import type { SlashCommandBuilder, SlashCommandSubcommandBuilder } from 'discord.js';
+import { SlashLocalizationBridge } from '../slash-localization.bridge';
 import type { GuildChannelTypeResolvable } from '../types';
+
+function applyOptionLocalizations<
+  T extends { setNameLocalizations: Function; setDescriptionLocalizations: Function },
+>(o: T, opt: SlashOptionMetadata): T {
+  if (!opt.i18n) return o;
+  const locs = SlashLocalizationBridge.resolve(opt.i18n);
+  if (!locs) return o;
+  o.setNameLocalizations(locs.name_localizations);
+  o.setDescriptionLocalizations(locs.description_localizations);
+  return o;
+}
 
 export function applyOption(
   builder: SlashCommandBuilder | SlashCommandSubcommandBuilder,
@@ -10,6 +22,7 @@ export function applyOption(
     case 'STRING':
       builder.addStringOption((o) => {
         o.setName(opt.name).setDescription(opt.description).setRequired(opt.required);
+        applyOptionLocalizations(o, opt);
         if (opt.minLength !== undefined) o.setMinLength(opt.minLength);
         if (opt.maxLength !== undefined) o.setMaxLength(opt.maxLength);
         if (opt.autocomplete) o.setAutocomplete(true);
@@ -22,6 +35,7 @@ export function applyOption(
     case 'INTEGER':
       builder.addIntegerOption((o) => {
         o.setName(opt.name).setDescription(opt.description).setRequired(opt.required);
+        applyOptionLocalizations(o, opt);
         if (opt.min !== undefined) o.setMinValue(opt.min);
         if (opt.max !== undefined) o.setMaxValue(opt.max);
         if (opt.autocomplete) o.setAutocomplete(true);
@@ -34,6 +48,7 @@ export function applyOption(
     case 'NUMBER':
       builder.addNumberOption((o) => {
         o.setName(opt.name).setDescription(opt.description).setRequired(opt.required);
+        applyOptionLocalizations(o, opt);
         if (opt.min !== undefined) o.setMinValue(opt.min);
         if (opt.max !== undefined) o.setMaxValue(opt.max);
         if (opt.autocomplete) o.setAutocomplete(true);
@@ -41,18 +56,21 @@ export function applyOption(
       });
       break;
     case 'BOOLEAN':
-      builder.addBooleanOption((o) =>
-        o.setName(opt.name).setDescription(opt.description).setRequired(opt.required),
-      );
+      builder.addBooleanOption((o) => {
+        o.setName(opt.name).setDescription(opt.description).setRequired(opt.required);
+        return applyOptionLocalizations(o, opt);
+      });
       break;
     case 'USER':
-      builder.addUserOption((o) =>
-        o.setName(opt.name).setDescription(opt.description).setRequired(opt.required),
-      );
+      builder.addUserOption((o) => {
+        o.setName(opt.name).setDescription(opt.description).setRequired(opt.required);
+        return applyOptionLocalizations(o, opt);
+      });
       break;
     case 'CHANNEL':
       builder.addChannelOption((o) => {
         o.setName(opt.name).setDescription(opt.description).setRequired(opt.required);
+        applyOptionLocalizations(o, opt);
         if (opt.channelTypes?.length) {
           o.addChannelTypes(...(opt.channelTypes as unknown as Array<GuildChannelTypeResolvable>));
         }
@@ -60,19 +78,22 @@ export function applyOption(
       });
       break;
     case 'ROLE':
-      builder.addRoleOption((o) =>
-        o.setName(opt.name).setDescription(opt.description).setRequired(opt.required),
-      );
+      builder.addRoleOption((o) => {
+        o.setName(opt.name).setDescription(opt.description).setRequired(opt.required);
+        return applyOptionLocalizations(o, opt);
+      });
       break;
     case 'MENTIONABLE':
-      builder.addMentionableOption((o) =>
-        o.setName(opt.name).setDescription(opt.description).setRequired(opt.required),
-      );
+      builder.addMentionableOption((o) => {
+        o.setName(opt.name).setDescription(opt.description).setRequired(opt.required);
+        return applyOptionLocalizations(o, opt);
+      });
       break;
     case 'ATTACHMENT':
-      builder.addAttachmentOption((o) =>
-        o.setName(opt.name).setDescription(opt.description).setRequired(opt.required),
-      );
+      builder.addAttachmentOption((o) => {
+        o.setName(opt.name).setDescription(opt.description).setRequired(opt.required);
+        return applyOptionLocalizations(o, opt);
+      });
       break;
   }
 }

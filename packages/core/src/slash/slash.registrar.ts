@@ -13,6 +13,7 @@ import {
 } from 'discord.js';
 import { logger } from '../logger';
 import { applyOption } from './helpers';
+import { SlashLocalizationBridge } from './slash-localization.bridge';
 import type { SlashRegistry } from './slash.registry';
 import type { SubcommandListEntry } from './types';
 
@@ -78,6 +79,14 @@ export class SlashRegistrar {
         .setName(resolved.config.name)
         .setDescription(resolved.config.description);
 
+      if (resolved.config.i18n) {
+        const locs = SlashLocalizationBridge.resolve(resolved.config.i18n);
+        if (locs) {
+          builder.setNameLocalizations(locs.name_localizations);
+          builder.setDescriptionLocalizations(locs.description_localizations);
+        }
+      }
+
       if (resolved.config.dmPermission !== undefined) {
         builder.setDMPermission(resolved.config.dmPermission);
       }
@@ -128,6 +137,14 @@ export class SlashRegistrar {
       builder.addSubcommand((subBuilder) => {
         subBuilder.setName(sub.meta.name).setDescription(sub.meta.description);
 
+        if (sub.meta.i18n) {
+          const locs = SlashLocalizationBridge.resolve(sub.meta.i18n);
+          if (locs) {
+            subBuilder.setNameLocalizations(locs.name_localizations);
+            subBuilder.setDescriptionLocalizations(locs.description_localizations);
+          }
+        }
+
         const options: Array<SlashOptionMetadata> =
           Reflect.getMetadata(METADATA_KEYS.SLASH_OPTION, ctor.prototype, sub.method) ?? [];
         for (const opt of options) {
@@ -152,6 +169,14 @@ export class SlashRegistrar {
       builder.addSubcommand((subBuilder) => {
         subBuilder.setName(sub.meta.name).setDescription(sub.meta.description);
 
+        if (sub.meta.i18n) {
+          const locs = SlashLocalizationBridge.resolve(sub.meta.i18n);
+          if (locs) {
+            subBuilder.setNameLocalizations(locs.name_localizations);
+            subBuilder.setDescriptionLocalizations(locs.description_localizations);
+          }
+        }
+
         const options: Array<SlashOptionMetadata> =
           Reflect.getMetadata(METADATA_KEYS.SLASH_OPTION, ctor.prototype, sub.method) ?? [];
         for (const opt of options) {
@@ -174,9 +199,25 @@ export class SlashRegistrar {
       builder.addSubcommandGroup((groupBuilder) => {
         groupBuilder.setName(groupMeta.name).setDescription(groupMeta.description);
 
+        if (groupMeta.i18n) {
+          const locs = SlashLocalizationBridge.resolve(groupMeta.i18n);
+          if (locs) {
+            groupBuilder.setNameLocalizations(locs.name_localizations);
+            groupBuilder.setDescriptionLocalizations(locs.description_localizations);
+          }
+        }
+
         for (const sub of groupSubs) {
           groupBuilder.addSubcommand((subBuilder) => {
             subBuilder.setName(sub.meta.name).setDescription(sub.meta.description);
+
+            if (sub.meta.i18n) {
+              const locs = SlashLocalizationBridge.resolve(sub.meta.i18n);
+              if (locs) {
+                subBuilder.setNameLocalizations(locs.name_localizations);
+                subBuilder.setDescriptionLocalizations(locs.description_localizations);
+              }
+            }
 
             const options: Array<SlashOptionMetadata> =
               Reflect.getMetadata(METADATA_KEYS.SLASH_OPTION, groupClass.prototype, sub.method) ?? [];
