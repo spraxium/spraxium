@@ -121,8 +121,8 @@ export function printBootTables(
       slashTable.push([
         chalk.cyan(`/${entry.commandName}`),
         chalk.green(entry.handlerClass),
-        entry.group ? chalk.magenta(entry.group) : chalk.dim(','),
-        entry.sub ? chalk.yellow(entry.sub) : chalk.dim(','),
+        entry.group ? chalk.magenta(entry.group) : chalk.dim('—'),
+        entry.sub ? chalk.yellow(entry.sub) : chalk.dim('—'),
         chalk.dim(String(entry.optionCount)),
       ]);
     }
