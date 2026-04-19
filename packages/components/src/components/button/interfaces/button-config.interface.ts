@@ -16,10 +16,4 @@ export interface LinkButtonConfig {
   disabled?: boolean;
 }
 
-export interface DynamicButtonConfig {
-  prefix: string;
-  label: string;
-  style?: ButtonStyleName;
-  emoji?: ButtonEmojiConfig;
-  disabled?: boolean;
-}
+

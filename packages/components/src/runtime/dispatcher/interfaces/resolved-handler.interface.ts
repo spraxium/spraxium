@@ -19,8 +19,3 @@ export interface ResolvedButtonHandler {
   handlerInstance: unknown;
 }
 
-export interface ResolvedDynamicButtonHandler {
-  prefix: string;
-  handlerCtor: Constructor;
-  handlerInstance: unknown;
-}

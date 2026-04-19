@@ -3,7 +3,6 @@ import { BUTTON_STYLE_MAP } from '../constants';
 import type {
   ButtonDef,
   ButtonEmojiConfig,
-  DynamicButtonDef,
   LinkButtonDef,
   StaticButtonDef,
 } from '../interfaces';
@@ -23,11 +22,6 @@ function buildButton(def: ButtonDef): ButtonBuilder {
     case 'link':
       btn.setStyle(ButtonStyle.Link).setURL(def.url);
       break;
-    case 'dynamic': {
-      const id = `${def.prefix}:${def.data}`;
-      btn.setStyle(BUTTON_STYLE_MAP[def.style]).setCustomId(id);
-      break;
-    }
     case 'static':
       btn.setStyle(BUTTON_STYLE_MAP[def.style]).setCustomId(def.customId);
       break;
@@ -59,10 +53,6 @@ export const Buttons = {
 
   link(url: string, label: string): LinkButtonDef {
     return { type: 'link', url, label };
-  },
-
-  dynamic(prefix: string, label: string, data: string): DynamicButtonDef {
-    return { type: 'dynamic', prefix, data, label, style: 'primary' };
   },
 
   emoji<T extends ButtonDef>(def: T, emoji: ButtonEmojiConfig): T {

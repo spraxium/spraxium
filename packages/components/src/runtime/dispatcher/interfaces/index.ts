@@ -4,5 +4,4 @@ export type {
   ResolvedModalHandler,
   ResolvedSelectHandler,
   ResolvedButtonHandler,
-  ResolvedDynamicButtonHandler,
 } from './resolved-handler.interface';

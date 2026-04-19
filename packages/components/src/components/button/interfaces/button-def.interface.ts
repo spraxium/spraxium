@@ -18,14 +18,4 @@ export interface LinkButtonDef {
   disabled?: boolean;
 }
 
-export interface DynamicButtonDef {
-  type: 'dynamic';
-  prefix: string;
-  data: string;
-  label: string;
-  style: ButtonStyleName;
-  emoji?: ButtonEmojiConfig;
-  disabled?: boolean;
-}
-
-export type ButtonDef = StaticButtonDef | LinkButtonDef | DynamicButtonDef;
+export type ButtonDef = StaticButtonDef | LinkButtonDef;

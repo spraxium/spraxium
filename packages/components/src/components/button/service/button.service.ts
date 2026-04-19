@@ -4,7 +4,7 @@ import { ActionRowBuilder, type ButtonBuilder } from 'discord.js';
 import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys.constant';
 import type { SpraxiumContext } from '../../../runtime/context';
 import type { AnyConstructor } from '../../../types';
-import type { ButtonComponentMeta, DynamicButtonConfig } from '../interfaces';
+import type { ButtonComponentMeta } from '../interfaces';
 import { ButtonRenderer } from '../renderer';
 
 @Injectable()
@@ -35,25 +35,6 @@ export class ButtonService {
     return this.build(ButtonClasses, context);
   }
 
-  buildDynamic(
-    DynamicClass: AnyConstructor,
-    data: string,
-    context?: SpraxiumContext<unknown>,
-  ): ActionRowBuilder<ButtonBuilder> {
-    const meta = this.getDynamicMeta(DynamicClass);
-    const dynamicMeta: ButtonComponentMeta = {
-      isLink: false,
-      isDynamic: true,
-      ...meta,
-    };
-    const btn = this.renderer.render(dynamicMeta);
-
-    const base = `${meta.prefix}:${data}`;
-    btn.setCustomId(context ? `${base}~${context.id}` : base);
-
-    return new ActionRowBuilder<ButtonBuilder>().addComponents(btn);
-  }
-
   private appendContext(btn: ButtonBuilder, context: SpraxiumContext<unknown>): void {
     const json = btn.toJSON();
     if ('custom_id' in json && json.custom_id) {
@@ -72,14 +53,4 @@ export class ButtonService {
     return meta;
   }
 
-  private getDynamicMeta(DynamicClass: AnyConstructor): DynamicButtonConfig {
-    const meta = Reflect.getOwnMetadata(COMPONENT_METADATA_KEYS.DYNAMIC_BUTTON_COMPONENT, DynamicClass) as
-      | ButtonComponentMeta
-      | undefined;
-
-    if (!meta || !('prefix' in meta)) {
-      throw new Error(`[ButtonService] ${DynamicClass.name} is not decorated with @DynamicButton.`);
-    }
-    return meta as unknown as DynamicButtonConfig;
-  }
 }

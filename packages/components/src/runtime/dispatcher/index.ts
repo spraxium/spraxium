@@ -7,5 +7,4 @@ export type {
   ResolvedModalHandler,
   ResolvedSelectHandler,
   ResolvedButtonHandler,
-  ResolvedDynamicButtonHandler,
 } from './interfaces';

@@ -35,11 +35,8 @@ export const COMPONENT_METADATA_KEYS = {
 
   BUTTON_COMPONENT: 'spraxium:button_component',
   BUTTON_HANDLER: 'spraxium:button_handler',
-  DYNAMIC_BUTTON_COMPONENT: 'spraxium:dynamic_button_component',
-  DYNAMIC_BUTTON_HANDLER: 'spraxium:dynamic_button_handler',
 
   FLOW_CONTEXT_PARAM: 'spraxium:flow_context_param',
-  SELECTED_PARAM: 'spraxium:selected_param',
 
   V2_CONTAINER: 'spraxium:v2_container',
   V2_CHILDREN: 'spraxium:v2_children',

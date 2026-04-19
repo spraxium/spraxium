@@ -33,7 +33,6 @@ export class ComponentDispatcher {
       this.modals.register(ctor, instance);
       this.selects.register(ctor, instance);
       this.buttons.registerStatic(ctor, instance);
-      this.buttons.registerDynamic(ctor, instance);
     }
     pendingInstances.length = 0;
   }

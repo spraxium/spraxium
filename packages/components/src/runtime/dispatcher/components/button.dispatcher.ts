@@ -2,20 +2,18 @@ import 'reflect-metadata';
 import { METADATA_KEYS } from '@spraxium/common';
 import { type ButtonInteraction, type Client, Events, type Interaction } from 'discord.js';
 import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys.constant';
-import type { ButtonComponentMeta, ButtonHandlerMeta, DynamicButtonConfig } from '../../../components/button';
+import type { ButtonComponentMeta, ButtonHandlerMeta } from '../../../components/button';
 import { ContextStore } from '../../context';
 import type { ComponentsConfig, SpraxiumContext } from '../../lifecycle';
 import { resolveContextError } from '../helpers/context-error.helper';
 import { splitCustomId } from '../helpers/split-custom-id.helper';
-import type { Constructor, ResolvedButtonHandler, ResolvedDynamicButtonHandler } from '../interfaces';
+import type { Constructor, ResolvedButtonHandler } from '../interfaces';
 
 /**
  * Handles registration and dispatch of button interactions.
- * Supports both static (fixed custom ID) and dynamic (prefix based) buttons.
  */
 export class ButtonDispatcher {
   private readonly staticHandlers: Array<ResolvedButtonHandler> = [];
-  private readonly dynamicHandlers: Array<ResolvedDynamicButtonHandler> = [];
   private config?: ComponentsConfig;
 
   setConfig(config: ComponentsConfig): void {
@@ -23,7 +21,7 @@ export class ButtonDispatcher {
   }
 
   get size(): number {
-    return this.staticHandlers.length + this.dynamicHandlers.length;
+    return this.staticHandlers.length;
   }
 
   registerStatic(ctor: Constructor, instance: unknown): void {
@@ -56,33 +54,8 @@ export class ButtonDispatcher {
     });
   }
 
-  registerDynamic(ctor: Constructor, instance: unknown): void {
-    const handlerMeta: ButtonHandlerMeta | undefined = Reflect.getMetadata(
-      COMPONENT_METADATA_KEYS.DYNAMIC_BUTTON_HANDLER,
-      ctor,
-    );
-    if (!handlerMeta) return;
-
-    const componentClass = handlerMeta.component as Constructor;
-    const componentMeta: DynamicButtonConfig | undefined = Reflect.getMetadata(
-      COMPONENT_METADATA_KEYS.DYNAMIC_BUTTON_COMPONENT,
-      componentClass,
-    );
-    if (!componentMeta) {
-      throw new Error(
-        `${ctor.name}: @DynamicButtonHandler references ${componentClass.name} which is not decorated with @DynamicButton().`,
-      );
-    }
-
-    this.dynamicHandlers.push({
-      prefix: componentMeta.prefix,
-      handlerCtor: ctor,
-      handlerInstance: instance,
-    });
-  }
-
   bind(client: Client): void {
-    if (this.staticHandlers.length === 0 && this.dynamicHandlers.length === 0) return;
+    if (this.staticHandlers.length === 0) return;
 
     client.on(Events.InteractionCreate, (interaction: Interaction) => {
       if (!interaction.isButton()) return;
@@ -93,14 +66,6 @@ export class ButtonDispatcher {
       const staticResolved = this.staticHandlers.find((h) => h.customId === baseId);
       if (staticResolved) {
         void this.dispatchStatic(button, staticResolved, contextId);
-        return;
-      }
-
-      const dynamicResolved = this.dynamicHandlers.find(
-        (h) => baseId === h.prefix || baseId.startsWith(`${h.prefix}:`),
-      );
-      if (dynamicResolved) {
-        void this.dispatchDynamic(button, dynamicResolved, baseId, contextId);
       }
     });
   }
@@ -132,47 +97,6 @@ export class ButtonDispatcher {
       await Promise.resolve(fn.call(resolved.handlerInstance, ...args));
     } catch (err) {
       console.error('[Spraxium] Unhandled error in @ButtonHandler:', err);
-    }
-  }
-
-  private async dispatchDynamic(
-    button: ButtonInteraction,
-    resolved: ResolvedDynamicButtonHandler,
-    baseId: string,
-    contextId: string | undefined,
-  ): Promise<void> {
-    try {
-      const flowCtx = await this.resolveFlowContext(button, contextId);
-      if (flowCtx === null) return;
-
-      const proto = resolved.handlerCtor.prototype as Record<string | symbol, unknown>;
-      const ctxIndex: number | undefined = Reflect.getMetadata(METADATA_KEYS.CTX_PARAM, proto, 'handle');
-      const flowCtxIndex: number | undefined = Reflect.getMetadata(
-        COMPONENT_METADATA_KEYS.FLOW_CONTEXT_PARAM,
-        proto,
-        'handle',
-      );
-      const selectedIndex: number | undefined = Reflect.getMetadata(
-        COMPONENT_METADATA_KEYS.SELECTED_PARAM,
-        proto,
-        'handle',
-      );
-
-      const dynamicData = baseId.startsWith(`${resolved.prefix}:`)
-        ? baseId.slice(resolved.prefix.length + 1)
-        : '';
-
-      const args: Array<unknown> = [];
-      if (ctxIndex !== undefined) args[ctxIndex] = button;
-      if (flowCtxIndex !== undefined) args[flowCtxIndex] = flowCtx;
-      if (selectedIndex !== undefined) args[selectedIndex] = dynamicData;
-
-      const fn = (resolved.handlerInstance as Record<string | symbol, (...a: Array<unknown>) => unknown>)
-        .handle;
-      if (typeof fn !== 'function') return;
-      await Promise.resolve(fn.call(resolved.handlerInstance, ...args));
-    } catch (err) {
-      console.error('[Spraxium] Unhandled error in @DynamicButtonHandler:', err);
     }
   }
 

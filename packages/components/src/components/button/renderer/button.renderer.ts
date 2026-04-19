@@ -11,8 +11,6 @@ export class ButtonRenderer {
 
     if (meta.isLink) {
       btn.setStyle(ButtonStyle.Link).setURL(meta.url);
-    } else if (meta.isDynamic) {
-      btn.setStyle(BUTTON_STYLE_MAP[meta.style ?? 'primary']);
     } else {
       btn.setStyle(BUTTON_STYLE_MAP[meta.style ?? 'primary']).setCustomId(meta.customId);
     }
