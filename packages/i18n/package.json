@@ -1,6 +1,6 @@
 {
   "name": "@spraxium/i18n",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "private": false,
   "type": "module",
   "main": "./dist/index.js",
@@ -22,12 +22,12 @@
     "reflect-metadata": "^0.2.2"
   },
   "peerDependencies": {
-    "@spraxium/common": "workspace:*",
-    "@spraxium/core": "workspace:*"
+    "@spraxium/common": "^0.1.1",
+    "@spraxium/core": "^0.1.1"
   },
   "devDependencies": {
-    "@spraxium/common": "workspace:*",
-    "@spraxium/core": "workspace:*",
+    "@spraxium/common": "^0.1.1",
+    "@spraxium/core": "^0.1.1",
     "@types/node": "^22.13.0",
     "tsdown": "^0.12.0",
     "typescript": "^5.7.0",
