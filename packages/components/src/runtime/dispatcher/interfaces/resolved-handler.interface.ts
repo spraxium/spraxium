@@ -18,4 +18,3 @@ export interface ResolvedButtonHandler {
   handlerCtor: Constructor;
   handlerInstance: unknown;
 }
-

@@ -3,5 +3,5 @@ import { developmentConfig } from './config/development.config';
 
 export default defineConfig(() => ({
   plugins: [],
-  dev: developmentConfig, 
+  dev: developmentConfig,
 }));

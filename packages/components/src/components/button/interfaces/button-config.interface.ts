@@ -15,5 +15,3 @@ export interface LinkButtonConfig {
   emoji?: ButtonEmojiConfig;
   disabled?: boolean;
 }
-
-

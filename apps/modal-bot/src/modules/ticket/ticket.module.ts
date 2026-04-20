@@ -8,10 +8,6 @@ import { TicketOpenCommandHandler } from './handlers/ticket-open-command.handler
 @Module({
   providers: [ModalService],
   commands: [TicketCommand],
-  handlers: [
-    TicketOpenCommandHandler,
-    TicketEditCommandHandler,
-    TicketModalHandler,
-  ],
+  handlers: [TicketOpenCommandHandler, TicketEditCommandHandler, TicketModalHandler],
 })
 export class TicketModule {}

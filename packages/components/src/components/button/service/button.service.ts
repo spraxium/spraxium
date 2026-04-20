@@ -52,5 +52,4 @@ export class ButtonService {
     }
     return meta;
   }
-
 }

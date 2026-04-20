@@ -7,9 +7,6 @@ import { ProfileSetupCommandHandler } from './handlers/profile-setup-command.han
 @Module({
   providers: [ModalService],
   commands: [ProfileCommand],
-  handlers: [
-    ProfileSetupCommandHandler,
-    ProfileModalHandler,
-  ],
+  handlers: [ProfileSetupCommandHandler, ProfileModalHandler],
 })
 export class ProfileModule {}

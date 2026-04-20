@@ -1,11 +1,6 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
 import { BUTTON_STYLE_MAP } from '../constants';
-import type {
-  ButtonDef,
-  ButtonEmojiConfig,
-  LinkButtonDef,
-  StaticButtonDef,
-} from '../interfaces';
+import type { ButtonDef, ButtonEmojiConfig, LinkButtonDef, StaticButtonDef } from '../interfaces';
 import type { ButtonStyleName } from '../types';
 
 function resolveEmoji(emoji: ButtonEmojiConfig): { id?: string; name?: string; animated?: boolean } {

@@ -12,7 +12,6 @@ import {
 @ModalTextDisplay({ content: 'Set up your public profile visible to server members.' })
 @ModalComponent({ id: 'profile', title: 'Profile Setup' })
 export class ProfileModal {
-
   @ModalSelect({ label: 'Primary role', placeholder: 'Select your role…', required: true })
   @ModalOption({ label: 'Developer', value: 'dev', emoji: '💻', description: 'Software engineering' })
   @ModalOption({ label: 'Designer', value: 'design', emoji: '🎨', description: 'UI/UX and visual work' })
