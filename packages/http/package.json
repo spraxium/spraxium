@@ -1,7 +1,7 @@
 {
   "name": "@spraxium/http",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "description": "HTTP bridge layer for Spraxium bots — exposes bot state over a secured REST API",
   "main": "./dist/index.js",
   "module": "./dist/index.js",

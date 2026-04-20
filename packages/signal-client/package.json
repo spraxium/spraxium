@@ -1,7 +1,7 @@
 {
   "name": "@spraxium/signal-client",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "description": "Envelope builder and webhook sender for the Spraxium signal protocol — zero external dependencies",
   "type": "module",
   "main": "./dist/index.js",

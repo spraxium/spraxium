@@ -1,7 +1,7 @@
 {
   "name": "@spraxium/signal",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "description": "Async unidirectional signal system for Spraxium bots via Discord webhooks",
   "type": "module",
   "main": "./dist/index.js",
