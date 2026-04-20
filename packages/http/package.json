@@ -32,8 +32,8 @@
     "discord.js": "^14.26.3"
   },
   "devDependencies": {
-    "@spraxium/common": "^0.1.1",
-    "@spraxium/core": "^0.1.1",
+    "@spraxium/common": "workspace:*",
+    "@spraxium/core": "workspace:*",
     "@types/node": "^22.0.0",
     "tsdown": "^0.12.0",
     "typescript": "^5.7.0"

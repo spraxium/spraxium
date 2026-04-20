@@ -22,8 +22,8 @@
     "reflect-metadata": "^0.2.2"
   },
   "peerDependencies": {
-    "@spraxium/common": "^0.1.1",
-    "@spraxium/core": "^0.1.1",
+    "@spraxium/common": "workspace:*",
+    "@spraxium/core": "workspace:*",
     "ioredis": "\u003e=5.0.0"
   },
   "peerDependenciesMeta": {
@@ -32,8 +32,8 @@
     }
   },
   "devDependencies": {
-    "@spraxium/common": "^0.1.1",
-    "@spraxium/core": "^0.1.1",
+    "@spraxium/common": "workspace:*",
+    "@spraxium/core": "workspace:*",
     "@types/node": "^22.13.0",
     "tsdown": "^0.12.0",
     "typescript": "^5.7.0",

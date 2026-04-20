@@ -17,7 +17,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@spraxium/common": "^0.1.1",
+    "@spraxium/common": "workspace:*",
     "chalk": "^5.4.0",
     "cli-table3": "^0.6.5",
     "reflect-metadata": "^0.2.2"

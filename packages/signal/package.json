@@ -20,8 +20,8 @@
     "lint": "biome check src/"
   },
   "dependencies": {
-    "@spraxium/common": "^0.1.1",
-    "@spraxium/core": "^0.1.1",
+    "@spraxium/common": "workspace:*",
+    "@spraxium/core": "workspace:*",
     "discord.js": "^14.26.3",
     "zod": "^3.22.0"
   },
