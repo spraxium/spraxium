@@ -21,8 +21,8 @@
         {
           "id": "mysql",
           "label": "MySQL",
-          "runtimePackages": ["@prisma/client", "@prisma/adapter-mariadb", "mariadb"],
-          "devPackages": ["prisma"],
+          "runtimePackages": ["@prisma/client", "mysql2"],
+          "devPackages": ["prisma", "@types/mysql2"],
           "postInstall": ["npx prisma generate"],
           "envKeys": [{ "key": "DATABASE_URL" }],
           "nextSteps": [
