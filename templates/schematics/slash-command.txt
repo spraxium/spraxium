@@ -1,4 +1,6 @@
 import { SlashCommand } from '@spraxium/common';
 
 @SlashCommand({ name: '{{kebabName}}', description: 'TODO: describe this command' })
-export class {{pascalName}}Command {}
+export class {{pascalName}}Command {
+  build() {}
+}
