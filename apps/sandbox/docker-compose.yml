@@ -1,0 +1,42 @@
+services:
+  postgres:
+    image: postgres:18-alpine
+    container_name: spraxium-postgres
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-spraxium}
+      POSTGRES_USER: ${POSTGRES_USER:-spraxium}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-spraxium}
+    volumes:
+      - postgres_data:/var/lib/postgresql/18/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-spraxium} -d ${POSTGRES_DB:-spraxium}']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  redis:
+    image: redis:8-alpine
+    container_name: spraxium-redis
+    ports:
+      - '6379:6379'
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    environment:
+      # Sem password por padrão para dev
+      # Pra adicionar password: redis-server --requirepass sua-senha
+      LOG_LEVEL: notice
+
+volumes:
+  postgres_data:
+    driver: local
+
+  redis_data:
+    driver: local

@@ -1,0 +1,87 @@
+{
+  "ping": {
+    "name": "ping",
+    "description": "Check bot latency or ping a specific service.",
+    "reply": "🏓 Pong! WebSocket latency: **{{ws}}ms**",
+    "reply_service": "🏓 **{{service}}** latency: ~{{ws}}ms (WebSocket: {{ws}}ms)"
+  },
+  "locale": {
+    "name": "locale",
+    "description": "Change your preferred language.",
+    "options": {
+      "language": {
+        "name": "language",
+        "description": "The language to use."
+      }
+    },
+    "set": "✅ Your language has been set to **{{locale}}**.",
+    "already_set": "ℹ️ Your language is already set to **{{locale}}**.",
+    "invalid": "❌ Unknown locale: **{{locale}}**. Available: {{available}}."
+  },
+  "info": {
+    "name": "info",
+    "description": "Show bot information.",
+    "embed": {
+      "title": "Bot Information",
+      "description": "A demo bot built with Spraxium.",
+      "fields": {
+        "latency_name": "🏓 Latency",
+        "latency_value": "{{ws}}ms",
+        "locale_name": "🌐 Your Locale",
+        "locale_value": "{{locale}}"
+      }
+    }
+  },
+  "demo": {
+    "name": "demo",
+    "description": "i18n feature demonstrations",
+    "translate": {
+      "name": "translate",
+      "description": "Shows t() and tUser() with {{interpolation}} in both locales",
+      "result": "👋 Hello, **{{user}}**! This was rendered with `t()` using locale `{{locale}}`."
+    },
+    "plural": {
+      "name": "plural",
+      "description": "Shows tp() and tpUser() — picks items_one or items_other via Intl.PluralRules",
+      "options": {
+        "count": {
+          "name": "count",
+          "description": "Number of items (try 0, 1, 5)"
+        }
+      },
+      "items_one": "{{count}} item",
+      "items_other": "{{count}} items"
+    },
+    "locale": {
+      "title": "🌐 Locale Resolution",
+      "user_locale": "**getUserLocale():** `{{locale}}`",
+      "guild_locale": "**getGuildLocale():** `{{locale}}`",
+      "guild_locale_none": "**getGuildLocale():** *(not in a guild)*",
+      "resolved": "**resolveLocale():** `{{locale}}` ← winner",
+      "default_locale": "**default():** `{{locale}}`",
+      "explanation": "*Priority chain: user → guild → default*"
+    },
+    "embed": {
+      "title": "📋 LocalizedEmbedBuilder Demo",
+      "description": "Every field below is a separate i18n key, all rendered via `LocalizedEmbedBuilder` in your locale.",
+      "field_locale_name": "🌍 Your Locale",
+      "field_locale_value": "`{{locale}}`",
+      "field_ws_name": "🏓 WebSocket Latency",
+      "field_ws_value": "`{{ws}}ms`",
+      "field_guild_name": "🏛️ Guild Locale",
+      "field_guild_value": "`{{locale}}`",
+      "footer": "setFooter() also translated • locale: {{locale}}"
+    },
+    "registry": {
+      "title": "📚 LocaleRegistry API",
+      "locales": "**locales():** `[{{locales}}]`",
+      "default": "**default():** `{{locale}}`",
+      "has_true": "**has('{{locale}}'):** ✅ registered",
+      "has_false": "**has('{{locale}}'):** ❌ not registered"
+    },
+    "slash_info": {
+      "title": "🔖 buildSlashLocalizations()",
+      "description": "Generates `name_localizations` + `description_localizations` for `commands.demo`:"
+    }
+  }
+}

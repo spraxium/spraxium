@@ -1,0 +1,87 @@
+{
+  "ping": {
+    "name": "ping",
+    "description": "Verifique a latência do bot ou de um serviço específico.",
+    "reply": "🏓 Pong! Latência WebSocket: **{{ws}}ms**",
+    "reply_service": "🏓 Latência de **{{service}}**: ~{{ws}}ms (WebSocket: {{ws}}ms)"
+  },
+  "locale": {
+    "name": "idioma",
+    "description": "Altere seu idioma preferido.",
+    "options": {
+      "language": {
+        "name": "idioma",
+        "description": "O idioma a ser usado."
+      }
+    },
+    "set": "✅ Seu idioma foi definido para **{{locale}}**.",
+    "already_set": "ℹ️ Seu idioma já está definido como **{{locale}}**.",
+    "invalid": "❌ Idioma desconhecido: **{{locale}}**. Disponíveis: {{available}}."
+  },
+  "info": {
+    "name": "info",
+    "description": "Exibe informações do bot.",
+    "embed": {
+      "title": "Informações do Bot",
+      "description": "Um bot demo construído com Spraxium.",
+      "fields": {
+        "latency_name": "🏓 Latência",
+        "latency_value": "{{ws}}ms",
+        "locale_name": "🌐 Seu Idioma",
+        "locale_value": "{{locale}}"
+      }
+    }
+  },
+  "demo": {
+    "name": "demo",
+    "description": "Demonstrações das funcionalidades do i18n",
+    "translate": {
+      "name": "traduzir",
+      "description": "Demonstra t() e tUser() com {{interpolação}} em ambos os idiomas",
+      "result": "👋 Olá, **{{user}}**! Renderizado com `t()` usando o locale `{{locale}}`."
+    },
+    "plural": {
+      "name": "plural",
+      "description": "Demonstra tp() e tpUser() com Intl.PluralRules",
+      "options": {
+        "count": {
+          "name": "quantidade",
+          "description": "Número de itens (tente 0, 1, 5)"
+        }
+      },
+      "items_one": "{{count}} item",
+      "items_other": "{{count}} itens"
+    },
+    "locale": {
+      "title": "🌐 Resolução de Idioma",
+      "user_locale": "**getUserLocale():** `{{locale}}`",
+      "guild_locale": "**getGuildLocale():** `{{locale}}`",
+      "guild_locale_none": "**getGuildLocale():** *(não está em um servidor)*",
+      "resolved": "**resolveLocale():** `{{locale}}` ← vencedor",
+      "default_locale": "**default():** `{{locale}}`",
+      "explanation": "*Cadeia de prioridade: usuário → servidor → padrão*"
+    },
+    "embed": {
+      "title": "📋 Demo do LocalizedEmbedBuilder",
+      "description": "Cada campo abaixo é uma chave de i18n separada, todos renderizados via `LocalizedEmbedBuilder` no seu idioma.",
+      "field_locale_name": "🌍 Seu Idioma",
+      "field_locale_value": "`{{locale}}`",
+      "field_ws_name": "🏓 Latência WebSocket",
+      "field_ws_value": "`{{ws}}ms`",
+      "field_guild_name": "🏛️ Idioma do Servidor",
+      "field_guild_value": "`{{locale}}`",
+      "footer": "setFooter() também traduzido • locale: {{locale}}"
+    },
+    "registry": {
+      "title": "📚 LocaleRegistry API",
+      "locales": "**locales():** `[{{locales}}]`",
+      "default": "**default():** `{{locale}}`",
+      "has_true": "**has('{{locale}}'):** ✅ registrado",
+      "has_false": "**has('{{locale}}'):** ❌ não registrado"
+    },
+    "slash_info": {
+      "title": "🔖 buildSlashLocalizations()",
+      "description": "Gera `name_localizations` + `description_localizations` para `commands.demo`:"
+    }
+  }
+}

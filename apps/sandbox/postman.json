@@ -1,0 +1,505 @@
+{
+  "info": {
+    "name": "Spraxium HTTP API",
+    "description": "Complete API collection for Spraxium Discord bot HTTP module sandbox",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Guild Management",
+      "item": [
+        {
+          "name": "Get Guild Info",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{apiKey}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/guilds/{{guildId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "guilds",
+                "{{guildId}}"
+              ]
+            },
+            "description": "Retrieve guild information"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Guild Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{apiKey}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/guilds/{{guildId}}/stats",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "guilds",
+                "{{guildId}}",
+                "stats"
+              ]
+            },
+            "description": "Get guild statistics (member count, boost level, channels, roles, emojis)"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Guild Channels",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{apiKey}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/guilds/{{guildId}}/channels",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "guilds",
+                "{{guildId}}",
+                "channels"
+              ]
+            },
+            "description": "Get all channels in a guild"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Guild Bans",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{apiKey}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/guilds/{{guildId}}/bans",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "guilds",
+                "{{guildId}}",
+                "bans"
+              ]
+            },
+            "description": "Get list of all banned users in a guild"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Ban Info",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{apiKey}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/guilds/{{guildId}}/bans/{{userId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "guilds",
+                "{{guildId}}",
+                "bans",
+                "{{userId}}"
+              ]
+            },
+            "description": "Get ban information for a specific user"
+          },
+          "response": []
+        },
+        {
+          "name": "Ban User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{apiKey}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"{{userId}}\",\n  \"reason\": \"Violating community guidelines\",\n  \"deleteMessageDays\": 7\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/guilds/{{guildId}}/bans",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "guilds",
+                "{{guildId}}",
+                "bans"
+              ]
+            },
+            "description": "Ban a user from the guild"
+          },
+          "response": []
+        },
+        {
+          "name": "Unban User",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{apiKey}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/guilds/{{guildId}}/bans/{{userId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "guilds",
+                "{{guildId}}",
+                "bans",
+                "{{userId}}"
+              ]
+            },
+            "description": "Remove ban from a user"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Member Management",
+      "item": [
+        {
+          "name": "Get Guild Members",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{apiKey}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/guilds/{{guildId}}/members",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "guilds",
+                "{{guildId}}",
+                "members"
+              ]
+            },
+            "description": "List all members in a guild"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Member Info",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{apiKey}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/guilds/{{guildId}}/members/{{userId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "guilds",
+                "{{guildId}}",
+                "members",
+                "{{userId}}"
+              ]
+            },
+            "description": "Get detailed member information"
+          },
+          "response": []
+        },
+        {
+          "name": "Kick Member",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{apiKey}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"Disruptive behavior\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/guilds/{{guildId}}/members/{{userId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "guilds",
+                "{{guildId}}",
+                "members",
+                "{{userId}}"
+              ]
+            },
+            "description": "Kick a member from the guild"
+          },
+          "response": []
+        },
+        {
+          "name": "Timeout Member",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{apiKey}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"durationMs\": 3600000,\n  \"reason\": \"Spam warning\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/guilds/{{guildId}}/members/{{userId}}/timeout",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "guilds",
+                "{{guildId}}",
+                "members",
+                "{{userId}}",
+                "timeout"
+              ]
+            },
+            "description": "Apply timeout to a member (durationMs in milliseconds)"
+          },
+          "response": []
+        },
+        {
+          "name": "Remove Timeout",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{apiKey}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/guilds/{{guildId}}/members/{{userId}}/timeout",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "guilds",
+                "{{guildId}}",
+                "members",
+                "{{userId}}",
+                "timeout"
+              ]
+            },
+            "description": "Remove timeout from a member"
+          },
+          "response": []
+        },
+        {
+          "name": "Add Role to Member",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{apiKey}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/guilds/{{guildId}}/members/{{userId}}/roles/{{roleId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "guilds",
+                "{{guildId}}",
+                "members",
+                "{{userId}}",
+                "roles",
+                "{{roleId}}"
+              ]
+            },
+            "description": "Add a role to a member"
+          },
+          "response": []
+        },
+        {
+          "name": "Remove Role from Member",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{apiKey}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/guilds/{{guildId}}/members/{{userId}}/roles/{{roleId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "guilds",
+                "{{guildId}}",
+                "members",
+                "{{userId}}",
+                "roles",
+                "{{roleId}}"
+              ]
+            },
+            "description": "Remove a role from a member"
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3001",
+      "type": "string"
+    },
+    {
+      "key": "apiKey",
+      "value": "dev-secret",
+      "type": "string"
+    },
+    {
+      "key": "guildId",
+      "value": "123456789012345678",
+      "type": "string"
+    },
+    {
+      "key": "userId",
+      "value": "987654321098765432",
+      "type": "string"
+    },
+    {
+      "key": "roleId",
+      "value": "111111111111111111",
+      "type": "string"
+    }
+  ]
+}
