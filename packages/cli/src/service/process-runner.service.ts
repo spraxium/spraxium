@@ -3,7 +3,7 @@ import { type Options, type ResultPromise, execa } from 'execa';
 export class ProcessRunner {
   async inherit(cmd: string, args: Array<string> = [], options: Options = {}): Promise<boolean> {
     try {
-      await execa(cmd, args, { stdio: 'inherit', ...options });
+      await execa(cmd, args, { stdio: 'inherit', preferLocal: true, ...options });
       return true;
     } catch {
       return false;
@@ -12,7 +12,7 @@ export class ProcessRunner {
 
   async silent(cmd: string, args: Array<string> = [], options: Options = {}): Promise<boolean> {
     try {
-      await execa(cmd, args, { stdio: 'pipe', ...options });
+      await execa(cmd, args, { stdio: 'pipe', preferLocal: true, ...options });
       return true;
     } catch {
       return false;
@@ -25,7 +25,7 @@ export class ProcessRunner {
     options: Options = {},
   ): Promise<{ ok: boolean; output: string }> {
     try {
-      const result = await execa(cmd, args, { stdio: 'pipe', ...options });
+      const result = await execa(cmd, args, { stdio: 'pipe', preferLocal: true, ...options });
       return { ok: true, output: this.asText(result.stdout) };
     } catch (error: unknown) {
       const output =
