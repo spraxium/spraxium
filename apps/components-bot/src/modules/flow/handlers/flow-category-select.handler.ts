@@ -1,10 +1,16 @@
 import { Ctx } from '@spraxium/common';
-import { ButtonService, ContextService, FlowContext, SelectedValues, StringSelectHandler } from '@spraxium/components';
+import {
+  type ButtonService,
+  type ContextService,
+  FlowContext,
+  SelectedValues,
+  StringSelectHandler,
+} from '@spraxium/components';
 import type { SpraxiumContext } from '@spraxium/components';
 import type { AnySelectMenuInteraction } from 'discord.js';
+import { FlowCategorySelect } from '../components/flow-category-select.component';
 import { FlowWizardCancelButton } from '../components/flow-wizard-cancel-button.component';
 import { FlowWizardSubmitButton } from '../components/flow-wizard-submit-button.component';
-import { FlowCategorySelect } from '../components/flow-category-select.component';
 import type { WizardData } from './flow-wizard-command.handler';
 
 const CATEGORY_LABEL: Record<string, string> = {
@@ -26,7 +32,6 @@ export class FlowCategorySelectHandler {
     @FlowContext() ctx: SpraxiumContext<WizardData>,
     @Ctx() interaction: AnySelectMenuInteraction,
   ): Promise<void> {
-
     ctx.data.category = values[0] ?? '';
     ctx.data.step = 2;
 

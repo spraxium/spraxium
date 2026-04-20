@@ -1,11 +1,4 @@
-import {
-  V2Container,
-  V2Section,
-  V2Separator,
-  V2Text,
-  V2When,
-  desc,
-} from '@spraxium/components';
+import { V2Container, V2Section, V2Separator, V2Text, V2When, desc } from '@spraxium/components';
 
 export interface ServerStatsData {
   guildName: string;

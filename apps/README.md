@@ -1,0 +1,63 @@
+# Spraxium Example Apps
+
+This folder contains runnable example applications used by the Spraxium team to validate package behavior locally.
+
+If the documentation is not enough for a specific use case, start from one of these examples as a base and adapt it to your project.
+
+## App Map
+
+| App | Focus | What you will learn |
+|---|---|---|
+| slash-bot | Slash commands | Basic handlers, subcommands, guards, and autocomplete |
+| modal-bot | Modal workflows | Modal components, open/submit patterns, and form handling |
+| components-bot | UI components | Buttons, selects, modals, FlowContext, and V2 container layouts |
+| http-bot | HTTP integration | HTTP controllers/services and API plugin setup |
+| i18n-bot | Internationalization | Locale files, per-user translation, and locale management commands |
+| schedule-bot | Scheduled tasks | AfterOnline, Timeout, Interval, and Cron usage |
+| signal-bot | Async signals | Webhook-driven events with SignalListener, OnSignal, and Zod schemas |
+| sandbox | Full integration | Combined use of multiple packages in a broader modular architecture |
+
+## Common Structure
+
+All apps follow the same base structure:
+
+```
+apps/<app-name>/
+  .env.example
+  package.json
+  spraxium.config.ts
+  src/
+    app.env.ts
+    app.module.ts
+    main.ts
+```
+
+Most apps also include:
+
+- config/ for plugin config (defineHttp, defineSchedule, defineSignal, etc.)
+- src/modules/ for feature modules and handlers
+
+## Running an Example
+
+From repository root:
+
+```bash
+pnpm install
+```
+
+Then pick an app:
+
+```bash
+cp apps/slash-bot/.env.example apps/slash-bot/.env
+# edit .env and set required values
+cd apps/slash-bot
+pnpm dev
+```
+
+You can switch slash-bot with any other app folder.
+
+## Important Notes
+
+- These apps are intentionally simple and optimized for learning.
+- They are great templates for starting new bots quickly.
+- Before production, harden security, observability, persistence, and deployment settings.

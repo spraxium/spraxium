@@ -7,13 +7,6 @@ import { SelectsModule } from './modules/selects/selects.module';
 import { V2Module } from './modules/v2/v2.module';
 
 @Module({
-  imports: [
-    ComponentsModule,
-    ButtonsModule,
-    SelectsModule,
-    ModalModule,
-    FlowModule,
-    V2Module,
-  ],
+  imports: [ComponentsModule, ButtonsModule, SelectsModule, ModalModule, FlowModule, V2Module],
 })
 export class AppModule {}

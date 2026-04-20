@@ -1,5 +1,5 @@
 import { Ctx, SlashCommandHandler } from '@spraxium/common';
-import { ButtonService, ContextService } from '@spraxium/components';
+import type { ButtonService, ContextService } from '@spraxium/components';
 import type { ChatInputCommandInteraction } from 'discord.js';
 import { MessageFlags } from 'discord.js';
 import { FlowCommand } from '../commands/flow.command';
@@ -19,7 +19,6 @@ export class FlowConfirmCommandHandler {
   ) {}
 
   async handle(@Ctx() interaction: ChatInputCommandInteraction): Promise<void> {
-
     const ctx = await this.contexts.create<ConfirmData>(
       { action: 'delete-channel', targetId: interaction.channelId },
       { ttl: 30, restrictedTo: interaction.user.id },
@@ -31,7 +30,7 @@ export class FlowConfirmCommandHandler {
       content: [
         '⚠️ **Confirm destructive action**',
         '',
-        `Action: \`delete-channel\``,
+        'Action: `delete-channel`',
         `Target: <#${interaction.channelId}>`,
         '',
         '> Context is scoped to **you** and expires in **30 s**.',

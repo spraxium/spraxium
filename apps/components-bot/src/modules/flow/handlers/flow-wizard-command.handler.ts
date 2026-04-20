@@ -1,5 +1,5 @@
 import { Ctx, SlashCommandHandler } from '@spraxium/common';
-import { ContextService, SelectService } from '@spraxium/components';
+import type { ContextService, SelectService } from '@spraxium/components';
 import type { ChatInputCommandInteraction } from 'discord.js';
 import { MessageFlags } from 'discord.js';
 import { FlowCommand } from '../commands/flow.command';
@@ -18,7 +18,6 @@ export class FlowWizardCommandHandler {
   ) {}
 
   async handle(@Ctx() interaction: ChatInputCommandInteraction): Promise<void> {
-
     const ctx = await this.contexts.create<WizardData>(
       { category: '', step: 1 },
       { ttl: 300, restrictedTo: interaction.user.id },
@@ -28,10 +27,11 @@ export class FlowWizardCommandHandler {
 
     await interaction.reply({
       content: [
-        '📋 **Issue Reporter - Step 1 / 2**',        '',
+        '📋 **Issue Reporter - Step 1 / 2**',
+        '',
         'What **category** best describes your issue?',
         '',
-        '> Context is scoped to **you** - others cannot advance this wizard.',,
+        '> Context is scoped to **you** - others cannot advance this wizard.',
       ].join('\n'),
       components: [row],
       flags: MessageFlags.Ephemeral,

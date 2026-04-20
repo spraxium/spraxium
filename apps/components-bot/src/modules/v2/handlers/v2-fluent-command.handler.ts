@@ -1,6 +1,6 @@
 import { Ctx, SlashCommandHandler } from '@spraxium/common';
-import { V2Service, desc } from '@spraxium/components';
-import { MessageFlags, type ChatInputCommandInteraction } from 'discord.js';
+import { type V2Service, desc } from '@spraxium/components';
+import { type ChatInputCommandInteraction, MessageFlags } from 'discord.js';
 import { V2Command } from '../commands/v2.command';
 
 @SlashCommandHandler(V2Command, { sub: 'fluent' })

@@ -1,5 +1,5 @@
 import { Ctx, SlashCommandHandler } from '@spraxium/common';
-import { ButtonService, EmbedService } from '@spraxium/components';
+import type { ButtonService, EmbedService } from '@spraxium/components';
 import type { ChatInputCommandInteraction } from 'discord.js';
 import { ButtonsCommand } from '../commands/buttons.command';
 import { ApproveButton } from '../components/approve-button.component';

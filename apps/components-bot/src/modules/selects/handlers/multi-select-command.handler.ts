@@ -1,9 +1,9 @@
 import { Ctx, SlashCommandHandler } from '@spraxium/common';
-import { EmbedService, SelectService } from '@spraxium/components';
+import type { EmbedService, SelectService } from '@spraxium/components';
 import type { ChatInputCommandInteraction } from 'discord.js';
 import { SelectsCommand } from '../commands/selects.command';
-import { StringSelectEmbed } from '../components/string-select-embed.component';
 import { AreasMultiSelect } from '../components/areas-multi-select.component';
+import { StringSelectEmbed } from '../components/string-select-embed.component';
 
 @SlashCommandHandler(SelectsCommand, { sub: 'multi' })
 export class MultiSelectCommandHandler {

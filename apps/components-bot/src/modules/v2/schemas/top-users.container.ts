@@ -28,8 +28,7 @@ export class TopUsersContainer {
 
     return data.entries.flatMap((entry, index) => {
       const medal = MEDALS[index] ?? `**${index + 1}.**`;
-      const delta =
-        entry.delta > 0 ? `+${entry.delta}` : entry.delta < 0 ? `${entry.delta}` : '0';
+      const delta = entry.delta > 0 ? `+${entry.delta}` : entry.delta < 0 ? `${entry.delta}` : '0';
 
       return [
         v2text(`${medal} **${entry.username}** - ${entry.score.toLocaleString()} pts (${delta})`),

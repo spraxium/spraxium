@@ -15,45 +15,44 @@
 
 ## What is Spraxium
 
-Spraxium is a modular TypeScript framework built on top of discord.js. It brings the same architectural patterns found in backend frameworks (dependency injection, decorator-based routing, lifecycle hooks) to Discord bot development.
+Spraxium is a modular TypeScript framework built on top of discord.js. It applies the same architectural patterns found in backend frameworks, such as dependency injection, decorator-based routing, and lifecycle hooks, to Discord bot development.
 
-Most bots eventually become hard to maintain as they grow. Spraxium gives you a structured foundation from day one: modules group related functionality, services are injected where needed, and concerns like scheduling, i18n, and HTTP APIs are handled by purpose-built packages that integrate into the application lifecycle without any manual wiring.
+Most bots become hard to maintain as they grow. Spraxium gives you a structured foundation from day one: modules group related functionality, services are injected where needed, and concerns like scheduling, internationalization, and HTTP APIs are handled by purpose-built packages that integrate into the application lifecycle without any manual wiring.
 
-The framework is a monorepo of opt-in packages. You include only what your bot actually needs and configure everything through a single typed file. There is no hidden runtime magic, every behavior is explicit and traceable.
+The framework is a monorepo of opt-in packages. You include only what your bot needs and configure everything through a single typed file. There is no hidden runtime magic; every behavior is explicit and traceable.
 
 ## Architecture
 
-A Spraxium application is composed of modules. Each module declares its providers and the framework resolves the dependency graph at boot time, instantiating services in the correct order. Lifecycle hooks (`onBoot`, `onReady`, `onShutdown`) give each service a well-defined entry point tied to the Discord client's connection state.
+A Spraxium application is composed of modules. Each module declares its providers and the framework resolves the dependency graph at boot time, instantiating services in the correct order. Lifecycle hooks (`onBoot`, `onReady`, `onShutdown`) give each service a well-defined entry point tied to the Discord client connection state.
 
 Packages like `@spraxium/http` or `@spraxium/schedule` plug into the config layer via a `define*` function in `spraxium.config.ts`. This keeps configuration co-located and type-safe without requiring separate bootstrap code.
+
+## Example Apps
+
+The repository includes runnable example apps in [apps/](./apps/). These are the same code examples we use locally to validate package behavior and integration flows. If the documentation is not enough for a specific scenario, start from one of these apps as a base and adapt it to your project.
 
 ## Packages
 
 | Package | Description |
 |---|---|
-| `@spraxium/core` | Application factory, DI container, lifecycle hooks, slash and prefix command pipeline |
+| `@spraxium/core` | Application factory, DI container, lifecycle hooks, and the slash and prefix command pipeline |
 | `@spraxium/common` | Shared decorators (`@Injectable`, `@Module`, `@Global`) and base interfaces used across all packages |
 | `@spraxium/components` | Decorator-based system for Discord UI components: buttons, select menus, modals, embeds, and V2 container layouts |
-| `@spraxium/http` | Decorator-based REST API over Hono. Exposes bot state via a secured HTTP layer with guards, rate limiting, and CORS |
+| `@spraxium/http` | Decorator-based REST API layer over Hono that exposes bot state through a secured HTTP interface with guards, rate limiting, and CORS |
 | `@spraxium/i18n` | Internationalization with variable interpolation, plural resolution via `Intl.PluralRules`, and locale fallback |
 | `@spraxium/schedule` | Cron-based job scheduler with an optional Redis driver for distributed and sharded environments |
 | `@spraxium/signal` | Async unidirectional event signals dispatched through Discord webhooks with schema validation |
-| `@spraxium/signal-client` | Lightweight envelope builder for the signal protocol. Zero external dependencies, usable outside a Spraxium app |
+| `@spraxium/signal-client` | Lightweight envelope builder for the signal protocol with zero external dependencies, usable outside a Spraxium application |
 | `@spraxium/env` | Typed environment variable validation with clear errors at startup |
-| `@spraxium/analytics` | Runtime event tracking and bot metrics |
-| `@spraxium/testing` | Test utilities and mock helpers for Spraxium applications |
 | `@spraxium/cli` | Project scaffolding, module generation, and developer tooling via the `spraxium` CLI |
 
 ## Sharding
 
-Spraxium has first-class support for Discord sharding. The `@spraxium/http` package integrates with `ShardingManager` directly. When sharding is enabled, the HTTP server boots on the manager process and communicates with individual shards through the bridge layer, so API consumers always get a unified view of bot state regardless of shard topology.
+Spraxium has first-class support for Discord sharding. The `@spraxium/http` package integrates with `ShardingManager` directly. When sharding is enabled, the HTTP server boots on the manager process and communicates with individual shards through the bridge layer, giving API consumers a unified view of bot state regardless of shard topology.
 
 ## Requirements
 
-- Node.js 20 or higher
-- TypeScript 5.7 or higher
-- discord.js 14
-- `experimentalDecorators` and `emitDecoratorMetadata` enabled in `tsconfig.json`
+Node.js 20 or higher, TypeScript 5.7 or higher, discord.js 14, and `experimentalDecorators` with `emitDecoratorMetadata` enabled in `tsconfig.json`.
 
 ## License
 

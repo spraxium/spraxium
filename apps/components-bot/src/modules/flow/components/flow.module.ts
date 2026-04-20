@@ -13,7 +13,6 @@ import { FlowWizardSubmitHandler } from '../handlers/flow-wizard-submit.handler'
   providers: [ButtonService, SelectService, ContextService],
   commands: [FlowCommand],
   handlers: [
-
     FlowConfirmCommandHandler,
     FlowWizardCommandHandler,
 

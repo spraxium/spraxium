@@ -1,8 +1,8 @@
 import { Ctx, SlashCommandHandler } from '@spraxium/common';
-import { V2Service } from '@spraxium/components';
-import { MessageFlags, type ChatInputCommandInteraction } from 'discord.js';
+import type { V2Service } from '@spraxium/components';
+import { type ChatInputCommandInteraction, MessageFlags } from 'discord.js';
 import { V2Command } from '../commands/v2.command';
-import { type TopUsersData, TopUsersContainer } from '../schemas/top-users.container';
+import { TopUsersContainer, type TopUsersData } from '../schemas/top-users.container';
 
 @SlashCommandHandler(V2Command, { sub: 'dynamic' })
 export class V2DynamicCommandHandler {

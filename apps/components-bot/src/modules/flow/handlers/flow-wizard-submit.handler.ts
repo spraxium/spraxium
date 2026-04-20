@@ -1,5 +1,5 @@
 import { Ctx } from '@spraxium/common';
-import { ButtonHandler, ContextService, FlowContext } from '@spraxium/components';
+import { ButtonHandler, type ContextService, FlowContext } from '@spraxium/components';
 import type { SpraxiumContext } from '@spraxium/components';
 import type { ButtonInteraction } from 'discord.js';
 import { FlowWizardSubmitButton } from '../components/flow-wizard-submit-button.component';
@@ -20,7 +20,6 @@ export class FlowWizardSubmitHandler {
     @FlowContext() ctx: SpraxiumContext<WizardData>,
     @Ctx() interaction: ButtonInteraction,
   ): Promise<void> {
-
     await this.contexts.delete(ctx.id);
 
     await interaction.update({

@@ -1,5 +1,5 @@
 import { Ctx } from '@spraxium/common';
-import { Field, ModalHandler, type ModalContext } from '@spraxium/components';
+import { Field, type ModalContext, ModalHandler } from '@spraxium/components';
 import { FeedbackModal } from '../components/feedback-modal.component';
 
 @ModalHandler(FeedbackModal)
