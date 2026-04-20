@@ -5,19 +5,29 @@
   "type": "module",
   "scripts": {
     "dev": "spraxium dev",
-    "test": "vitest run"
+    "test": "vitest run",
+    "build": "spraxium build",
+    "start": "spraxium start"
   },
   "dependencies": {
-    "@spraxium/analytics": "workspace:*",
     "@spraxium/common": "workspace:*",
+    "@spraxium/components": "workspace:*",
     "@spraxium/core": "workspace:*",
     "@spraxium/env": "workspace:*",
+    "@spraxium/http": "workspace:*",
+    "@spraxium/i18n": "workspace:*",
     "@spraxium/schedule": "workspace:*",
-    "discord.js": "^14.17.0"
+    "discord.js": "^14.26.3",
+    "drizzle-orm": "^0.45.2",
+    "pg": "^8.20.0",
+    "reflect-metadata": "^0.2.2",
+    "typeorm": "^0.3.28"
   },
   "devDependencies": {
     "@spraxium/cli": "workspace:*",
-    "@types/node": "^22.13.0",
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/node": "^22.19.15",
+    "@types/pg": "^8.20.0",
     "tsx": "^4.19.0",
     "typescript": "^5.7.0",
     "vitest": "^3.0.0"
