@@ -24,8 +24,14 @@ export class BuildCommand extends BaseCommand {
   private async execute(): Promise<void> {
     this.logger.blank();
 
+    const cwd = process.cwd();
+    if (!existsSync(path.join(cwd, 'tsconfig.json'))) {
+      this.logger.error('No tsconfig.json found. Run this command from the root of a Spraxium project.');
+      process.exit(1);
+    }
+
     this.logger.step(MessageConstant.BUILD_TYPE_CHECKING);
-    const typeOk = await this.runner.inherit('tsc', ['--noEmit']);
+    const typeOk = await this.runner.inherit('tsc', ['--noEmit', '--project', 'tsconfig.json']);
     if (!typeOk) {
       this.logger.result(false, MessageConstant.BUILD_TYPE_CHECK_FAILED);
       process.exit(1);
