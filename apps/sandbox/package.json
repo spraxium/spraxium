@@ -5,7 +5,6 @@
   "type": "module",
   "scripts": {
     "dev": "spraxium dev",
-    "test": "vitest run",
     "build": "spraxium build",
     "start": "spraxium start"
   },
