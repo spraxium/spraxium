@@ -1,6 +1,6 @@
 {
   "name": "@spraxium/signal",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "private": false,
   "description": "Async unidirectional signal system for Spraxium bots via Discord webhooks",
   "type": "module",
@@ -32,5 +32,5 @@
     "vitest": "^3.0.0"
   },
   "files": ["dist"],
-  "license": "MIT"
+  "license": "Apache-2.0"
 }

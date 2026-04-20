@@ -1,6 +1,6 @@
 {
   "name": "@spraxium/common",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "private": false,
   "type": "module",
   "main": "./dist/index.js",
@@ -30,5 +30,5 @@
     "vitest": "^3.0.0"
   },
   "files": ["dist"],
-  "license": "MIT"
+  "license": "Apache-2.0"
 }

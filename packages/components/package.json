@@ -1,6 +1,6 @@
 {
   "name": "@spraxium/components",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "private": false,
   "type": "module",
   "main": "./dist/index.js",
@@ -45,5 +45,5 @@
     "typescript": "^5.7.0"
   },
   "files": ["dist"],
-  "license": "MIT"
+  "license": "Apache-2.0"
 }

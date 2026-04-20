@@ -11,7 +11,6 @@ export const NewCommandConstant = {
     { pkg: '@spraxium/components', label: 'components', module: 'ComponentsModule' },
     { pkg: '@spraxium/http', label: 'http', module: 'HttpModule' },
     { pkg: '@spraxium/schedule', label: 'schedule', module: 'ScheduleModule' },
-    { pkg: '@spraxium/analytics', label: 'analytics', module: 'AnalyticsModule' },
     { pkg: '@spraxium/i18n', label: 'i18n', module: 'I18nModule' },
     { pkg: '@spraxium/signal', label: 'signal', module: null },
     { pkg: '@spraxium/signal-client', label: 'signal-client', module: null },

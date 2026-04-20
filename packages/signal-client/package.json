@@ -1,6 +1,6 @@
 {
   "name": "@spraxium/signal-client",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "private": false,
   "description": "Envelope builder and webhook sender for the Spraxium signal protocol — zero external dependencies",
   "type": "module",
@@ -29,5 +29,5 @@
     "node": ">=20.0.0"
   },
   "files": ["dist"],
-  "license": "MIT"
+  "license": "Apache-2.0"
 }
