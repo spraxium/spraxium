@@ -6,6 +6,8 @@ import { execa } from 'execa';
 import { MessageConstant, UnicodeConstant } from '../constants';
 import { BaseCommand } from '../core/base.command';
 
+const swcLoaderHref = new URL('./swc.loader.js', import.meta.url).href;
+
 export class StartCommand extends BaseCommand {
   register(program: Command): void {
     program
@@ -28,7 +30,7 @@ export class StartCommand extends BaseCommand {
     );
     this.logger.blank();
 
-    const child = execa('node', [entry], {
+    const child = execa(process.execPath, ['--import', swcLoaderHref, entry], {
       stdio: 'inherit',
       env: { ...process.env, NODE_ENV: process.env.NODE_ENV ?? 'production' },
     });
