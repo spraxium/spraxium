@@ -44,11 +44,17 @@ export class StartCommand extends BaseCommand {
 
   private async findEntry(cwd: string): Promise<string | null> {
     const candidates = [
+      path.join(cwd, '.spraxium', 'dist', 'src', 'main.mjs'),
       path.join(cwd, '.spraxium', 'dist', 'src', 'main.js'),
+      path.join(cwd, '.spraxium', 'dist', 'main.mjs'),
       path.join(cwd, '.spraxium', 'dist', 'main.js'),
+      path.join(cwd, 'dist', 'src', 'main.mjs'),
       path.join(cwd, 'dist', 'src', 'main.js'),
+      path.join(cwd, 'dist', 'main.mjs'),
       path.join(cwd, 'dist', 'main.js'),
+      path.join(cwd, 'build', 'src', 'main.mjs'),
       path.join(cwd, 'build', 'src', 'main.js'),
+      path.join(cwd, 'build', 'main.mjs'),
       path.join(cwd, 'build', 'main.js'),
     ];
 
