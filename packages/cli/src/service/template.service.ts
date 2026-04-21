@@ -20,7 +20,7 @@ export class TemplateService {
   }
 
   private async downloadViaGiget(destDir: string, templateId: string): Promise<void> {
-    await downloadTemplate(`${TemplateConstant.GIGET_ORG}/${templateId}`, {
+    await downloadTemplate(`${TemplateConstant.GIGET_ORG}/${templateId}#main`, {
       dir: destDir,
       forceClean: false,
     });

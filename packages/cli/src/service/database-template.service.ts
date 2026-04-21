@@ -42,7 +42,7 @@ export class DatabaseTemplateService {
       const localPath = path.join(monorepoRoot, 'templates', templateId);
       await cp(localPath, destDir, { recursive: true });
     } else {
-      await downloadTemplate(`${TemplateConstant.GIGET_ORG}/${templateId}`, {
+      await downloadTemplate(`${TemplateConstant.GIGET_ORG}/${templateId}#main`, {
         dir: destDir,
         forceClean: false,
       });
