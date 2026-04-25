@@ -2,6 +2,7 @@
   "name": "@spraxium/env",
   "version": "0.1.2",
   "private": false,
+  "description": "Typed environment variable validation with class decorators and clear startup errors",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

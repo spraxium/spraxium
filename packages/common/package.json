@@ -2,6 +2,7 @@
   "name": "@spraxium/common",
   "version": "0.1.2",
   "private": false,
+  "description": "Shared decorators, interfaces and types used across the Spraxium framework",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

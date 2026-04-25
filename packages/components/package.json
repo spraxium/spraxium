@@ -2,6 +2,7 @@
   "name": "@spraxium/components",
   "version": "0.1.3",
   "private": false,
+  "description": "Decorator-based Discord UI components system for buttons, select menus, modals and embeds",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

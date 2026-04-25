@@ -2,6 +2,7 @@
   "name": "@spraxium/cli",
   "version": "0.1.8",
   "private": false,
+  "description": "Spraxium CLI for project scaffolding, module generation and developer tooling",
   "type": "module",
   "bin": {
     "spraxium": "./dist/index.js"
