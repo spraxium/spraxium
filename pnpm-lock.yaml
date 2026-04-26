@@ -159,6 +159,43 @@ importers:
         specifier: ^5.7.0
         version: 5.9.3
 
+  apps/i18n-components-bot:
+    dependencies:
+      '@spraxium/common':
+        specifier: workspace:*
+        version: link:../../packages/common
+      '@spraxium/components':
+        specifier: workspace:*
+        version: link:../../packages/components
+      '@spraxium/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@spraxium/env':
+        specifier: workspace:*
+        version: link:../../packages/env
+      '@spraxium/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
+      discord.js:
+        specifier: ^14.26.3
+        version: 14.26.3
+      reflect-metadata:
+        specifier: ^0.2.2
+        version: 0.2.2
+    devDependencies:
+      '@spraxium/cli':
+        specifier: workspace:*
+        version: link:../../packages/cli
+      '@types/node':
+        specifier: ^22.19.15
+        version: 22.19.15
+      tsx:
+        specifier: ^4.19.0
+        version: 4.21.0
+      typescript:
+        specifier: ^5.7.0
+        version: 5.9.3
+
   apps/modal-bot:
     dependencies:
       '@spraxium/common':
@@ -336,6 +373,40 @@ importers:
       '@spraxium/env':
         specifier: workspace:*
         version: link:../../packages/env
+      discord.js:
+        specifier: ^14.26.3
+        version: 14.26.3
+      reflect-metadata:
+        specifier: ^0.2.2
+        version: 0.2.2
+    devDependencies:
+      '@spraxium/cli':
+        specifier: workspace:*
+        version: link:../../packages/cli
+      '@types/node':
+        specifier: ^22.19.15
+        version: 22.19.15
+      tsx:
+        specifier: ^4.19.0
+        version: 4.21.0
+      typescript:
+        specifier: ^5.7.0
+        version: 5.9.3
+
+  apps/webhook-bot:
+    dependencies:
+      '@spraxium/common':
+        specifier: workspace:*
+        version: link:../../packages/common
+      '@spraxium/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@spraxium/env':
+        specifier: workspace:*
+        version: link:../../packages/env
+      '@spraxium/webhook':
+        specifier: workspace:*
+        version: link:../../packages/webhook
       discord.js:
         specifier: ^14.26.3
         version: 14.26.3
@@ -563,6 +634,9 @@ importers:
       '@spraxium/common':
         specifier: workspace:*
         version: link:../common
+      '@spraxium/components':
+        specifier: workspace:*
+        version: link:../components
       '@spraxium/core':
         specifier: workspace:*
         version: link:../core
@@ -655,6 +729,34 @@ importers:
       vitest:
         specifier: ^3.0.0
         version: 3.2.4(@types/node@22.19.15)(tsx@4.21.0)
+
+  packages/webhook:
+    dependencies:
+      chalk:
+        specifier: ^5.4.0
+        version: 5.6.2
+      reflect-metadata:
+        specifier: ^0.2.2
+        version: 0.2.2
+    devDependencies:
+      '@spraxium/common':
+        specifier: workspace:*
+        version: link:../common
+      '@spraxium/core':
+        specifier: workspace:*
+        version: link:../core
+      '@types/node':
+        specifier: ^22.0.0
+        version: 22.19.15
+      discord.js:
+        specifier: ^14.26.3
+        version: 14.26.3
+      tsdown:
+        specifier: ^0.12.0
+        version: 0.12.9(typescript@5.9.3)
+      typescript:
+        specifier: ^5.7.0
+        version: 5.9.3
 
 packages:
 
