@@ -12,6 +12,15 @@ export {
   buildSlashLocalizations,
   defineTranslations,
   LocalizedEmbedBuilder,
+  resolveSelectI18n,
+  resolveSelectOptionI18n,
+  resolveModalI18n,
+  resolveModalFieldI18n,
+  buildLocalizedButton,
+  buildLocalizedSelect,
+  buildLocalizedModal,
+  buildLocalizedEmbed,
+  buildLocalizedV2,
 } from './helpers';
 export type { I18nConfig, I18nReference } from './interfaces';
 export type { I18nStore } from './interfaces';
@@ -21,3 +30,10 @@ export type { InterpolationVars } from './types';
 export type { LocaleData } from './types';
 export type { PluralCategory, PluralRule } from './types';
 export { DISCORD_LOCALES, I18N_DEFAULTS } from './constants';
+export type {
+  BuildLocalizedButtonOptions,
+  BuildLocalizedSelectOptions,
+  BuildLocalizedModalOptions,
+  BuildLocalizedEmbedOptions,
+  BuildLocalizedV2Options,
+} from './helpers';

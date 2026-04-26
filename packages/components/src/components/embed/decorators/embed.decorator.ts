@@ -62,6 +62,7 @@ export function EmbedField<T = unknown>(config: EmbedFieldConfig<T>): PropertyDe
       name: config.name as string | ((data: unknown) => string),
       value: config.value as string | ((data: unknown) => string),
       inline: config.inline,
+      i18n: config.i18n,
     });
   };
 }

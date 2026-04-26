@@ -1,4 +1,5 @@
 import type { SeparatorSpacingSize } from 'discord.js';
+import type { V2SectionI18nKeys, V2TextDisplayI18nKeys } from '../../../interfaces';
 import type { AnyConstructor } from '../../../types';
 import type { DescriptionBuilder } from '../../embed';
 
@@ -15,6 +16,7 @@ export type V2ChildType =
 export interface V2TextDisplayConfig {
   // biome-ignore lint/suspicious/noExplicitAny: generic callable type required
   content: string | DescriptionBuilder | ((data: any) => string | DescriptionBuilder);
+  i18n?: V2TextDisplayI18nKeys;
 }
 
 export interface V2MediaGalleryItem {
@@ -33,6 +35,7 @@ export interface V2SectionConfig {
   text: string | DescriptionBuilder | ((data: any) => string | DescriptionBuilder);
   button?: AnyConstructor;
   thumbnail?: V2ThumbnailConfig;
+  i18n?: V2SectionI18nKeys;
 }
 
 export interface V2SeparatorConfig {

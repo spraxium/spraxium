@@ -24,10 +24,17 @@
   },
   "peerDependencies": {
     "@spraxium/common": "workspace:*",
+    "@spraxium/components": "workspace:*",
     "@spraxium/core": "workspace:*"
+  },
+  "peerDependenciesMeta": {
+    "@spraxium/components": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@spraxium/common": "workspace:*",
+    "@spraxium/components": "workspace:*",
     "@spraxium/core": "workspace:*",
     "@types/node": "^22.13.0",
     "tsdown": "^0.12.0",

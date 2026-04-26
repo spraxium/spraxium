@@ -1,3 +1,4 @@
+import type { EmbedI18nKeys } from '../../../interfaces';
 import type { DescriptionBuilder } from '../builder';
 
 export interface EmbedAuthorConfig {
@@ -21,6 +22,7 @@ export interface EmbedSchema {
   image?: string | ((data: unknown) => string);
   author?: EmbedAuthorConfig | ((data: unknown) => EmbedAuthorConfig);
   footer?: EmbedFooterConfig | ((data: unknown) => EmbedFooterConfig);
+  i18n?: EmbedI18nKeys;
 }
 
 export interface EmbedMeta extends EmbedSchema {
