@@ -6,7 +6,7 @@ import { FlowConfirmButton } from '../components/flow-confirm-button.component';
 import type { ConfirmData } from './flow-confirm-command.handler';
 
 @ButtonHandler(FlowConfirmButton)
-export class FlowConfirmButtonHandler {
+export class FlowConfirmButtonCommandHandler {
   constructor(private readonly contexts: ContextService) {}
 
   async handle(

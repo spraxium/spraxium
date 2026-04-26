@@ -7,7 +7,7 @@ import type { ConfirmData } from './flow-confirm-command.handler';
 import type { WizardData } from './flow-wizard-command.handler';
 
 @ButtonHandler(FlowCancelButton)
-export class FlowCancelButtonHandler {
+export class FlowCancelButtonCommandHandler {
   async handle(
     @FlowContext() ctx: SpraxiumContext<ConfirmData | WizardData>,
     @Ctx() interaction: ButtonInteraction,

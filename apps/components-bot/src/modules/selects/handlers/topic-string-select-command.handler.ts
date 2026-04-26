@@ -11,7 +11,7 @@ const TOPIC_LABEL: Record<string, string> = {
 };
 
 @StringSelectHandler(TopicStringSelect)
-export class TopicStringSelectHandler {
+export class TopicStringSelectCommandHandler {
   async handle(
     @SelectedValues() values: string[],
     @Ctx() interaction: StringSelectMenuInteraction,

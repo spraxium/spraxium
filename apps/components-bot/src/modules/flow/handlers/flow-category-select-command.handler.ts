@@ -21,7 +21,7 @@ const CATEGORY_LABEL: Record<string, string> = {
 };
 
 @StringSelectHandler(FlowCategorySelect)
-export class FlowCategorySelectHandler {
+export class FlowCategorySelectCommandHandler {
   constructor(
     private readonly buttons: ButtonService,
     private readonly contexts: ContextService,

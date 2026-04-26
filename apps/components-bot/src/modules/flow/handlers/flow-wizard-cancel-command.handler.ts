@@ -6,7 +6,7 @@ import { FlowWizardCancelButton } from '../components/flow-wizard-cancel-button.
 import type { WizardData } from './flow-wizard-command.handler';
 
 @ButtonHandler(FlowWizardCancelButton)
-export class FlowWizardCancelHandler {
+export class FlowWizardCancelCommandHandler {
   async handle(
     @FlowContext() ctx: SpraxiumContext<WizardData>,
     @Ctx() interaction: ButtonInteraction,

@@ -3,7 +3,7 @@ import { Field, type ModalContext, ModalHandler } from '@spraxium/components';
 import { FeedbackModal } from '../components/feedback-modal.component';
 
 @ModalHandler(FeedbackModal)
-export class FeedbackModalHandler {
+export class FeedbackModalSubmitCommandHandler {
   async handle(
     @Field('subject') subject: string,
     @Field('message') message: string,

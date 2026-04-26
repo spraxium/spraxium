@@ -4,7 +4,7 @@ import type { StringSelectMenuInteraction } from 'discord.js';
 import { AreasMultiSelect } from '../components/areas-multi-select.component';
 
 @StringSelectHandler(AreasMultiSelect)
-export class AreasMultiSelectHandler {
+export class AreasMultiSelectCommandHandler {
   async handle(
     @SelectedValues() values: string[],
     @Ctx() interaction: StringSelectMenuInteraction,

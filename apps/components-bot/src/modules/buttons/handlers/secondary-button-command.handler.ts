@@ -4,7 +4,7 @@ import type { ButtonInteraction } from 'discord.js';
 import { SecondaryButton } from '../components/secondary-button.component';
 
 @ButtonHandler(SecondaryButton)
-export class SecondaryButtonHandler {
+export class SecondaryButtonCommandHandler {
   async handle(@Ctx() interaction: ButtonInteraction): Promise<void> {
     await interaction.reply({ content: '⬜ Secondary button clicked!', flags: 'Ephemeral' });
   }

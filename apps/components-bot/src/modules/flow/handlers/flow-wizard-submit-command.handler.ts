@@ -13,7 +13,7 @@ const CATEGORY_LABEL: Record<string, string> = {
 };
 
 @ButtonHandler(FlowWizardSubmitButton)
-export class FlowWizardSubmitHandler {
+export class FlowWizardSubmitCommandHandler {
   constructor(private readonly contexts: ContextService) {}
 
   async handle(
