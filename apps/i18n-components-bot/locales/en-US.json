@@ -1,0 +1,127 @@
+{
+  "profile": {
+    "name": "profile",
+    "description": "View or edit your profile.",
+    "view": {
+      "name": "view",
+      "description": "View your profile card."
+    },
+    "edit": {
+      "name": "edit",
+      "description": "Edit your profile details."
+    }
+  },
+  "stats": {
+    "name": "stats",
+    "description": "View server statistics."
+  },
+  "components": {
+    "profile": {
+      "embed": {
+        "title": "Your Profile",
+        "description": "Here is your current profile. Click **Edit** to update your details.",
+        "footer": "Use /profile edit to change your info"
+      },
+      "fields": {
+        "username": {
+          "name": "Username",
+          "value": "{{value}}"
+        },
+        "locale": {
+          "name": "Locale",
+          "value": "{{value}}"
+        },
+        "joined": {
+          "name": "Member since",
+          "value": "{{value}}"
+        }
+      },
+      "buttons": {
+        "edit": "✏️ Edit Profile",
+        "share": "📤 Share"
+      },
+      "select": {
+        "placeholder": "Select your preferred locale…"
+      },
+      "options": {
+        "en_us": {
+          "label": "English (US)",
+          "description": "Set your language to English"
+        },
+        "pt_br": {
+          "label": "Portuguese (Brazil)",
+          "description": "Definir idioma para Português"
+        }
+      },
+      "modal": {
+        "title": "Edit Profile",
+        "fields": {
+          "bio": {
+            "label": "Bio",
+            "placeholder": "Write a short bio about yourself…"
+          },
+          "location": {
+            "label": "Location",
+            "placeholder": "Where are you from?"
+          }
+        }
+      }
+    },
+    "stats": {
+      "header": "📊 {{guild}} Server Stats",
+      "members": "👥 **Members:** {{count}}",
+      "online": "🟢 **Online:** {{count}}",
+      "boost": "⭐ **Boost level:** {{level}}",
+      "footer": "Built with V2 schema class via @spraxium/components + @spraxium/i18n"
+    },
+    "showcase": {
+      "embed": {
+        "title": "📢 Announcement",
+        "description": "This embed was built with `buildLocalizedEmbed()` from `@spraxium/i18n`.",
+        "footer": "Powered by @spraxium/i18n",
+        "fields": {
+          "version": { "name": "Version" },
+          "package": { "name": "Package" }
+        }
+      },
+      "button": {
+        "confirm": "✅ Confirm",
+        "cancel": "❌ Cancel"
+      },
+      "select": {
+        "placeholder": "Pick a topic…",
+        "options": {
+          "dev": {
+            "label": "🔧 Development",
+            "description": "Code and architecture topics"
+          },
+          "ops": {
+            "label": "🚀 Operations",
+            "description": "Deployment and infra topics"
+          },
+          "ux": {
+            "label": "🎨 Design / UX",
+            "description": "UI and experience topics"
+          }
+        }
+      },
+      "modal": {
+        "title": "Feedback Form",
+        "fields": {
+          "name": {
+            "label": "Your name",
+            "placeholder": "e.g. Alice"
+          },
+          "message": {
+            "label": "Your message",
+            "placeholder": "Tell us what you think…"
+          }
+        }
+      },
+      "v2": {
+        "header": "🌐 Spraxium i18n V2 Demo",
+        "body": "This container was built with `buildLocalizedV2()` from `@spraxium/i18n`.\n\n• `@V2Text` header: resolved via `i18n.t()` before calling the builder.\n• `@V2Section` body: patched in-place from this static key."
+      }
+    }
+  }
+}

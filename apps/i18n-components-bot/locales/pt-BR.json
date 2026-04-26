@@ -1,0 +1,127 @@
+{
+  "profile": {
+    "name": "perfil",
+    "description": "Visualize ou edite seu perfil.",
+    "view": {
+      "name": "visualizar",
+      "description": "Visualize seu cartão de perfil."
+    },
+    "edit": {
+      "name": "editar",
+      "description": "Edite os detalhes do seu perfil."
+    }
+  },
+  "stats": {
+    "name": "estatisticas",
+    "description": "Visualize as estatísticas do servidor."
+  },
+  "components": {
+    "profile": {
+      "embed": {
+        "title": "Seu Perfil",
+        "description": "Este é o seu perfil atual. Clique em **Editar** para atualizar seus dados.",
+        "footer": "Use /perfil editar para alterar suas informações"
+      },
+      "fields": {
+        "username": {
+          "name": "Nome de usuário",
+          "value": "{{value}}"
+        },
+        "locale": {
+          "name": "Idioma",
+          "value": "{{value}}"
+        },
+        "joined": {
+          "name": "Membro desde",
+          "value": "{{value}}"
+        }
+      },
+      "buttons": {
+        "edit": "✏️ Editar Perfil",
+        "share": "📤 Compartilhar"
+      },
+      "select": {
+        "placeholder": "Selecione seu idioma preferido…"
+      },
+      "options": {
+        "en_us": {
+          "label": "Inglês (EUA)",
+          "description": "Definir idioma para English"
+        },
+        "pt_br": {
+          "label": "Português (Brasil)",
+          "description": "Definir idioma para Português"
+        }
+      },
+      "modal": {
+        "title": "Editar Perfil",
+        "fields": {
+          "bio": {
+            "label": "Bio",
+            "placeholder": "Escreva uma breve bio sobre você…"
+          },
+          "location": {
+            "label": "Localização",
+            "placeholder": "De onde você é?"
+          }
+        }
+      }
+    },
+    "stats": {
+      "header": "📊 {{guild}} Estatísticas do Servidor",
+      "members": "👥 **Membros:** {{count}}",
+      "online": "🟢 **Online:** {{count}}",
+      "boost": "⭐ **Nível de impulso:** {{level}}",
+      "footer": "Construído com classe V2 via @spraxium/components + @spraxium/i18n"
+    },
+    "showcase": {
+      "embed": {
+        "title": "📢 Anúncio",
+        "description": "Este embed foi construído com `buildLocalizedEmbed()` do `@spraxium/i18n`.",
+        "footer": "Desenvolvido por @spraxium/i18n",
+        "fields": {
+          "version": { "name": "Versão" },
+          "package": { "name": "Pacote" }
+        }
+      },
+      "button": {
+        "confirm": "✅ Confirmar",
+        "cancel": "❌ Cancelar"
+      },
+      "select": {
+        "placeholder": "Escolha um tópico…",
+        "options": {
+          "dev": {
+            "label": "🔧 Desenvolvimento",
+            "description": "Tópicos de código e arquitetura"
+          },
+          "ops": {
+            "label": "🚀 Operações",
+            "description": "Tópicos de deploy e infra"
+          },
+          "ux": {
+            "label": "🎨 Design / UX",
+            "description": "Tópicos de interface e experiência"
+          }
+        }
+      },
+      "modal": {
+        "title": "Formulário de Feedback",
+        "fields": {
+          "name": {
+            "label": "Seu nome",
+            "placeholder": "ex.: Alice"
+          },
+          "message": {
+            "label": "Sua mensagem",
+            "placeholder": "Conte-nos o que você acha…"
+          }
+        }
+      },
+      "v2": {
+        "header": "🌐 Spraxium i18n Demo V2",
+        "body": "Este container foi construído com `buildLocalizedV2()` do `@spraxium/i18n`.\n\n• Cabeçalho `@V2Text`: resolvido via `i18n.t()` antes de chamar o builder.\n• Corpo `@V2Section`: substituído automaticamente a partir desta chave estática."
+      }
+    }
+  }
+}
