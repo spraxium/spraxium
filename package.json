@@ -25,5 +25,16 @@
     "typescript": "^5.7.0",
     "vitest": "^3.0.0"
   },
-  "packageManager": "pnpm@9.15.0"
+  "packageManager": "pnpm@9.15.0",
+  "pnpm": {
+    "overrides": {
+      "vite": "^6.2.3",
+      "defu": "^6.1.7",
+      "postcss": "^8.5.3",
+      "picomatch": "^4.0.4",
+      "brace-expansion": "^2.0.1",
+      "lodash": "^4.17.21",
+      "uuid": "^10.0.0"
+    }
+  }
 }
