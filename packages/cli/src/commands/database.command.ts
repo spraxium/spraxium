@@ -2,7 +2,10 @@ import path from 'node:path';
 import { confirm, input, select } from '@inquirer/prompts';
 import chalk from 'chalk';
 import type { Command } from 'commander';
+import { parse as parseShellArgs } from 'shell-quote';
 import { MessageConstant, UnicodeConstant } from '../constants';
+
+const SAFE_POST_INSTALL_BINS = new Set(['npm', 'npx', 'pnpm', 'pnpx', 'yarn', 'bun']);
 import { BaseCommand } from '../core/base.command';
 import type { DbEntry, OrmEntry } from '../interfaces';
 import type { DatabaseTemplateService } from '../service/database-template.service';
@@ -144,10 +147,16 @@ export class DatabaseCommand extends BaseCommand {
       }
 
       for (const cmd of dbEntry.postInstall) {
-        const parts = cmd.split(' ');
+        const parsed = parseShellArgs(cmd);
+        const parts = parsed.filter((p): p is string => typeof p === 'string');
         const bin = parts[0];
         const args = parts.slice(1);
         if (!bin) continue;
+
+        if (!SAFE_POST_INSTALL_BINS.has(bin)) {
+          this.logger.warn(`Skipped unsafe post-install command: ${cmd}`);
+          continue;
+        }
 
         this.logger.step(`Running ${cmd}…`);
         const cmdOk = await this.runner.inherit(bin, args, { cwd: process.cwd() });
