@@ -3,7 +3,7 @@ import { Field, type ModalContext, ModalHandler } from '@spraxium/components';
 import { ProfileModal } from '../components/profile.modal.component';
 
 @ModalHandler(ProfileModal)
-export class ProfileModalHandler {
+export class ProfileModalSubmitCommandHandler {
   async handle(
     @Ctx() ctx: ModalContext,
     @Field('role') role: string,

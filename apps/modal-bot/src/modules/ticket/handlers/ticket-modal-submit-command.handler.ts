@@ -3,7 +3,7 @@ import { Field, type ModalContext, ModalHandler } from '@spraxium/components';
 import { TicketModal } from '../components/ticket-modal.component';
 
 @ModalHandler(TicketModal)
-export class TicketModalHandler {
+export class TicketModalSubmitCommandHandler {
   async handle(
     @Field('subject') subject: string,
     @Field('description') description: string,

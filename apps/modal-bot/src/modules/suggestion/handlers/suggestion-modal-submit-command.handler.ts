@@ -3,7 +3,7 @@ import { Field, type ModalContext, ModalHandler } from '@spraxium/components';
 import { SuggestionModal } from '../components/suggestion-modal.component';
 
 @ModalHandler(SuggestionModal)
-export class SuggestionModalHandler {
+export class SuggestionModalSubmitCommandHandler {
   async handle(
     @Field('title') title: string,
     @Field('details') details: string,

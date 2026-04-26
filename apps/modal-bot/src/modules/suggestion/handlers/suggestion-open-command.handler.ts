@@ -3,7 +3,7 @@ import type { ModalService } from '@spraxium/components';
 import type { ChatInputCommandInteraction } from 'discord.js';
 import { SuggestionCommand } from '../commands/suggestion.command';
 import { SuggestionModal } from '../components/suggestion-modal.component';
-import type { SuggestionData } from '../interfaces/suggestion-data.interface';
+import type { SuggestionData } from '../components/suggestion-data.interface';
 
 @SlashCommandHandler(SuggestionCommand, { sub: 'submit' })
 export class SuggestionOpenCommandHandler {
