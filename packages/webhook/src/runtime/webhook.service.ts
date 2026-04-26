@@ -159,7 +159,7 @@ export class WebhookService {
   registered(): Array<string> {
     return this.registry.registered();
   }
-  
+
   private resolveOrThrow(name: string): WebhookEntry {
     const entry = this.registry.get(name);
     if (!entry) {
