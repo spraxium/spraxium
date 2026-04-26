@@ -149,6 +149,15 @@ export class ScheduleRegistry {
         await this.executeJob(job);
         this.jobs.delete(job.name);
       }, ms);
+      return;
+    }
+
+    if (job.type === 'run-once') {
+      const delay = Math.max(0, (job.runAt?.getTime() ?? Date.now()) - Date.now());
+      job.timeoutHandle = setTimeout(async () => {
+        await this.executeJob(job);
+        this.jobs.delete(job.name);
+      }, delay);
     }
   }
 
@@ -190,7 +199,9 @@ export class ScheduleRegistry {
     const ttlMs =
       job.type === 'cron'
         ? Math.max(30_000, getNextRunDate(job.expression ?? '', job.timezone).getTime() - Date.now())
-        : (job.intervalMs ?? this.lockTtlMs);
+        : job.type === 'run-once'
+          ? Math.max(30_000, (job.runAt?.getTime() ?? Date.now()) - Date.now())
+          : (job.intervalMs ?? this.lockTtlMs);
     const acquired = await this.driver.acquireLock(job.name, ttlMs);
 
     if (!acquired) {

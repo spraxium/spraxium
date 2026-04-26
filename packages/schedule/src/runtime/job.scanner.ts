@@ -6,6 +6,7 @@ import type { AfterOnlineJobMetadata } from '../interfaces/after-online-job-meta
 import type { CronJobMetadata } from '../interfaces/cron-job-metadata.interface';
 import type { IntervalJobMetadata } from '../interfaces/interval-job-metadata.interface';
 import type { JobEntry } from '../interfaces/job-entry.interface';
+import type { RunOnceJobMetadata } from '../interfaces/run-once-job-metadata.interface';
 import type { TimeoutJobMetadata } from '../interfaces/timeout-job-metadata.interface';
 import type { JobType } from '../types/job.type';
 import { getNextRunDate } from '../utils/cron.parser';
@@ -62,6 +63,14 @@ export class JobScanner {
       | undefined;
     if (afterOnlineMeta) {
       this.registerAfterOnlineJob(instance, method, afterOnlineMeta);
+      return;
+    }
+
+    const runOnceMeta = Reflect.getMetadata(SCHEDULE_METADATA_KEYS.RUN_ONCE, proto, method) as
+      | RunOnceJobMetadata
+      | undefined;
+    if (runOnceMeta) {
+      this.registerRunOnceJob(instance, method, runOnceMeta);
     }
   }
 
@@ -137,6 +146,28 @@ export class JobScanner {
     this.jobs.set(name, entry);
     this.pendingAfterOnline.push(entry);
     this.log.debug(MESSAGES.AFTER_ONLINE_REGISTERED(name, meta.ms));
+  }
+
+  private registerRunOnceJob(instance: unknown, method: string, meta: RunOnceJobMetadata): void {
+    const name = meta.name ?? this.autoName('run-once');
+    this.assertUniqueName(name);
+    const dateStr = meta.date.toISOString();
+    if (meta.date.getTime() <= Date.now()) {
+      this.log.warn(MESSAGES.RUN_ONCE_PAST_DATE(dateStr));
+    }
+    const entry: JobEntry = {
+      name,
+      type: 'run-once',
+      runAt: meta.date,
+      fn: this.bindMethod(instance, method, name),
+      running: false,
+      disabled: meta.disabled ?? false,
+      runOnInit: false,
+      nextRun: meta.date,
+      runCount: 0,
+    };
+    this.jobs.set(name, entry);
+    this.log.debug(MESSAGES.RUN_ONCE_REGISTERED(name, dateStr));
   }
 
   private assertUniqueName(name: string): void {

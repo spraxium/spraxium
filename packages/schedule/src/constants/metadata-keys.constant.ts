@@ -3,4 +3,5 @@ export const SCHEDULE_METADATA_KEYS = {
   INTERVAL: 'spraxium:schedule:interval',
   TIMEOUT: 'spraxium:schedule:timeout',
   AFTER_ONLINE: 'spraxium:schedule:after-online',
+  RUN_ONCE: 'spraxium:schedule:run-once',
 } as const;

@@ -5,6 +5,7 @@ export interface JobEntry {
   type: JobType;
   expression?: string;
   intervalMs?: number;
+  runAt?: Date;
   timezone?: string;
   fn: () => Promise<void>;
   running: boolean;
