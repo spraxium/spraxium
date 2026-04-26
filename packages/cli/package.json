@@ -25,10 +25,13 @@
   },
   "devDependencies": {
     "@types/node": "^22.19.15",
+    "@types/shell-quote": "^1.7.5",
     "tsdown": "^0.12.0",
     "typescript": "^5.7.0",
     "vitest": "^3.0.0"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "license": "Apache-2.0"
 }

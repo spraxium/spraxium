@@ -2,7 +2,7 @@ import path from 'node:path';
 import { confirm, input, select } from '@inquirer/prompts';
 import chalk from 'chalk';
 import type { Command } from 'commander';
-import { parse as parseShellArgs } from 'shell-quote';
+import { type ParseEntry, parse as parseShellArgs } from 'shell-quote';
 import { MessageConstant, UnicodeConstant } from '../constants';
 
 const SAFE_POST_INSTALL_BINS = new Set(['npm', 'npx', 'pnpm', 'pnpx', 'yarn', 'bun']);
@@ -148,7 +148,7 @@ export class DatabaseCommand extends BaseCommand {
 
       for (const cmd of dbEntry.postInstall) {
         const parsed = parseShellArgs(cmd);
-        const parts = parsed.filter((p): p is string => typeof p === 'string');
+        const parts = parsed.filter((p: ParseEntry): p is string => typeof p === 'string');
         const bin = parts[0];
         const args = parts.slice(1);
         if (!bin) continue;
