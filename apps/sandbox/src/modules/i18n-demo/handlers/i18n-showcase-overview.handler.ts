@@ -2,10 +2,9 @@ import { Ctx, SlashCommandHandler, SlashOpt } from '@spraxium/common';
 import {
   type InterpolationVars,
   I18nService,
-  LocalizedEmbedBuilder,
   buildSlashLocalizations,
 } from '@spraxium/i18n';
-import type { ChatInputCommandInteraction } from 'discord.js';
+import { EmbedBuilder, type ChatInputCommandInteraction } from 'discord.js';
 import { I18nShowcaseCommand } from '../commands/i18n-showcase.command';
 
 @SlashCommandHandler(I18nShowcaseCommand, { sub: 'overview' })
@@ -31,25 +30,24 @@ export class I18nShowcaseOverviewHandler {
 
     const items = this.i18n.tp('commands.demo.plural.items', locale, count, { count });
 
-    const embed = new LocalizedEmbedBuilder(this.i18n, locale)
-      .setTitle('commands.demo.embed.title')
-      .setDescription('commands.demo.embed.description')
+    const embed = new EmbedBuilder()
+      .setTitle(this.i18n.t('commands.demo.embed.title', locale))
+      .setDescription(this.i18n.t('commands.demo.embed.description', locale))
       .setColor('#5865F2')
-      .addLocalizedField({
-        nameKey: 'commands.demo.embed.field_locale_name',
-        valueKey: 'commands.demo.embed.field_locale_value',
-        valueVars: { locale },
-        inline: true,
-      })
-      .addLocalizedField({
-        nameKey: 'commands.demo.embed.field_ws_name',
-        valueKey: 'commands.demo.embed.field_ws_value',
-        valueVars: { ws },
-        inline: true,
-      })
-      .setFooter('commands.demo.embed.footer', { locale })
-      .setTimestamp()
-      .build();
+      .addFields(
+        {
+          name: this.i18n.t('commands.demo.embed.field_locale_name', locale),
+          value: this.i18n.t('commands.demo.embed.field_locale_value', locale, { locale }),
+          inline: true,
+        },
+        {
+          name: this.i18n.t('commands.demo.embed.field_ws_name', locale),
+          value: this.i18n.t('commands.demo.embed.field_ws_value', locale, { ws }),
+          inline: true,
+        },
+      )
+      .setFooter({ text: this.i18n.t('commands.demo.embed.footer', locale, { locale }) })
+      .setTimestamp();
 
     const slashLocs = buildSlashLocalizations({
       name: 'commands.demo.name',

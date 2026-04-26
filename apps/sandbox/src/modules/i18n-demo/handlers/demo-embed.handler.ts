@@ -1,6 +1,6 @@
 import { Ctx, SlashCommandHandler } from '@spraxium/common';
-import { I18nService, LocalizedEmbedBuilder } from '@spraxium/i18n';
-import type { ChatInputCommandInteraction } from 'discord.js';
+import { I18nService } from '@spraxium/i18n';
+import { EmbedBuilder, type ChatInputCommandInteraction } from 'discord.js';
 import { DemoCommand } from '../commands/demo.command';
 
 @SlashCommandHandler(DemoCommand, { sub: 'embed' })
@@ -18,35 +18,29 @@ export class DemoEmbedHandler {
       ? await this.i18n.getGuildLocale(guildId)
       : this.i18n.default();
 
-    const embed = new LocalizedEmbedBuilder(this.i18n, locale)
-
-      .setTitle('commands.demo.embed.title')
-      .setDescription('commands.demo.embed.description')
+    const embed = new EmbedBuilder()
+      .setTitle(this.i18n.t('commands.demo.embed.title', locale))
+      .setDescription(this.i18n.t('commands.demo.embed.description', locale))
       .setColor('#5865F2')
-
-      .addLocalizedField({
-        nameKey: 'commands.demo.embed.field_locale_name',
-        valueKey: 'commands.demo.embed.field_locale_value',
-        valueVars: { locale },
-        inline: true,
-      })
-      .addLocalizedField({
-        nameKey: 'commands.demo.embed.field_ws_name',
-        valueKey: 'commands.demo.embed.field_ws_value',
-        valueVars: { ws },
-        inline: true,
-      })
-      .addLocalizedField({
-        nameKey: 'commands.demo.embed.field_guild_name',
-        valueKey: 'commands.demo.embed.field_guild_value',
-        valueVars: { locale: guildLocale },
-        inline: true,
-      })
-
-      .setFooter('commands.demo.embed.footer', { locale })
-
-      .setTimestamp()
-      .build();
+      .addFields(
+        {
+          name: this.i18n.t('commands.demo.embed.field_locale_name', locale),
+          value: this.i18n.t('commands.demo.embed.field_locale_value', locale, { locale }),
+          inline: true,
+        },
+        {
+          name: this.i18n.t('commands.demo.embed.field_ws_name', locale),
+          value: this.i18n.t('commands.demo.embed.field_ws_value', locale, { ws }),
+          inline: true,
+        },
+        {
+          name: this.i18n.t('commands.demo.embed.field_guild_name', locale),
+          value: this.i18n.t('commands.demo.embed.field_guild_value', locale, { locale: guildLocale }),
+          inline: true,
+        },
+      )
+      .setFooter({ text: this.i18n.t('commands.demo.embed.footer', locale, { locale }) })
+      .setTimestamp();
 
     await interaction.reply({ embeds: [embed] });
   }

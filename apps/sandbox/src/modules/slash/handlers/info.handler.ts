@@ -1,6 +1,6 @@
 import { Ctx, SlashCommandHandler } from '@spraxium/common';
-import { I18nService, LocalizedEmbedBuilder } from '@spraxium/i18n';
-import type { ChatInputCommandInteraction } from 'discord.js';
+import { I18nService } from '@spraxium/i18n';
+import { EmbedBuilder, type ChatInputCommandInteraction } from 'discord.js';
 import { InfoCommand } from '../commands/info.command';
 
 @SlashCommandHandler(InfoCommand)
@@ -13,23 +13,22 @@ export class InfoHandler {
     const locale = await this.i18n.resolveLocale(userId, guildId);
     const ws = interaction.client.ws.ping;
 
-    const embed = new LocalizedEmbedBuilder(this.i18n, locale)
-      .setTitle('commands.info.embed.title')
-      .setDescription('commands.info.embed.description')
+    const embed = new EmbedBuilder()
+      .setTitle(this.i18n.t('commands.info.embed.title', locale))
+      .setDescription(this.i18n.t('commands.info.embed.description', locale))
       .setColor('#5865F2')
-      .addLocalizedField({
-        nameKey: 'commands.info.embed.fields.latency_name',
-        valueKey: 'commands.info.embed.fields.latency_value',
-        valueVars: { ws },
-        inline: true,
-      })
-      .addLocalizedField({
-        nameKey: 'commands.info.embed.fields.locale_name',
-        valueKey: 'commands.info.embed.fields.locale_value',
-        valueVars: { locale },
-        inline: true,
-      })
-      .build();
+      .addFields(
+        {
+          name: this.i18n.t('commands.info.embed.fields.latency_name', locale),
+          value: this.i18n.t('commands.info.embed.fields.latency_value', locale, { ws }),
+          inline: true,
+        },
+        {
+          name: this.i18n.t('commands.info.embed.fields.locale_name', locale),
+          value: this.i18n.t('commands.info.embed.fields.locale_value', locale, { locale }),
+          inline: true,
+        },
+      );
 
     await interaction.reply({ embeds: [embed] });
   }

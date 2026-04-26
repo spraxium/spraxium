@@ -11,7 +11,6 @@ export {
   buildOptionLocalizations,
   buildSlashLocalizations,
   defineTranslations,
-  LocalizedEmbedBuilder,
   resolveSelectI18n,
   resolveSelectOptionI18n,
   resolveModalI18n,
@@ -24,7 +23,6 @@ export {
 } from './helpers';
 export type { I18nConfig, I18nReference } from './interfaces';
 export type { I18nStore } from './interfaces';
-export type { LocalizedField } from './interfaces';
 export type { SlashLocalizations } from './interfaces';
 export type { InterpolationVars } from './types';
 export type { LocaleData } from './types';
