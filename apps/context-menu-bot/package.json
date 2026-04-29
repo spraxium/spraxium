@@ -1,0 +1,24 @@
+{
+  "name": "@spraxium/context-menu-bot",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "spraxium dev",
+    "build": "spraxium build",
+    "start": "spraxium start"
+  },
+  "dependencies": {
+    "@spraxium/common": "workspace:*",
+    "@spraxium/core": "workspace:*",
+    "@spraxium/env": "workspace:*",
+    "discord.js": "^14.26.3",
+    "reflect-metadata": "^0.2.2"
+  },
+  "devDependencies": {
+    "@spraxium/cli": "workspace:*",
+    "@types/node": "^22.19.15",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  }
+}

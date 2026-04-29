@@ -9,6 +9,7 @@ If the documentation is not enough for a specific use case, start from one of th
 | App | Focus | What you will learn |
 |---|---|---|
 | slash-bot | Slash commands | Basic handlers, subcommands, guards, and autocomplete |
+| context-menu-bot | Context menu commands | User and message context menus (right-click → Apps), permissions, and target resolution |
 | modal-bot | Modal workflows | Dynamic fields, validation, caching, radio groups, checkboxes, and select menus in modals |
 | components-bot | UI components | Buttons, selects, modals, FlowContext, and V2 container layouts |
 | i18n-components-bot | i18n + UI components | buildLocalized* builders, per-user locale resolution, dual-locale support (en-US / pt-BR) |
