@@ -3,6 +3,23 @@
   "version": "0.1.3",
   "private": false,
   "description": "Cron-based job scheduler with optional Redis driver for distributed and sharded environments",
+  "keywords": [
+    "discord",
+    "discord.js",
+    "discord-bot",
+    "spraxium",
+    "typescript",
+    "decorators",
+    "cron",
+    "scheduler",
+    "cron-job",
+    "task-scheduling",
+    "redis",
+    "distributed",
+    "sharding",
+    "bot-framework",
+    "jobs"
+  ],
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -25,7 +42,7 @@
   "peerDependencies": {
     "@spraxium/common": "workspace:*",
     "@spraxium/core": "workspace:*",
-    "ioredis": "\u003e=5.0.0"
+    "ioredis": ">=5.0.0"
   },
   "peerDependenciesMeta": {
     "ioredis": {

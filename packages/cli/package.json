@@ -3,6 +3,22 @@
   "version": "0.1.8",
   "private": false,
   "description": "Spraxium CLI for project scaffolding, module generation and developer tooling",
+  "keywords": [
+    "discord",
+    "discord.js",
+    "discord-bot",
+    "spraxium",
+    "cli",
+    "scaffolding",
+    "code-generator",
+    "module-generator",
+    "bot-framework",
+    "typescript",
+    "create-bot",
+    "project-template",
+    "developer-tools",
+    "monorepo"
+  ],
   "type": "module",
   "bin": {
     "spraxium": "./dist/index.js"
