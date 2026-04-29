@@ -99,13 +99,17 @@ export class SpraxiumApplication {
    */
   public async forceRegisterSlashCommands(): Promise<void> {
     const dispatcher = this.state.moduleLoader?.getSlashDispatcher();
-    if (!dispatcher || dispatcher.commandCount === 0) return;
+    const contextMenuDispatcher = this.state.moduleLoader?.getContextMenuDispatcher();
+    const slashCount = dispatcher?.commandCount ?? 0;
+    const contextMenuCount = contextMenuDispatcher?.commandCount ?? 0;
+    if (!dispatcher || slashCount + contextMenuCount === 0) return;
 
     const token = this.state.token ?? process.env.DISCORD_TOKEN;
     const clientId = this.state.client?.user?.id;
     if (!token || !clientId) return;
 
-    await dispatcher.register(token, clientId, undefined, true);
+    const extraPayloads = contextMenuDispatcher?.buildPayloads() ?? [];
+    await dispatcher.register(token, clientId, undefined, true, extraPayloads);
   }
 
   public async listen(): Promise<void> {
@@ -224,6 +228,11 @@ export class SpraxiumApplication {
     if (slashDispatcher && slashDispatcher.size > 0) {
       slashDispatcher.bind(client);
     }
+
+    const contextMenuDispatcher = this.state.moduleLoader?.getContextMenuDispatcher();
+    if (contextMenuDispatcher && contextMenuDispatcher.size > 0) {
+      contextMenuDispatcher.bind(client);
+    }
   }
 
   private resolvePrefixConfig(configPrefix?: PrefixConfig): PrefixConfig | undefined {
@@ -273,10 +282,15 @@ export class SpraxiumApplication {
         await this.state.moduleLoader?.runReadyHooks(readyClient);
 
         const slashDispatcher = this.state.moduleLoader?.getSlashDispatcher();
-        if (slashDispatcher && slashDispatcher.commandCount > 0) {
+        const contextMenuDispatcher = this.state.moduleLoader?.getContextMenuDispatcher();
+        const slashCount = slashDispatcher?.commandCount ?? 0;
+        const contextMenuCount = contextMenuDispatcher?.commandCount ?? 0;
+
+        if (slashDispatcher && slashCount + contextMenuCount > 0) {
           const token = this.state.token ?? process.env.DISCORD_TOKEN;
           if (token) {
-            await slashDispatcher.register(token, readyClient.user.id);
+            const extraPayloads = contextMenuDispatcher?.buildPayloads() ?? [];
+            await slashDispatcher.register(token, readyClient.user.id, undefined, false, extraPayloads);
           }
         }
 

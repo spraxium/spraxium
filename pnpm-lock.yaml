@@ -9,7 +9,7 @@ overrides:
   defu: ^6.1.7
   postcss: ^8.5.3
   picomatch: ^4.0.4
-  brace-expansion: ^2.0.1
+  brace-expansion: ^5.0.0
   lodash: ^4.17.21
   uuid: ^10.0.0
 
@@ -56,6 +56,37 @@ importers:
       '@spraxium/components':
         specifier: workspace:*
         version: link:../../packages/components
+      '@spraxium/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@spraxium/env':
+        specifier: workspace:*
+        version: link:../../packages/env
+      discord.js:
+        specifier: ^14.26.3
+        version: 14.26.3
+      reflect-metadata:
+        specifier: ^0.2.2
+        version: 0.2.2
+    devDependencies:
+      '@spraxium/cli':
+        specifier: workspace:*
+        version: link:../../packages/cli
+      '@types/node':
+        specifier: ^22.19.15
+        version: 22.19.15
+      tsx:
+        specifier: ^4.19.0
+        version: 4.21.0
+      typescript:
+        specifier: ^5.7.0
+        version: 5.9.3
+
+  apps/context-menu-bot:
+    dependencies:
+      '@spraxium/common':
+        specifier: workspace:*
+        version: link:../../packages/common
       '@spraxium/core':
         specifier: workspace:*
         version: link:../../packages/core
@@ -3104,8 +3135,9 @@ packages:
       possible-typed-array-names: 1.1.0
     dev: false
 
-  /balanced-match@1.0.2:
-    resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
+  /balanced-match@4.0.4:
+    resolution: {integrity: sha512-BLrgEcRTwX2o6gGxGOCNyMvGSp35YofuYzw9h1IMTRmKqttAZZVU67bdb9Pr2vUHA8+j3i2tJfjO6C6+4myGTA==}
+    engines: {node: 18 || 20 || >=22}
     dev: false
 
   /base64-js@1.5.1:
@@ -3146,10 +3178,11 @@ packages:
       readable-stream: 3.6.2
     dev: false
 
-  /brace-expansion@2.1.0:
-    resolution: {integrity: sha512-TN1kCZAgdgweJhWWpgKYrQaMNHcDULHkWwQIspdtjV4Y5aurRdZpjAqn6yX3FPqTA9ngHCc4hJxMAMgGfve85w==}
+  /brace-expansion@5.0.5:
+    resolution: {integrity: sha512-VZznLgtwhn+Mact9tfiwx64fA9erHH/MCXEUfB/0bX/6Fz6ny5EGTXYltMocqg4xFAQZtnO3DHWWXi8RiuN7cQ==}
+    engines: {node: 18 || 20 || >=22}
     dependencies:
-      balanced-match: 1.0.2
+      balanced-match: 4.0.4
     dev: false
 
   /braces@3.0.3:
@@ -4370,14 +4403,14 @@ packages:
     resolution: {integrity: sha512-oRjTw/97aTBN0RHbYCdtF1MQfvusSIBQM0IZEgzl6426+8jSC0nF1a/GmnVLpfB9yyr6g6FTqWqiZVbxrtaCIg==}
     engines: {node: 18 || 20 || >=22}
     dependencies:
-      brace-expansion: 2.1.0
+      brace-expansion: 5.0.5
     dev: false
 
   /minimatch@9.0.9:
     resolution: {integrity: sha512-OBwBN9AL4dqmETlpS2zasx+vTeWclWzkblfZk7KTA5j3jeOONz/tRCnZomUyvNg83wL5Zv9Ss6HMJXAgL8R2Yg==}
     engines: {node: '>=16 || 14 >=14.17'}
     dependencies:
-      brace-expansion: 2.1.0
+      brace-expansion: 5.0.5
     dev: false
 
   /minimist@1.2.8:

@@ -32,7 +32,7 @@
       "defu": "^6.1.7",
       "postcss": "^8.5.3",
       "picomatch": "^4.0.4",
-      "brace-expansion": "^2.0.1",
+      "brace-expansion": "^5.0.0",
       "lodash": "^4.17.21",
       "uuid": "^10.0.0"
     }

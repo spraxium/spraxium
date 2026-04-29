@@ -6,7 +6,9 @@ import { METADATA_KEYS } from '@spraxium/common';
 import type { Constructor, SlashOptionMetadata, SlashSubcommandGroupMetadata } from '@spraxium/common';
 import chalk from 'chalk';
 import {
+  InteractionContextType,
   REST,
+  type RESTPostAPIApplicationCommandsJSONBody,
   type RESTPostAPIChatInputApplicationCommandsJSONBody,
   Routes,
   SlashCommandBuilder,
@@ -23,12 +25,19 @@ const HASH_FILE = path.join(HASH_DIR, 'commands.hash');
 export class SlashRegistrar {
   constructor(private readonly registry: SlashRegistry) {}
 
-  public async register(token: string, clientId: string, guildId?: string, force = false): Promise<void> {
-    const payloads = this.buildPayloads();
+  public async register(
+    token: string,
+    clientId: string,
+    guildId?: string,
+    force = false,
+    extraPayloads: Array<RESTPostAPIApplicationCommandsJSONBody> = [],
+  ): Promise<void> {
+    const slashPayloads = this.buildPayloads();
+    const payloads = [...slashPayloads, ...extraPayloads];
     if (payloads.length === 0) return;
 
     if (!force && process.env.NODE_ENV === 'development' && this.isUnchanged(payloads)) {
-      logger.raw(`${chalk.yellow('⊘')}  Slash commands unchanged , skipped REST registration (dev)`);
+      logger.raw(`${chalk.yellow('⊘')}  Application commands unchanged , skipped REST registration (dev)`);
       return;
     }
 
@@ -39,8 +48,15 @@ export class SlashRegistrar {
       : Routes.applicationCommands(clientId);
 
     await rest.put(route, { body: payloads });
+
+    const slashCount = slashPayloads.length;
+    const extraCount = extraPayloads.length;
+    const parts: Array<string> = [];
+    if (slashCount > 0) parts.push(`${slashCount} slash`);
+    if (extraCount > 0) parts.push(`${extraCount} context menu`);
+
     logger.raw(
-      `${chalk.green('✔')}  Registered ${payloads.length} slash command(s)${guildId ? ` for guild ${guildId}` : ' globally'}`,
+      `${chalk.green('✔')}  Registered ${parts.join(' + ')} command(s)${guildId ? ` for guild ${guildId}` : ' globally'}`,
     );
 
     if (process.env.NODE_ENV === 'development') {
@@ -48,7 +64,7 @@ export class SlashRegistrar {
     }
   }
 
-  private isUnchanged(payloads: Array<RESTPostAPIChatInputApplicationCommandsJSONBody>): boolean {
+  private isUnchanged(payloads: Array<RESTPostAPIApplicationCommandsJSONBody>): boolean {
     const hash = this.computeHash(payloads);
     try {
       return fs.readFileSync(HASH_FILE, 'utf-8').trim() === hash;
@@ -57,7 +73,7 @@ export class SlashRegistrar {
     }
   }
 
-  private writeHash(payloads: Array<RESTPostAPIChatInputApplicationCommandsJSONBody>): void {
+  private writeHash(payloads: Array<RESTPostAPIApplicationCommandsJSONBody>): void {
     try {
       fs.mkdirSync(HASH_DIR, { recursive: true });
       fs.writeFileSync(HASH_FILE, this.computeHash(payloads), 'utf-8');
@@ -66,7 +82,7 @@ export class SlashRegistrar {
     }
   }
 
-  private computeHash(payloads: Array<RESTPostAPIChatInputApplicationCommandsJSONBody>): string {
+  private computeHash(payloads: Array<RESTPostAPIApplicationCommandsJSONBody>): string {
     return crypto.createHash('sha256').update(JSON.stringify(payloads)).digest('hex');
   }
 
@@ -88,7 +104,15 @@ export class SlashRegistrar {
       }
 
       if (resolved.config.dmPermission !== undefined) {
-        builder.setDMPermission(resolved.config.dmPermission);
+        builder.setContexts(
+          resolved.config.dmPermission
+            ? [
+                InteractionContextType.Guild,
+                InteractionContextType.BotDM,
+                InteractionContextType.PrivateChannel,
+              ]
+            : [InteractionContextType.Guild],
+        );
       }
       if (resolved.config.defaultMemberPermissions !== undefined) {
         builder.setDefaultMemberPermissions(resolved.config.defaultMemberPermissions);

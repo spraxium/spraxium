@@ -37,3 +37,9 @@ export type {
   SlashSubcommandGroupMetadata,
 } from './slash-subcommand-metadata.interface';
 export type { SlashAutocompleteHandlerMetadata } from './slash-autocomplete-handler-metadata.interface';
+
+export type {
+  ContextMenuCommandConfig,
+  ContextMenuCommandType,
+} from './context-menu-command-config.interface';
+export type { ContextMenuCommandHandlerMetadata } from './context-menu-command-handler-metadata.interface';

@@ -1,5 +1,6 @@
 import chalk from 'chalk';
 import Table from 'cli-table3';
+import type { ResolvedContextMenuEntry } from '../context-menu/interfaces';
 import type { ResolvedListenerEntry } from '../listeners/interfaces';
 import type { ResolvedPrefixEntry } from '../prefix/interfaces';
 import type { ResolvedSlashEntry } from '../slash/interfaces';
@@ -11,6 +12,7 @@ export function printBootTables(
   listenerEntries: Array<ResolvedListenerEntry>,
   prefixEntries: Array<ResolvedPrefixEntry>,
   slashEntries: Array<ResolvedSlashEntry>,
+  contextMenuEntries: Array<ResolvedContextMenuEntry> = [],
 ): void {
   if (process.env.SHARDS !== undefined) return;
 
@@ -132,6 +134,28 @@ export function printBootTables(
     console.log(chalk.dim(' All @SlashCommand() handlers registered for interaction-based dispatch.'));
     console.log('');
     console.log(slashTable.toString());
+    console.log('');
+  }
+
+  if (contextMenuEntries.length > 0) {
+    const cmTable = new Table({
+      head: [chalk.bold.cyan('Command'), chalk.bold.cyan('Type'), chalk.bold.cyan('Handler')],
+      ...TABLE_STYLE,
+    });
+
+    for (const entry of contextMenuEntries) {
+      cmTable.push([
+        chalk.cyan(entry.commandName),
+        entry.type === 'user' ? chalk.magenta('user') : chalk.yellow('message'),
+        chalk.green(entry.handlerClass),
+      ]);
+    }
+
+    console.log('');
+    console.log(chalk.bold(' Context Menu Commands'));
+    console.log(chalk.dim(' All @ContextMenuCommand() handlers registered under the Apps submenu.'));
+    console.log('');
+    console.log(cmTable.toString());
     console.log('');
   }
 }

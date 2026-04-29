@@ -5,6 +5,7 @@ export * from './bootstrap';
 export * from './client';
 export * from './config';
 export * from './context';
+export * from './context-menu';
 export * from './exceptions';
 export * from './guards';
 export * from './listeners';
