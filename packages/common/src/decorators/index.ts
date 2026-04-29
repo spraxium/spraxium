@@ -26,3 +26,5 @@ export { SlashSubcommandGroups } from './slash-subcommand-groups.decorator';
 export { SlashAutocompleteHandler } from './slash-autocomplete-handler.decorator';
 export { ContextMenuCommand } from './context-menu-command.decorator';
 export { ContextMenuCommandHandler } from './context-menu-command-handler.decorator';
+export { Defer } from './defer.decorator';
+export type { DeferOptions } from './defer.decorator';

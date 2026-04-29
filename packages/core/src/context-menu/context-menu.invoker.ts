@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { METADATA_KEYS } from '@spraxium/common';
+import { type DeferOptions, METADATA_KEYS } from '@spraxium/common';
 import type { ContextMenuCommandInteraction } from 'discord.js';
 import { ConfigStore } from '../config';
 import { SpraxiumExecutionContext } from '../context';
@@ -24,6 +24,13 @@ export class ContextMenuInvoker {
     if (!passed) {
       await ExceptionHandler.handle(new GuardDeniedException(), ctx, ConfigStore.getRaw().exceptions);
       return;
+    }
+
+    const deferOptions = Reflect.getOwnMetadata(METADATA_KEYS.DEFER, handler.handlerCtor) as
+      | DeferOptions
+      | undefined;
+    if (deferOptions) {
+      await interaction.deferReply({ ephemeral: deferOptions.ephemeral ?? false });
     }
 
     try {
