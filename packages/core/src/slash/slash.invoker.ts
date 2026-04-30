@@ -1,10 +1,11 @@
 import 'reflect-metadata';
-import { type DeferOptions, METADATA_KEYS } from '@spraxium/common';
+import { type AutoDeferOptions, type DeferOptions, METADATA_KEYS } from '@spraxium/common';
 import type { ChatInputCommandInteraction } from 'discord.js';
 import { ConfigStore } from '../config';
 import { SpraxiumExecutionContext } from '../context';
 import { ExceptionHandler, GuardDeniedException } from '../exceptions';
 import { GuardExecutor } from '../guards';
+import { installAutoDefer } from '../utils/auto-defer.util';
 import { resolveOptionValue, resolveOptionsFromCommand } from './helpers';
 import type { ResolvedSlashHandler } from './interfaces';
 import type { SlashOptParam } from './types';
@@ -32,6 +33,11 @@ export class SlashInvoker {
       await interaction.deferReply({ ephemeral: deferOptions.ephemeral ?? false });
     }
 
+    const autoDeferOptions = Reflect.getOwnMetadata(METADATA_KEYS.AUTO_DEFER, handler.handlerCtor) as
+      | AutoDeferOptions
+      | undefined;
+    const cleanupAutoDefer = autoDeferOptions ? installAutoDefer(interaction, autoDeferOptions) : undefined;
+
     try {
       const params = this.buildParams(handler, interaction);
       const fn = this.resolveMethod(handler);
@@ -40,6 +46,8 @@ export class SlashInvoker {
       await Promise.resolve(fn.call(handler.instance, ...params));
     } catch (err) {
       await ExceptionHandler.handle(err, ctx, ConfigStore.getRaw().exceptions);
+    } finally {
+      cleanupAutoDefer?.();
     }
   }
 

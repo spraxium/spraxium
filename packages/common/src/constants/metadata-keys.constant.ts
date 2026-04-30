@@ -35,4 +35,5 @@ export const METADATA_KEYS = {
   CONTEXT_MENU_COMMAND_HANDLER: 'spraxium:context_menu_command_handler',
 
   DEFER: 'spraxium:defer',
+  AUTO_DEFER: 'spraxium:auto_defer',
 } as const;

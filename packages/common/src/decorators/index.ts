@@ -27,4 +27,6 @@ export { SlashAutocompleteHandler } from './slash-autocomplete-handler.decorator
 export { ContextMenuCommand } from './context-menu-command.decorator';
 export { ContextMenuCommandHandler } from './context-menu-command-handler.decorator';
 export { Defer } from './defer.decorator';
+export { AutoDefer } from './auto-defer.decorator';
+export type { AutoDeferOptions } from './auto-defer.decorator';
 export type { DeferOptions } from './defer.decorator';
