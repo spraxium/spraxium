@@ -49,7 +49,7 @@
   },
   "overrides": [
     {
-      "include": ["apps/dynamic-bot/src/**/*.ts"],
+      "include": ["apps/**/*.ts"],
       "linter": {
         "rules": {
           "style": {
