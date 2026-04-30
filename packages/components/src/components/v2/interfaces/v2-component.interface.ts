@@ -59,7 +59,8 @@ export interface V2FileConfig {
 export interface V2ActionRowConfig {
   // biome-ignore lint/suspicious/noExplicitAny: factory receives caller-defined data types
   components: Array<AnyConstructor> | ((data: any) => Array<AnyConstructor>);
-  rowData?: unknown;
+  // biome-ignore lint/suspicious/noExplicitAny: factory receives caller-defined data types
+  rowData?: unknown | ((data: any) => unknown);
 }
 
 export type V2DynamicChildSpec =
