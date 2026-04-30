@@ -1,0 +1,4 @@
+﻿{
+  "name": "Spraxium",
+  "postCreateCommand": "pnpm run build"
+}
