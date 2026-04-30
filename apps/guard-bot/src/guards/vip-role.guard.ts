@@ -25,8 +25,6 @@ export class VipRoleGuard implements SpraxiumGuard {
 
     // member.roles is a GuildMemberRoleManager (cached) or an array of snowflakes (API)
     const roles = 'cache' in member.roles ? member.roles.cache : member.roles;
-    return Array.isArray(roles)
-      ? roles.includes(this.roleId)
-      : roles.has(this.roleId);
+    return Array.isArray(roles) ? roles.includes(this.roleId) : roles.has(this.roleId);
   }
 }

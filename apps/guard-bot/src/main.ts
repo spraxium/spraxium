@@ -1,4 +1,4 @@
-import { GuildOnly, GuardRegistry, IntentPreset, Logger, SpraxiumFactory } from '@spraxium/core';
+import { GuardRegistry, GuildOnly, IntentPreset, Logger, SpraxiumFactory } from '@spraxium/core';
 import { EnvValidator } from '@spraxium/env';
 import { AppEnv } from './app.env';
 import { AppModule } from './app.module';

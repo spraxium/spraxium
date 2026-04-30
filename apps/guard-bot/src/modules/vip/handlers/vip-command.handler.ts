@@ -1,5 +1,5 @@
 import { Ctx, SlashCommandHandler, UseGuards, withOptions } from '@spraxium/common';
-import { ButtonService } from '@spraxium/components';
+import type { ButtonService } from '@spraxium/components';
 import type { ChatInputCommandInteraction } from 'discord.js';
 import { VipRoleGuard } from '../../../guards/vip-role.guard';
 import { VipCommand } from '../commands/vip.command';
