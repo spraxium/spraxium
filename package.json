@@ -10,7 +10,7 @@
     "format": "biome format . --write",
     "changeset": "changeset",
     "version": "changeset version",
-    "release": "pnpm run build && changeset publish --provenance",
+    "release": "pnpm run build && changeset publish --provenance --access public",
     "prepare": "husky"
   },
   "devDependencies": {
