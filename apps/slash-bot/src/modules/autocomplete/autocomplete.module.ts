@@ -1,7 +1,7 @@
 import { Module } from '@spraxium/common';
 import { SearchCommand } from './commands/search.command';
+import { SearchHandler } from './handlers/search-command.handler';
 import { SearchQueryAutocomplete } from './handlers/search-query.autocomplete';
-import { SearchHandler } from './handlers/search.handler';
 
 @Module({
   commands: [SearchCommand],

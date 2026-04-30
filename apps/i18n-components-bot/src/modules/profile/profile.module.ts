@@ -4,8 +4,8 @@ import { ProfileCommand } from './commands/profile.command';
 import { EditProfileButtonHandler } from './handlers/edit-profile-button.handler';
 import { EditProfileModalHandler } from './handlers/edit-profile-modal.handler';
 import { LocaleSelectHandler } from './handlers/locale-select.handler';
-import { ProfileEditHandler } from './handlers/profile-edit.handler';
-import { ProfileViewHandler } from './handlers/profile-view.handler';
+import { ProfileEditHandler } from './handlers/profile-edit-command.handler';
+import { ProfileViewHandler } from './handlers/profile-view-command.handler';
 import { ShareProfileButtonHandler } from './handlers/share-profile-button.handler';
 
 @Module({
