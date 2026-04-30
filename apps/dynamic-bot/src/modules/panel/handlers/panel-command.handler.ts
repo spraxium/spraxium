@@ -1,5 +1,5 @@
 import { Ctx, SlashCommandHandler, SlashOpt } from '@spraxium/common';
-import type { V2Service } from '@spraxium/components';
+import { V2Service } from '@spraxium/components';
 import { type ChatInputCommandInteraction, MessageFlags } from 'discord.js';
 import { PanelCommand } from '../commands/panel.command';
 import type { PanelTemplate } from '../panel.data';

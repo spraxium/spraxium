@@ -1,5 +1,5 @@
 import { Ctx, SlashCommandHandler } from '@spraxium/common';
-import type { ButtonService } from '@spraxium/components';
+import { ButtonService } from '@spraxium/components';
 import { type ChatInputCommandInteraction, MessageFlags } from 'discord.js';
 import { ErrorsCommand } from '../commands/errors.command';
 import { BoomButton, ExpiredButton } from '../components/errors.components';

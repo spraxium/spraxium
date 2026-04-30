@@ -1,6 +1,17 @@
 import type { Interaction, RepliableInteraction } from 'discord.js';
+import type { ModalErrorEmbed } from '../../../components/modal';
 import type { ComponentsConfig, HandlerErrorReply } from '../../lifecycle';
-import { resolveContextError } from './context-error.helper';
+
+function resolveReply(
+  reply: HandlerErrorReply | undefined,
+  err: unknown,
+  interaction: Interaction,
+  ephemeral: boolean,
+): { content: string; ephemeral: boolean } | { embeds: Array<ModalErrorEmbed>; ephemeral: boolean } {
+  const value = typeof reply === 'function' ? reply(err, interaction) : (reply ?? '❌ Something went wrong.');
+  if (typeof value === 'string') return { content: value, ephemeral };
+  return { embeds: [value], ephemeral };
+}
 
 /**
  * Reports a handler-thrown error: invokes the global `onError` hook (defaulting
@@ -28,9 +39,8 @@ export async function reportHandlerError(
   if (interaction.replied || interaction.deferred) return;
 
   try {
-    const message =
-      typeof reply === 'function' ? reply(err, interaction) : (reply ?? '❌ Something went wrong.');
-    await interaction.reply(resolveContextError(message, '❌ Something went wrong.', ephemeralErrors));
+    const replyOptions = resolveReply(reply, err, interaction, ephemeralErrors);
+    await interaction.reply(replyOptions);
   } catch (replyErr) {
     console.error('[Spraxium] failed to send error reply:', replyErr);
   }

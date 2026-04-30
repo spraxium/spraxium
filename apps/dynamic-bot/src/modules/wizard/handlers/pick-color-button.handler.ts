@@ -1,7 +1,7 @@
 import { Ctx } from '@spraxium/common';
 import {
   ButtonPayload,
-  type ContextService,
+  ContextService,
   DynamicButtonHandler,
   FlowContext,
   type SpraxiumContext,

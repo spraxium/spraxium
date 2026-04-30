@@ -1,5 +1,5 @@
 import { Ctx, SlashCommandHandler } from '@spraxium/common';
-import type { ButtonService, ContextService } from '@spraxium/components';
+import { ButtonService, ContextService } from '@spraxium/components';
 import { type ChatInputCommandInteraction, MessageFlags } from 'discord.js';
 import { WizardCommand } from '../commands/wizard.command';
 import { PickColorButton } from '../components/pick-color-button.component';

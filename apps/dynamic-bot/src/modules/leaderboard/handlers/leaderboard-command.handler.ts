@@ -1,5 +1,5 @@
 import { Ctx, SlashCommandHandler } from '@spraxium/common';
-import type { V2Service } from '@spraxium/components';
+import { V2Service } from '@spraxium/components';
 import type { ChatInputCommandInteraction } from 'discord.js';
 import { LeaderboardCommand } from '../commands/leaderboard.command';
 import { LeaderboardContainer } from '../components/leaderboard.container';

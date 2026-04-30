@@ -5,10 +5,16 @@ import type { ContextStorageConfig } from '../types/context-storage-config.type'
 
 /**
  * Reply payload sent to the user when a component handler throws an unhandled
- * error. Either a plain string (sent as ephemeral content) or a callable that
- * receives the offending error.
+ * error.
+ *
+ * - `string` — sent as ephemeral plain text.
+ * - `ModalErrorEmbed` — sent as an ephemeral embed.
+ * - `(err, interaction) => string | ModalErrorEmbed` — built at throw time.
  */
-export type HandlerErrorReply = string | ((err: unknown, interaction: Interaction) => ContextErrorMessage);
+export type HandlerErrorReply =
+  | string
+  | ModalErrorEmbed
+  | ((err: unknown, interaction: Interaction) => string | ModalErrorEmbed);
 
 export interface ComponentsConfig {
   modal?: {
