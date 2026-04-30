@@ -1,6 +1,7 @@
 import chalk from 'chalk';
 import type { LockData } from '../interfaces';
 
+// biome-ignore lint/suspicious/noControlCharactersInRegex: intentional ANSI escape strip
 const ANSI_RE = /\u001b\[[0-9;]*m/g;
 
 export class LockConflictPrinter {

@@ -9,7 +9,9 @@ export class ProcessLock {
 
   static async acquire(): Promise<void> {
     if (ProcessLock.shouldSkip()) {
-      console.log(chalk.yellow('  Lock check skipped (--no-lock). Concurrent instances will not be detected.'));
+      console.log(
+        chalk.yellow('  Lock check skipped (--no-lock). Concurrent instances will not be detected.'),
+      );
       console.log('');
       return;
     }
@@ -68,9 +70,9 @@ export class ProcessLock {
     const targetLauncher = existing.launcherPid;
 
     if (
-      typeof targetLauncher === 'number'
-      && targetLauncher !== ownLauncher
-      && ProcessInspector.isRunning(targetLauncher)
+      typeof targetLauncher === 'number' &&
+      targetLauncher !== ownLauncher &&
+      ProcessInspector.isRunning(targetLauncher)
     ) {
       console.log(chalk.yellow(`  Terminating its launcher (PID ${targetLauncher}) to prevent respawn...`));
       await ProcessInspector.terminateAndWait(targetLauncher, 2000);

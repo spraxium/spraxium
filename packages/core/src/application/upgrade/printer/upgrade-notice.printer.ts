@@ -1,6 +1,7 @@
 import chalk from 'chalk';
 import type { PackageUpgrade } from '../interfaces';
 
+// biome-ignore lint/suspicious/noControlCharactersInRegex: intentional ANSI escape strip
 const ANSI_RE = /\u001b\[[0-9;]*m/g;
 
 export class UpgradeNoticePrinter {
@@ -12,7 +13,11 @@ export class UpgradeNoticePrinter {
     UpgradeNoticePrinter.renderCommand(upgrades);
   }
 
-  private static renderBox(upgrades: ReadonlyArray<PackageUpgrade>, nameWidth: number, boxWidth: number): void {
+  private static renderBox(
+    upgrades: ReadonlyArray<PackageUpgrade>,
+    nameWidth: number,
+    boxWidth: number,
+  ): void {
     const top = `  \u250c${'\u2500'.repeat(boxWidth + 2)}\u2510`;
     const bot = `  \u2514${'\u2500'.repeat(boxWidth + 2)}\u2518`;
     const empty = `  \u2502 ${' '.repeat(boxWidth)} \u2502`;

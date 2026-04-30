@@ -40,7 +40,9 @@ export class UpgradeChecker {
     }
   }
 
-  private static async resolveLatestMap(tracked: ReadonlyArray<string>): Promise<Record<string, string> | null> {
+  private static async resolveLatestMap(
+    tracked: ReadonlyArray<string>,
+  ): Promise<Record<string, string> | null> {
     if (!process.env.SPRAXIUM_MOCK_LATEST_VERSION) {
       const cached = UpgradeCacheStore.read();
 
@@ -74,7 +76,10 @@ export class UpgradeChecker {
     return NpmRegistryClient.fetchLatestMany(packages);
   }
 
-  private static collectUpgrades(tracked: ReadonlyArray<string>, latestMap: Record<string, string>): Array<PackageUpgrade> {
+  private static collectUpgrades(
+    tracked: ReadonlyArray<string>,
+    latestMap: Record<string, string>,
+  ): Array<PackageUpgrade> {
     const upgrades: Array<PackageUpgrade> = [];
 
     for (const name of tracked) {
