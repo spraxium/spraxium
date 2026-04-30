@@ -1,5 +1,12 @@
 # @spraxium/components-bot
 
+## 0.0.4
+
+### Patch Changes
+
+- Updated dependencies [3d18457]
+  - @spraxium/components@0.1.4
+
 ## 0.0.3
 
 ### Patch Changes
