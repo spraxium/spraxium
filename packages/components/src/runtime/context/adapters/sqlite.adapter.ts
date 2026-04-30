@@ -64,7 +64,7 @@ export class SqliteContextAdapter implements ContextStorageAdapter {
 
     if (!row) return undefined;
 
-    if (row.expires_at <= Date.now()) {
+    if (row.expires_at !== 0 && row.expires_at <= Date.now()) {
       this.db.prepare('DELETE FROM contexts WHERE id = ?').run(id);
       return undefined;
     }
@@ -87,7 +87,9 @@ export class SqliteContextAdapter implements ContextStorageAdapter {
   }
 
   async entries(): Promise<ReadonlyArray<SpraxiumContext<unknown>>> {
-    const rows = this.db.prepare('SELECT data FROM contexts WHERE expires_at > ?').all(Date.now()) as Array<{
+    const rows = this.db
+      .prepare('SELECT data FROM contexts WHERE expires_at = 0 OR expires_at > ?')
+      .all(Date.now()) as Array<{
       data: string;
     }>;
 

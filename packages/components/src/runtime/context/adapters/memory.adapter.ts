@@ -12,7 +12,7 @@ export class MemoryContextAdapter implements ContextStorageAdapter {
   async get(id: string): Promise<SpraxiumContext<unknown> | undefined> {
     const ctx = this.store.get(id);
     if (!ctx) return undefined;
-    if (ctx.expiresAt <= Date.now()) {
+    if (ctx.expiresAt !== 0 && ctx.expiresAt <= Date.now()) {
       this.store.delete(id);
       return undefined;
     }

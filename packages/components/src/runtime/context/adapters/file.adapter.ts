@@ -31,7 +31,7 @@ export class FileContextAdapter implements ContextStorageAdapter {
       const entries = JSON.parse(raw) as Array<SpraxiumContext<unknown>>;
       const now = Date.now();
       for (const ctx of entries) {
-        if (ctx.expiresAt > now) this.store.set(ctx.id, ctx);
+        if (ctx.expiresAt === 0 || ctx.expiresAt > now) this.store.set(ctx.id, ctx);
       }
     } catch {
       // File does not exist yet or is malformed — start with an empty store.
@@ -49,7 +49,7 @@ export class FileContextAdapter implements ContextStorageAdapter {
     await this.ready;
     const ctx = this.store.get(id);
     if (!ctx) return undefined;
-    if (ctx.expiresAt <= Date.now()) {
+    if (ctx.expiresAt !== 0 && ctx.expiresAt <= Date.now()) {
       this.store.delete(id);
       void this.flush();
       return undefined;

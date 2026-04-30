@@ -37,7 +37,7 @@ export class ContextStore {
     const now = Date.now();
     const stored = await adapter.entries();
     for (const ctx of stored) {
-      if (ctx.expiresAt > now) ContextStore.hot.set(ctx.id, ctx);
+      if (ctx.expiresAt === 0 || ctx.expiresAt > now) ContextStore.hot.set(ctx.id, ctx);
     }
 
     ContextStore.startCleanup();
@@ -57,7 +57,7 @@ export class ContextStore {
   private static async runCleanup(): Promise<void> {
     const now = Date.now();
     for (const [id, ctx] of ContextStore.hot) {
-      if (ctx.expiresAt <= now) {
+      if (ctx.expiresAt !== 0 && ctx.expiresAt <= now) {
         ContextStore.hot.delete(id);
         await ContextStore.adapter.delete(id);
       }
@@ -67,7 +67,7 @@ export class ContextStore {
   static async get<T = unknown>(id: string): Promise<SpraxiumContext<T> | undefined> {
     const cached = ContextStore.hot.get(id);
     if (cached) {
-      if (cached.expiresAt <= Date.now()) {
+      if (cached.expiresAt !== 0 && cached.expiresAt <= Date.now()) {
         ContextStore.hot.delete(id);
         await ContextStore.adapter.delete(id);
         return undefined;

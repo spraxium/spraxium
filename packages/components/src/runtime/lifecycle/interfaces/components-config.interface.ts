@@ -63,6 +63,7 @@ export interface ComponentsConfig {
     /**
      * Default TTL in seconds applied when `ContextService.create()` is called
      * without an explicit `ttl` option. Defaults to `300` (5 minutes).
+     * Set to `0` to make contexts permanent by default.
      */
     defaultTtl?: number;
   };

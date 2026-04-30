@@ -48,7 +48,7 @@ export class RedisContextAdapter implements ContextStorageAdapter {
     const raw: string | null = await (this.client.get(this.key(id)) as Promise<string | null>);
     if (!raw) return undefined;
     const ctx = JSON.parse(raw) as SpraxiumContext<unknown>;
-    if (ctx.expiresAt <= Date.now()) {
+    if (ctx.expiresAt !== 0 && ctx.expiresAt <= Date.now()) {
       await this.delete(id);
       return undefined;
     }
@@ -56,6 +56,10 @@ export class RedisContextAdapter implements ContextStorageAdapter {
   }
 
   async set(ctx: SpraxiumContext<unknown>): Promise<void> {
+    if (ctx.expiresAt === 0) {
+      await (this.client.set(this.key(ctx.id), JSON.stringify(ctx)) as Promise<unknown>);
+      return;
+    }
     const ttlMs = ctx.expiresAt - Date.now();
     if (ttlMs <= 0) return;
     await (this.client.set(this.key(ctx.id), JSON.stringify(ctx), 'PX', ttlMs) as Promise<unknown>);
@@ -74,7 +78,7 @@ export class RedisContextAdapter implements ContextStorageAdapter {
     for (const raw of values) {
       if (!raw) continue;
       const ctx = JSON.parse(raw) as SpraxiumContext<unknown>;
-      if (ctx.expiresAt > now) results.push(ctx);
+      if (ctx.expiresAt === 0 || ctx.expiresAt > now) results.push(ctx);
     }
     return results;
   }
