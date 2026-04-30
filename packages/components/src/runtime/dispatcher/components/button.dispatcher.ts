@@ -1,9 +1,11 @@
 import 'reflect-metadata';
 import { METADATA_KEYS } from '@spraxium/common';
+import { GuardExecutor } from '@spraxium/core';
 import { type ButtonInteraction, type Client, Events, type Interaction } from 'discord.js';
 import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys.constant';
 import type { ButtonComponentMeta, ButtonHandlerMeta } from '../../../components/button';
 import { ContextStore } from '../../context';
+import { ComponentExecutionContext } from '../../guards';
 import type { ComponentsConfig, SpraxiumContext } from '../../lifecycle';
 import { resolveContextError } from '../helpers/context-error.helper';
 import { splitCustomId } from '../helpers/split-custom-id.helper';
@@ -78,6 +80,13 @@ export class ButtonDispatcher {
     try {
       const flowCtx = await this.resolveFlowContext(button, contextId);
       if (flowCtx === null) return;
+
+      const guardPassed = await GuardExecutor.execute(
+        resolved.handlerCtor,
+        'handle',
+        new ComponentExecutionContext(button, resolved.customId),
+      );
+      if (!guardPassed) return;
 
       const proto = resolved.handlerCtor.prototype as Record<string | symbol, unknown>;
       const ctxIndex: number | undefined = Reflect.getMetadata(METADATA_KEYS.CTX_PARAM, proto, 'handle');

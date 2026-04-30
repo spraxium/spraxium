@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 import { METADATA_KEYS } from '@spraxium/common';
+import { GuardExecutor } from '@spraxium/core';
 import { type Client, Events, type Interaction, type ModalSubmitInteraction } from 'discord.js';
 import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys.constant';
 import type {
@@ -16,6 +17,7 @@ import {
   ModalValidatorRunner,
   buildDefaultValidationEmbed,
 } from '../../../components/modal';
+import { ComponentExecutionContext } from '../../guards';
 import type { ComponentsConfig } from '../../lifecycle';
 import type { Constructor, ResolvedModalHandler } from '../interfaces';
 
@@ -81,6 +83,13 @@ export class ModalDispatcher {
         await this.handleValidationFailure(modal, resolved, errors, config);
         return;
       }
+
+      const guardPassed = await GuardExecutor.execute(
+        resolved.handlerCtor,
+        'handle',
+        new ComponentExecutionContext(modal, resolved.customId),
+      );
+      if (!guardPassed) return;
 
       const args = this.resolveHandlerArgs(modal, resolved);
 
