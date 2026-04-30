@@ -113,6 +113,40 @@ importers:
         specifier: ^5.7.0
         version: 5.9.3
 
+  apps/dynamic-bot:
+    dependencies:
+      '@spraxium/common':
+        specifier: workspace:*
+        version: link:../../packages/common
+      '@spraxium/components':
+        specifier: workspace:*
+        version: link:../../packages/components
+      '@spraxium/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@spraxium/env':
+        specifier: workspace:*
+        version: link:../../packages/env
+      discord.js:
+        specifier: ^14.26.3
+        version: 14.26.3
+      reflect-metadata:
+        specifier: ^0.2.2
+        version: 0.2.2
+    devDependencies:
+      '@spraxium/cli':
+        specifier: workspace:*
+        version: link:../../packages/cli
+      '@types/node':
+        specifier: ^22.19.15
+        version: 22.19.15
+      tsx:
+        specifier: ^4.19.0
+        version: 4.21.0
+      typescript:
+        specifier: ^5.7.0
+        version: 5.9.3
+
   apps/guard-bot:
     dependencies:
       '@spraxium/common':
@@ -473,7 +507,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/common
       '@spraxium/components':
-        specifier: workspace:0.1.3
+        specifier: workspace:*
         version: link:../../packages/components
       '@spraxium/core':
         specifier: workspace:*
@@ -482,19 +516,19 @@ importers:
         specifier: workspace:*
         version: link:../../packages/env
       '@spraxium/http':
-        specifier: workspace:0.1.3
+        specifier: workspace:*
         version: link:../../packages/http
       '@spraxium/i18n':
-        specifier: workspace:0.1.3
+        specifier: workspace:*
         version: link:../../packages/i18n
       '@spraxium/schedule':
-        specifier: workspace:0.1.3
+        specifier: workspace:*
         version: link:../../packages/schedule
       '@spraxium/signal':
-        specifier: workspace:0.1.3
+        specifier: workspace:*
         version: link:../../packages/signal
       '@spraxium/signal-client':
-        specifier: workspace:0.1.2
+        specifier: workspace:*
         version: link:../../packages/signal-client
       discord.js:
         specifier: ^14.26.3

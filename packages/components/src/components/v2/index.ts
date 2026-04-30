@@ -13,6 +13,7 @@ export type {
   V2ActionRowConfig,
   V2DynamicConfig,
   V2DynamicChildSpec,
+  V2DynamicRowConfig,
   V2InnerBuilder,
   V2ReplyPayload,
 } from './interfaces';
@@ -28,6 +29,7 @@ export {
   V2File,
   V2Row,
   V2Dynamic,
+  V2DynamicRow,
   v2text,
   v2sep,
   v2separator,

@@ -18,3 +18,17 @@ export interface ResolvedButtonHandler {
   handlerCtor: Constructor;
   handlerInstance: unknown;
 }
+
+export interface ResolvedDynamicButtonHandler {
+  /** Base ID configured on `@DynamicButton({ baseId })`. */
+  baseId: string;
+  handlerCtor: Constructor;
+  handlerInstance: unknown;
+}
+
+export interface ResolvedDynamicSelectHandler {
+  /** Base ID configured on `@DynamicStringSelect({ baseId })`. */
+  baseId: string;
+  handlerCtor: Constructor;
+  handlerInstance: unknown;
+}

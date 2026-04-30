@@ -1,6 +1,14 @@
+import type { Interaction } from 'discord.js';
 import type { ModalErrorEmbed, ModalValidationError } from '../../../components/modal';
 import type { ContextErrorMessage } from '../types/context-error-message.type';
 import type { ContextStorageConfig } from '../types/context-storage-config.type';
+
+/**
+ * Reply payload sent to the user when a component handler throws an unhandled
+ * error. Either a plain string (sent as ephemeral content) or a callable that
+ * receives the offending error.
+ */
+export type HandlerErrorReply = string | ((err: unknown, interaction: Interaction) => ContextErrorMessage);
 
 export interface ComponentsConfig {
   modal?: {
@@ -10,10 +18,20 @@ export interface ComponentsConfig {
   button?: {
     /** When `true`, expired-context and restricted-access replies are sent ephemerally. Defaults to `true`. */
     ephemeralErrors?: boolean;
+    /**
+     * Reply sent when a `@ButtonHandler` / `@DynamicButtonHandler` throws an
+     * unhandled error. Defaults to a generic ephemeral message.
+     */
+    onErrorReply?: HandlerErrorReply;
   };
   select?: {
     /** When `true`, expired-context and restricted-access replies are sent ephemerally. Defaults to `true`. */
     ephemeralErrors?: boolean;
+    /**
+     * Reply sent when a select handler throws an unhandled error. Defaults to
+     * a generic ephemeral message.
+     */
+    onErrorReply?: HandlerErrorReply;
   };
   /** Override the default human-readable error messages sent when a context check fails. */
   errorMessages?: {
@@ -21,7 +39,15 @@ export interface ComponentsConfig {
     expired?: ContextErrorMessage;
     /** Shown when the user is not the context owner. Defaults to `'❌ You are not allowed to use this component.'` */
     restricted?: ContextErrorMessage;
+    /** Shown when a payload (`~p:<id>`) cannot be found (expired or invalid). */
+    payloadExpired?: ContextErrorMessage;
   };
+  /**
+   * Global hook invoked whenever a component handler throws. Useful for
+   * structured logging or error reporting. The default implementation calls
+   * `console.error`.
+   */
+  onError?: (err: unknown, ctx: { interaction: Interaction; handler: string }) => void | Promise<void>;
   /** Flow-context storage configuration. */
   context?: {
     /**

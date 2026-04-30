@@ -11,3 +11,5 @@ export {
   MentionableSelectHandler,
   ChannelSelectHandler,
 } from './select-handler.decorator';
+export { DynamicStringSelect } from './dynamic-string-select.decorator';
+export { DynamicSelectHandler } from './dynamic-select-handler.decorator';
