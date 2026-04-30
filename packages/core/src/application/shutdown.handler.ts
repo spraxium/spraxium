@@ -2,11 +2,14 @@ import type { Client } from 'discord.js';
 import type { ModuleLoader } from '../bootstrap';
 import { PresenceManager } from '../client';
 import { logger } from '../logger';
+import { ProcessLock } from './lock';
 
 export class ShutdownHandler {
   static register(client: Client, moduleLoader: ModuleLoader | undefined): void {
     const shutdown = async (signal: string): Promise<void> => {
       logger.info(`Received ${signal}, shutting down`);
+
+      ProcessLock.release();
 
       if (moduleLoader) {
         await moduleLoader.runShutdownHooks();

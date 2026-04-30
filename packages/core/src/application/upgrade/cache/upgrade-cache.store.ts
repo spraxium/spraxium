@@ -3,11 +3,6 @@ import { homedir } from 'node:os';
 import { join } from 'node:path';
 import type { UpgradeCache } from '../interfaces';
 
-/**
- * Reads and writes the cached registry snapshot to ~/.spraxium/upgrade-check.json.
- * The cache is global per-user so multiple Spraxium projects on the same machine
- * share the same snapshot and avoid redundant npm requests.
- */
 export class UpgradeCacheStore {
   private static readonly DIR = join(homedir(), '.spraxium');
   private static readonly FILE = join(UpgradeCacheStore.DIR, 'upgrade-check.json');

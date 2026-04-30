@@ -1,14 +1,8 @@
 import chalk from 'chalk';
 import type { PackageUpgrade } from '../interfaces';
 
-/**
- * Prints the formatted upgrade notice to stdout.
- *
- * Layout:
- *   - Boxed list of packages with current → latest versions.
- *   - The install command is rendered OUTSIDE the box on a single line so it
- *     can be selected and copied with the mouse without the box characters.
- */
+const ANSI_RE = /\u001b\[[0-9;]*m/g;
+
 export class UpgradeNoticePrinter {
   static print(upgrades: ReadonlyArray<PackageUpgrade>): void {
     const nameWidth = Math.max(...upgrades.map((u) => u.name.length));
@@ -19,10 +13,10 @@ export class UpgradeNoticePrinter {
   }
 
   private static renderBox(upgrades: ReadonlyArray<PackageUpgrade>, nameWidth: number, boxWidth: number): void {
-    const top   = `  \u250c${'\u2500'.repeat(boxWidth + 2)}\u2510`;
-    const bot   = `  \u2514${'\u2500'.repeat(boxWidth + 2)}\u2518`;
+    const top = `  \u250c${'\u2500'.repeat(boxWidth + 2)}\u2510`;
+    const bot = `  \u2514${'\u2500'.repeat(boxWidth + 2)}\u2518`;
     const empty = `  \u2502 ${' '.repeat(boxWidth)} \u2502`;
-    const row   = (content: string): string => `  \u2502 ${UpgradeNoticePrinter.pad(content, boxWidth)} \u2502`;
+    const row = (content: string): string => `  \u2502 ${UpgradeNoticePrinter.pad(content, boxWidth)} \u2502`;
 
     console.log('');
     console.log(chalk.yellow(top));
@@ -31,7 +25,7 @@ export class UpgradeNoticePrinter {
     console.log(chalk.yellow(empty));
 
     for (const { name, current, latest } of upgrades) {
-      const line = `${name.padEnd(nameWidth + 2)}${chalk.dim(current)}  \u2192  ${chalk.green.bold(latest)}`;
+      const line = `${name.padEnd(nameWidth + 2)}${chalk.dim(current)}  >  ${chalk.green.bold(latest)}`;
       console.log(chalk.yellow(row(line)));
     }
 
@@ -48,9 +42,10 @@ export class UpgradeNoticePrinter {
     console.log('');
   }
 
-  /** Pads a string to the given visible width, ignoring ANSI escape sequences. */
   private static pad(text: string, width: number): string {
-    const visible = text.replace(/\u001b\[[0-9;]*m/g, '');
-    return text + ' '.repeat(Math.max(0, width - visible.length));
+    const visible = text.replace(ANSI_RE, '').length;
+    const diff = width - visible;
+    if (diff <= 0) return text;
+    return text + ' '.repeat(diff);
   }
 }

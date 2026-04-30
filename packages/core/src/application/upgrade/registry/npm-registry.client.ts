@@ -1,7 +1,3 @@
-/**
- * Thin wrapper around the public npm registry. Fetches the `latest` dist-tag
- * for a single package with a configurable timeout.
- */
 export class NpmRegistryClient {
   private static readonly TIMEOUT_MS = 3_000;
 

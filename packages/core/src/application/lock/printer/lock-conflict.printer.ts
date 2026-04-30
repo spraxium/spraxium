@@ -20,7 +20,7 @@ export class LockConflictPrinter {
     console.log('');
     console.log(chalk.red(top));
     console.log(chalk.red(empty));
-    console.log(chalk.red(row(chalk.red.bold('[!] Another instance is already running'))));
+    console.log(chalk.red(row(chalk.red.bold('\u26a0  Another instance is already running'))));
     console.log(chalk.red(empty));
     console.log(chalk.red(row(chalk.red(`PID         ${lock.pid}`))));
     console.log(chalk.red(row(chalk.red(`Started at  ${lock.startedAt}`))));
