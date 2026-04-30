@@ -210,9 +210,10 @@ export class V2Service {
 
         const firstClass = rawComponents[0];
         if (Reflect.hasMetadata(COMPONENT_METADATA_KEYS.SELECT_COMPONENT, firstClass)) {
+          const resolvedRowData = typeof cfg.rowData === 'function' ? cfg.rowData(data) : cfg.rowData;
           return this.selects.build(
             firstClass,
-            cfg.rowData,
+            resolvedRowData,
             context as SpraxiumContext<Record<string, unknown>>,
           );
         }
