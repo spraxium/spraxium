@@ -9,7 +9,9 @@ import { GuardRegistry } from '../guards';
 import { CommandLogger, Logger, logger } from '../logger';
 import { spraxiumFatal } from '../utils';
 import type { ApplicationState, SpraxiumOptions } from './interfaces';
+import { ProcessLock } from './lock';
 import { ShutdownHandler } from './shutdown.handler';
+import { UpgradeChecker } from './upgrade';
 
 export class SpraxiumApplication {
   private readonly state: ApplicationState;
@@ -125,6 +127,9 @@ export class SpraxiumApplication {
       );
     }
     this.booted = true;
+
+    await ProcessLock.acquire();
+    UpgradeChecker.check();
 
     await this.loadConfig();
     const token = this.resolveToken();
