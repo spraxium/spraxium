@@ -41,19 +41,19 @@ export class ListenerInvoker {
   ): Promise<void> {
     const ctx = new SpraxiumExecutionContext(contextArg, handler.event);
 
-    const passed = await GuardExecutor.execute(
-      handler.ctor as new (
-        ...args: Array<unknown>
-      ) => unknown,
-      handler.method,
-      ctx,
-    );
-    if (!passed) {
-      await ExceptionHandler.handle(new GuardDeniedException(), ctx, ConfigStore.getRaw().exceptions);
-      return;
-    }
-
     try {
+      const passed = await GuardExecutor.execute(
+        handler.ctor as new (
+          ...args: Array<unknown>
+        ) => unknown,
+        handler.method,
+        ctx,
+      );
+      if (!passed) {
+        await ExceptionHandler.handle(new GuardDeniedException(), ctx, ConfigStore.getRaw().exceptions);
+        return;
+      }
+
       await Promise.resolve(handlerFn.call(handler.instance, ...discordArgs));
     } catch (err) {
       await ExceptionHandler.handle(err, ctx, ConfigStore.getRaw().exceptions);
