@@ -14,31 +14,34 @@ export class SlashInvoker {
   public async run(handler: ResolvedSlashHandler, interaction: ChatInputCommandInteraction): Promise<void> {
     const ctx = new SpraxiumExecutionContext(interaction, handler.config.name);
 
-    const passed = await GuardExecutor.execute(
-      handler.handlerCtor as new (
-        ...args: Array<unknown>
-      ) => unknown,
-      'handle',
-      ctx,
-    );
-    if (!passed) {
-      await ExceptionHandler.handle(new GuardDeniedException(), ctx, ConfigStore.getRaw().exceptions);
-      return;
-    }
-
     const deferOptions = Reflect.getOwnMetadata(METADATA_KEYS.DEFER, handler.handlerCtor) as
       | DeferOptions
       | undefined;
-    if (deferOptions) {
-      await interaction.deferReply({ ephemeral: deferOptions.ephemeral ?? false });
-    }
-
     const autoDeferOptions = Reflect.getOwnMetadata(METADATA_KEYS.AUTO_DEFER, handler.handlerCtor) as
       | AutoDeferOptions
       | undefined;
-    const cleanupAutoDefer = autoDeferOptions ? installAutoDefer(interaction, autoDeferOptions) : undefined;
+
+    let cleanupAutoDefer: (() => void) | undefined;
 
     try {
+      const passed = await GuardExecutor.execute(
+        handler.handlerCtor as new (
+          ...args: Array<unknown>
+        ) => unknown,
+        'handle',
+        ctx,
+      );
+      if (!passed) {
+        await ExceptionHandler.handle(new GuardDeniedException(), ctx, ConfigStore.getRaw().exceptions);
+        return;
+      }
+
+      if (deferOptions) {
+        await interaction.deferReply({ ephemeral: deferOptions.ephemeral ?? false });
+      }
+
+      cleanupAutoDefer = autoDeferOptions ? installAutoDefer(interaction, autoDeferOptions) : undefined;
+
       const params = this.buildParams(handler, interaction);
       const fn = this.resolveMethod(handler);
       if (!fn) return;

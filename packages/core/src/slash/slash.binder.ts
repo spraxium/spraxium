@@ -4,7 +4,8 @@ import { logger } from '@spraxium/logger';
 import type { Client, Interaction } from 'discord.js';
 import { ConfigStore } from '../config';
 import { SpraxiumExecutionContext } from '../context';
-import { ExceptionHandler } from '../exceptions';
+import { ExceptionHandler, GuardDeniedException } from '../exceptions';
+import { GuardExecutor } from '../guards';
 import type { ResolvedAutocompleteHandler } from './interfaces';
 import { SlashInvoker } from './slash.invoker';
 import type { SlashRegistry } from './slash.registry';
@@ -57,7 +58,21 @@ export class SlashBinder {
       return;
     }
 
+    const ctx = new SpraxiumExecutionContext(interaction, commandName);
+
     try {
+      const passed = await GuardExecutor.execute(
+        autocomplete.handlerCtor as new (
+          ...args: Array<unknown>
+        ) => unknown,
+        'handle',
+        ctx,
+      );
+      if (!passed) {
+        await ExceptionHandler.handle(new GuardDeniedException(), ctx, ConfigStore.getRaw().exceptions);
+        return;
+      }
+
       const proto = autocomplete.handlerCtor.prototype as object;
       const focusedIndex: number | undefined = Reflect.getOwnMetadata(
         METADATA_KEYS.SLASH_FOCUSED_PARAM,
@@ -80,7 +95,6 @@ export class SlashBinder {
         );
       }
     } catch (err) {
-      const ctx = new SpraxiumExecutionContext(interaction, commandName);
       await ExceptionHandler.handle(err, ctx, ConfigStore.getRaw().exceptions);
     }
   }

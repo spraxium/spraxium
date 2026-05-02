@@ -37,19 +37,19 @@ export class PrefixInvoker {
       }
     }
 
-    const passed = await GuardExecutor.execute(
-      handler.handlerCtor as new (
-        ...args: Array<unknown>
-      ) => unknown,
-      'handle',
-      ctx,
-    );
-    if (!passed) {
-      await ExceptionHandler.handle(new GuardDeniedException(), ctx, ConfigStore.getRaw().exceptions);
-      return;
-    }
-
     try {
+      const passed = await GuardExecutor.execute(
+        handler.handlerCtor as new (
+          ...args: Array<unknown>
+        ) => unknown,
+        'handle',
+        ctx,
+      );
+      if (!passed) {
+        await ExceptionHandler.handle(new GuardDeniedException(), ctx, ConfigStore.getRaw().exceptions);
+        return;
+      }
+
       const coercedArgs = this.argParser.parse(argv, argMetas, message);
       const params = this.buildParams(handler, message, coercedArgs, argMetas);
       const fn = this.resolveMethod(handler);
