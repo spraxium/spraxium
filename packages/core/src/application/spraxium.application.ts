@@ -1,4 +1,5 @@
 import type { Constructor, PrefixConfig, SpraxiumGuard } from '@spraxium/common';
+import { CommandLogger, Logger, logger } from '@spraxium/logger';
 import { type Client, GatewayIntentBits, Partials } from 'discord.js';
 import { ModuleLoader } from '../bootstrap';
 import { ClientFactory, PresenceManager, SpraxiumShardManager, isShardChild } from '../client';
@@ -6,7 +7,6 @@ import type { PresenceOptions, ShardOptions } from '../client/interfaces';
 import { IntentPreset, resolveIntents } from '../client/types';
 import { ConfigLoader, ConfigStore } from '../config';
 import { GuardRegistry } from '../guards';
-import { CommandLogger, Logger, logger } from '../logger';
 import { spraxiumFatal } from '../utils';
 import type { ApplicationState, SpraxiumOptions } from './interfaces';
 import { ProcessLock } from './lock';

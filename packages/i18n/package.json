@@ -42,7 +42,8 @@
   "peerDependencies": {
     "@spraxium/common": "workspace:*",
     "@spraxium/components": "workspace:*",
-    "@spraxium/core": "workspace:*"
+    "@spraxium/core": "workspace:*",
+    "@spraxium/logger": "workspace:*"
   },
   "peerDependenciesMeta": {
     "@spraxium/components": {
@@ -53,6 +54,7 @@
     "@spraxium/common": "workspace:*",
     "@spraxium/components": "workspace:*",
     "@spraxium/core": "workspace:*",
+    "@spraxium/logger": "workspace:*",
     "@types/node": "^22.13.0",
     "tsdown": "^0.12.0",
     "typescript": "^5.7.0",

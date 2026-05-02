@@ -1,6 +1,7 @@
 import { Ctx, PrefixArg, PrefixCommandHandler } from '@spraxium/common';
 
-import { Logger, PrefixDispatcher } from '@spraxium/core';
+import { Logger } from '@spraxium/logger';
+import { PrefixDispatcher } from '@spraxium/core';
 import { EmbedBuilder } from 'discord.js';
 import type { Message } from 'discord.js';
 import { HelpCommand } from '../commands/help.command';

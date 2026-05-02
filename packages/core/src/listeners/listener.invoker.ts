@@ -1,12 +1,14 @@
+import { logger } from '@spraxium/logger';
 import type { BaseInteraction, Message } from 'discord.js';
 import { ConfigStore } from '../config';
 import { SpraxiumExecutionContext } from '../context';
 import { ExceptionHandler, GuardDeniedException } from '../exceptions';
 import { GuardExecutor } from '../guards';
-import { logger } from '../logger';
 import type { HandlerEntry } from './interfaces';
 
 export class ListenerInvoker {
+  private readonly log = logger.child('ListenerInvoker');
+
   public async runGroup(handlers: Array<HandlerEntry>, discordArgs: Array<unknown>): Promise<void> {
     for (const handler of handlers) {
       await this.run(handler, discordArgs);
@@ -67,8 +69,8 @@ export class ListenerInvoker {
     try {
       await Promise.resolve(handlerFn.call(handler.instance, ...discordArgs));
     } catch (err) {
-      logger.error(`[ListenerInvoker] Unhandled error in ${handler.ctor.name}.${String(handler.method)}`);
-      if (err instanceof Error) logger.error(err.stack ?? err.message);
+      this.log.error(`Unhandled error in ${handler.ctor.name}.${String(handler.method)}`);
+      if (err instanceof Error) this.log.error(err.stack ?? err.message);
     }
   }
 

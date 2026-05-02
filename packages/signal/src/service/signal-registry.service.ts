@@ -1,7 +1,8 @@
 import 'reflect-metadata';
 import { Inject, Injectable } from '@spraxium/common';
 import type { SpraxiumOnBoot, SpraxiumOnShutdown } from '@spraxium/common';
-import { ConfigStore, ModuleLoader, logger } from '@spraxium/core';
+import { ConfigStore, ModuleLoader } from '@spraxium/core';
+import { logger } from '@spraxium/logger';
 import type { Client, Message } from 'discord.js';
 import { SIGNAL_MESSAGES, SIGNAL_METADATA_KEYS } from '../constants';
 import type { OnSignalMetadata, SignalConfig, SignalEnvelope } from '../interfaces';
@@ -11,6 +12,7 @@ import type { SignalProcessor } from './signal-processor.service';
 import type { SignalRouter } from './signal-router.service';
 
 const CTX = 'SignalRegistry';
+const log = logger.child(CTX);
 
 /**
  * Discovers `@SignalListener()` classes, extracts `@OnSignal()` methods,
@@ -34,7 +36,7 @@ export class SignalRegistry implements SpraxiumOnBoot, SpraxiumOnShutdown {
     const config: SignalConfig | undefined = ConfigStore.getPluginConfig(defineSignal);
 
     if (!config) {
-      logger.warn(`[${CTX}] ${SIGNAL_MESSAGES.NO_CONFIG}`);
+      log.warn(SIGNAL_MESSAGES.NO_CONFIG);
       return;
     }
 
@@ -45,7 +47,7 @@ export class SignalRegistry implements SpraxiumOnBoot, SpraxiumOnShutdown {
     this.client.on('messageCreate', this.messageHandler);
 
     const channels = Array.isArray(config.channelId) ? config.channelId.join(', ') : config.channelId;
-    logger.info(`[${CTX}] ${SIGNAL_MESSAGES.LISTENING(channels)}`);
+    log.info(SIGNAL_MESSAGES.LISTENING(channels));
   }
 
   async onShutdown(): Promise<void> {

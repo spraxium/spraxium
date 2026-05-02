@@ -13,3 +13,4 @@ export type {
 export type { DiscordTransportConfig } from './discord-transport-config.interface';
 export type { SendableChannel } from './sendable-channel.interface';
 export type { SpraxiumLoggerConfig } from './spraxium-logger-config.interface';
+export type { PartialEmbed } from './patial-embed.interface';

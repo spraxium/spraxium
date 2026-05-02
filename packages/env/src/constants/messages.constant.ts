@@ -54,5 +54,20 @@ export const MESSAGES = {
   DISCORD_TOKEN_LENGTH: (length: number) => `Discord token length out of range (got ${length})`,
   EXPECTED_DISCORD_ID: (value: unknown) =>
     `Expected a Discord snowflake ID (17${ICONS.EN_DASH}19 digits), got "${value}"`,
+  EXPECTED_DISCORD_WEBHOOK_URL: (value: unknown) =>
+    `Expected a Discord webhook URL (https://discord.com/api/webhooks/{id}/{token}), got "${value}"`,
+  DISCORD_CLIENT_SECRET_LENGTH: (length: number) =>
+    `Discord client secret length out of range (expected 24${ICONS.EN_DASH}64 chars, got ${length})`,
+  DISCORD_CLIENT_SECRET_WHITESPACE: 'Discord client secret must not contain whitespace',
+  EXPECTED_DISCORD_PERMISSIONS: (value: unknown) =>
+    `Expected a Discord permission bitfield (non-negative integer string), got "${value}"`,
   CUSTOM_VALIDATION_FAILED: 'Custom validation failed',
+  MIN_VALUE: (min: number, value: number) => `Expected a value >= ${min}, got ${value}`,
+  MAX_VALUE: (max: number, value: number) => `Expected a value <= ${max}, got ${value}`,
+  IS_POSITIVE: (value: number) => `Expected a positive number (> 0), got ${value}`,
+  IS_NEGATIVE: (value: number) => `Expected a negative number (< 0), got ${value}`,
+  MIN_LENGTH: (min: number, got: number) => `Expected at least ${min} character(s), got ${got}`,
+  MAX_LENGTH: (max: number, got: number) => `Expected at most ${max} character(s), got ${got}`,
+  MATCHES: (pattern: string, value: unknown) => `Expected value to match ${pattern}, got "${value}"`,
+  URL_HTTPS_REQUIRED: (value: unknown) => `Expected an HTTPS URL, got "${value}"`,
 };

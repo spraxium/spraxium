@@ -1,5 +1,5 @@
 import { Injectable } from '@spraxium/common';
-import { logger } from '@spraxium/core';
+import { logger } from '@spraxium/logger';
 import type { Message } from 'discord.js';
 import { SIGNAL_MESSAGES } from '../constants';
 import type { SignalConfig, SignalEnvelope, SignalHandler } from '../interfaces';
@@ -8,6 +8,7 @@ import type { SignalRouter } from './signal-router.service';
 import type { SignalValidator } from './signal-validator.service';
 
 const CTX = 'SignalProcessor';
+const log = logger.child(CTX);
 
 @Injectable()
 export class SignalProcessor {
@@ -20,25 +21,25 @@ export class SignalProcessor {
   async process(message: Message, config: SignalConfig): Promise<void> {
     const dbg = config.debug === true;
 
-    if (dbg) logger.info(`[${CTX}] ${SIGNAL_MESSAGES.PROCESSING(message.id, message.webhookId ?? 'none')}`);
+    if (dbg) log.info(SIGNAL_MESSAGES.PROCESSING(message.id, message.webhookId ?? 'none'));
 
     const result = this.validator.validate(message, config, this.router.events());
     if (!result.ok) {
-      if (dbg) logger.warn(`[${CTX}] ${SIGNAL_MESSAGES.REJECTED(message.id)}`);
+      if (dbg) log.warn(SIGNAL_MESSAGES.REJECTED(message.id));
       return;
     }
 
     const { envelope } = result;
 
     if (this.nonceCache.has(envelope.nonce)) {
-      if (dbg) logger.warn(`[${CTX}] ${SIGNAL_MESSAGES.NONCE_REPLAY(envelope.nonce)}`);
+      if (dbg) log.warn(SIGNAL_MESSAGES.NONCE_REPLAY(envelope.nonce));
       return;
     }
     this.nonceCache.add(envelope.nonce);
 
     const handler = this.router.resolve(envelope.event);
     if (!handler) {
-      if (dbg) logger.warn(`[${CTX}] ${SIGNAL_MESSAGES.NO_HANDLER(envelope.event)}`);
+      if (dbg) log.warn(SIGNAL_MESSAGES.NO_HANDLER(envelope.event));
       return;
     }
 
@@ -52,31 +53,26 @@ export class SignalProcessor {
 
   private resolvePayload(handler: SignalHandler, envelope: SignalEnvelope, dbg: boolean): unknown | null {
     if (!handler.schema) {
-      if (dbg) logger.info(`[${CTX}] ${SIGNAL_MESSAGES.ZOD_SKIP}`);
+      if (dbg) log.info(SIGNAL_MESSAGES.ZOD_SKIP);
       return envelope.payload;
     }
 
     const result = handler.schema.safeParse(envelope.payload);
     if (!result.success) {
-      if (dbg)
-        logger.warn(
-          `[${CTX}] ${SIGNAL_MESSAGES.ZOD_FAIL(envelope.event, JSON.stringify(result.error.issues))}`,
-        );
+      if (dbg) log.warn(SIGNAL_MESSAGES.ZOD_FAIL(envelope.event, JSON.stringify(result.error.issues)));
       return null;
     }
 
-    if (dbg) logger.info(`[${CTX}] ${SIGNAL_MESSAGES.ZOD_OK}`);
+    if (dbg) log.info(SIGNAL_MESSAGES.ZOD_OK);
     return result.data;
   }
 
   private async tryDeleteMessage(message: Message, dbg: boolean): Promise<void> {
-    if (dbg) logger.info(`[${CTX}] ${SIGNAL_MESSAGES.DELETING(message.id)}`);
+    if (dbg) log.info(SIGNAL_MESSAGES.DELETING(message.id));
     try {
       await message.delete();
     } catch (err) {
-      logger.warn(
-        `[${CTX}] ${SIGNAL_MESSAGES.DELETE_FAIL(message.id, err instanceof Error ? err.message : String(err))}`,
-      );
+      log.warn(SIGNAL_MESSAGES.DELETE_FAIL(message.id, err instanceof Error ? err.message : String(err)));
     }
   }
 
@@ -86,13 +82,13 @@ export class SignalProcessor {
     envelope: SignalEnvelope,
     dbg: boolean,
   ): Promise<void> {
-    if (dbg) logger.info(`[${CTX}] ${SIGNAL_MESSAGES.INVOKING(envelope.event, envelope.guildId)}`);
+    if (dbg) log.info(SIGNAL_MESSAGES.INVOKING(envelope.event, envelope.guildId));
     try {
       await handler.execute(payload, envelope);
-      if (dbg) logger.info(`[${CTX}] ${SIGNAL_MESSAGES.HANDLER_OK(envelope.event)}`);
+      if (dbg) log.info(SIGNAL_MESSAGES.HANDLER_OK(envelope.event));
     } catch (err) {
-      logger.error(
-        `[${CTX}] ${SIGNAL_MESSAGES.HANDLER_ERROR(envelope.event, err instanceof Error ? err.message : String(err))}`,
+      log.error(
+        SIGNAL_MESSAGES.HANDLER_ERROR(envelope.event, err instanceof Error ? err.message : String(err)),
       );
     }
   }

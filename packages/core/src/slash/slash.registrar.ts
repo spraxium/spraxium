@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { METADATA_KEYS } from '@spraxium/common';
 import type { Constructor, SlashOptionMetadata, SlashSubcommandGroupMetadata } from '@spraxium/common';
-import chalk from 'chalk';
+import { ANSI, logger } from '@spraxium/logger';
 import {
   InteractionContextType,
   REST,
@@ -13,7 +13,6 @@ import {
   Routes,
   SlashCommandBuilder,
 } from 'discord.js';
-import { logger } from '../logger';
 import { applyOption } from './helpers';
 import { SlashLocalizationBridge } from './slash-localization.bridge';
 import type { SlashRegistry } from './slash.registry';
@@ -23,6 +22,8 @@ const HASH_DIR = path.join(process.cwd(), '.spraxium');
 const HASH_FILE = path.join(HASH_DIR, 'commands.hash');
 
 export class SlashRegistrar {
+  private readonly log = logger.child('SlashRegistrar');
+
   constructor(private readonly registry: SlashRegistry) {}
 
   public async register(
@@ -37,7 +38,7 @@ export class SlashRegistrar {
     if (payloads.length === 0) return;
 
     if (!force && process.env.NODE_ENV === 'development' && this.isUnchanged(payloads)) {
-      logger.raw(`${chalk.yellow('⊘')}  Application commands unchanged , skipped REST registration (dev)`);
+      this.log.raw(`${ANSI.yellow('⊘')}  Application commands unchanged , skipped REST registration (dev)`);
       return;
     }
 
@@ -55,8 +56,8 @@ export class SlashRegistrar {
     if (slashCount > 0) parts.push(`${slashCount} slash`);
     if (extraCount > 0) parts.push(`${extraCount} context menu`);
 
-    logger.raw(
-      `${chalk.green('✔')}  Registered ${parts.join(' + ')} command(s)${guildId ? ` for guild ${guildId}` : ' globally'}`,
+    this.log.raw(
+      `${ANSI.green('✔')}  Registered ${parts.join(' + ')} command(s)${guildId ? ` for guild ${guildId}` : ' globally'}`,
     );
 
     if (process.env.NODE_ENV === 'development') {

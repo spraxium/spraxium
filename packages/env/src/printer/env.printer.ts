@@ -2,8 +2,7 @@
 import Table from 'cli-table3';
 import { ICONS } from '../constants/icons.constant';
 import { MESSAGES } from '../constants/messages.constant';
-import type { EnvDiffEntry } from '../interfaces/env-diff-entry.interface';
-import type { FieldValidationResult } from '../interfaces/field-validation-result.interface';
+import type { EnvDiffEntry, FieldValidationResult } from '../interfaces';
 import type { EnvFieldError } from '../validator/validation.error';
 
 export class EnvPrinter {
@@ -20,10 +19,10 @@ export class EnvPrinter {
       style: { head: [], border: ['dim'] },
     });
 
-    for (const { meta, raw, parsed, source } of results) {
+    for (const { meta, parsed, source } of results) {
       let val: string;
-      if (raw !== undefined) {
-        val = meta.secret ? chalk.gray(ICONS.SECRET_MASK) : chalk.green(String(parsed ?? raw).slice(0, 40));
+      if (source !== 'absent') {
+        val = meta.secret ? chalk.gray(ICONS.SECRET_MASK) : chalk.green(String(parsed).slice(0, 40));
       } else {
         val = chalk.gray(MESSAGES.ABSENT_OPTIONAL);
       }

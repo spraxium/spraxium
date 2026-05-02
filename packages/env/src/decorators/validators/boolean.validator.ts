@@ -8,11 +8,12 @@ export function IsBoolean(): PropertyDecorator {
     meta.rules.push({
       name: 'IsBoolean',
       type: 'boolean',
-      transform: (raw) => {
-        const lower = raw.toLowerCase().trim();
+      transform: (value) => {
+        if (typeof value === 'boolean') return value;
+        const lower = String(value).toLowerCase().trim();
         if (lower === 'true' || lower === '1') return true;
         if (lower === 'false' || lower === '0') return false;
-        return raw;
+        return value;
       },
       validate: (value) => (typeof value === 'boolean' ? null : MESSAGES.EXPECTED_BOOLEAN(value)),
     });

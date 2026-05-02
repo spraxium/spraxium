@@ -1,8 +1,11 @@
 ﻿import { MESSAGES } from '../../constants/messages.constant';
+import type { IsUrlOptions } from '../../interfaces/is-url-options.interface';
 import { MetadataHelper } from '../../utils/metadata.util';
 
+export type { IsUrlOptions };
+
 /** Validates that the environment variable is a valid URL. */
-export function IsUrl(): PropertyDecorator {
+export function IsUrl(options?: IsUrlOptions): PropertyDecorator {
   return (target: object, propertyKey: string | symbol): void => {
     const meta = MetadataHelper.getOrCreateFieldMeta(target, String(propertyKey));
     meta.rules.push({
@@ -10,12 +13,16 @@ export function IsUrl(): PropertyDecorator {
       type: 'url',
       validate: (value) => {
         if (typeof value !== 'string') return MESSAGES.EXPECTED_STRING;
+        let url: URL;
         try {
-          new URL(value);
-          return null;
+          url = new URL(value);
         } catch {
           return MESSAGES.EXPECTED_URL(value);
         }
+        if (options?.https && url.protocol !== 'https:') {
+          return MESSAGES.URL_HTTPS_REQUIRED(value);
+        }
+        return null;
       },
     });
   };

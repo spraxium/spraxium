@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { ConsoleTransport } from '../src/console.transport';
 import type { LogEntry, LogTransport } from '../src/interfaces';
-import { Logger } from '../src/logger.service';
+import { Logger } from '../src/services/logger.service';
+import { ConsoleTransport } from '../src/transports/console.transport';
 
 const FAKE_TOKEN = 'MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMi.GaBcDe.ABCDEFGHIJKLMNOPQRSTUVWXYZabcde';
 

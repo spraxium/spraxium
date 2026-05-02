@@ -1,32 +1,19 @@
-import { nativeWarn } from './console.transport';
-import { DISCORD_LEVEL_COLORS, DISCORD_MAX_QUEUE_SIZE } from './constants';
+import { DISCORD_LEVEL_COLORS, DISCORD_MAX_QUEUE_SIZE } from '../constants';
 import type {
   ClientAwareTransport,
   DiscordEmbedTemplate,
   DiscordTransportConfig,
   LogEntry,
+  PartialEmbed,
   SendableChannel,
-} from './interfaces';
-import { formatDate, formatTime, interpolateTemplate } from './utils';
-
-/**
- * Minimal APIEmbed shape — mirrors discord.js `APIEmbed` without importing discord.js.
- * Only the fields actually used by this transport are declared.
- */
-interface PartialEmbed {
-  title?: string;
-  description?: string;
-  color?: number;
-  timestamp?: string;
-  footer?: { text: string };
-  thumbnail?: { url: string };
-  fields?: Array<{ name: string; value: string; inline?: boolean }>;
-}
+} from '../interfaces';
+import { formatDate, formatTime, interpolateTemplate } from '../utils';
+import { nativeWarn } from './console.transport';
 
 export class DiscordTransport implements ClientAwareTransport {
   readonly name = 'discord';
 
-  /** discord.js `Client` — typed as `unknown` to avoid a hard dependency. */
+  /** discord.js `Client`: typed as `unknown` to avoid a hard dependency. */
   private client?: unknown;
 
   private readonly queue: Array<LogEntry> = [];

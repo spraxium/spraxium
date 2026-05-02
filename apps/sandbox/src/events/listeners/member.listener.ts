@@ -1,5 +1,5 @@
 import { Listener, On } from '@spraxium/common';
-import { Logger } from '@spraxium/core';
+import { Logger } from '@spraxium/logger';
 import { Events, type GuildMember, type PartialGuildMember } from 'discord.js';
 
 @Listener(Events.GuildMemberAdd)

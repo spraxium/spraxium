@@ -1,5 +1,5 @@
 import type { PrefixGuildEntry, PrefixGuildProvider } from '@spraxium/common';
-import { logger } from '../../logger/logger.service';
+import { logger } from '@spraxium/logger';
 import { PREFIX_MESSAGES } from '../constants';
 
 /**
@@ -14,6 +14,7 @@ import { PREFIX_MESSAGES } from '../constants';
  * determine the active prefix for a guild.
  */
 export class PrefixGuildManager {
+  private readonly log = logger.child('PrefixGuildManager');
   private readonly store = new Map<string, PrefixGuildEntry>();
 
   public getGuildPrefix(guildId: string): Array<string> | undefined {
@@ -74,6 +75,6 @@ export class PrefixGuildManager {
       this.store.set(entry.guildId, entry);
     }
 
-    logger.debug(PREFIX_MESSAGES.guildLoaded(entries.length));
+    this.log.debug(PREFIX_MESSAGES.guildLoaded(entries.length));
   }
 }

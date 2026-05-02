@@ -9,7 +9,6 @@ export * from './context-menu';
 export * from './exceptions';
 export * from './guards';
 export * from './listeners';
-export * from './logger';
 export * from './prefix';
 export * from './slash';
 export * from './utils';

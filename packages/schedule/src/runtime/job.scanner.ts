@@ -1,5 +1,6 @@
 import 'reflect-metadata';
-import { ConfigurationException, Logger } from '@spraxium/core';
+import { ConfigurationException } from '@spraxium/core';
+import { logger } from '@spraxium/logger';
 import { MESSAGES } from '../constants/messages.constant';
 import { SCHEDULE_METADATA_KEYS } from '../constants/metadata-keys.constant';
 import type { AfterOnlineJobMetadata } from '../interfaces/after-online-job-metadata.interface';
@@ -12,7 +13,7 @@ import type { JobType } from '../types/job.type';
 import { getNextRunDate } from '../utils/cron.parser';
 
 export class JobScanner {
-  private readonly log = new Logger('JobScanner');
+  private readonly log = logger.child('JobScanner');
   private autoNameIdx = 0;
 
   constructor(

@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "@spraxium/upgrade-test-bot",
   "version": "0.0.1",
   "private": true,
@@ -15,6 +15,7 @@
     "@spraxium/env": "workspace:*",
     "@spraxium/http": "workspace:*",
     "@spraxium/i18n": "workspace:*",
+    "@spraxium/logger": "workspace:^",
     "@spraxium/schedule": "workspace:*",
     "@spraxium/signal": "workspace:*",
     "@spraxium/signal-client": "workspace:*",

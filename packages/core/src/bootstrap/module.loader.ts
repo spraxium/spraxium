@@ -7,10 +7,10 @@ import type {
 } from '@spraxium/common';
 import { METADATA_KEYS } from '@spraxium/common';
 import { ReadonlyContainer } from '@spraxium/common';
+import { logger } from '@spraxium/logger';
 import { Client } from 'discord.js';
 import { ContextMenuDispatcher } from '../context-menu';
 import { ListenerDispatcher } from '../listeners';
-import { logger } from '../logger';
 import { PrefixDispatcher } from '../prefix';
 import { SlashDispatcher } from '../slash';
 import { spraxiumError } from '../utils';
@@ -20,6 +20,7 @@ import { SpraxiumContainer } from './spraxium.container';
 
 export class ModuleLoader {
   static readonly instanceScanners: Set<(instance: unknown) => void> = new Set();
+  private readonly log = logger.child('ModuleLoader');
   private readonly rootContainer = new SpraxiumContainer();
   private readonly bootHooks: Array<SpraxiumOnBoot> = [];
   private readonly shutdownHooks: Array<SpraxiumOnShutdown> = [];
@@ -42,7 +43,7 @@ export class ModuleLoader {
     this.rootContainer.set(Client, client);
     this.rootContainer.set(ReadonlyContainer, this.rootContainer);
     this.loadModule(rootModule, this.rootContainer);
-    logger.debug('Module tree loaded');
+    this.log.debug('Module tree loaded');
   }
 
   private loadModule(moduleCtor: Constructor, parentContainer: SpraxiumContainer): void {
@@ -105,7 +106,7 @@ export class ModuleLoader {
       global: isGlobal,
     });
 
-    logger.debug(`Loaded module: ${moduleCtor.name}`);
+    this.log.debug(`Loaded module: ${moduleCtor.name}`);
   }
 
   private instantiate<T>(ctor: Constructor<T>, container: SpraxiumContainer): T {

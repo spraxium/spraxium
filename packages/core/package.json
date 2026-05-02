@@ -37,7 +37,7 @@
   },
   "dependencies": {
     "@spraxium/common": "workspace:*",
-    "chalk": "^5.4.0",
+    "@spraxium/logger": "workspace:*",
     "cli-table3": "^0.6.5",
     "reflect-metadata": "^0.2.2"
   },

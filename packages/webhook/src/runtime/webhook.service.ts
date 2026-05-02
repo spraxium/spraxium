@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@spraxium/common';
-import { Logger } from '@spraxium/core';
+import { logger } from '@spraxium/logger';
 import type { EmbedBuilder, MessageCreateOptions } from 'discord.js';
 import { MESSAGES } from '../constants/messages.constant';
 import type { SendOptions } from '../interfaces/send-options.interface';
@@ -8,7 +8,7 @@ import { WebhookRegistry } from './webhook.registry';
 
 @Injectable()
 export class WebhookService {
-  private readonly log = new Logger('WebhookService');
+  private readonly log = logger.child('WebhookService');
 
   constructor(@Inject(WebhookRegistry) private readonly registry: WebhookRegistry) {}
 

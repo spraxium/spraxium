@@ -1,5 +1,5 @@
 import { Injectable } from '@spraxium/common';
-import { Logger } from '@spraxium/core';
+import { Logger } from '@spraxium/logger';
 import { Cron, CronExpression, ScheduleService } from '@spraxium/schedule';
 import { AppEnv } from '../app.env';
 

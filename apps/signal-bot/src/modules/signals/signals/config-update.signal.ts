@@ -1,4 +1,4 @@
-﻿import { Logger } from '@spraxium/core';
+﻿import { Logger } from '@spraxium/logger';
 import { OnSignal, SignalListener } from '@spraxium/signal';
 import type { SignalEnvelope } from '@spraxium/signal';
 import {

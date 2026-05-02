@@ -1,6 +1,6 @@
 import { Injectable } from '@spraxium/common';
 import type { SpraxiumOnBoot, SpraxiumOnShutdown } from '@spraxium/common';
-import { Logger } from '@spraxium/core';
+import { Logger } from '@spraxium/logger';
 
 @Injectable()
 export class {{pascalName}}Service implements SpraxiumOnBoot, SpraxiumOnShutdown {

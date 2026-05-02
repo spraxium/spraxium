@@ -1,4 +1,4 @@
-import { DISCORD_TOKEN_PATTERN } from './constants';
+import { DISCORD_TOKEN_PATTERN } from '../constants';
 
 /**
  * Scans log message strings for patterns that match a Discord bot token and

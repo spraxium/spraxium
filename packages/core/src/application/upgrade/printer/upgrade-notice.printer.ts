@@ -1,4 +1,4 @@
-import chalk from 'chalk';
+import { ANSI, nativeLog } from '@spraxium/logger';
 import type { PackageUpgrade } from '../interfaces';
 
 // biome-ignore lint/suspicious/noControlCharactersInRegex: intentional ANSI escape strip
@@ -20,37 +20,44 @@ export class UpgradeNoticePrinter {
   ): void {
     const top = `  \u250c${'\u2500'.repeat(boxWidth + 2)}\u2510`;
     const bot = `  \u2514${'\u2500'.repeat(boxWidth + 2)}\u2518`;
-    const empty = `  \u2502 ${' '.repeat(boxWidth)} \u2502`;
-    const row = (content: string): string => `  \u2502 ${UpgradeNoticePrinter.pad(content, boxWidth)} \u2502`;
+    const empty = `  \u2502${' '.repeat(boxWidth + 2)}\u2502`;
 
-    console.log('');
-    console.log(chalk.yellow(top));
-    console.log(chalk.yellow(empty));
-    console.log(chalk.yellow(row(chalk.bold('\u2726  Spraxium upgrade available'))));
-    console.log(chalk.yellow(empty));
+    nativeLog('');
+    nativeLog(ANSI.yellow(top));
+    nativeLog(ANSI.yellow(empty));
+    nativeLog(UpgradeNoticePrinter.yellowRow(ANSI.bold('\u2726  Spraxium upgrade available'), boxWidth));
+    nativeLog(ANSI.yellow(empty));
 
     for (const { name, current, latest } of upgrades) {
-      const line = `${name.padEnd(nameWidth + 2)}${chalk.dim(current)}  >  ${chalk.green.bold(latest)}`;
-      console.log(chalk.yellow(row(line)));
+      // dim current version (NORM restores intensity without resetting yellow),
+      // then switch to bold-green for latest (restore yellow afterwards).
+      const line = `${name.padEnd(nameWidth + 2)}${ANSI.dim(current)}  >  ${ANSI.bold(ANSI.green(latest))}`;
+      nativeLog(UpgradeNoticePrinter.yellowRow(line, boxWidth));
     }
 
-    console.log(chalk.yellow(empty));
-    console.log(chalk.yellow(bot));
+    nativeLog(ANSI.yellow(empty));
+    nativeLog(ANSI.yellow(bot));
   }
 
   private static renderCommand(upgrades: ReadonlyArray<PackageUpgrade>): void {
     const command = `pnpm add ${upgrades.map((u) => `${u.name}@${u.latest}`).join(' ')}`;
 
-    console.log('');
-    console.log(chalk.dim('  Run to upgrade:'));
-    console.log(chalk.cyan(`  ${command}`));
-    console.log('');
+    nativeLog('');
+    nativeLog(ANSI.dim('  Run to upgrade:'));
+    nativeLog(ANSI.cyan(`  ${command}`));
+    nativeLog('');
   }
 
-  private static pad(text: string, width: number): string {
-    const visible = text.replace(ANSI_RE, '').length;
-    const diff = width - visible;
-    if (diff <= 0) return text;
-    return text + ' '.repeat(diff);
+  /**
+   * Wraps `content` in a yellow box row, correctly measuring visible width by
+   * stripping ANSI codes before padding.  Re-asserts yellow after content so
+   * that inner color resets (from nested ANSI helpers) don't affect borders.
+   */
+  private static yellowRow(content: string, boxWidth: number): string {
+    const visible = content.replace(ANSI_RE, '').length;
+    const pad = Math.max(0, boxWidth - visible);
+    // Re-assert yellow (\x1b[33m) before the padding so border chars stay yellow
+    // even when `content` ends with a full \x1b[0m reset from a nested helper.
+    return `\x1b[33m  \u2502 ${content}\x1b[33m${' '.repeat(pad)} \u2502\x1b[0m`;
   }
 }

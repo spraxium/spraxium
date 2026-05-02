@@ -1,5 +1,5 @@
 import { Ctx, SlashCommandHandler, SlashIntegerOption, SlashStringOption, SlashUserOption, UseGuards } from '@spraxium/common';
-import { Logger } from '@spraxium/core';
+import { Logger } from '@spraxium/logger';
 import type { ChatInputCommandInteraction, GuildMember, User } from 'discord.js';
 import { ModeratorGuard } from '../../prefix/guards/moderator.guard';
 import { BanCommand } from '../commands/ban.command';

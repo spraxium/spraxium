@@ -1,5 +1,5 @@
 import { Ctx, PrefixArg, PrefixCommandHandler } from '@spraxium/common';
-import { Logger } from '@spraxium/core';
+import { Logger } from '@spraxium/logger';
 import type { Message } from 'discord.js';
 import { RollCommand } from '../commands/roll.command';
 

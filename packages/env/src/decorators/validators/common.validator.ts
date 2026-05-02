@@ -18,16 +18,16 @@ export function Secret(): PropertyDecorator {
 }
 
 /** Sets a static default value, used when the environment variable is absent. */
-export function Default(value: string): PropertyDecorator {
+export function Default(value: string | number | boolean): PropertyDecorator {
   return (target: object, propertyKey: string | symbol): void => {
     const meta = MetadataHelper.getOrCreateFieldMeta(target, String(propertyKey));
-    meta.defaultValue = value;
+    meta.defaultValue = String(value);
     meta.optional = true;
   };
 }
 
-/** Applies a custom transformation function to the raw string value before validation. */
-export function Transform(fn: (raw: string) => unknown): PropertyDecorator {
+/** Applies a custom transformation function to the value before validation. */
+export function Transform(fn: (value: unknown) => unknown): PropertyDecorator {
   return (target: object, propertyKey: string | symbol): void => {
     const meta = MetadataHelper.getOrCreateFieldMeta(target, String(propertyKey));
     meta.rules.push({ name: 'Transform', transform: fn });

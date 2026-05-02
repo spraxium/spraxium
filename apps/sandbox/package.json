@@ -15,6 +15,7 @@
     "@spraxium/env": "workspace:*",
     "@spraxium/http": "workspace:*",
     "@spraxium/i18n": "workspace:*",
+    "@spraxium/logger": "workspace:^",
     "@spraxium/schedule": "workspace:*",
     "discord.js": "^14.26.3",
     "drizzle-orm": "^0.45.2",

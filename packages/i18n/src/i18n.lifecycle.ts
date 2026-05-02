@@ -1,5 +1,6 @@
 import { Inject, Injectable, type SpraxiumOnBoot } from '@spraxium/common';
-import { ConfigStore, SlashLocalizationBridge, logger } from '@spraxium/core';
+import { ConfigStore, SlashLocalizationBridge } from '@spraxium/core';
+import { logger } from '@spraxium/logger';
 import chalk from 'chalk';
 import { buildSlashLocalizations } from './helpers/slash-localizations';
 import { defineI18n } from './i18n.config';

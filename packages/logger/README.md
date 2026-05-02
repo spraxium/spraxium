@@ -1,6 +1,6 @@
 # @spraxium/logger
 
-`@spraxium/logger` is the centralized logging package for the Spraxium ecosystem. It provides a zero-runtime-dependency logger built on native ANSI escape codes, with pluggable transports, token masking, configurable timestamp formats, and a static `TableBuilder` utility for rendering CLI tables. All output in Spraxium passes through this package — the core runtime, sharding manager, and command pipeline each use a context-scoped child logger derived from the root `Logger` instance.
+`@spraxium/logger` is the centralized logging package for the Spraxium ecosystem. It provides a zero-runtime-dependency logger built on native ANSI escape codes, with pluggable transports, token masking, configurable timestamp formats, and a static `TableBuilder` utility for rendering CLI tables. All output in Spraxium passes through this package: the core runtime, sharding manager, and command pipeline each use a context-scoped child logger derived from the root `Logger` instance.
 
 The package ships four built-in log levels (`info`, `success`, `warn`, `error`) plus `debug` (opt-in via `Logger.setDebug(true)` or the `SPRAXIUM_DEBUG=true` environment variable) and `command` (used by the command logger). Custom levels can be registered at boot time with arbitrary ANSI colors. Transports are fully replaceable: the default `ConsoleTransport` writes to stdout/stderr, and `DiscordTransport` forwards log entries to a Discord channel or webhook. Both can be swapped or augmented with any object that implements the `LogTransport` interface.
 
@@ -15,11 +15,11 @@ npm install @spraxium/logger
 ```typescript
 import { Logger, logger } from '@spraxium/logger';
 
-// Root logger — no context label
+// Root logger: no context label
 logger.info('Bot is starting');
 logger.warn('Config file not found, using defaults');
 
-// Context-scoped logger — prefixes every line with [MyService]
+// Context-scoped logger: prefixes every line with [MyService]
 const log = logger.child('MyService');
 log.info('Initialized');
 log.error('Something went wrong');

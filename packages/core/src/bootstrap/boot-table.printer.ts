@@ -1,10 +1,8 @@
-import chalk from 'chalk';
-import Table from 'cli-table3';
+﻿import { ANSI, TableBuilder, nativeLog } from '@spraxium/logger';
 import type { ResolvedContextMenuEntry } from '../context-menu/interfaces';
 import type { ResolvedListenerEntry } from '../listeners/interfaces';
 import type { ResolvedPrefixEntry } from '../prefix/interfaces';
 import type { ResolvedSlashEntry } from '../slash/interfaces';
-import { TABLE_STYLE } from './constants';
 import type { ModuleRow } from './interfaces';
 
 export function printBootTables(
@@ -17,145 +15,134 @@ export function printBootTables(
   if (process.env.SHARDS !== undefined) return;
 
   if (moduleRows.length > 0) {
-    const modTable = new Table({
-      head: [
-        chalk.bold.cyan('Module'),
-        chalk.bold.cyan('Providers'),
-        chalk.bold.cyan('Listeners'),
-        chalk.bold.cyan('Commands'),
-        chalk.bold.cyan('Handlers'),
-        chalk.bold.cyan('Exports'),
-        chalk.bold.cyan('Global'),
-      ],
-      ...TABLE_STYLE,
-    });
+    const modTable = TableBuilder.create([
+      ANSI.bold(ANSI.cyan('Module')),
+      ANSI.bold(ANSI.cyan('Providers')),
+      ANSI.bold(ANSI.cyan('Listeners')),
+      ANSI.bold(ANSI.cyan('Commands')),
+      ANSI.bold(ANSI.cyan('Handlers')),
+      ANSI.bold(ANSI.cyan('Exports')),
+      ANSI.bold(ANSI.cyan('Global')),
+    ]);
 
     for (const row of moduleRows) {
       modTable.push([
-        chalk.cyan(row.name),
-        chalk.green(String(row.providers)),
-        chalk.green(String(row.listeners)),
-        chalk.green(String(row.commands)),
-        chalk.green(String(row.handlers)),
-        chalk.dim(String(row.exports)),
-        row.global ? chalk.yellow('yes') : chalk.dim('no'),
+        ANSI.cyan(row.name),
+        ANSI.green(String(row.providers)),
+        ANSI.green(String(row.listeners)),
+        ANSI.green(String(row.commands)),
+        ANSI.green(String(row.handlers)),
+        ANSI.dim(String(row.exports)),
+        row.global ? ANSI.yellow('yes') : ANSI.dim('no'),
       ]);
     }
 
-    console.log('');
-    console.log(chalk.bold(' Modules'));
-    console.log(chalk.dim(' All @Module() classes loaded in dependency order.'));
-    console.log('');
-    console.log(modTable.toString());
+    nativeLog('');
+    nativeLog(ANSI.bold(' Modules'));
+    nativeLog(ANSI.dim(' All @Module() classes loaded in dependency order.'));
+    nativeLog('');
+    nativeLog(modTable.toString());
   }
 
   if (listenerEntries.length > 0) {
-    const lisTable = new Table({
-      head: [
-        chalk.bold.cyan('Class'),
-        chalk.bold.cyan('Event'),
-        chalk.bold.cyan('Method'),
-        chalk.bold.cyan('Type'),
-      ],
-      ...TABLE_STYLE,
-    });
+    const lisTable = TableBuilder.create([
+      ANSI.bold(ANSI.cyan('Class')),
+      ANSI.bold(ANSI.cyan('Event')),
+      ANSI.bold(ANSI.cyan('Method')),
+      ANSI.bold(ANSI.cyan('Type')),
+    ]);
 
     for (const entry of listenerEntries) {
       lisTable.push([
-        chalk.cyan(entry.className),
-        chalk.green(entry.event),
-        chalk.dim(entry.method),
-        entry.once ? chalk.yellow('once') : chalk.dim('on'),
+        ANSI.cyan(entry.className),
+        ANSI.green(entry.event),
+        ANSI.dim(entry.method),
+        entry.once ? ANSI.yellow('once') : ANSI.dim('on'),
       ]);
     }
 
-    console.log('');
-    console.log(chalk.bold(' Listeners'));
-    console.log(chalk.dim(' All @Listener() handlers registered to Discord events.'));
-    console.log('');
-    console.log(lisTable.toString());
-    console.log('');
+    nativeLog('');
+    nativeLog(ANSI.bold(' Listeners'));
+    nativeLog(ANSI.dim(' All @Listener() handlers registered to Discord events.'));
+    nativeLog('');
+    nativeLog(lisTable.toString());
+    nativeLog('');
   }
 
   if (prefixEntries.length > 0) {
-    const cmdTable = new Table({
-      head: [
-        chalk.bold.cyan('Command'),
-        chalk.bold.cyan('Aliases'),
-        chalk.bold.cyan('Handler'),
-        chalk.bold.cyan('Subcommand'),
-        chalk.bold.cyan('Args'),
-      ],
-      ...TABLE_STYLE,
-    });
+    const cmdTable = TableBuilder.create([
+      ANSI.bold(ANSI.cyan('Command')),
+      ANSI.bold(ANSI.cyan('Aliases')),
+      ANSI.bold(ANSI.cyan('Handler')),
+      ANSI.bold(ANSI.cyan('Subcommand')),
+      ANSI.bold(ANSI.cyan('Args')),
+    ]);
 
     for (const entry of prefixEntries) {
       cmdTable.push([
-        chalk.cyan(entry.commandName),
-        chalk.dim(entry.aliases.join(', ') || ','),
-        chalk.green(entry.handlerClass),
-        entry.subcommand ? chalk.yellow(entry.subcommand) : chalk.dim(','),
-        chalk.dim(String(entry.argCount)),
+        ANSI.cyan(entry.commandName),
+        ANSI.dim(entry.aliases.join(', ') || ','),
+        ANSI.green(entry.handlerClass),
+        entry.subcommand ? ANSI.yellow(entry.subcommand) : ANSI.dim(','),
+        ANSI.dim(String(entry.argCount)),
       ]);
     }
 
-    console.log('');
-    console.log(chalk.bold(' Prefix Commands'));
-    console.log(chalk.dim(' All @PrefixCommand() handlers registered for message-based dispatch.'));
-    console.log('');
-    console.log(cmdTable.toString());
-    console.log('');
+    nativeLog('');
+    nativeLog(ANSI.bold(' Prefix Commands'));
+    nativeLog(ANSI.dim(' All @PrefixCommand() handlers registered for message-based dispatch.'));
+    nativeLog('');
+    nativeLog(cmdTable.toString());
+    nativeLog('');
   }
 
   if (slashEntries.length > 0) {
-    const slashTable = new Table({
-      head: [
-        chalk.bold.cyan('Command'),
-        chalk.bold.cyan('Handler'),
-        chalk.bold.cyan('Group'),
-        chalk.bold.cyan('Subcommand'),
-        chalk.bold.cyan('Options'),
-      ],
-      ...TABLE_STYLE,
-    });
+    const slashTable = TableBuilder.create([
+      ANSI.bold(ANSI.cyan('Command')),
+      ANSI.bold(ANSI.cyan('Handler')),
+      ANSI.bold(ANSI.cyan('Group')),
+      ANSI.bold(ANSI.cyan('Subcommand')),
+      ANSI.bold(ANSI.cyan('Options')),
+    ]);
 
     for (const entry of slashEntries) {
       slashTable.push([
-        chalk.cyan(`/${entry.commandName}`),
-        chalk.green(entry.handlerClass),
-        entry.group ? chalk.magenta(entry.group) : chalk.dim('—'),
-        entry.sub ? chalk.yellow(entry.sub) : chalk.dim('—'),
-        chalk.dim(String(entry.optionCount)),
+        ANSI.cyan(`/${entry.commandName}`),
+        ANSI.green(entry.handlerClass),
+        entry.group ? ANSI.magenta(entry.group) : ANSI.dim('—'),
+        entry.sub ? ANSI.yellow(entry.sub) : ANSI.dim('—'),
+        ANSI.dim(String(entry.optionCount)),
       ]);
     }
 
-    console.log('');
-    console.log(chalk.bold(' Slash Commands'));
-    console.log(chalk.dim(' All @SlashCommand() handlers registered for interaction-based dispatch.'));
-    console.log('');
-    console.log(slashTable.toString());
-    console.log('');
+    nativeLog('');
+    nativeLog(ANSI.bold(' Slash Commands'));
+    nativeLog(ANSI.dim(' All @SlashCommand() handlers registered for interaction-based dispatch.'));
+    nativeLog('');
+    nativeLog(slashTable.toString());
+    nativeLog('');
   }
 
   if (contextMenuEntries.length > 0) {
-    const cmTable = new Table({
-      head: [chalk.bold.cyan('Command'), chalk.bold.cyan('Type'), chalk.bold.cyan('Handler')],
-      ...TABLE_STYLE,
-    });
+    const cmTable = TableBuilder.create([
+      ANSI.bold(ANSI.cyan('Command')),
+      ANSI.bold(ANSI.cyan('Type')),
+      ANSI.bold(ANSI.cyan('Handler')),
+    ]);
 
     for (const entry of contextMenuEntries) {
       cmTable.push([
-        chalk.cyan(entry.commandName),
-        entry.type === 'user' ? chalk.magenta('user') : chalk.yellow('message'),
-        chalk.green(entry.handlerClass),
+        ANSI.cyan(entry.commandName),
+        entry.type === 'user' ? ANSI.magenta('user') : ANSI.yellow('message'),
+        ANSI.green(entry.handlerClass),
       ]);
     }
 
-    console.log('');
-    console.log(chalk.bold(' Context Menu Commands'));
-    console.log(chalk.dim(' All @ContextMenuCommand() handlers registered under the Apps submenu.'));
-    console.log('');
-    console.log(cmTable.toString());
-    console.log('');
+    nativeLog('');
+    nativeLog(ANSI.bold(' Context Menu Commands'));
+    nativeLog(ANSI.dim(' All @ContextMenuCommand() handlers registered under the Apps submenu.'));
+    nativeLog('');
+    nativeLog(cmTable.toString());
+    nativeLog('');
   }
 }

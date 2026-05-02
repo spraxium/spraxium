@@ -1,5 +1,5 @@
 import { Injectable, type SpraxiumOnBoot, type SpraxiumOnShutdown } from '@spraxium/common';
-import { Logger } from '@spraxium/core';
+import { Logger } from '@spraxium/logger';
 import { AppEnv } from '../../app.env';
 import Database from 'better-sqlite3';
 import { type BetterSQLite3Database, drizzle } from 'drizzle-orm/better-sqlite3';

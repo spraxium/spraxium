@@ -1,4 +1,4 @@
-import { Logger } from '@spraxium/core';
+import { Logger } from '@spraxium/logger';
 import { Send, WebhookSender } from '@spraxium/webhook';
 import { EmbedBuilder } from 'discord.js';
 

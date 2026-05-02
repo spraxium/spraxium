@@ -1,9 +1,9 @@
 import type { PrefixArgMetadata, PrefixConfig } from '@spraxium/common';
+import { logger } from '@spraxium/logger';
 import type { Client, Message } from 'discord.js';
 import { ConfigStore } from '../config';
 import { SpraxiumExecutionContext } from '../context';
 import { CommandNotFoundException, ExceptionHandler } from '../exceptions';
-import { logger } from '../logger';
 import { PREFIX_MESSAGES } from './constants';
 import type { PrefixGuildManager } from './guild';
 import { PrefixInvoker } from './prefix.invoker';
@@ -11,6 +11,7 @@ import { PrefixParser } from './prefix.parser';
 import type { PrefixRegistry } from './prefix.registry';
 
 export class PrefixBinder {
+  private readonly log = logger.child('PrefixBinder');
   private readonly boundClients = new WeakSet<Client>();
   private readonly parser = new PrefixParser();
   private readonly invoker = new PrefixInvoker();
@@ -26,7 +27,7 @@ export class PrefixBinder {
       void this.handleMessage(message, config, guildManager);
     });
 
-    logger.debug(PREFIX_MESSAGES.binderBound(this.registry.size));
+    this.log.debug(PREFIX_MESSAGES.binderBound(this.registry.size));
   }
 
   public get cooldowns(): PrefixBinder['invoker']['cooldowns'] {

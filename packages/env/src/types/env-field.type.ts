@@ -10,5 +10,8 @@ export type EnvFieldType =
   | 'json'
   | 'discord-token'
   | 'discord-id'
+  | 'discord-webhook-url'
+  | 'discord-client-secret'
+  | 'discord-permissions'
   | 'mongodb-uri'
   | 'redis-uri';

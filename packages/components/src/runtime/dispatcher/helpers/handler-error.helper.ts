@@ -1,3 +1,4 @@
+import { nativeError } from '@spraxium/logger';
 import type { Interaction, RepliableInteraction } from 'discord.js';
 import type { ModalErrorEmbed } from '../../../components/modal';
 import type { ComponentsConfig, HandlerErrorReply } from '../../lifecycle';
@@ -29,10 +30,10 @@ export async function reportHandlerError(
     if (config?.onError) {
       await config.onError(err, { interaction, handler: handlerName });
     } else {
-      console.error(`[Spraxium] Unhandled error in ${handlerName}:`, err);
+      nativeError(`[Spraxium] Unhandled error in ${handlerName}:`, err);
     }
   } catch (hookErr) {
-    console.error('[Spraxium] onError hook itself threw:', hookErr);
+    nativeError('[Spraxium] onError hook itself threw:', hookErr);
   }
 
   if (!isRepliable(interaction)) return;
@@ -42,7 +43,7 @@ export async function reportHandlerError(
     const replyOptions = resolveReply(reply, err, interaction, ephemeralErrors);
     await interaction.reply(replyOptions);
   } catch (replyErr) {
-    console.error('[Spraxium] failed to send error reply:', replyErr);
+    nativeError('[Spraxium] failed to send error reply:', replyErr);
   }
 }
 

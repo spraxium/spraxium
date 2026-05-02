@@ -1,7 +1,6 @@
 import path from 'node:path';
-import chalk from 'chalk';
+import { ANSI, logger, nativeLog } from '@spraxium/logger';
 import { type Shard, ShardingManager } from 'discord.js';
-import { logger } from '../logger';
 import { spraxiumFatal } from '../utils';
 import { DEFAULT_SPAWN_DELAY } from './constants';
 import type { ShardEvalContext, ShardOptions, ShardStatus } from './interfaces';
@@ -56,8 +55,8 @@ export class SpraxiumShardManager {
 
     const shardLabel = totalShards === 'auto' ? 'auto' : String(totalShards);
     const plural = totalShards === 1 ? 'shard' : 'shards';
-    console.log(
-      `  ${chalk.dim('⟳')} ${chalk.cyan('Sharding')}   ${chalk.dim(`spawning ${shardLabel} ${plural}...`)}`,
+    nativeLog(
+      `  ${ANSI.dim('⟳')} ${ANSI.cyan('Sharding')}   ${ANSI.dim(`spawning ${shardLabel} ${plural}...`)}`,
     );
 
     try {
@@ -69,7 +68,7 @@ export class SpraxiumShardManager {
     await Promise.all(readyPromises);
     await ParentHookRegistry.run(manager);
 
-    console.log();
+    nativeLog();
     for (const [shardId, { guildCount, ready }] of [...statuses.entries()].sort(([a], [b]) => a - b)) {
       const detail =
         guildCount !== undefined
@@ -77,7 +76,7 @@ export class SpraxiumShardManager {
           : ready
             ? 'ready'
             : 'failed';
-      console.log(`  ${chalk.dim('›')} ${chalk.cyan(`Shard ${shardId}`.padEnd(9))}  ${chalk.dim(detail)}`);
+      nativeLog(`  ${ANSI.dim('›')} ${ANSI.cyan(`Shard ${shardId}`.padEnd(9))}  ${ANSI.dim(detail)}`);
     }
 
     // Collect summary from all shards
@@ -96,18 +95,18 @@ export class SpraxiumShardManager {
 
     const ms = Date.now() - startedAt;
     const count = statuses.size;
-    const dot = chalk.gray('  ·  ');
+    const dot = ANSI.gray('  ·  ');
 
-    console.log();
-    console.log(
+    nativeLog();
+    nativeLog(
       `  ${[
-        `${chalk.bold.cyan('◆')}  ${tag ? chalk.cyan(tag) : chalk.gray('connected')}`,
-        chalk.gray(`${count} shard${count === 1 ? '' : 's'}`),
-        chalk.gray(`${totalGuilds} total guild${totalGuilds === 1 ? '' : 's'}`),
-        chalk.gray(`ready in ${ms}ms`),
+        `${ANSI.bold(ANSI.cyan('◆'))}  ${tag ? ANSI.cyan(tag) : ANSI.gray('connected')}`,
+        ANSI.gray(`${count} shard${count === 1 ? '' : 's'}`),
+        ANSI.gray(`${totalGuilds} total guild${totalGuilds === 1 ? '' : 's'}`),
+        ANSI.gray(`ready in ${ms}ms`),
       ].join(dot)}`,
     );
-    console.log();
+    nativeLog();
 
     this.registerShutdownHandlers();
   }

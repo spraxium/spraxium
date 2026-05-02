@@ -1,9 +1,10 @@
+import { logger } from '@spraxium/logger';
 import type { Client, Interaction } from 'discord.js';
-import { logger } from '../logger';
 import { ContextMenuInvoker } from './context-menu.invoker';
 import type { ContextMenuRegistry } from './context-menu.registry';
 
 export class ContextMenuBinder {
+  private readonly log = logger.child('ContextMenuBinder');
   private readonly boundClients = new WeakSet<Client>();
   private readonly invoker = new ContextMenuInvoker();
 
@@ -17,7 +18,7 @@ export class ContextMenuBinder {
       void this.handleInteraction(interaction);
     });
 
-    logger.debug(`Context menu binder bound , ${this.registry.size} handler(s)`);
+    this.log.debug(`Context menu binder bound , ${this.registry.size} handler(s)`);
   }
 
   private async handleInteraction(interaction: Interaction): Promise<void> {

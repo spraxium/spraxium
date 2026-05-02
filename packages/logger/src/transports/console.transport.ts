@@ -1,6 +1,6 @@
-import { ANSI, CONSOLE_LEVEL_COLORS } from './constants';
-import type { LogColorInput, LogEntry, LogTransport } from './interfaces';
-import { type TimestampFormat, formatTimestamp } from './utils';
+import { ANSI, CONSOLE_LEVEL_COLORS } from '../constants';
+import type { LogColorInput, LogEntry, LogTransport } from '../interfaces';
+import { type TimestampFormat, formatTimestamp } from '../utils';
 
 // Bind native console methods at module load time so they remain
 // unaffected if anything overrides the console globals later.

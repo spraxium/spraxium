@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { TokenMasker } from '../src/token-masker.util';
+import { TokenMasker } from '../src/utils/token-masker.util';
 
 /**
  * A fake token that satisfies the three-segment pattern used by Discord:

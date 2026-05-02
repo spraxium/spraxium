@@ -1,6 +1,6 @@
 import type { PrefixConfig } from '@spraxium/common';
+import type { SpraxiumLoggerConfig } from '@spraxium/logger';
 import type { ExceptionOptions } from '../../exceptions/interfaces/exception-layout.interface';
-import type { SpraxiumLoggerConfig } from '../../logger';
 
 export interface SpraxiumPlugin<N extends string = string, C = unknown> {
   readonly namespace: N;

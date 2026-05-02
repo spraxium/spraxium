@@ -1,4 +1,4 @@
-import chalk from 'chalk';
+import { ANSI } from '@spraxium/logger';
 import { version as djsVersion } from 'discord.js';
 import pkg from '../../package.json';
 import { isShardChild } from '../client';
@@ -13,7 +13,7 @@ export class SpraxiumFactory {
     // avoid N duplicate header lines (one per shard). The parent prints it.
     if (!isShardChild()) {
       process.stdout.write(
-        `\n  ${chalk.yellow('\u2605')}  ${chalk.bold('spraxium')}  ${chalk.gray(`v${pkg.version}`)}  ${chalk.bold(`discord.js v${djsVersion}`)}\n\n`,
+        `\n  ${ANSI.yellow('\u2605')}  ${ANSI.bold('spraxium')}  ${ANSI.gray(`v${pkg.version}`)}  ${ANSI.bold(`discord.js v${djsVersion}`)}\n\n`,
       );
     }
 

@@ -1,4 +1,4 @@
-import chalk from 'chalk';
+import { ANSI } from '@spraxium/logger';
 import { ProcessInspector } from './inspector/process.inspector';
 import { LockConflictPrinter } from './printer/lock-conflict.printer';
 import { LockStore } from './store/lock.store';
@@ -10,7 +10,7 @@ export class ProcessLock {
   static async acquire(): Promise<void> {
     if (ProcessLock.shouldSkip()) {
       console.log(
-        chalk.yellow('  Lock check skipped (--no-lock). Concurrent instances will not be detected.'),
+        ANSI.yellow('  Lock check skipped (--no-lock). Concurrent instances will not be detected.'),
       );
       console.log('');
       return;
@@ -63,7 +63,7 @@ export class ProcessLock {
 
   private static async forceTakeover(existing: { pid: number; launcherPid?: number }): Promise<void> {
     console.log('');
-    console.log(chalk.yellow(`  Terminating existing instance (bot PID ${existing.pid})...`));
+    console.log(ANSI.yellow(`  Terminating existing instance (bot PID ${existing.pid})...`));
 
     // The launcher (dev/start CLI) must die first, otherwise it will respawn the bot child.
     const ownLauncher = ProcessLock.readLauncherPid();
@@ -74,20 +74,20 @@ export class ProcessLock {
       targetLauncher !== ownLauncher &&
       ProcessInspector.isRunning(targetLauncher)
     ) {
-      console.log(chalk.yellow(`  Terminating its launcher (PID ${targetLauncher}) to prevent respawn...`));
+      console.log(ANSI.yellow(`  Terminating its launcher (PID ${targetLauncher}) to prevent respawn...`));
       await ProcessInspector.terminateAndWait(targetLauncher, 2000);
     }
 
     if (ProcessInspector.isRunning(existing.pid)) {
       const ok = await ProcessInspector.terminateAndWait(existing.pid, 2000);
       if (!ok) {
-        console.log(chalk.red(`  Failed to terminate PID ${existing.pid}. Aborting.`));
+        console.log(ANSI.red(`  Failed to terminate PID ${existing.pid}. Aborting.`));
         process.exit(1);
       }
     }
 
     LockStore.remove();
-    console.log(chalk.green('  Previous instance terminated. Continuing startup.'));
+    console.log(ANSI.green('  Previous instance terminated. Continuing startup.'));
     console.log('');
   }
 

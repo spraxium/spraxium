@@ -1,5 +1,6 @@
 import { Injectable } from '@spraxium/common';
-import { ConfigStore, Logger, ModuleLoader } from '@spraxium/core';
+import { ConfigStore, ModuleLoader } from '@spraxium/core';
+import { logger } from '@spraxium/logger';
 import { MESSAGES } from '../constants/messages.constant';
 import { MemoryDriver } from '../drivers/memory.driver';
 import type { JobEntry } from '../interfaces/job-entry.interface';
@@ -11,7 +12,7 @@ import { JobScanner } from './job.scanner';
 
 @Injectable()
 export class ScheduleRegistry {
-  private readonly log = new Logger('ScheduleRegistry');
+  private readonly log = logger.child('ScheduleRegistry');
   private readonly jobs = new Map<string, JobEntry>();
   private readonly pendingAfterOnline: Array<JobEntry> = [];
   private readonly scanner: JobScanner;

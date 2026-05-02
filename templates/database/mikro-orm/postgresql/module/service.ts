@@ -1,7 +1,7 @@
 import { type EntityManager, MikroORM } from '@mikro-orm/core';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 import { Injectable, type SpraxiumOnBoot, type SpraxiumOnShutdown } from '@spraxium/common';
-import { Logger } from '@spraxium/core';
+import { Logger } from '@spraxium/logger';
 import { AppEnv } from '../../app.env';
 import { User } from './entities/user.entity';
 

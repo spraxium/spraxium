@@ -1,7 +1,7 @@
-import { Inject, Injectable } from '@spraxium/common';
+import { Injectable } from '@spraxium/common';
 import type { SpraxiumOnReady } from '@spraxium/common';
-import { Logger } from '@spraxium/core';
-import type { WebhookService } from '@spraxium/webhook';
+import { Logger } from '@spraxium/logger';
+import { WebhookService } from '@spraxium/webhook';
 import { EmbedBuilder } from 'discord.js';
 
 @Injectable()

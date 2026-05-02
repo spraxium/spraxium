@@ -9,9 +9,9 @@
  * focus on the observable, controllable behaviour instead.
  */
 import { describe, expect, it } from 'vitest';
-import { ConsoleTransport } from '../src/console.transport';
 import { CONSOLE_LEVEL_COLORS } from '../src/constants/console-level-colors.constant';
 import type { LogEntry } from '../src/interfaces';
+import { ConsoleTransport } from '../src/transports/console.transport';
 
 function makeEntry(overrides: Partial<LogEntry> = {}): LogEntry {
   return {

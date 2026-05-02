@@ -1,5 +1,5 @@
 import { Ctx, PrefixArg, PrefixCommandHandler, UseGuards } from '@spraxium/common';
-import { Logger } from '@spraxium/core';
+import { Logger } from '@spraxium/logger';
 import type { Message } from 'discord.js';
 import { ModCommand } from '../commands/mod.command';
 import { ModeratorGuard } from '../guards/moderator.guard';

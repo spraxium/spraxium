@@ -39,11 +39,13 @@
   "peerDependencies": {
     "@spraxium/common": "*",
     "@spraxium/core": "*",
+    "@spraxium/logger": "*",
     "discord.js": "^14.26.3"
   },
   "devDependencies": {
     "@spraxium/common": "workspace:*",
     "@spraxium/core": "workspace:*",
+    "@spraxium/logger": "workspace:*",
     "@types/node": "^22.0.0",
     "discord.js": "^14.26.3",
     "tsdown": "^0.12.0",

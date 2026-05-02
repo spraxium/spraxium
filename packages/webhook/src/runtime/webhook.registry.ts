@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import { Injectable } from '@spraxium/common';
-import { ConfigStore, Logger, ModuleLoader } from '@spraxium/core';
+import { ConfigStore, ModuleLoader } from '@spraxium/core';
+import { logger } from '@spraxium/logger';
 import chalk from 'chalk';
 import { WebhookClient } from 'discord.js';
 import { MESSAGES } from '../constants/messages.constant';
@@ -11,7 +12,7 @@ import { defineWebhook } from '../webhook.config';
 
 @Injectable()
 export class WebhookRegistry {
-  private readonly log = new Logger('WebhookRegistry');
+  private readonly log = logger.child('WebhookRegistry');
   private readonly entries = new Map<string, WebhookEntry>();
   private readonly scannerFn: (instance: unknown) => void;
   private errorHandler?: (name: string, error: Error) => void;
@@ -38,7 +39,13 @@ export class WebhookRegistry {
         this.log.warn(`Webhook "${name}" has an empty URL and will be skipped.`);
         continue;
       }
-      this.entries.set(name, { name, url, client: new WebhookClient({ url }) });
+      try {
+        const client = new WebhookClient({ url });
+        this.entries.set(name, { name, url, client });
+      } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : String(err);
+        this.log.warn(`Webhook "${name}" has an invalid URL and will be skipped: ${message}`);
+      }
     }
 
     this.log.raw(`${chalk.green('+')}  ${MESSAGES.WEBHOOK_LOADED(this.entries.size)}`);

@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { ENV_FIELDS_METADATA_KEY } from '../constants/metadata-keys.constant';
-import type { EnvFieldMeta } from '../interfaces/env-field.interface';
+import type { EnvFieldMeta } from '../interfaces';
 
 export class MetadataHelper {
   static getOrCreateFieldMeta(target: object, propertyKey: string): EnvFieldMeta {

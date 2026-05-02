@@ -5,8 +5,7 @@ import chalk from 'chalk';
 import { ICONS } from '../constants/icons.constant';
 import { MESSAGES } from '../constants/messages.constant';
 import { ENV_SCHEMA_METADATA_KEY } from '../constants/metadata-keys.constant';
-import type { FieldValidationResult } from '../interfaces/field-validation-result.interface';
-import type { ValidateOptions } from '../interfaces/validate-options.interface';
+import type { EnvFieldMeta, FieldValidationResult, ValidateOptions } from '../interfaces';
 import { EnvPrinter } from '../printer/env.printer';
 import { DotEnvParser } from '../utils/dotenv.parser';
 import { MetadataHelper } from '../utils/metadata.util';
@@ -71,7 +70,7 @@ export class EnvValidator {
   }
 
   private static waitForEnvFix(
-    fields: Array<import('../interfaces/env-field.interface').EnvFieldMeta>,
+    fields: Array<EnvFieldMeta>,
     initialErrors: Array<EnvFieldError>,
   ): Array<FieldValidationResult> {
     let errors = initialErrors;

@@ -4,7 +4,8 @@ import { serve } from '@hono/node-server';
 // biome-ignore lint/style/useImportType: runtime reference required for DI reflection
 import { Injectable, Optional, ReadonlyContainer } from '@spraxium/common';
 import type { SpraxiumOnBoot, SpraxiumOnShutdown } from '@spraxium/common';
-import { ConfigStore, Logger, ParentHookRegistry } from '@spraxium/core';
+import { ConfigStore, ParentHookRegistry } from '@spraxium/core';
+import { logger } from '@spraxium/logger';
 import { Client } from 'discord.js';
 import type { ShardingManager } from 'discord.js';
 import { Hono } from 'hono';
@@ -43,7 +44,7 @@ export class HttpServer implements SpraxiumOnBoot, SpraxiumOnShutdown {
     });
   }
 
-  private readonly log = new Logger('HttpServer');
+  private readonly log = logger.child('HttpServer');
   private server: Server | undefined;
 
   constructor(

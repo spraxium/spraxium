@@ -1,5 +1,5 @@
 import { Ctx, SlashCommandHandler, SlashStringOption } from '@spraxium/common';
-import { Logger } from '@spraxium/core';
+import { Logger } from '@spraxium/logger';
 import type { ChatInputCommandInteraction } from 'discord.js';
 import { ConfigCommand } from '../commands/config.command';
 
