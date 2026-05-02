@@ -5,7 +5,8 @@ const config: UserConfig = {
 
   parserPreset: {
     parserOpts: {
-      headerPattern: /^((?::\w+:|✨|🐛|📝|♻️|✅|🔧|⚡️|🔒️|🚀|💥)\s)?(\w+)(?:\(([^)]+)\))?:\s(.+)$/,
+      headerPattern:
+        /^((?::\w+:|✨|🐛|📝|♻️|✅|🔧|⚡️|🔒️|🚀|💥)\s)?(\w+)(?:\(([^)]+)\))?:\s(.+)$/,
       headerCorrespondence: ['emoji', 'type', 'scope', 'subject'],
     },
   },
@@ -14,7 +15,18 @@ const config: UserConfig = {
     'type-enum': [
       2,
       'always',
-      ['feat', 'fix', 'docs', 'refactor', 'test', 'chore', 'perf', 'security', 'release', 'breaking'],
+      [
+        'feat',
+        'fix',
+        'docs',
+        'refactor',
+        'test',
+        'chore',
+        'perf',
+        'security',
+        'release',
+        'breaking',
+      ],
     ],
 
     'scope-empty': [2, 'never'],
@@ -22,7 +34,24 @@ const config: UserConfig = {
     'subject-empty': [2, 'never'],
     'subject-case': [0],
     'header-max-length': [2, 'always', 200],
+    'header-match-plan': [2, 'always'],
   },
+  plugins: [
+    {
+      rules: {
+        'header-match-plan': (parsed) => {
+          const { emoji } = parsed;
+          if (!emoji) {
+            return [
+              false,
+              'Commit must start with an emoji from the allowed list! Ex: ✨ feat(scope): subject',
+            ];
+          }
+          return [true];
+        },
+      },
+    },
+  ],
 };
 
 export default config;
