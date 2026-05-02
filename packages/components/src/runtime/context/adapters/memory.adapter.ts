@@ -2,7 +2,7 @@ import type { ContextStorageAdapter } from '../interfaces/context-storage.interf
 import type { SpraxiumContext } from '../interfaces/spraxium-context.interface';
 
 /**
- * In-process memory adapter — identical behaviour to the original ContextRegistry.
+ * In-process memory adapter: identical behaviour to the original ContextRegistry.
  * All data is lost when the process restarts. Use as a lightweight default when
  * persistence is not required.
  */

@@ -3,7 +3,7 @@ import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys.consta
 import type { ModalValidationRule } from '../interfaces';
 
 /**
- * Property decorator — attaches validation rules to a modal text field.
+ * Property decorator that attaches validation rules to a modal text field.
  *
  * Define your rules in a dedicated validators file and import them here.
  *

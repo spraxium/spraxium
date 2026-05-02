@@ -34,7 +34,7 @@ export class FileContextAdapter implements ContextStorageAdapter {
         if (ctx.expiresAt === 0 || ctx.expiresAt > now) this.store.set(ctx.id, ctx);
       }
     } catch {
-      // File does not exist yet or is malformed — start with an empty store.
+      // File does not exist yet or is malformed; start with an empty store.
     }
   }
 

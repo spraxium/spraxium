@@ -3,7 +3,7 @@ import { COMPONENT_METADATA_KEYS } from '../component-metadata-keys.constant';
 
 /**
  * Parameter decorator that injects the selected values (`string[]`) from a select-menu interaction.
- * Shorthand for `interaction.values` — avoids boilerplate in handlers.
+ * Shorthand for `interaction.values`; avoids boilerplate in handlers.
  *
  * @example
  * ```ts

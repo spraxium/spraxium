@@ -3,7 +3,7 @@ import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys.consta
 import type { ModalHandlerMetadata } from '../interfaces';
 
 /**
- * Class decorator — links a handler class to a `@ModalComponent()` builder.
+ * Class decorator that links a handler class to a `@ModalComponent()` builder.
  *
  * @example
  * @ModalHandler(FeedbackModal)

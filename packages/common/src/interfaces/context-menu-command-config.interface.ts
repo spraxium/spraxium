@@ -1,8 +1,8 @@
 /**
  * Type of context menu command exposed by Discord.
  *
- * - `'user'` — appears under right-click on a user (`Apps` submenu)
- * - `'message'` — appears under right-click on a message (`Apps` submenu)
+ * - `'user'`: appears under right-click on a user (`Apps` submenu)
+ * - `'message'`: appears under right-click on a message (`Apps` submenu)
  */
 export type ContextMenuCommandType = 'user' | 'message';
 

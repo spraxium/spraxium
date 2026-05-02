@@ -64,7 +64,7 @@ export interface ModalChoiceI18nKeys {
   description?: string;
 }
 
-/** i18n keys for `@Embed()` — applies to static string fields only. */
+/** i18n keys for `@Embed()`: applies to static string fields only. */
 export interface EmbedI18nKeys {
   /** Key whose value overrides the embed title. */
   title?: string;
@@ -76,7 +76,7 @@ export interface EmbedI18nKeys {
   footerText?: string;
 }
 
-/** i18n keys for `@EmbedField()` — applies to static string name/value only. */
+/** i18n keys for `@EmbedField()`: applies to static string name/value only. */
 export interface EmbedFieldI18nKeys {
   /** Key whose value overrides the field name. */
   name?: string;
@@ -84,13 +84,13 @@ export interface EmbedFieldI18nKeys {
   value?: string;
 }
 
-/** i18n keys for `@V2TextDisplay()` — applies to static string content only. */
+/** i18n keys for `@V2TextDisplay()`: applies to static string content only. */
 export interface V2TextDisplayI18nKeys {
   /** Key whose value overrides the text display content. */
   content?: string;
 }
 
-/** i18n keys for `@V2Section()` — applies to static string text only. */
+/** i18n keys for `@V2Section()`: applies to static string text only. */
 export interface V2SectionI18nKeys {
   /** Key whose value overrides the section text. */
   text?: string;

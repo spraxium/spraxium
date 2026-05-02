@@ -54,7 +54,7 @@ export class ButtonDispatcher {
       }
       if (componentMeta.isLink) {
         throw new Error(
-          `${ctor.name}: @ButtonHandler references ${componentClass.name} which is a @LinkButton — link buttons do not fire interactions.`,
+          `${ctor.name}: @ButtonHandler references ${componentClass.name} which is a @LinkButton; link buttons do not fire interactions.`,
         );
       }
 
@@ -263,7 +263,7 @@ export class ButtonDispatcher {
     const isDynamic = this.dynamicHandlers.some((h) => h.baseId === id);
     if (isStatic || isDynamic) {
       console.warn(
-        `[Spraxium] Button customId / baseId collision detected for "${id}". Two handlers cannot share the same identifier — only the first registered will fire.`,
+        `[Spraxium] Button customId / baseId collision detected for "${id}". Two handlers cannot share the same identifier; only the first registered will fire.`,
       );
     }
   }

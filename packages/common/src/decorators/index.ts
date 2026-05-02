@@ -19,6 +19,17 @@ export { SlashCommand } from './slash-command.decorator';
 export { SlashCommandHandler } from './slash-command-handler.decorator';
 export { SlashOption } from './slash-option.decorator';
 export { SlashOpt } from './slash-opt.decorator';
+export {
+  SlashStringOption,
+  SlashIntegerOption,
+  SlashNumberOption,
+  SlashBooleanOption,
+  SlashUserOption,
+  SlashChannelOption,
+  SlashRoleOption,
+  SlashMentionableOption,
+  SlashAttachmentOption,
+} from './slash-typed-options.decorator';
 export { SlashFocused } from './slash-focused.decorator';
 export { SlashSubcommand } from './slash-subcommand.decorator';
 export { SlashSubcommandGroup } from './slash-subcommand-group.decorator';

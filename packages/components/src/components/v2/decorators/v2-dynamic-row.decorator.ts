@@ -8,13 +8,13 @@ import { registerChild } from './register-child.helper';
  *
  * Two modes are supported:
  *
- * 1. **Dynamic items** — render N items through a `@DynamicButton` class:
+ * 1. **Dynamic items**: render N items through a `@DynamicButton` class:
  * ```ts
  * @V2DynamicRow({ dynamic: BookButton, items: (data) => data.books })
  * declare books: never;
  * ```
  *
- * 2. **Static class list** — render a flat list of `@Button` classes:
+ * 2. **Static class list**: render a flat list of `@Button` classes:
  * ```ts
  * @V2DynamicRow({ components: (data) => data.actions })
  * declare actions: never;

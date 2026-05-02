@@ -3,7 +3,7 @@ import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys.consta
 import type { ModalComponentMetadata } from '../interfaces';
 
 /**
- * Class decorator — declares a modal builder.
+ * Class decorator that declares a modal builder.
  *
  * @example
  * @ModalComponent({ id: 'feedback', title: 'Share your feedback' })

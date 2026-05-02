@@ -8,7 +8,7 @@ import type { SpraxiumContext } from '../interfaces/spraxium-context.interface';
  *
  * Each context entry is stored as a Redis string (JSON serialised) with an
  * absolute TTL derived from `ctx.expiresAt` so that Redis handles eviction
- * automatically — no separate cleanup timers are needed.
+ * automatically; no separate cleanup timers are needed.
  *
  * Install the optional peer dependency before enabling this adapter:
  * ```

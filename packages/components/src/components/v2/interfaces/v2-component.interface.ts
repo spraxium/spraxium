@@ -79,12 +79,12 @@ export interface V2DynamicConfig {
 }
 
 /**
- * Configuration for `@V2DynamicRow` — auto-chunked rows of dynamic buttons.
+ * Configuration for `@V2DynamicRow`: auto-chunked rows of dynamic buttons.
  *
  * Provide either:
  *  - `dynamic` + `items`: render N items through a `@DynamicButton` class
  *    (auto-chunked into rows of 5).
- *  - `components`: a factory returning an array of `@Button` classes — these
+ *  - `components`: a factory returning an array of `@Button` classes; these
  *    are also auto-chunked into rows of 5.
  */
 export interface V2DynamicRowConfig {

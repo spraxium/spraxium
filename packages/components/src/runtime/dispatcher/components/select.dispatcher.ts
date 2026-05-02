@@ -277,7 +277,7 @@ export class SelectDispatcher {
     const isDynamic = this.dynamicHandlers.some((h) => h.baseId === id);
     if (isStatic || isDynamic) {
       console.warn(
-        `[Spraxium] Select customId / baseId collision detected for "${id}". Two handlers cannot share the same identifier — only the first registered will fire.`,
+        `[Spraxium] Select customId / baseId collision detected for "${id}". Two handlers cannot share the same identifier; only the first registered will fire.`,
       );
     }
   }

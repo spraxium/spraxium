@@ -25,8 +25,8 @@ export interface CreatePayloadOptions {
  * Stores small per-button / per-option payloads keyed by short ids that are
  * embedded into custom IDs as `~p:<id>`.
  *
- * The payload channel is independent from the flow context channel (`~ctx:<id>`)
- * — they can coexist on the same custom ID. Payloads piggyback on the global
+ * The payload channel is independent from the flow context channel (`~ctx:<id>`);
+ * they can coexist on the same custom ID. Payloads piggyback on the global
  * `ContextStore` adapter (memory/file/sqlite/redis) using a `payload:` prefix.
  */
 @Injectable()

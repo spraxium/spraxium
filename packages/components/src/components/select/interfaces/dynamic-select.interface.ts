@@ -3,7 +3,7 @@ import type { SelectOptionConfig } from './select-option.interface';
 
 /**
  * Configuration for `@DynamicStringSelect({ baseId })`.
- * The base ID is the prefix used to match incoming select interactions —
+ * The base ID is the prefix used to match incoming select interactions;
  * each rendered instance appends `~p:<id>` (and optionally `~ctx:<id>`).
  */
 export interface DynamicStringSelectConfig {

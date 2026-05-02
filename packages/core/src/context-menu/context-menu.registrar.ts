@@ -13,7 +13,7 @@ export class ContextMenuRegistrar {
    * Build the REST payloads for every registered context menu command.
    *
    * The payloads are merged with the slash command payloads at registration
-   * time inside `SlashRegistrar.register()` — Discord exposes a single
+   * time inside `SlashRegistrar.register()`; Discord exposes a single
    * application-commands endpoint for all command types.
    */
   public buildPayloads(): Array<RESTPostAPIContextMenuApplicationCommandsJSONBody> {

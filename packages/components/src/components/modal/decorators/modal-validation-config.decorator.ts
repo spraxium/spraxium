@@ -3,7 +3,7 @@ import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys.consta
 import type { ModalValidationOptions } from '../interfaces';
 
 /**
- * Class decorator — configures the validation error response for a modal.
+ * Class decorator that configures the validation error response for a modal.
  *
  * @example
  * @ModalValidationConfig({

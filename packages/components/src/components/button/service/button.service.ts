@@ -7,6 +7,7 @@ import { joinCustomId } from '../../../runtime/dispatcher/helpers/split-custom-i
 import { PayloadService } from '../../../runtime/payload';
 import type { AnyConstructor } from '../../../types';
 import type {
+  ButtonBuildOverrides,
   ButtonComponentMeta,
   ButtonRenderConfig,
   DynamicButtonComponentMeta,
@@ -15,14 +16,6 @@ import type {
 import type { ButtonEmojiConfig } from '../interfaces';
 import { ButtonRenderer } from '../renderer';
 import type { ButtonStyleName } from '../types';
-
-/** Render-time override applied on top of a `@Button` decorator's metadata. */
-export interface ButtonBuildOverrides {
-  label?: string;
-  style?: ButtonStyleName;
-  emoji?: ButtonEmojiConfig;
-  disabled?: boolean;
-}
 
 @Injectable()
 export class ButtonService {

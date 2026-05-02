@@ -207,6 +207,15 @@ export class ModalDispatcher {
       if (def.type === 'file_upload') {
         return modal.fields.getUploadedFiles(fieldId);
       }
+      if (def.type === 'radio_group') {
+        return modal.fields.getRadioGroup(fieldId) ?? null;
+      }
+      if (def.type === 'checkbox_group') {
+        return modal.fields.getCheckboxGroup(fieldId);
+      }
+      if (def.type === 'checkbox') {
+        return modal.fields.getCheckbox(fieldId);
+      }
       return null;
     } catch {
       return null;

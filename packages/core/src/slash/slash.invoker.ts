@@ -79,7 +79,7 @@ export class SlashInvoker {
       } else {
         const optParam = optParamMap.find((p) => p.index === i);
         if (optParam) {
-          const meta = optionsByName.get(optParam.name);
+          const meta = optParam.type ? { type: optParam.type } : optionsByName.get(optParam.name);
           if (meta) {
             params.push(resolveOptionValue(interaction, optParam.name, meta.type));
           } else {

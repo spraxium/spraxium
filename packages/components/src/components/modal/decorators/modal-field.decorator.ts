@@ -73,7 +73,7 @@ function appendChoice(target: object, propertyKey: string | symbol, choice: Moda
     return;
   }
 
-  // Field decorator hasn't run yet — store choices in a pending key.
+  // Field decorator hasn't run yet; store choices in a pending key.
   const pending: Array<ModalChoiceItem> =
     Reflect.getMetadata(COMPONENT_METADATA_KEYS.MODAL_PENDING_CHOICES, target, propertyKey) ?? [];
   pending.unshift(choice);
@@ -330,7 +330,7 @@ export function ModalFileUpload(config: ModalFileUploadFieldConfig): PropertyDec
 }
 
 /**
- * Class decorator — adds a top-level text display (read-only markdown) to the modal.
+ * Class decorator that adds a top-level text display (read-only markdown) to the modal.
  * Text displays are rendered before other fields and have no `custom_id`.
  *
  * @example
@@ -370,5 +370,5 @@ export function ModalChoice(config: ModalChoiceConfig): PropertyDecorator {
   };
 }
 
-/** Semantic alias for `@ModalChoice` — reads naturally on string select fields. */
+/** Semantic alias for `@ModalChoice`; reads naturally on string select fields. */
 export const ModalOption = ModalChoice;

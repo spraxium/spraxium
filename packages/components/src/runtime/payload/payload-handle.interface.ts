@@ -4,7 +4,7 @@
  *
  * Calling `consume()` permanently deletes the payload from the store, so
  * subsequent clicks will receive the "payload expired" error rather than
- * re-executing the handler — useful for one-shot actions.
+ * re-executing the handler; useful for one-shot actions.
  *
  * @example
  * ```ts

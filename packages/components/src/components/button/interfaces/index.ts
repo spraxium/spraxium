@@ -18,3 +18,4 @@ export type {
   DynamicButtonHandlerMeta,
   DynamicButtonRenderable,
 } from './dynamic-button.interface';
+export type { ButtonBuildOverrides } from './button-build.interface';

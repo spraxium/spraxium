@@ -252,7 +252,7 @@ export class V2Service {
         const rawComponents = typeof cfg.components === 'function' ? cfg.components(data) : cfg.components;
 
         if (rawComponents.length === 0) {
-          throw new Error('[V2Service] @V2Row — components array cannot be empty.');
+          throw new Error('[V2Service] @V2Row: components array cannot be empty.');
         }
 
         const firstClass = rawComponents[0];

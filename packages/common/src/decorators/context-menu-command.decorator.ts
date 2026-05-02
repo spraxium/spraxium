@@ -6,19 +6,19 @@ import type { ContextMenuCommandConfig } from '../interfaces/context-menu-comman
  * Marks a class as a Discord context menu command (User or Message).
  *
  * Context menu commands appear in the `Apps` submenu when a user right-clicks
- * on another user or message. They take no options — Discord passes the
+ * on another user or message. They take no options; Discord passes the
  * targeted user/message directly on the interaction.
  *
  * The decorated class only declares the command schema; pair it with a
  * `@ContextMenuCommandHandler`-decorated class for the execution logic.
  *
  * @example
- * // User context menu — appears on right-click → Apps → "User Info"
+ * // User context menu: appears on right-click → Apps → "User Info"
  * @ContextMenuCommand({ name: 'User Info', type: 'user' })
  * export class UserInfoCommand {}
  *
  * @example
- * // Message context menu — appears on right-click → Apps → "Quote"
+ * // Message context menu: appears on right-click → Apps → "Quote"
  * @ContextMenuCommand({ name: 'Quote', type: 'message' })
  * export class QuoteCommand {}
  */

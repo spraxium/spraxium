@@ -4,7 +4,7 @@ import type { ButtonEmojiConfig } from './button-emoji.interface';
 
 /**
  * Configuration for `@DynamicButton({ baseId })`.
- * The base ID is the prefix used to match incoming button interactions —
+ * The base ID is the prefix used to match incoming button interactions;
  * each rendered instance appends `~p:<id>` (and optionally `~ctx:<id>`).
  */
 export interface DynamicButtonConfig {
@@ -16,7 +16,7 @@ export interface DynamicButtonConfig {
 
 /**
  * Returned by a dynamic button's `static render(item)` method. Defines the
- * per-instance appearance only — the custom ID is appended automatically.
+ * per-instance appearance only; the custom ID is appended automatically.
  */
 export interface ButtonRenderConfig {
   label: string;

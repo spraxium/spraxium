@@ -3,7 +3,7 @@ import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys.consta
 import type { DynamicSelectComponentMeta, DynamicStringSelectConfig } from '../interfaces';
 
 /**
- * Class decorator that registers a dynamic string select menu — a select whose
+ * Class decorator that registers a dynamic string select menu; a select whose
  * options are computed per render. The class **must** expose a static
  * `render(items)` method returning a `SelectRenderConfig`.
  *

@@ -12,11 +12,11 @@ const CLEANUP_INTERVAL_MS = 60_000;
  * can be swapped at boot time via `ContextStore.initialize(adapter)`.
  *
  * Lifecycle:
- * 1. `initialize(adapter)` — called by `ComponentLifecycle.onBoot()`
+ * 1. `initialize(adapter)`: called by `ComponentLifecycle.onBoot()`
  *    Hydrates the hot cache from the adapter and starts the cleanup timer.
- * 2. `get` / `set` / `delete` — write-through: hot cache updated first,
+ * 2. `get` / `set` / `delete`: write-through: hot cache updated first,
  *    adapter persists asynchronously.
- * 3. `destroy()` — stops the cleanup timer (useful in tests).
+ * 3. `destroy()`: stops the cleanup timer (useful in tests).
  */
 export class ContextStore {
   private static adapter: ContextStorageAdapter = new MemoryContextAdapter();

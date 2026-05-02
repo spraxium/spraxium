@@ -7,9 +7,9 @@ import type { ContextStorageConfig } from '../types/context-storage-config.type'
  * Reply payload sent to the user when a component handler throws an unhandled
  * error.
  *
- * - `string` — sent as ephemeral plain text.
- * - `ModalErrorEmbed` — sent as an ephemeral embed.
- * - `(err, interaction) => string | ModalErrorEmbed` — built at throw time.
+ * - `string`: sent as ephemeral plain text.
+ * - `ModalErrorEmbed`: sent as an ephemeral embed.
+ * - `(err, interaction) => string | ModalErrorEmbed`: built at throw time.
  */
 export type HandlerErrorReply =
   | string
@@ -59,11 +59,11 @@ export interface ComponentsConfig {
     /**
      * Storage backend to use for flow contexts.
      *
-     * - `'memory'` — in-process Map, data lost on restart (default).
-     * - `'file'` — JSON snapshot in `.spraxium/contexts.json`, survives restarts.
-     * - `{ type: 'file'; dir?: string }` — file adapter with a custom directory.
-     * - `{ type: 'sqlite'; path?: string }` — SQLite via `better-sqlite3` (requires `pnpm add better-sqlite3`). Row-level storage, no full-file rewrite, ACID.
-     * - `{ type: 'redis'; ... }` — Redis via ioredis (requires `pnpm add ioredis`).
+     * - `'memory'`: in-process Map, data lost on restart (default).
+     * - `'file'`: JSON snapshot in `.spraxium/contexts.json`, survives restarts.
+     * - `{ type: 'file'; dir?: string }`: file adapter with a custom directory.
+     * - `{ type: 'sqlite'; path?: string }`: SQLite via `better-sqlite3` (requires `pnpm add better-sqlite3`). Row-level storage, no full-file rewrite, ACID.
+     * - `{ type: 'redis'; ... }`: Redis via ioredis (requires `pnpm add ioredis`).
      */
     storage?: ContextStorageConfig;
     /**
