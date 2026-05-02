@@ -33,8 +33,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "chalk": "^5.4.0",
-    "cli-table3": "^0.6.5",
+    "@spraxium/logger": "workspace:*",
     "reflect-metadata": "^0.2.2"
   },
   "devDependencies": {

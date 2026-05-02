@@ -1,6 +1,6 @@
 import path from 'node:path';
 import { confirm, input, select } from '@inquirer/prompts';
-import chalk from 'chalk';
+import { ANSI } from '@spraxium/logger';
 import type { Command } from 'commander';
 import { type ParseEntry, parse as parseShellArgs } from 'shell-quote';
 import { MessageConstant, UnicodeConstant } from '../constants';
@@ -200,7 +200,7 @@ export class DatabaseCommand extends BaseCommand {
       loop: false,
       choices: orms.map((o) => ({
         value: o.id,
-        name: `${o.label.padEnd(16)} ${chalk.dim(o.description)}`,
+        name: `${o.label.padEnd(16)} ${ANSI.dim(o.description)}`,
       })),
     });
 
@@ -229,14 +229,14 @@ export class DatabaseCommand extends BaseCommand {
   }
 
   private printNextSteps(dbEntry: DbEntry, moduleName: string, pascalName: string): void {
-    console.log(`  ${chalk.bold('Next steps:')}`);
+    console.log(`  ${ANSI.bold('Next steps:')}`);
     console.log();
     for (const step of dbEntry.nextSteps) {
       const resolved = step.replace('the generated module', `${pascalName}Module`);
-      console.log(`    ${chalk.dim(UnicodeConstant.DASH)}  ${resolved}`);
+      console.log(`    ${ANSI.dim(UnicodeConstant.DASH)}  ${resolved}`);
     }
     console.log();
-    console.log(`  ${chalk.dim('Module path:')} src/modules/${moduleName}/`);
+    console.log(`  ${ANSI.dim('Module path:')} src/modules/${moduleName}/`);
     console.log();
   }
 }

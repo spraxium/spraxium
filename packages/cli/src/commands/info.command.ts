@@ -1,4 +1,4 @@
-import chalk from 'chalk';
+import { ANSI } from '@spraxium/logger';
 import type { Command } from 'commander';
 import { MessageConstant } from '../constants';
 import { BaseCommand } from '../core/base.command';
@@ -76,6 +76,6 @@ export class InfoCommand extends BaseCommand {
   }
 
   private line(label: string, value: string): void {
-    process.stdout.write(`  ${chalk.gray(label.padEnd(20))}  ${value}\n`);
+    process.stdout.write(`  ${ANSI.gray(label.padEnd(20))}  ${value}\n`);
   }
 }

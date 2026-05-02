@@ -35,7 +35,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "chalk": "^5.4.0",
+    "@spraxium/logger": "workspace:*",
     "discord.js": "^14.26.3",
     "reflect-metadata": "^0.2.2"
   },

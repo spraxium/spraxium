@@ -1,7 +1,7 @@
 import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { checkbox, confirm, input, select } from '@inquirer/prompts';
-import chalk from 'chalk';
+import { ANSI } from '@spraxium/logger';
 import type { Command } from 'commander';
 import { MessageConstant, NewCommandConstant } from '../constants';
 import { BaseCommand } from '../core/base.command';
@@ -144,32 +144,32 @@ export class NewCommand extends BaseCommand {
   }
 
   private printTree(name: string): void {
-    console.log(`  ${chalk.bold('Project structure:')}`);
+    console.log(`  ${ANSI.bold('Project structure:')}`);
     console.log();
-    console.log(`    ${chalk.cyan(`${name}/`)}`);
-    console.log(`    ${chalk.dim('├──')} .env`);
-    console.log(`    ${chalk.dim('├──')} .env.example`);
-    console.log(`    ${chalk.dim('├──')} .gitignore`);
-    console.log(`    ${chalk.dim('├──')} package.json`);
-    console.log(`    ${chalk.dim('├──')} spraxium.config.ts`);
-    console.log(`    ${chalk.dim('├──')} tsconfig.json`);
-    console.log(`    ${chalk.dim('└──')} ${chalk.cyan('src/')}`);
-    console.log(`    ${chalk.dim('    ├──')} app.env.ts`);
-    console.log(`    ${chalk.dim('    ├──')} app.module.ts`);
-    console.log(`    ${chalk.dim('    └──')} main.ts`);
+    console.log(`    ${ANSI.cyan(`${name}/`)}`);
+    console.log(`    ${ANSI.dim('├──')} .env`);
+    console.log(`    ${ANSI.dim('├──')} .env.example`);
+    console.log(`    ${ANSI.dim('├──')} .gitignore`);
+    console.log(`    ${ANSI.dim('├──')} package.json`);
+    console.log(`    ${ANSI.dim('├──')} spraxium.config.ts`);
+    console.log(`    ${ANSI.dim('├──')} tsconfig.json`);
+    console.log(`    ${ANSI.dim('└──')} ${ANSI.cyan('src/')}`);
+    console.log(`    ${ANSI.dim('    ├──')} app.env.ts`);
+    console.log(`    ${ANSI.dim('    ├──')} app.module.ts`);
+    console.log(`    ${ANSI.dim('    └──')} main.ts`);
     console.log();
   }
 
   private printNextSteps(name: string, pm: PackageManager): void {
     const runCmd = pm === 'npm' ? 'npm run' : pm;
-    this.logger.info(chalk.bold('Next steps:'));
-    console.log(`    ${chalk.dim('$')} ${chalk.cyan(`cd ${name}`)}`);
-    console.log(`    ${chalk.dim('$')} ${chalk.cyan(`${runCmd} dev`)}`);
+    this.logger.info(ANSI.bold('Next steps:'));
+    console.log(`    ${ANSI.dim('$')} ${ANSI.cyan(`cd ${name}`)}`);
+    console.log(`    ${ANSI.dim('$')} ${ANSI.cyan(`${runCmd} dev`)}`);
     this.logger.blank();
-    this.logger.info(`Add your bot token to ${chalk.yellow('.env')}  →  DISCORD_TOKEN=<token>`);
+    this.logger.info(`Add your bot token to ${ANSI.yellow('.env')}  →  DISCORD_TOKEN=<token>`);
     this.logger.blank();
     this.logger.star('Spraxium is free and open-source. If it saves you time, consider supporting it.');
-    this.logger.info(`Sponsor on Open Collective  →  ${chalk.cyan('https://opencollective.com/spraxium')}`);
+    this.logger.info(`Sponsor on Open Collective  →  ${ANSI.cyan('https://opencollective.com/spraxium')}`);
     this.logger.blank();
   }
 }

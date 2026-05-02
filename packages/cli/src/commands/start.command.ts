@@ -1,6 +1,6 @@
 import { access } from 'node:fs/promises';
 import path from 'node:path';
-import chalk from 'chalk';
+import { ANSI } from '@spraxium/logger';
 import type { Command } from 'commander';
 import { execa } from 'execa';
 import { MessageConstant, UnicodeConstant } from '../constants';
@@ -28,7 +28,7 @@ export class StartCommand extends BaseCommand {
 
     this.logger.blank();
     console.log(
-      `  ${chalk.cyan(UnicodeConstant.STAR)}  ${chalk.cyan.bold(MessageConstant.START_STARTING)} ${chalk.dim(path.relative(cwd, entry))}`,
+      `  ${ANSI.cyan(UnicodeConstant.STAR)}  ${ANSI.cyan(ANSI.bold(MessageConstant.START_STARTING))} ${ANSI.dim(path.relative(cwd, entry))}`,
     );
     this.logger.blank();
 

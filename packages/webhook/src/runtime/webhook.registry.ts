@@ -1,8 +1,7 @@
 import 'reflect-metadata';
 import { Injectable } from '@spraxium/common';
 import { ConfigStore, ModuleLoader } from '@spraxium/core';
-import { logger } from '@spraxium/logger';
-import chalk from 'chalk';
+import { ANSI, logger } from '@spraxium/logger';
 import { WebhookClient } from 'discord.js';
 import { MESSAGES } from '../constants/messages.constant';
 import { WEBHOOK_METADATA_KEYS } from '../constants/metadata-keys.constant';
@@ -48,7 +47,7 @@ export class WebhookRegistry {
       }
     }
 
-    this.log.raw(`${chalk.green('+')}  ${MESSAGES.WEBHOOK_LOADED(this.entries.size)}`);
+    this.log.raw(`${ANSI.green('+')}  ${MESSAGES.WEBHOOK_LOADED(this.entries.size)}`);
   }
 
   shutdown(): void {

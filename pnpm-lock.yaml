@@ -631,15 +631,15 @@ importers:
       '@inquirer/prompts':
         specifier: ^8.3.2
         version: 8.3.2(@types/node@22.19.15)
+      '@spraxium/logger':
+        specifier: workspace:*
+        version: link:../logger
       '@swc-node/register':
         specifier: ^1.11.1
         version: 1.11.1(@swc/core@1.15.18)(@swc/types@0.1.25)(typescript@5.9.3)
       '@swc/core':
         specifier: ^1.15.18
         version: 1.15.18
-      chalk:
-        specifier: ^5.4.0
-        version: 5.6.2
       commander:
         specifier: ^13.1.0
         version: 13.1.0
@@ -764,12 +764,9 @@ importers:
 
   packages/env:
     dependencies:
-      chalk:
-        specifier: ^5.4.0
-        version: 5.6.2
-      cli-table3:
-        specifier: ^0.6.5
-        version: 0.6.5
+      '@spraxium/logger':
+        specifier: workspace:*
+        version: link:../logger
       reflect-metadata:
         specifier: ^0.2.2
         version: 0.2.2
@@ -832,9 +829,9 @@ importers:
 
   packages/i18n:
     dependencies:
-      chalk:
-        specifier: ^5.4.0
-        version: 5.6.2
+      '@spraxium/logger':
+        specifier: workspace:*
+        version: link:../logger
       discord.js:
         specifier: ^14.26.3
         version: 14.26.3
@@ -851,9 +848,6 @@ importers:
       '@spraxium/core':
         specifier: workspace:*
         version: link:../core
-      '@spraxium/logger':
-        specifier: workspace:*
-        version: link:../logger
       '@types/node':
         specifier: ^22.13.0
         version: 22.19.15
@@ -971,9 +965,9 @@ importers:
 
   packages/webhook:
     dependencies:
-      chalk:
-        specifier: ^5.4.0
-        version: 5.6.2
+      '@spraxium/logger':
+        specifier: workspace:*
+        version: link:../logger
       reflect-metadata:
         specifier: ^0.2.2
         version: 0.2.2
@@ -984,9 +978,6 @@ importers:
       '@spraxium/core':
         specifier: workspace:*
         version: link:../core
-      '@spraxium/logger':
-        specifier: workspace:*
-        version: link:../logger
       '@types/node':
         specifier: ^22.0.0
         version: 22.19.15
@@ -3452,11 +3443,6 @@ packages:
       loupe: 3.2.1
       pathval: 2.0.1
     dev: true
-
-  /chalk@5.6.2:
-    resolution: {integrity: sha512-7NzBL0rN6fMUW+f7A6Io4h40qQlG+xGmtMxfbnH/K7TAtt8JQWVQK+6g0UXKMeVJoyV5EkkNsErQ8pVD3bLHbA==}
-    engines: {node: ^12.17.0 || ^14.13 || >=16.0.0}
-    dev: false
 
   /chardet@2.1.1:
     resolution: {integrity: sha512-PsezH1rqdV9VvyNhxxOW32/d75r01NY7TQCmOqomRo15ZSOKbpTFVsfjghxo6JloQUCGnH4k1LGu0R4yCLlWQQ==}

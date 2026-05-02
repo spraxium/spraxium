@@ -1,7 +1,7 @@
 ﻿import 'reflect-metadata';
 import fs from 'node:fs';
 import path from 'node:path';
-import chalk from 'chalk';
+import { ANSI } from '@spraxium/logger';
 import { ICONS } from '../constants/icons.constant';
 import { MESSAGES } from '../constants/messages.constant';
 import { ENV_SCHEMA_METADATA_KEY } from '../constants/metadata-keys.constant';
@@ -76,7 +76,7 @@ export class EnvValidator {
     let errors = initialErrors;
 
     EnvPrinter.printReloadError(errors);
-    console.log(chalk.yellow(MESSAGES.WATCHING_ENV) + chalk.dim(MESSAGES.HINT_SAVE_TO_RETRY));
+    console.log(ANSI.yellow(MESSAGES.WATCHING_ENV) + ANSI.dim(MESSAGES.HINT_SAVE_TO_RETRY));
 
     let elapsed = 0;
 
@@ -85,7 +85,7 @@ export class EnvValidator {
       elapsed += EnvValidator.POLL_MS;
 
       if (elapsed >= EnvValidator.MAX_WAIT_MS) {
-        console.error(chalk.red(`\n${ICONS.ERROR} ${MESSAGES.TIMED_OUT}\n`));
+        console.error(ANSI.red(`\n${ICONS.ERROR} ${MESSAGES.TIMED_OUT}\n`));
         EnvPrinter.printFailureAndExit(errors);
       }
 
@@ -97,7 +97,7 @@ export class EnvValidator {
         .map((r) => r.error);
 
       if (nextErrors.length === 0) {
-        console.log(chalk.green(`${ICONS.SUCCESS} ${MESSAGES.ENV_FIXED}`));
+        console.log(ANSI.green(`${ICONS.SUCCESS} ${MESSAGES.ENV_FIXED}`));
         return nextResults;
       }
 

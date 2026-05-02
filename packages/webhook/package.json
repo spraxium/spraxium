@@ -33,7 +33,7 @@
     "lint": "biome check src/"
   },
   "dependencies": {
-    "chalk": "^5.4.0",
+    "@spraxium/logger": "workspace:*",
     "reflect-metadata": "^0.2.2"
   },
   "peerDependencies": {

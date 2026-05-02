@@ -1,6 +1,6 @@
 import path from 'node:path';
 import { confirm, input, select } from '@inquirer/prompts';
-import chalk from 'chalk';
+import { ANSI } from '@spraxium/logger';
 import type { Command } from 'commander';
 import { GenerateConstant, MessageConstant } from '../constants';
 import { BaseCommand } from '../core/base.command';
@@ -93,7 +93,7 @@ export class GenerateCommand extends BaseCommand {
       loop: false,
       choices: this.schematics.map((s) => ({
         value: s.name,
-        name: `${s.name.padEnd(16)} ${chalk.dim(s.description)}`,
+        name: `${s.name.padEnd(16)} ${ANSI.dim(s.description)}`,
       })),
     });
     return this.lookup.get(chosen) as Schematic;

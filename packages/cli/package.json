@@ -30,9 +30,9 @@
   },
   "dependencies": {
     "@inquirer/prompts": "^8.3.2",
+    "@spraxium/logger": "workspace:*",
     "@swc-node/register": "^1.11.1",
     "@swc/core": "^1.15.18",
-    "chalk": "^5.4.0",
     "commander": "^13.1.0",
     "execa": "^9.5.0",
     "giget": "^3.2.0",

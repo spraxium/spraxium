@@ -1,4 +1,4 @@
-import chalk from 'chalk';
+import { ANSI } from '@spraxium/logger';
 import { UnicodeConstant } from '../constants';
 
 const SPINNER_FRAMES = [
@@ -16,23 +16,23 @@ const SPINNER_FRAMES = [
 
 export class CliLogger {
   info(message: string): void {
-    console.log(`  ${chalk.cyan(UnicodeConstant.INFO)}  ${message}`);
+    console.log(`  ${ANSI.cyan(UnicodeConstant.INFO)}  ${message}`);
   }
 
   success(message: string): void {
-    console.log(`  ${chalk.green(UnicodeConstant.CHECK)}  ${chalk.green(message)}`);
+    console.log(`  ${ANSI.green(UnicodeConstant.CHECK)}  ${ANSI.green(message)}`);
   }
 
   error(message: string): void {
-    console.error(`  ${chalk.red(UnicodeConstant.CROSS)}  ${chalk.red(message)}`);
+    console.error(`  ${ANSI.red(UnicodeConstant.CROSS)}  ${ANSI.red(message)}`);
   }
 
   warn(message: string): void {
-    console.log(`  ${chalk.yellow(UnicodeConstant.WARN)}  ${chalk.yellow(message)}`);
+    console.log(`  ${ANSI.yellow(UnicodeConstant.WARN)}  ${ANSI.yellow(message)}`);
   }
 
   star(message: string): void {
-    console.log(`  ${chalk.yellow(UnicodeConstant.STAR)}  ${chalk.yellow(message)}`);
+    console.log(`  ${ANSI.yellow(UnicodeConstant.STAR)}  ${ANSI.yellow(message)}`);
   }
 
   blank(): void {
@@ -40,12 +40,12 @@ export class CliLogger {
   }
 
   step(text: string): void {
-    process.stdout.write(`  ${chalk.dim(UnicodeConstant.CIRCLE)}  ${chalk.dim(text)}\r`);
+    process.stdout.write(`  ${ANSI.dim(UnicodeConstant.CIRCLE)}  ${ANSI.dim(text)}\r`);
   }
 
   result(ok: boolean, text: string): void {
-    const icon = ok ? chalk.green(UnicodeConstant.CHECK) : chalk.red(UnicodeConstant.CROSS);
-    const msg = ok ? chalk.green(text) : chalk.red(text);
+    const icon = ok ? ANSI.green(UnicodeConstant.CHECK) : ANSI.red(UnicodeConstant.CROSS);
+    const msg = ok ? ANSI.green(text) : ANSI.red(text);
     console.log(`  ${icon}  ${msg}          `);
   }
 
@@ -53,16 +53,16 @@ export class CliLogger {
     let i = 0;
     const timer = setInterval(() => {
       process.stdout.write(
-        `  ${chalk.cyan(SPINNER_FRAMES[i++ % SPINNER_FRAMES.length] ?? '|')}  ${chalk.dim(label)}\r`,
+        `  ${ANSI.cyan(SPINNER_FRAMES[i++ % SPINNER_FRAMES.length] ?? '|')}  ${ANSI.dim(label)}\r`,
       );
     }, 80);
     const { ok, output } = await fn();
     clearInterval(timer);
     if (!ok && output) {
       console.log();
-      console.log(chalk.dim('\u2500'.repeat(60)));
-      console.log(chalk.dim(output));
-      console.log(chalk.dim('\u2500'.repeat(60)));
+      console.log(ANSI.dim('\u2500'.repeat(60)));
+      console.log(ANSI.dim(output));
+      console.log(ANSI.dim('\u2500'.repeat(60)));
       console.log();
     }
     return ok;
