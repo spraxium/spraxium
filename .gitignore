@@ -5,3 +5,4 @@ dist/
 .env.*
 !.env.example
 .spraxium
+0.2.0.md
