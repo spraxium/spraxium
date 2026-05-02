@@ -80,18 +80,18 @@ export class ModalDispatcher {
   ): Promise<void> {
     const handlerName = `@ModalHandler(${resolved.handlerCtor.name})`;
     try {
-      const errors = ModalValidatorRunner.validate(resolved.builderCtor, modal);
-      if (errors.length > 0) {
-        await this.handleValidationFailure(modal, resolved, errors, config);
-        return;
-      }
-
       const guardPassed = await GuardExecutor.execute(
         resolved.handlerCtor,
         'handle',
         new ComponentExecutionContext(modal, resolved.customId),
       );
       if (!guardPassed) return;
+
+      const errors = ModalValidatorRunner.validate(resolved.builderCtor, modal);
+      if (errors.length > 0) {
+        await this.handleValidationFailure(modal, resolved, errors, config);
+        return;
+      }
 
       const args = this.resolveHandlerArgs(modal, resolved);
 

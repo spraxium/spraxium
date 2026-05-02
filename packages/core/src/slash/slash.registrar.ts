@@ -14,6 +14,7 @@ import {
   SlashCommandBuilder,
 } from 'discord.js';
 import { applyOption } from './helpers';
+import type { ResolvedSlashCommand } from './interfaces';
 import { SlashLocalizationBridge } from './slash-localization.bridge';
 import type { SlashRegistry } from './slash.registry';
 import type { SubcommandListEntry } from './types';
@@ -32,36 +33,57 @@ export class SlashRegistrar {
     guildId?: string,
     force = false,
     extraPayloads: Array<RESTPostAPIApplicationCommandsJSONBody> = [],
+    extraGuildPayloads: Map<string, Array<RESTPostAPIApplicationCommandsJSONBody>> = new Map(),
   ): Promise<void> {
-    const slashPayloads = this.buildPayloads();
-    const payloads = [...slashPayloads, ...extraPayloads];
-    if (payloads.length === 0) return;
+    const slashGlobalPayloads = this.buildGlobalPayloads();
+    const globalPayloads = [...slashGlobalPayloads, ...extraPayloads];
 
-    if (!force && process.env.NODE_ENV === 'development' && this.isUnchanged(payloads)) {
-      this.log.raw(`${ANSI.yellow('⊘')}  Application commands unchanged , skipped REST registration (dev)`);
-      return;
-    }
+    const commandGuilds = this.registry.getCommandGuilds();
+    const allGuilds = new Set<string>([...commandGuilds, ...extraGuildPayloads.keys()]);
+
+    if (globalPayloads.length === 0 && allGuilds.size === 0) return;
 
     const rest = new REST({ version: '10' }).setToken(token);
 
-    const route = guildId
-      ? Routes.applicationGuildCommands(clientId, guildId)
-      : Routes.applicationCommands(clientId);
+    if (globalPayloads.length > 0) {
+      const skipGlobal = !force && process.env.NODE_ENV === 'development' && this.isUnchanged(globalPayloads);
 
-    await rest.put(route, { body: payloads });
+      if (skipGlobal) {
+        this.log.raw(`${ANSI.yellow('⊘')}  Application commands unchanged , skipped REST registration (dev)`);
+      } else {
+        const route = guildId
+          ? Routes.applicationGuildCommands(clientId, guildId)
+          : Routes.applicationCommands(clientId);
 
-    const slashCount = slashPayloads.length;
-    const extraCount = extraPayloads.length;
-    const parts: Array<string> = [];
-    if (slashCount > 0) parts.push(`${slashCount} slash`);
-    if (extraCount > 0) parts.push(`${extraCount} context menu`);
+        await rest.put(route, { body: globalPayloads });
 
-    this.log.raw(
-      `${ANSI.green('✔')}  Registered ${parts.join(' + ')} command(s)${guildId ? ` for guild ${guildId}` : ' globally'}`,
-    );
+        const slashCount = slashGlobalPayloads.length;
+        const extraCount = extraPayloads.length;
+        const parts: Array<string> = [];
+        if (slashCount > 0) parts.push(`${slashCount} slash`);
+        if (extraCount > 0) parts.push(`${extraCount} context menu`);
 
-    if (process.env.NODE_ENV === 'development') {
-      this.writeHash(payloads);
+        this.log.raw(
+          `${ANSI.green('✔')}  Registered ${parts.join(' + ')} command(s)${guildId ? ` for guild ${guildId}` : ' globally'}`,
+        );
+
+        if (process.env.NODE_ENV === 'development') {
+          this.writeHash(globalPayloads);
+        }
+      }
+    }
+
+    for (const cmdGuild of allGuilds) {
+      const perGuildPayloads = [
+        ...this.buildGuildPayloads(cmdGuild),
+        ...(extraGuildPayloads.get(cmdGuild) ?? []),
+      ];
+      if (perGuildPayloads.length === 0) continue;
+
+      await rest.put(Routes.applicationGuildCommands(clientId, cmdGuild), { body: perGuildPayloads });
+      this.log.raw(
+        `${ANSI.green('✔')}  Registered ${perGuildPayloads.length} command(s) for guild ${cmdGuild} (per-command override)`,
+      );
     }
   }
 
@@ -88,60 +110,74 @@ export class SlashRegistrar {
   }
 
   public buildPayloads(): Array<RESTPostAPIChatInputApplicationCommandsJSONBody> {
-    const payloads: Array<RESTPostAPIChatInputApplicationCommandsJSONBody> = [];
-    const commands = this.registry.allCommands();
+    return Array.from(this.registry.allCommands().entries()).map(([ctor, resolved]) =>
+      this.buildCommandPayload(ctor, resolved),
+    );
+  }
 
-    for (const [ctor, resolved] of commands) {
-      const builder = new SlashCommandBuilder()
-        .setName(resolved.config.name)
-        .setDescription(resolved.config.description);
+  private buildGlobalPayloads(): Array<RESTPostAPIChatInputApplicationCommandsJSONBody> {
+    return Array.from(this.registry.allCommands().entries())
+      .filter(([, resolved]) => !resolved.config.guild)
+      .map(([ctor, resolved]) => this.buildCommandPayload(ctor, resolved));
+  }
 
-      if (resolved.config.i18n) {
-        const locs = SlashLocalizationBridge.resolve(resolved.config.i18n);
-        if (locs) {
-          builder.setNameLocalizations(locs.name_localizations);
-          builder.setDescriptionLocalizations(locs.description_localizations);
-        }
+  private buildGuildPayloads(guild: string): Array<RESTPostAPIChatInputApplicationCommandsJSONBody> {
+    return Array.from(this.registry.allCommands().entries())
+      .filter(([, resolved]) => resolved.config.guild === guild)
+      .map(([ctor, resolved]) => this.buildCommandPayload(ctor, resolved));
+  }
+
+  private buildCommandPayload(
+    ctor: Constructor,
+    resolved: ResolvedSlashCommand,
+  ): RESTPostAPIChatInputApplicationCommandsJSONBody {
+    const builder = new SlashCommandBuilder()
+      .setName(resolved.config.name)
+      .setDescription(resolved.config.description);
+
+    if (resolved.config.i18n) {
+      const locs = SlashLocalizationBridge.resolve(resolved.config.i18n);
+      if (locs) {
+        builder.setNameLocalizations(locs.name_localizations);
+        builder.setDescriptionLocalizations(locs.description_localizations);
       }
-
-      if (resolved.config.dmPermission !== undefined) {
-        builder.setContexts(
-          resolved.config.dmPermission
-            ? [
-                InteractionContextType.Guild,
-                InteractionContextType.BotDM,
-                InteractionContextType.PrivateChannel,
-              ]
-            : [InteractionContextType.Guild],
-        );
-      }
-      if (resolved.config.defaultMemberPermissions !== undefined) {
-        builder.setDefaultMemberPermissions(resolved.config.defaultMemberPermissions);
-      }
-      if (resolved.config.nsfw) {
-        builder.setNSFW(true);
-      }
-
-      const groupClasses: Array<Constructor> =
-        Reflect.getOwnMetadata(METADATA_KEYS.SLASH_SUBCOMMAND_GROUPS, ctor) ?? [];
-
-      if (groupClasses.length > 0) {
-        this.applySubcommandGroups(builder, ctor, groupClasses);
-      } else {
-        const subs: Array<SubcommandListEntry> =
-          Reflect.getMetadata(METADATA_KEYS.SLASH_SUBCOMMANDS_LIST, ctor) ?? [];
-
-        if (subs.length > 0) {
-          this.applySubcommands(builder, ctor, subs);
-        } else {
-          this.applyRootOptions(builder, ctor);
-        }
-      }
-
-      payloads.push(builder.toJSON());
     }
 
-    return payloads;
+    if (resolved.config.dmPermission !== undefined) {
+      builder.setContexts(
+        resolved.config.dmPermission
+          ? [
+              InteractionContextType.Guild,
+              InteractionContextType.BotDM,
+              InteractionContextType.PrivateChannel,
+            ]
+          : [InteractionContextType.Guild],
+      );
+    }
+    if (resolved.config.defaultMemberPermissions !== undefined) {
+      builder.setDefaultMemberPermissions(resolved.config.defaultMemberPermissions);
+    }
+    if (resolved.config.nsfw) {
+      builder.setNSFW(true);
+    }
+
+    const groupClasses: Array<Constructor> =
+      Reflect.getOwnMetadata(METADATA_KEYS.SLASH_SUBCOMMAND_GROUPS, ctor) ?? [];
+
+    if (groupClasses.length > 0) {
+      this.applySubcommandGroups(builder, ctor, groupClasses);
+    } else {
+      const subs: Array<SubcommandListEntry> =
+        Reflect.getMetadata(METADATA_KEYS.SLASH_SUBCOMMANDS_LIST, ctor) ?? [];
+
+      if (subs.length > 0) {
+        this.applySubcommands(builder, ctor, subs);
+      } else {
+        this.applyRootOptions(builder, ctor);
+      }
+    }
+
+    return builder.toJSON();
   }
 
   private applyRootOptions(builder: SlashCommandBuilder, ctor: Constructor): void {

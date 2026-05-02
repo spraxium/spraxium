@@ -25,6 +25,12 @@ export class ShutdownHandler {
 
     process.once('SIGINT', () => void shutdown('SIGINT'));
     process.once('SIGTERM', () => void shutdown('SIGTERM'));
+    process.once('unhandledRejection', (reason) => {
+      log.error(
+        `Unhandled promise rejection: ${reason instanceof Error ? (reason.stack ?? reason.message) : String(reason)}`,
+      );
+      void shutdown('unhandledRejection');
+    });
   }
 
   static drain(code: number): Promise<void> {

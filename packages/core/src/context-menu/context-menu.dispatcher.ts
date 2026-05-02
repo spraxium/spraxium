@@ -26,6 +26,10 @@ export class ContextMenuDispatcher {
     return this.registrar.buildPayloads();
   }
 
+  public buildGuildGroupedPayloads(): Map<string, Array<RESTPostAPIContextMenuApplicationCommandsJSONBody>> {
+    return this.registrar.buildGuildGroupedPayloads();
+  }
+
   public getResolved(): Array<ResolvedContextMenuEntry> {
     return this.registry.getResolved();
   }

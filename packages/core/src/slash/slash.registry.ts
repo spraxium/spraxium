@@ -78,6 +78,14 @@ export class SlashRegistry {
     return this.autocompleteHandlers.get(`${commandName.toLowerCase()}:${optionName}`);
   }
 
+  public getCommandGuilds(): Set<string> {
+    const guilds = new Set<string>();
+    for (const [, resolved] of this.commands) {
+      if (resolved.config.guild) guilds.add(resolved.config.guild);
+    }
+    return guilds;
+  }
+
   public allCommands(): ReadonlyMap<Constructor, ResolvedSlashCommand> {
     return this.commands;
   }

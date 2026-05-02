@@ -39,7 +39,16 @@ export class DiscordReplyStrategy {
       flags: ephemeral ? MessageFlags.Ephemeral : undefined,
     };
 
-    if (interaction.deferred || interaction.replied) {
+    if (interaction.deferred && !interaction.replied) {
+      // The interaction was deferred (e.g. @Defer / @AutoDefer) but not yet replied.
+      // Replace the "Thinking…" placeholder instead of creating a stray follow-up alongside it.
+      await interaction.editReply({
+        content: payload.content,
+        embeds: payload.embeds,
+        // biome-ignore lint/suspicious/noExplicitAny: discord.js component generic is broad
+        components: payload.components as Array<any>,
+      });
+    } else if (interaction.replied) {
       await interaction.followUp(opts);
     } else {
       await interaction.reply(opts);

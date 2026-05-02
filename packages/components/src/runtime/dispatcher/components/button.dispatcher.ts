@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import { METADATA_KEYS } from '@spraxium/common';
 import { GuardExecutor } from '@spraxium/core';
+import { logger } from '@spraxium/logger';
 import { type ButtonInteraction, type Client, Events, type Interaction } from 'discord.js';
 import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys.constant';
 import type {
@@ -23,6 +24,7 @@ import type { Constructor, ResolvedButtonHandler, ResolvedDynamicButtonHandler }
  * (both static `@Button` and `@DynamicButton`).
  */
 export class ButtonDispatcher {
+  private readonly log = logger.child('ButtonDispatcher');
   private readonly staticHandlers: Array<ResolvedButtonHandler> = [];
   private readonly dynamicHandlers: Array<ResolvedDynamicButtonHandler> = [];
   private config?: ComponentsConfig;
@@ -262,8 +264,8 @@ export class ButtonDispatcher {
     const isStatic = this.staticHandlers.some((h) => h.customId === id);
     const isDynamic = this.dynamicHandlers.some((h) => h.baseId === id);
     if (isStatic || isDynamic) {
-      console.warn(
-        `[Spraxium] Button customId / baseId collision detected for "${id}". Two handlers cannot share the same identifier; only the first registered will fire.`,
+      this.log.warn(
+        `Button customId/baseId collision for "${id}". Two handlers share the same identifier; only the first registered will fire.`,
       );
     }
   }

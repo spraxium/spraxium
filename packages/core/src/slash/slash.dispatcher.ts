@@ -33,8 +33,9 @@ export class SlashDispatcher {
     guildId?: string,
     force = false,
     extraPayloads: Array<RESTPostAPIApplicationCommandsJSONBody> = [],
+    extraGuildPayloads: Map<string, Array<RESTPostAPIApplicationCommandsJSONBody>> = new Map(),
   ): Promise<void> {
-    await this.registrar.register(token, clientId, guildId, force, extraPayloads);
+    await this.registrar.register(token, clientId, guildId, force, extraPayloads, extraGuildPayloads);
   }
 
   public buildPayloads(): ReturnType<SlashRegistrar['buildPayloads']> {

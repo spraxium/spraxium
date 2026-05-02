@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 import { type AutoDeferOptions, type DeferOptions, METADATA_KEYS } from '@spraxium/common';
+import { logger } from '@spraxium/logger';
 import type { ChatInputCommandInteraction } from 'discord.js';
 import { ConfigStore } from '../config';
 import { SpraxiumExecutionContext } from '../context';
@@ -11,6 +12,8 @@ import type { ResolvedSlashHandler } from './interfaces';
 import type { SlashOptParam } from './types';
 
 export class SlashInvoker {
+  private static readonly warnedHandlers = new Set<object>();
+
   public async run(handler: ResolvedSlashHandler, interaction: ChatInputCommandInteraction): Promise<void> {
     const ctx = new SpraxiumExecutionContext(interaction, handler.config.name);
 
@@ -20,6 +23,13 @@ export class SlashInvoker {
     const autoDeferOptions = Reflect.getOwnMetadata(METADATA_KEYS.AUTO_DEFER, handler.handlerCtor) as
       | AutoDeferOptions
       | undefined;
+
+    if (deferOptions && autoDeferOptions && !SlashInvoker.warnedHandlers.has(handler.handlerCtor)) {
+      SlashInvoker.warnedHandlers.add(handler.handlerCtor);
+      logger.warn(
+        `[SlashInvoker] ${handler.handlerCtor.name} has both @Defer and @AutoDefer applied — @Defer always fires immediately; @AutoDefer is ignored. Remove @AutoDefer to silence this warning.`,
+      );
+    }
 
     let cleanupAutoDefer: (() => void) | undefined;
 

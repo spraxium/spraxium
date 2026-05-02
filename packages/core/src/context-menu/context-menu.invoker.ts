@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 import { type AutoDeferOptions, type DeferOptions, METADATA_KEYS } from '@spraxium/common';
+import { logger } from '@spraxium/logger';
 import type { ContextMenuCommandInteraction } from 'discord.js';
 import { ConfigStore } from '../config';
 import { SpraxiumExecutionContext } from '../context';
@@ -9,6 +10,8 @@ import { installAutoDefer } from '../utils/auto-defer.util';
 import type { ResolvedContextMenuHandler } from './interfaces';
 
 export class ContextMenuInvoker {
+  private static readonly warnedHandlers = new Set<object>();
+
   public async run(
     handler: ResolvedContextMenuHandler,
     interaction: ContextMenuCommandInteraction,
@@ -21,6 +24,13 @@ export class ContextMenuInvoker {
     const autoDeferOptions = Reflect.getOwnMetadata(METADATA_KEYS.AUTO_DEFER, handler.handlerCtor) as
       | AutoDeferOptions
       | undefined;
+
+    if (deferOptions && autoDeferOptions && !ContextMenuInvoker.warnedHandlers.has(handler.handlerCtor)) {
+      ContextMenuInvoker.warnedHandlers.add(handler.handlerCtor);
+      logger.warn(
+        `[ContextMenuInvoker] ${handler.handlerCtor.name} has both @Defer and @AutoDefer applied, @Defer always fires immediately; @AutoDefer is ignored. Remove @AutoDefer to silence this warning.`,
+      );
+    }
 
     let cleanupAutoDefer: (() => void) | undefined;
 

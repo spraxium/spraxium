@@ -111,7 +111,8 @@ export class SpraxiumApplication {
     if (!token || !clientId) return;
 
     const extraPayloads = contextMenuDispatcher?.buildPayloads() ?? [];
-    await dispatcher.register(token, clientId, undefined, true, extraPayloads);
+    const extraGuildPayloads = contextMenuDispatcher?.buildGuildGroupedPayloads() ?? new Map();
+    await dispatcher.register(token, clientId, undefined, true, extraPayloads, extraGuildPayloads);
   }
 
   public async listen(): Promise<void> {
@@ -295,7 +296,15 @@ export class SpraxiumApplication {
           const token = this.state.token ?? process.env.DISCORD_TOKEN;
           if (token) {
             const extraPayloads = contextMenuDispatcher?.buildPayloads() ?? [];
-            await slashDispatcher.register(token, readyClient.user.id, undefined, false, extraPayloads);
+            const extraGuildPayloads = contextMenuDispatcher?.buildGuildGroupedPayloads() ?? new Map();
+            await slashDispatcher.register(
+              token,
+              readyClient.user.id,
+              undefined,
+              false,
+              extraPayloads,
+              extraGuildPayloads,
+            );
           }
         }
 
