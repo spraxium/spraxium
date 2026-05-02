@@ -62,6 +62,9 @@ importers:
       '@spraxium/env':
         specifier: workspace:*
         version: link:../../packages/env
+      '@spraxium/logger':
+        specifier: workspace:^
+        version: link:../../packages/logger
       discord.js:
         specifier: ^14.26.3
         version: 14.26.3
@@ -93,6 +96,9 @@ importers:
       '@spraxium/env':
         specifier: workspace:*
         version: link:../../packages/env
+      '@spraxium/logger':
+        specifier: workspace:^
+        version: link:../../packages/logger
       discord.js:
         specifier: ^14.26.3
         version: 14.26.3
@@ -127,6 +133,9 @@ importers:
       '@spraxium/env':
         specifier: workspace:*
         version: link:../../packages/env
+      '@spraxium/logger':
+        specifier: workspace:^
+        version: link:../../packages/logger
       discord.js:
         specifier: ^14.26.3
         version: 14.26.3
@@ -161,6 +170,9 @@ importers:
       '@spraxium/env':
         specifier: workspace:*
         version: link:../../packages/env
+      '@spraxium/logger':
+        specifier: workspace:^
+        version: link:../../packages/logger
       discord.js:
         specifier: ^14.26.3
         version: 14.26.3
@@ -201,6 +213,9 @@ importers:
       '@spraxium/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
+      '@spraxium/logger':
+        specifier: workspace:^
+        version: link:../../packages/logger
       '@spraxium/schedule':
         specifier: workspace:*
         version: link:../../packages/schedule
@@ -247,6 +262,9 @@ importers:
       '@spraxium/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
+      '@spraxium/logger':
+        specifier: workspace:^
+        version: link:../../packages/logger
       discord.js:
         specifier: ^14.26.3
         version: 14.26.3
@@ -284,6 +302,9 @@ importers:
       '@spraxium/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
+      '@spraxium/logger':
+        specifier: workspace:^
+        version: link:../../packages/logger
       discord.js:
         specifier: ^14.26.3
         version: 14.26.3
@@ -318,6 +339,9 @@ importers:
       '@spraxium/env':
         specifier: workspace:*
         version: link:../../packages/env
+      '@spraxium/logger':
+        specifier: workspace:^
+        version: link:../../packages/logger
       discord.js:
         specifier: ^14.26.3
         version: 14.26.3
@@ -358,6 +382,9 @@ importers:
       '@spraxium/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
+      '@spraxium/logger':
+        specifier: workspace:^
+        version: link:../../packages/logger
       '@spraxium/schedule':
         specifier: workspace:*
         version: link:../../packages/schedule
@@ -410,6 +437,9 @@ importers:
       '@spraxium/env':
         specifier: workspace:*
         version: link:../../packages/env
+      '@spraxium/logger':
+        specifier: workspace:^
+        version: link:../../packages/logger
       '@spraxium/schedule':
         specifier: workspace:*
         version: link:../../packages/schedule
@@ -444,6 +474,9 @@ importers:
       '@spraxium/env':
         specifier: workspace:*
         version: link:../../packages/env
+      '@spraxium/logger':
+        specifier: workspace:^
+        version: link:../../packages/logger
       '@spraxium/signal':
         specifier: workspace:*
         version: link:../../packages/signal
@@ -481,6 +514,9 @@ importers:
       '@spraxium/env':
         specifier: workspace:*
         version: link:../../packages/env
+      '@spraxium/logger':
+        specifier: workspace:^
+        version: link:../../packages/logger
       discord.js:
         specifier: ^14.26.3
         version: 14.26.3
@@ -521,6 +557,9 @@ importers:
       '@spraxium/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
+      '@spraxium/logger':
+        specifier: workspace:^
+        version: link:../../packages/logger
       '@spraxium/schedule':
         specifier: workspace:*
         version: link:../../packages/schedule
@@ -561,6 +600,9 @@ importers:
       '@spraxium/env':
         specifier: workspace:*
         version: link:../../packages/env
+      '@spraxium/logger':
+        specifier: workspace:^
+        version: link:../../packages/logger
       '@spraxium/webhook':
         specifier: workspace:*
         version: link:../../packages/webhook
@@ -657,6 +699,9 @@ importers:
       '@discordjs/builders':
         specifier: ^1.14.1
         version: 1.14.1
+      '@spraxium/logger':
+        specifier: workspace:*
+        version: link:../logger
       better-sqlite3:
         specifier: '>=9'
         version: 12.8.0
@@ -691,9 +736,9 @@ importers:
       '@spraxium/common':
         specifier: workspace:*
         version: link:../common
-      chalk:
-        specifier: ^5.4.0
-        version: 5.6.2
+      '@spraxium/logger':
+        specifier: workspace:*
+        version: link:../logger
       cli-table3:
         specifier: ^0.6.5
         version: 0.6.5
@@ -772,6 +817,9 @@ importers:
       '@spraxium/core':
         specifier: workspace:*
         version: link:../core
+      '@spraxium/logger':
+        specifier: workspace:*
+        version: link:../logger
       '@types/node':
         specifier: ^22.0.0
         version: 22.19.15
@@ -803,6 +851,28 @@ importers:
       '@spraxium/core':
         specifier: workspace:*
         version: link:../core
+      '@spraxium/logger':
+        specifier: workspace:*
+        version: link:../logger
+      '@types/node':
+        specifier: ^22.13.0
+        version: 22.19.15
+      tsdown:
+        specifier: ^0.12.0
+        version: 0.12.9(typescript@5.9.3)
+      typescript:
+        specifier: ^5.7.0
+        version: 5.9.3
+      vitest:
+        specifier: ^3.0.0
+        version: 3.2.4(@types/node@22.19.15)(tsx@4.21.0)
+
+  packages/logger:
+    dependencies:
+      cli-table3:
+        specifier: ^0.6.5
+        version: 0.6.5
+    devDependencies:
       '@types/node':
         specifier: ^22.13.0
         version: 22.19.15
@@ -837,6 +907,9 @@ importers:
       '@spraxium/core':
         specifier: workspace:*
         version: link:../core
+      '@spraxium/logger':
+        specifier: workspace:*
+        version: link:../logger
       '@types/node':
         specifier: ^22.13.0
         version: 22.19.15
@@ -858,6 +931,9 @@ importers:
       '@spraxium/core':
         specifier: workspace:*
         version: link:../core
+      '@spraxium/logger':
+        specifier: workspace:*
+        version: link:../logger
       discord.js:
         specifier: ^14.26.3
         version: 14.26.3
@@ -908,6 +984,9 @@ importers:
       '@spraxium/core':
         specifier: workspace:*
         version: link:../core
+      '@spraxium/logger':
+        specifier: workspace:*
+        version: link:../logger
       '@types/node':
         specifier: ^22.0.0
         version: 22.19.15
