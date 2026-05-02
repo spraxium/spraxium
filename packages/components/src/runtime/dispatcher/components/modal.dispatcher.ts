@@ -19,6 +19,7 @@ import {
 } from '../../../components/modal';
 import { ComponentExecutionContext } from '../../guards';
 import type { ComponentsConfig } from '../../lifecycle';
+import { reportHandlerError } from '../helpers/handler-error.helper';
 import type { Constructor, ResolvedModalHandler } from '../interfaces';
 
 /**
@@ -77,6 +78,7 @@ export class ModalDispatcher {
     resolved: ResolvedModalHandler,
     config?: ComponentsConfig,
   ): Promise<void> {
+    const handlerName = `@ModalHandler(${resolved.handlerCtor.name})`;
     try {
       const errors = ModalValidatorRunner.validate(resolved.builderCtor, modal);
       if (errors.length > 0) {
@@ -100,7 +102,14 @@ export class ModalDispatcher {
 
       this.clearCacheOnSuccess(resolved, modal);
     } catch (err) {
-      console.error('[Spraxium] Unhandled error in @ModalHandler:', err);
+      await reportHandlerError(
+        err,
+        modal,
+        handlerName,
+        config,
+        config?.modal?.ephemeralErrors !== false,
+        config?.modal?.onErrorReply,
+      );
     }
   }
 

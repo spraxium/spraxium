@@ -20,6 +20,13 @@ export interface ComponentsConfig {
   modal?: {
     /** Custom embed builder for field validation errors shown to the user. */
     validationEmbed?: (errors: Array<ModalValidationError>) => ModalErrorEmbed;
+    /** When `true`, error replies from `@ModalHandler` are sent ephemerally. Defaults to `true`. */
+    ephemeralErrors?: boolean;
+    /**
+     * Reply sent when a `@ModalHandler` throws an unhandled error. Defaults to
+     * a generic ephemeral message.
+     */
+    onErrorReply?: HandlerErrorReply;
   };
   button?: {
     /** When `true`, expired-context and restricted-access replies are sent ephemerally. Defaults to `true`. */
