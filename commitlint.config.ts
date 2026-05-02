@@ -5,8 +5,7 @@ const config: UserConfig = {
 
   parserPreset: {
     parserOpts: {
-      headerPattern:
-        /^((?::\w+:|✨|🐛|📝|♻️|✅|🔧|⚡️|🔒️|🚀|💥)\s)?(\w+)(?:\(([^)]+)\))?:\s(.+)$/,
+      headerPattern: /^((?::\w+:|✨|🐛|📝|♻️|✅|🔧|⚡️|🔒️|🚀|💥)\s)?(\w+)(?:\(([^)]+)\))?:\s(.+)$/,
       headerCorrespondence: ['emoji', 'type', 'scope', 'subject'],
     },
   },
@@ -15,18 +14,7 @@ const config: UserConfig = {
     'type-enum': [
       2,
       'always',
-      [
-        'feat',
-        'fix',
-        'docs',
-        'refactor',
-        'test',
-        'chore',
-        'perf',
-        'security',
-        'release',
-        'breaking',
-      ],
+      ['feat', 'fix', 'docs', 'refactor', 'test', 'chore', 'perf', 'security', 'release', 'breaking'],
     ],
 
     'scope-empty': [2, 'never'],
