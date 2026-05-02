@@ -1,4 +1,4 @@
-import { Ctx, SlashCommandHandler, SlashOpt } from '@spraxium/common';
+import { Ctx, SlashCommandHandler, SlashStringOption } from '@spraxium/common';
 import type { ChatInputCommandInteraction } from 'discord.js';
 import { ServerCommand } from '../commands/server.command';
 
@@ -6,7 +6,7 @@ import { ServerCommand } from '../commands/server.command';
 export class ServerSettingsPrefixHandler {
   async handle(
     @Ctx() interaction: ChatInputCommandInteraction,
-    @SlashOpt('prefix') prefix: string,
+    @SlashStringOption('prefix') prefix: string,
   ): Promise<void> {
     await interaction.reply(`✅ Command prefix updated to \`${prefix}\`.`);
   }

@@ -1,4 +1,4 @@
-import { Ctx, SlashCommandHandler, SlashOpt } from '@spraxium/common';
+import { Ctx, SlashCommandHandler, SlashIntegerOption, SlashStringOption } from '@spraxium/common';
 import type { ChatInputCommandInteraction } from 'discord.js';
 import { SearchCommand } from '../commands/search.command';
 
@@ -6,8 +6,8 @@ import { SearchCommand } from '../commands/search.command';
 export class SearchHandler {
   async handle(
     @Ctx() interaction: ChatInputCommandInteraction,
-    @SlashOpt('query') query: string,
-    @SlashOpt('limit') limit: number | null,
+    @SlashStringOption('query') query: string,
+    @SlashIntegerOption('limit') limit: number | null,
   ): Promise<void> {
     const max = limit ?? 10;
     await interaction.reply({

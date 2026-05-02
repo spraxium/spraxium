@@ -1,11 +1,11 @@
 import { Ctx } from '@spraxium/common';
-import { Field, ModalHandler, type ModalContext } from '@spraxium/components';
+import { ModalHandler, ModalTextField, type ModalContext } from '@spraxium/components';
 import { DynamicModal } from '../modals/component-modals';
 
 @ModalHandler(DynamicModal)
 export class DynamicModalHandler {
   async handle(
-    @Field('name') name: string,
+    @ModalTextField('name') name: string,
     @Ctx() ctx: ModalContext,
   ): Promise<void> {
     console.log('Recebendo interacao da modal', ctx.channel?.id);

@@ -1,4 +1,4 @@
-import { Ctx, SlashCommandHandler, SlashOpt } from '@spraxium/common';
+import { Ctx, SlashCommandHandler, SlashStringOption } from '@spraxium/common';
 import { Logger } from '@spraxium/core';
 import { I18nService } from '@spraxium/i18n';
 import type { ChatInputCommandInteraction } from 'discord.js';
@@ -12,7 +12,7 @@ export class PingHandler {
 
   async handle(
     @Ctx() interaction: ChatInputCommandInteraction,
-    @SlashOpt('service') service: string | null,
+    @SlashStringOption('service') service: string | null,
   ): Promise<void> {
     const ws = interaction.client.ws.ping;
     const userId = interaction.user.id;

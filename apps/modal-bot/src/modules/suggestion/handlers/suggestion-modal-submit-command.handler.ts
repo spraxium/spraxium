@@ -1,13 +1,14 @@
 import { Ctx } from '@spraxium/common';
-import { Field, type ModalContext, ModalHandler } from '@spraxium/components';
+import { type ModalContext, ModalField, ModalHandler, ModalTextField } from '@spraxium/components';
 import { SuggestionModal } from '../components/suggestion-modal.component';
 
 @ModalHandler(SuggestionModal)
 export class SuggestionModalSubmitCommandHandler {
   async handle(
-    @Field('title') title: string,
-    @Field('details') details: string,
-    @Field('url') url: string,
+    @ModalField('title') titleTwo: string,
+    @ModalTextField('title') title: string,
+    @ModalTextField('details') details: string,
+    @ModalTextField('url') url: string,
     @Ctx() ctx: ModalContext,
   ): Promise<void> {
     const uxRating = ctx.fields.getRadioGroup('rate_ux') ?? 'N/A';

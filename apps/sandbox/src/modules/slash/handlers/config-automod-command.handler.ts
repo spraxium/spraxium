@@ -1,4 +1,4 @@
-import { Ctx, SlashCommandHandler, SlashOpt } from '@spraxium/common';
+import { Ctx, SlashBooleanOption, SlashCommandHandler, SlashStringOption } from '@spraxium/common';
 import { Logger } from '@spraxium/core';
 import type { ChatInputCommandInteraction } from 'discord.js';
 import { ConfigCommand } from '../commands/config.command';
@@ -9,8 +9,8 @@ export class ConfigAutomodHandler {
 
   async handle(
     @Ctx() interaction: ChatInputCommandInteraction,
-    @SlashOpt('enabled') enabled: boolean,
-    @SlashOpt('filter') filter: string | null,
+    @SlashBooleanOption('enabled') enabled: boolean,
+    @SlashStringOption('filter') filter: string | null,
   ): Promise<void> {
     const state = enabled ? 'enabled' : 'disabled';
     const filterText = filter ? ` (filter: ${filter})` : '';

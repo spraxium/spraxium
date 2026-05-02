@@ -1,4 +1,4 @@
-import { Ctx, SlashCommandHandler, SlashOpt } from '@spraxium/common';
+import { Ctx, SlashBooleanOption, SlashCommandHandler, SlashStringOption } from '@spraxium/common';
 import { V2Service } from '@spraxium/components';
 import { type ChatInputCommandInteraction, MessageFlags } from 'discord.js';
 import { PanelCommand } from '../commands/panel.command';
@@ -12,8 +12,8 @@ export class PanelCommandHandler {
 
   async handle(
     @Ctx() interaction: ChatInputCommandInteraction,
-    @SlashOpt('type') type: string,
-    @SlashOpt('empty') empty: boolean | null,
+    @SlashStringOption('type') type: string,
+    @SlashBooleanOption('empty') empty: boolean | null,
   ): Promise<void> {
     const base = type === 'select' ? SELECT_PANEL : BUTTONS_PANEL;
     const data: PanelTemplate = empty ? { ...base, categories: [] } : base;

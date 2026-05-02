@@ -1,4 +1,4 @@
-import { Ctx, SlashCommandHandler, SlashOpt } from '@spraxium/common';
+import { Ctx, SlashCommandHandler, SlashIntegerOption } from '@spraxium/common';
 import {
   type InterpolationVars,
   I18nService,
@@ -13,7 +13,7 @@ export class I18nShowcaseOverviewHandler {
 
   async handle(
     @Ctx() interaction: ChatInputCommandInteraction,
-    @SlashOpt('count') count: number,
+    @SlashIntegerOption('count') count: number,
   ): Promise<void> {
     const userId = interaction.user.id;
     const guildId = interaction.guildId ?? undefined;

@@ -1,16 +1,12 @@
 import { Ctx } from '@spraxium/common';
-import {
-  Field,
-  type ModalContext,
-  ModalHandler,
-} from '@spraxium/components';
+import { ModalHandler, ModalTextField, type ModalContext } from '@spraxium/components';
 import { ReportModal } from '../modals/text-modals';
 
 @ModalHandler(ReportModal)
 export class ReportModalHandler {
   async handle(
-    @Field('description') description: string,
-    @Field('email') email: string,
+    @ModalTextField('description') description: string,
+    @ModalTextField('email') email: string,
     @Ctx() ctx: ModalContext,
   ): Promise<void> {
 

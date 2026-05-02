@@ -1,4 +1,4 @@
-import { Ctx, SlashCommandHandler, SlashOpt } from '@spraxium/common';
+import { Ctx, SlashCommandHandler, SlashIntegerOption } from '@spraxium/common';
 import { I18nService } from '@spraxium/i18n';
 import type { ChatInputCommandInteraction } from 'discord.js';
 import { DemoCommand } from '../commands/demo.command';
@@ -9,7 +9,7 @@ export class DemoPluralHandler {
 
   async handle(
     @Ctx() interaction: ChatInputCommandInteraction,
-    @SlashOpt('count') count: number,
+    @SlashIntegerOption('count') count: number,
   ): Promise<void> {
     const userId = interaction.user.id;
     const userLocale = await this.i18n.getUserLocale(userId);

@@ -1,4 +1,4 @@
-import { Ctx, SlashCommandHandler, SlashOpt } from '@spraxium/common';
+import { Ctx, SlashCommandHandler, SlashStringOption } from '@spraxium/common';
 import { I18nService } from '@spraxium/i18n';
 import type { ChatInputCommandInteraction } from 'discord.js';
 import { LocaleCommand } from '../commands/locale.command';
@@ -9,7 +9,7 @@ export class LocaleHandler {
 
   async handle(
     @Ctx() interaction: ChatInputCommandInteraction,
-    @SlashOpt('language') language: string,
+    @SlashStringOption('language') language: string,
   ): Promise<void> {
     const userId = interaction.user.id;
     const current = await this.i18n.getUserLocale(userId);

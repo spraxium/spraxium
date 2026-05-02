@@ -1,4 +1,4 @@
-import { Ctx, SlashCommandHandler, SlashOpt } from '@spraxium/common';
+import { Ctx, SlashCommandHandler, SlashIntegerOption, SlashStringOption } from '@spraxium/common';
 import type { ChatInputCommandInteraction } from 'discord.js';
 import { ColorCommand } from '../commands/color.command';
 
@@ -14,8 +14,8 @@ const HEX: Record<string, Record<number, string>> = {
 export class ColorHandler {
   async handle(
     @Ctx() interaction: ChatInputCommandInteraction,
-    @SlashOpt('name') name: string,
-    @SlashOpt('shade') shade: number | null,
+    @SlashStringOption('name') name: string,
+    @SlashIntegerOption('shade') shade: number | null,
   ): Promise<void> {
     const level = shade ?? 500;
     const hex = HEX[name]?.[level] ?? '#000000';

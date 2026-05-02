@@ -1,4 +1,17 @@
-import { Ctx, SlashCommandHandler, SlashOpt } from '@spraxium/common';
+import {
+  Ctx,
+  SlashAttachmentOption,
+  SlashBooleanOption,
+  SlashChannelOption,
+  SlashCommandHandler,
+  SlashIntegerOption,
+  SlashMentionableOption,
+  SlashNumberOption,
+  SlashOpt,
+  SlashOption,
+  SlashRoleOption,
+  SlashUserOption,
+} from '@spraxium/common';
 import type { Attachment, ChatInputCommandInteraction, Role, TextChannel, User } from 'discord.js';
 import { InspectCommand } from '../commands/inspect.command';
 
@@ -6,15 +19,16 @@ import { InspectCommand } from '../commands/inspect.command';
 export class InspectHandler {
   async handle(
     @Ctx() interaction: ChatInputCommandInteraction,
-    @SlashOpt('text') text: string,
-    @SlashOpt('count') count: number | null,
-    @SlashOpt('ratio') ratio: number | null,
-    @SlashOpt('flag') flag: boolean | null,
-    @SlashOpt('target') target: User | null,
-    @SlashOpt('channel') channel: TextChannel | null,
-    @SlashOpt('role') role: Role | null,
-    @SlashOpt('mention') mention: User | Role | null,
-    @SlashOpt('file') file: Attachment | null,
+    @SlashOpt('text') rawText: string, // deprecated
+    @SlashOption('text') text: string,
+    @SlashIntegerOption('count') count: number | null,
+    @SlashNumberOption('ratio') ratio: number | null,
+    @SlashBooleanOption('flag') flag: boolean | null,
+    @SlashUserOption('target') target: User | null,
+    @SlashChannelOption('channel') channel: TextChannel | null,
+    @SlashRoleOption('role') role: Role | null,
+    @SlashMentionableOption('mention') mention: User | Role | null,
+    @SlashAttachmentOption('file') file: Attachment | null,
   ): Promise<void> {
     const lines = [
       '📋 **Received option values:**',

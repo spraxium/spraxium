@@ -1,4 +1,11 @@
-import { Ctx, SlashCommandHandler, SlashOpt, UseGuards, withOptions } from '@spraxium/common';
+import {
+  Ctx,
+  SlashCommandHandler,
+  SlashIntegerOption,
+  SlashUserOption,
+  UseGuards,
+  withOptions,
+} from '@spraxium/common';
 import { GuildOnly, PermissionGuard } from '@spraxium/core';
 import type { ChatInputCommandInteraction, GuildMember, User } from 'discord.js';
 import { ModCommand } from '../commands/mod.command';
@@ -8,8 +15,8 @@ import { ModCommand } from '../commands/mod.command';
 export class ModTimeoutHandler {
   async handle(
     @Ctx() interaction: ChatInputCommandInteraction,
-    @SlashOpt('target') target: User,
-    @SlashOpt('duration') duration: number,
+    @SlashUserOption('target') target: User,
+    @SlashIntegerOption('duration') duration: number,
   ): Promise<void> {
     if (!interaction.guild) {
       await interaction.reply({ content: '❌ Guild not found.', flags: 'Ephemeral' });

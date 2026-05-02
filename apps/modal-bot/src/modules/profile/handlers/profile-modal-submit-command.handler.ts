@@ -1,15 +1,22 @@
 import { Ctx } from '@spraxium/common';
-import { Field, type ModalContext, ModalHandler } from '@spraxium/components';
+import {
+  ModalCheckboxField,
+  ModalCheckboxGroupField,
+  type ModalContext,
+  ModalHandler,
+  ModalRadioGroupField,
+  ModalStringSelectField,
+} from '@spraxium/components';
 import { ProfileModal } from '../components/profile.modal.component';
 
 @ModalHandler(ProfileModal)
 export class ProfileModalSubmitCommandHandler {
   async handle(
     @Ctx() ctx: ModalContext,
-    @Field('role') role: string,
-    @Field('timezone') timezone: string,
-    @Field('notifications') notifications: string[],
-    @Field('acceptedRules') acceptedRules: boolean,
+    @ModalStringSelectField('role') role: string,
+    @ModalRadioGroupField('timezone') timezone: string,
+    @ModalCheckboxGroupField('notifications') notifications: string[],
+    @ModalCheckboxField('acceptedRules') acceptedRules: boolean,
   ): Promise<void> {
     if (!acceptedRules) {
       await ctx.reply({

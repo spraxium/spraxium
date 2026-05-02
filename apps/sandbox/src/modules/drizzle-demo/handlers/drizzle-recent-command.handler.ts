@@ -1,4 +1,4 @@
-import { Ctx, SlashCommandHandler, SlashOpt } from '@spraxium/common';
+import { Ctx, SlashCommandHandler, SlashIntegerOption } from '@spraxium/common';
 import type { ChatInputCommandInteraction } from 'discord.js';
 import { DrizzleDemoCommand } from '../commands/drizzle-demo.command';
 import { DrizzlePostgresService } from '../services/drizzle-postgres.service';
@@ -9,7 +9,7 @@ export class DrizzleRecentHandler {
 
   async handle(
     @Ctx() interaction: ChatInputCommandInteraction,
-    @SlashOpt('limit') limit: number | null,
+    @SlashIntegerOption('limit') limit: number | null,
   ): Promise<void> {
     const rows = await this.drizzle.listRecent(limit ?? 5);
 

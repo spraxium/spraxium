@@ -1,4 +1,4 @@
-import { Ctx, SlashCommandHandler, SlashOpt, UseGuards } from '@spraxium/common';
+import { Ctx, SlashCommandHandler, SlashIntegerOption, SlashStringOption, SlashUserOption, UseGuards } from '@spraxium/common';
 import { Logger } from '@spraxium/core';
 import type { ChatInputCommandInteraction, GuildMember, User } from 'discord.js';
 import { ModeratorGuard } from '../../prefix/guards/moderator.guard';
@@ -11,9 +11,9 @@ export class BanHandler {
 
   async handle(
     @Ctx() interaction: ChatInputCommandInteraction,
-    @SlashOpt('target') target: User,
-    @SlashOpt('reason') reason: string | null,
-    @SlashOpt('days') days: number | null,
+    @SlashUserOption('target') target: User,
+    @SlashStringOption('reason') reason: string | null,
+    @SlashIntegerOption('days') days: number | null,
   ): Promise<void> {
     if (!interaction.guild) {
       await interaction.reply({ content: '❌ This command can only be used in a server.', flags: 'Ephemeral' });

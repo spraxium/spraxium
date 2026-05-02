@@ -1,4 +1,11 @@
-import { Ctx, SlashCommandHandler, SlashOpt, UseGuards, withOptions } from '@spraxium/common';
+import {
+  Ctx,
+  SlashCommandHandler,
+  SlashStringOption,
+  SlashUserOption,
+  UseGuards,
+  withOptions,
+} from '@spraxium/common';
 import { CooldownGuard, GuildOnly, PermissionGuard } from '@spraxium/core';
 import type { ChatInputCommandInteraction, User } from 'discord.js';
 import { ModCommand } from '../commands/mod.command';
@@ -12,8 +19,8 @@ import { ModCommand } from '../commands/mod.command';
 export class ModWarnHandler {
   async handle(
     @Ctx() interaction: ChatInputCommandInteraction,
-    @SlashOpt('target') target: User,
-    @SlashOpt('reason') reason: string | null,
+    @SlashUserOption('target') target: User,
+    @SlashStringOption('reason') reason: string | null,
   ): Promise<void> {
     const reasonText = reason ?? 'No reason provided';
     await interaction.reply(`⚠️ **${target.displayName}** has been warned.\n**Reason:** ${reasonText}`);

@@ -1,4 +1,11 @@
-import { Ctx, SlashCommandHandler, SlashOpt, UseGuards, withOptions } from '@spraxium/common';
+import {
+  Ctx,
+  SlashCommandHandler,
+  SlashStringOption,
+  SlashUserOption,
+  UseGuards,
+  withOptions,
+} from '@spraxium/common';
 import { GuildOnly, PermissionGuard } from '@spraxium/core';
 import type { ChatInputCommandInteraction, GuildMember, User } from 'discord.js';
 import { ModCommand } from '../commands/mod.command';
@@ -8,8 +15,8 @@ import { ModCommand } from '../commands/mod.command';
 export class ModKickHandler {
   async handle(
     @Ctx() interaction: ChatInputCommandInteraction,
-    @SlashOpt('target') target: User,
-    @SlashOpt('reason') reason: string | null,
+    @SlashUserOption('target') target: User,
+    @SlashStringOption('reason') reason: string | null,
   ): Promise<void> {
     if (!interaction.guild) {
       await interaction.reply({ content: '❌ Guild not found.', flags: 'Ephemeral' });

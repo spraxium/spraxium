@@ -1,4 +1,4 @@
-import { Ctx, SlashCommandHandler, SlashOpt } from '@spraxium/common';
+import { Ctx, SlashCommandHandler, SlashStringOption } from '@spraxium/common';
 import { Logger } from '@spraxium/core';
 import type { ChatInputCommandInteraction } from 'discord.js';
 import { ConfigCommand } from '../commands/config.command';
@@ -9,7 +9,7 @@ export class ConfigWelcomeMessageHandler {
 
   async handle(
     @Ctx() interaction: ChatInputCommandInteraction,
-    @SlashOpt('template') template: string,
+    @SlashStringOption('template') template: string,
   ): Promise<void> {
     this.logger.info(`Welcome template updated by ${interaction.user.tag}`);
     await interaction.reply(`📝 Welcome message template updated:\n> ${template}`);

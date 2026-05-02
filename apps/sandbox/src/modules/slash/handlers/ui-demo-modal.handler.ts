@@ -1,13 +1,18 @@
 import { Ctx } from '@spraxium/common';
-import { Field, ModalHandler, type ModalContext } from '@spraxium/components';
+import {
+  ModalCheckboxGroupField,
+  ModalHandler,
+  ModalRadioGroupField,
+  type ModalContext,
+} from '@spraxium/components';
 import { UiDemoModal } from '../modals/ui-demo.modal';
 
 @ModalHandler(UiDemoModal)
 export class UiDemoModalHandler {
   async handle(
     @Ctx() ctx: ModalContext,
-    @Field('option') option: string,
-    @Field('preferences') preferences: string[],
+    @ModalRadioGroupField('option') option: string,
+    @ModalCheckboxGroupField('preferences') preferences: string[],
   ): Promise<void> {
     await ctx.reply({
       content: [

@@ -1,12 +1,12 @@
 import { Ctx } from '@spraxium/common';
-import { Field, type ModalContext, ModalHandler } from '@spraxium/components';
+import { type ModalContext, ModalHandler, ModalTextField } from '@spraxium/components';
 import { FeedbackModal } from '../components/feedback-modal.component';
 
 @ModalHandler(FeedbackModal)
 export class FeedbackModalSubmitCommandHandler {
   async handle(
-    @Field('subject') subject: string,
-    @Field('message') message: string,
+    @ModalTextField('subject') subject: string,
+    @ModalTextField('message') message: string,
     @Ctx() ctx: ModalContext,
   ): Promise<void> {
     await ctx.reply({

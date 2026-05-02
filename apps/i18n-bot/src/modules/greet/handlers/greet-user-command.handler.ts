@@ -1,4 +1,4 @@
-﻿import { Ctx, SlashCommandHandler, SlashOpt } from '@spraxium/common';
+﻿import { Ctx, SlashCommandHandler, SlashUserOption } from '@spraxium/common';
 import type { I18nService } from '@spraxium/i18n';
 import type { ChatInputCommandInteraction, User } from 'discord.js';
 import { GreetCommand } from '../commands/greet.command';
@@ -9,7 +9,7 @@ export class GreetUserHandler {
 
   async handle(
     @Ctx() interaction: ChatInputCommandInteraction,
-    @SlashOpt('target') target: User,
+    @SlashUserOption('target') target: User,
   ): Promise<void> {
     if (target.id === interaction.user.id) {
       const selfMsg = await this.i18n.tUser(interaction.user.id, 'commands.greet.user.self');

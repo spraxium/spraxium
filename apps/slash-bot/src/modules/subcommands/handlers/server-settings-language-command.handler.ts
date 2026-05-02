@@ -1,4 +1,4 @@
-import { Ctx, SlashCommandHandler, SlashOpt } from '@spraxium/common';
+import { Ctx, SlashCommandHandler, SlashStringOption } from '@spraxium/common';
 import type { ChatInputCommandInteraction } from 'discord.js';
 import { ServerCommand } from '../commands/server.command';
 
@@ -6,7 +6,7 @@ import { ServerCommand } from '../commands/server.command';
 export class ServerSettingsLanguageHandler {
   async handle(
     @Ctx() interaction: ChatInputCommandInteraction,
-    @SlashOpt('locale') locale: string,
+    @SlashStringOption('locale') locale: string,
   ): Promise<void> {
     await interaction.reply(`🌐 Server language updated to \`${locale}\`.`);
   }
