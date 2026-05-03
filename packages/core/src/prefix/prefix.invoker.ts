@@ -55,8 +55,6 @@ export class PrefixInvoker {
       const fn = this.resolveMethod(handler);
       if (!fn) return;
 
-      // Set the cooldown before the handler fires so it applies even when the
-      // handler throws, otherwise a handler that always errors can be spammed.
       if (cooldownSeconds > 0) {
         this.cooldowns.set(commandName, message.author.id, cooldownSeconds);
       }

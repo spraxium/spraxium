@@ -11,6 +11,7 @@ import type { ResolvedContextMenuHandler } from './interfaces';
 
 export class ContextMenuInvoker {
   private static readonly warnedHandlers = new Set<object>();
+  private readonly log = logger.child('ContextMenuInvoker');
 
   public async run(
     handler: ResolvedContextMenuHandler,
@@ -27,8 +28,8 @@ export class ContextMenuInvoker {
 
     if (deferOptions && autoDeferOptions && !ContextMenuInvoker.warnedHandlers.has(handler.handlerCtor)) {
       ContextMenuInvoker.warnedHandlers.add(handler.handlerCtor);
-      logger.warn(
-        `[ContextMenuInvoker] ${handler.handlerCtor.name} has both @Defer and @AutoDefer applied, @Defer always fires immediately; @AutoDefer is ignored. Remove @AutoDefer to silence this warning.`,
+      this.log.warn(
+        `${handler.handlerCtor.name} has both @Defer and @AutoDefer — @AutoDefer will be ignored`,
       );
     }
 

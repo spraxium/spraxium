@@ -19,10 +19,6 @@ import { reportHandlerError } from '../helpers/handler-error.helper';
 import { splitCustomId } from '../helpers/split-custom-id.helper';
 import type { Constructor, ResolvedButtonHandler, ResolvedDynamicButtonHandler } from '../interfaces';
 
-/**
- * Handles registration and dispatch of button interactions
- * (both static `@Button` and `@DynamicButton`).
- */
 export class ButtonDispatcher {
   private readonly log = logger.child('ButtonDispatcher');
   private readonly staticHandlers: Array<ResolvedButtonHandler> = [];

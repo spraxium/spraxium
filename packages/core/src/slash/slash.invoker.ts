@@ -13,6 +13,7 @@ import type { SlashOptParam } from './types';
 
 export class SlashInvoker {
   private static readonly warnedHandlers = new Set<object>();
+  private readonly log = logger.child('SlashInvoker');
 
   public async run(handler: ResolvedSlashHandler, interaction: ChatInputCommandInteraction): Promise<void> {
     const ctx = new SpraxiumExecutionContext(interaction, handler.config.name);
@@ -26,8 +27,8 @@ export class SlashInvoker {
 
     if (deferOptions && autoDeferOptions && !SlashInvoker.warnedHandlers.has(handler.handlerCtor)) {
       SlashInvoker.warnedHandlers.add(handler.handlerCtor);
-      logger.warn(
-        `[SlashInvoker] ${handler.handlerCtor.name} has both @Defer and @AutoDefer applied — @Defer always fires immediately; @AutoDefer is ignored. Remove @AutoDefer to silence this warning.`,
+      this.log.warn(
+        `${handler.handlerCtor.name} has both @Defer and @AutoDefer — @AutoDefer will be ignored`,
       );
     }
 

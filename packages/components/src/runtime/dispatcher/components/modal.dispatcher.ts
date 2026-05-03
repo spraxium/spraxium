@@ -22,10 +22,6 @@ import type { ComponentsConfig } from '../../lifecycle';
 import { reportHandlerError } from '../helpers/handler-error.helper';
 import type { Constructor, ResolvedModalHandler } from '../interfaces';
 
-/**
- * Handles registration and dispatch of modal submission interactions.
- * Manages field resolution, validation, and cache clearing.
- */
 export class ModalDispatcher {
   private readonly handlers: Array<ResolvedModalHandler> = [];
 

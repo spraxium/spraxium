@@ -16,7 +16,7 @@ export class DiscordReplyStrategy {
         await DiscordReplyStrategy.replyToMessage(raw as Message, payload);
       }
     } catch {
-      // Intentionally swallowed , exception reply failures must never cascade.
+      // intentionally swallowed — exception reply failures must not cascade
     }
   }
 
@@ -28,8 +28,6 @@ export class DiscordReplyStrategy {
     interaction: ChatInputCommandInteraction,
     payload: ExceptionLayoutPayload,
   ): Promise<void> {
-    // `ephemeral` is a convenience field kept for backwards compat.
-    // discord.js deprecated the boolean; we always convert to MessageFlags.
     const ephemeral = payload.ephemeral ?? true;
     const opts: InteractionReplyOptions = {
       content: payload.content,
@@ -40,8 +38,6 @@ export class DiscordReplyStrategy {
     };
 
     if (interaction.deferred && !interaction.replied) {
-      // The interaction was deferred (e.g. @Defer / @AutoDefer) but not yet replied.
-      // Replace the "Thinking…" placeholder instead of creating a stray follow-up alongside it.
       await interaction.editReply({
         content: payload.content,
         embeds: payload.embeds,
