@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import { METADATA_KEYS } from '@spraxium/common';
 import { GuardExecutor } from '@spraxium/core';
+import { logger } from '@spraxium/logger';
 import {
   type AnySelectMenuInteraction,
   type Client,
@@ -30,6 +31,7 @@ import type { Constructor, ResolvedDynamicSelectHandler, ResolvedSelectHandler }
  * and `@DynamicStringSelect` payload-aware selects.
  */
 export class SelectDispatcher {
+  private readonly log = logger.child('SelectDispatcher');
   private readonly handlers: Array<ResolvedSelectHandler> = [];
   private readonly dynamicHandlers: Array<ResolvedDynamicSelectHandler> = [];
   private config?: ComponentsConfig;
@@ -276,8 +278,8 @@ export class SelectDispatcher {
     const isStatic = this.handlers.some((h) => h.customId === id);
     const isDynamic = this.dynamicHandlers.some((h) => h.baseId === id);
     if (isStatic || isDynamic) {
-      console.warn(
-        `[Spraxium] Select customId / baseId collision detected for "${id}". Two handlers cannot share the same identifier; only the first registered will fire.`,
+      this.log.warn(
+        `Select customId/baseId collision for "${id}". Two handlers share the same identifier; only the first registered will fire.`,
       );
     }
   }

@@ -1,5 +1,8 @@
+import { logger } from '@spraxium/logger';
 import type { Context, Next } from 'hono';
 import type { HttpMiddleware } from '../interfaces';
+
+const log = logger.child('HttpLogger');
 
 export class LoggerMiddleware implements HttpMiddleware {
   async handle(ctx: Context, next: Next): Promise<undefined> {
@@ -9,7 +12,7 @@ export class LoggerMiddleware implements HttpMiddleware {
     const status = ctx.res.status;
     const line = `${ctx.req.method} ${ctx.req.path} ${status} ${ms}ms`;
     if (status >= 400) {
-      console.warn(`[spraxium/http] ${line}`);
+      log.warn(line);
     }
   }
 }
