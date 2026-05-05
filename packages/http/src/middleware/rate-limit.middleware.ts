@@ -17,7 +17,9 @@ export class RateLimitMiddleware implements HttpMiddleware {
   private readonly trustedProxies: ReadonlySet<string>;
 
   constructor(private readonly config: RateLimitConfig) {
-    this.trustedProxies = new Set(config.trustedProxies ?? []);
+    this.trustedProxies = new Set(
+      (config.trustedProxies ?? []).map((proxyIp) => RateLimitMiddleware.normalizeIp(proxyIp)),
+    );
     this.cleanupInterval = setInterval(() => this.evict(), config.windowMs);
     if (this.cleanupInterval.unref) this.cleanupInterval.unref();
   }
@@ -54,8 +56,9 @@ export class RateLimitMiddleware implements HttpMiddleware {
    */
   private resolveClientIp(ctx: Context): string {
     const directIp = RateLimitMiddleware.getDirectIp(ctx);
+    const normalizedDirectIp = directIp ? RateLimitMiddleware.normalizeIp(directIp) : undefined;
 
-    if (directIp && this.trustedProxies.has(directIp)) {
+    if (normalizedDirectIp && this.trustedProxies.has(normalizedDirectIp)) {
       const forwarded = ctx.req.header('x-forwarded-for');
       const clientIp = RateLimitMiddleware.parseLeftmost(forwarded);
       if (clientIp) return clientIp;
@@ -75,6 +78,13 @@ export class RateLimitMiddleware implements HttpMiddleware {
     if (!header) return undefined;
     const first = header.split(',')[0]?.trim();
     return first ? first : undefined;
+  }
+
+  private static normalizeIp(ip: string): string {
+    const value = ip.trim().toLowerCase();
+    const mappedIpv4 = /^::ffff:(\d{1,3}(?:\.\d{1,3}){3})$/i.exec(value);
+    if (mappedIpv4?.[1]) return mappedIpv4[1];
+    return value;
   }
 
   private evict(): void {

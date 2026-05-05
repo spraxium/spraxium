@@ -20,9 +20,18 @@ export function installAutoDefer(interaction: PatchableInteraction, options: Aut
   const threshold = options.threshold ?? 2000;
   let deferred = false;
   let deferPromise: Promise<unknown> | null = null;
+  let timerActive = true;
 
   // biome-ignore lint/suspicious/noExplicitAny: patching discord.js interaction at runtime
   const originalReply = (interaction.reply as (...args: Array<any>) => unknown).bind(interaction);
+
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const cancelTimer = (): void => {
+    timerActive = false;
+    if (!timer) return;
+    clearTimeout(timer);
+    timer = undefined;
+  };
 
   // biome-ignore lint/suspicious/noExplicitAny: patch requires any
   (interaction as any).reply = async (replyOptions: unknown) => {
@@ -30,16 +39,18 @@ export function installAutoDefer(interaction: PatchableInteraction, options: Aut
       if (deferPromise) await deferPromise;
       return interaction.editReply(replyOptions as Parameters<typeof interaction.editReply>[0]);
     }
+    cancelTimer();
     return originalReply(replyOptions);
   };
 
-  const timer = setTimeout(() => {
+  timer = setTimeout(() => {
+    if (!timerActive || interaction.deferred || interaction.replied) return;
     deferred = true;
-    deferPromise = interaction.deferReply({ ephemeral: options.ephemeral ?? false });
+    deferPromise = interaction.deferReply({ ephemeral: options.ephemeral ?? false }).catch(() => undefined);
   }, threshold);
 
   return () => {
-    clearTimeout(timer);
+    cancelTimer();
     // biome-ignore lint/suspicious/noExplicitAny: restoring patched method
     (interaction as any).reply = originalReply;
   };
