@@ -1,3 +1,4 @@
+import * as spraxiumLogger from '@spraxium/logger';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { FieldValidationResult } from '../src/interfaces';
 import { EnvPrinter } from '../src/printer/env.printer';
@@ -35,7 +36,7 @@ describe('EnvPrinter.printReloadDiff', () => {
   let logSpy: ReturnType<typeof vi.spyOn>;
 
   beforeEach(() => {
-    logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    logSpy = vi.spyOn(spraxiumLogger, 'nativeLog').mockImplementation(() => {});
   });
 
   afterEach(() => {
