@@ -19,7 +19,7 @@ export class V2DynamicCommandHandler {
       ],
     };
 
-    const payload = this.v2.buildReply(TopUsersContainer, data);
+    const payload = await this.v2.buildReply(TopUsersContainer, data);
 
     await interaction.reply({
       ...payload,

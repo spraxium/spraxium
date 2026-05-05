@@ -22,7 +22,7 @@ export class V2DynamicHandler {
       ],
     };
 
-    const payload = this.v2.buildReply(LeaderboardContainer, data);
+    const payload = await this.v2.buildReply(LeaderboardContainer, data);
 
     await interaction.reply({
       ...payload,

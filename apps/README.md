@@ -10,6 +10,7 @@ If the documentation is not enough for a specific use case, start from one of th
 |---|---|---|
 | slash-bot | Slash commands | Basic handlers, subcommands, guards, and autocomplete |
 | context-menu-bot | Context menu commands | User and message context menus (right-click → Apps), permissions, and target resolution |
+| dynamic-bot | Dynamic V2 components | Async dynamic rows, generated content, and runtime-driven V2 replies |
 | modal-bot | Modal workflows | Dynamic fields, validation, caching, radio groups, checkboxes, and select menus in modals |
 | components-bot | UI components | Buttons, selects, modals, FlowContext, and V2 container layouts |
 | guard-bot | Guards | Unified guard pipeline across slash commands and component handlers (buttons, selects, modals) |

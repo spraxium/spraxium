@@ -28,7 +28,7 @@ export class V2ClassHandler {
         'https://placehold.co/128x128/5865f2/ffffff.png?text=G',
     };
 
-    const payload = this.v2.buildReply(ServerInsightsContainer, data);
+    const payload = await this.v2.buildReply(ServerInsightsContainer, data);
 
     await interaction.reply({
       ...payload,

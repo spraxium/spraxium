@@ -23,7 +23,12 @@ export class V2ShowcaseHandler {
 
     // The section body is resolved implicitly by buildLocalizedV2
     // reading the i18n key from @V2Section({ i18n: { text: '...' } }).
-    const reply = buildLocalizedV2({ containerClass: InfoContainer, locale, v2Service: this.v2, data });
+    const reply = buildLocalizedV2({
+      containerClass: InfoContainer,
+      locale,
+      v2Service: { build: this.v2.buildSync.bind(this.v2) },
+      data,
+    });
 
     await interaction.reply({
       ...reply,

@@ -7,6 +7,7 @@ export class ServerIconHandler {
   async handle(@Ctx() interaction: ChatInputCommandInteraction): Promise<void> {
     const guild = interaction.guild;
     const iconUrl = guild?.iconURL({ size: 512 });
+    const guildName = guild?.name ?? 'Server';
 
     if (!iconUrl) {
       await interaction.reply({ content: '❌ This server has no icon.', flags: 'Ephemeral' });
@@ -14,7 +15,7 @@ export class ServerIconHandler {
     }
 
     const embed = new EmbedBuilder()
-      .setTitle(`${guild.name} — Server Icon`)
+      .setTitle(`${guildName} — Server Icon`)
       .setImage(iconUrl)
       .setColor(0x5865f2);
 

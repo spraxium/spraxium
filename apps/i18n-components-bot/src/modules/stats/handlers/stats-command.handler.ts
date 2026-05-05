@@ -49,7 +49,7 @@ export class StatsCommandHandler {
     const reply = buildLocalizedV2({
       containerClass: ServerStatsContainer,
       locale,
-      v2Service: this.v2,
+      v2Service: { build: this.v2.buildSync.bind(this.v2) },
       data,
     });
 

@@ -63,7 +63,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/env
       '@spraxium/logger':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../../packages/logger
       discord.js:
         specifier: ^14.26.3
@@ -97,7 +97,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/env
       '@spraxium/logger':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../../packages/logger
       discord.js:
         specifier: ^14.26.3
@@ -134,7 +134,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/env
       '@spraxium/logger':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../../packages/logger
       discord.js:
         specifier: ^14.26.3
@@ -171,7 +171,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/env
       '@spraxium/logger':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../../packages/logger
       discord.js:
         specifier: ^14.26.3
@@ -214,7 +214,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/i18n
       '@spraxium/logger':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../../packages/logger
       '@spraxium/schedule':
         specifier: workspace:*
@@ -222,6 +222,9 @@ importers:
       discord.js:
         specifier: ^14.26.3
         version: 14.26.3
+      hono:
+        specifier: ^4.9.8
+        version: 4.12.15
       reflect-metadata:
         specifier: ^0.2.2
         version: 0.2.2
@@ -263,7 +266,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/i18n
       '@spraxium/logger':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../../packages/logger
       discord.js:
         specifier: ^14.26.3
@@ -303,7 +306,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/i18n
       '@spraxium/logger':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../../packages/logger
       discord.js:
         specifier: ^14.26.3
@@ -340,7 +343,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/env
       '@spraxium/logger':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../../packages/logger
       discord.js:
         specifier: ^14.26.3
@@ -383,11 +386,14 @@ importers:
         specifier: workspace:*
         version: link:../../packages/i18n
       '@spraxium/logger':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../../packages/logger
       '@spraxium/schedule':
         specifier: workspace:*
         version: link:../../packages/schedule
+      class-validator:
+        specifier: ^0.14.2
+        version: 0.14.4
       discord.js:
         specifier: ^14.26.3
         version: 14.26.3
@@ -438,7 +444,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/env
       '@spraxium/logger':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../../packages/logger
       '@spraxium/schedule':
         specifier: workspace:*
@@ -475,7 +481,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/env
       '@spraxium/logger':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../../packages/logger
       '@spraxium/signal':
         specifier: workspace:*
@@ -515,60 +521,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/env
       '@spraxium/logger':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../../packages/logger
-      discord.js:
-        specifier: ^14.26.3
-        version: 14.26.3
-      reflect-metadata:
-        specifier: ^0.2.2
-        version: 0.2.2
-    devDependencies:
-      '@spraxium/cli':
-        specifier: workspace:*
-        version: link:../../packages/cli
-      '@types/node':
-        specifier: ^22.19.15
-        version: 22.19.15
-      tsx:
-        specifier: ^4.19.0
-        version: 4.21.0
-      typescript:
-        specifier: ^5.7.0
-        version: 5.9.3
-
-  apps/upgrade-test-bot:
-    dependencies:
-      '@spraxium/common':
-        specifier: workspace:*
-        version: link:../../packages/common
-      '@spraxium/components':
-        specifier: workspace:*
-        version: link:../../packages/components
-      '@spraxium/core':
-        specifier: workspace:*
-        version: link:../../packages/core
-      '@spraxium/env':
-        specifier: workspace:*
-        version: link:../../packages/env
-      '@spraxium/http':
-        specifier: workspace:*
-        version: link:../../packages/http
-      '@spraxium/i18n':
-        specifier: workspace:*
-        version: link:../../packages/i18n
-      '@spraxium/logger':
-        specifier: workspace:^
-        version: link:../../packages/logger
-      '@spraxium/schedule':
-        specifier: workspace:*
-        version: link:../../packages/schedule
-      '@spraxium/signal':
-        specifier: workspace:*
-        version: link:../../packages/signal
-      '@spraxium/signal-client':
-        specifier: workspace:*
-        version: link:../../packages/signal-client
       discord.js:
         specifier: ^14.26.3
         version: 14.26.3
@@ -601,7 +555,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/env
       '@spraxium/logger':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../../packages/logger
       '@spraxium/webhook':
         specifier: workspace:*
@@ -3468,6 +3422,14 @@ packages:
 
   /class-transformer@0.5.1:
     resolution: {integrity: sha512-SQa1Ws6hUbfC98vKGxZH3KFY0Y1lm5Zm0SY8XX9zbK7FJCyVEac3ATW0RIpwzW+oOfmHE5PMPufDG9hCfoEOMw==}
+    dev: false
+
+  /class-validator@0.14.4:
+    resolution: {integrity: sha512-AwNusCCam51q703dW82x95tOqQp6oC9HNUl724KxJJOfnKscI8dOloXFgyez7LbTTKWuRBA37FScqVbJEoq8Yw==}
+    dependencies:
+      '@types/validator': 13.15.10
+      libphonenumber-js: 1.12.41
+      validator: 13.15.26
     dev: false
 
   /class-validator@0.15.1:
