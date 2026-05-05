@@ -7,7 +7,7 @@ import {
   ModalWhen,
 } from '@spraxium/components';
 import type { ModalFieldDef } from '@spraxium/components';
-import type { SuggestionData } from '../interfaces/suggestion-data.interface';
+import type { SuggestionData } from './suggestion-data.interface';
 
 @ModalDynamic<SuggestionData>()
 @ModalComponent({ id: 'suggestion', title: 'Submit a Suggestion' })

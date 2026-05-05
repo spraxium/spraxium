@@ -3,7 +3,7 @@ import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys.consta
 import type { ModalCacheConfig } from '../interfaces';
 
 /**
- * Class decorator — enables per-user field-value caching on a modal builder.
+ * Class decorator that enables per-user field-value caching on a modal builder.
  *
  * When active and a submission fails validation, submitted values are stored for
  * `ttl` seconds. The next call to `ModalService.buildFor()` will pre-fill them.

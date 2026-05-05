@@ -16,3 +16,10 @@ export type {
   SelectHandlerMeta,
 } from './select-metadata.interface';
 export type { SelectDef } from './select-def.interface';
+export type {
+  DynamicStringSelectConfig,
+  SelectRenderConfig,
+  DynamicSelectComponentMeta,
+  DynamicSelectHandlerMeta,
+  DynamicSelectRenderable,
+} from './dynamic-select.interface';

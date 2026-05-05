@@ -14,7 +14,7 @@ export function Env(envKey: string, options?: EnvOptions): PropertyDecorator {
     meta.envKey = envKey;
     meta.secret = options?.secret ?? true;
     if (options?.default !== undefined) {
-      meta.defaultValue = options.default;
+      meta.defaultValue = String(options.default);
       meta.optional = true;
     }
   };

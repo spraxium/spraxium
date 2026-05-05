@@ -35,10 +35,20 @@ export const COMPONENT_METADATA_KEYS = {
 
   BUTTON_COMPONENT: 'spraxium:button_component',
   BUTTON_HANDLER: 'spraxium:button_handler',
+  BUTTON_DYNAMIC: 'spraxium:button_dynamic',
+  BUTTON_DYNAMIC_HANDLER: 'spraxium:button_dynamic_handler',
+  BUTTON_PAYLOAD_PARAM: 'spraxium:button_payload_param',
+
+  SELECT_DYNAMIC: 'spraxium:select_dynamic',
+  SELECT_DYNAMIC_HANDLER: 'spraxium:select_dynamic_handler',
+  SELECT_PAYLOAD_PARAM: 'spraxium:select_payload_param',
+
+  PAYLOAD_REF_PARAM: 'spraxium:payload_ref_param',
 
   FLOW_CONTEXT_PARAM: 'spraxium:flow_context_param',
 
   V2_CONTAINER: 'spraxium:v2_container',
   V2_CHILDREN: 'spraxium:v2_children',
   V2_WHEN: 'spraxium:v2_when',
+  V2_DYNAMIC_ROW: 'spraxium:v2_dynamic_row',
 } as const;

@@ -18,6 +18,7 @@ export function SelectOption(config: SelectOptionConfig): ClassDecorator {
       description: config.description,
       default: config.default,
       emoji: config.emoji,
+      i18n: config.i18n,
     });
     Reflect.defineMetadata(COMPONENT_METADATA_KEYS.SELECT_OPTIONS_LIST, existing, target);
   };

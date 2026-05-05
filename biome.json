@@ -46,5 +46,17 @@
       "apps/sandbox/*",
       "vscode-extension/**"
     ]
-  }
+  },
+  "overrides": [
+    {
+      "include": ["apps/**/*.ts"],
+      "linter": {
+        "rules": {
+          "style": {
+            "useImportType": "off"
+          }
+        }
+      }
+    }
+  ]
 }

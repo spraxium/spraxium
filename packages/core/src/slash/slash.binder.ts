@@ -1,15 +1,17 @@
 import 'reflect-metadata';
 import { METADATA_KEYS } from '@spraxium/common';
+import { logger } from '@spraxium/logger';
 import type { Client, Interaction } from 'discord.js';
 import { ConfigStore } from '../config';
 import { SpraxiumExecutionContext } from '../context';
-import { ExceptionHandler } from '../exceptions';
-import { logger } from '../logger';
+import { ExceptionHandler, GuardDeniedException } from '../exceptions';
+import { GuardExecutor } from '../guards';
 import type { ResolvedAutocompleteHandler } from './interfaces';
 import { SlashInvoker } from './slash.invoker';
 import type { SlashRegistry } from './slash.registry';
 
 export class SlashBinder {
+  private readonly log = logger.child('SlashBinder');
   private readonly boundClients = new WeakSet<Client>();
   private readonly invoker = new SlashInvoker();
 
@@ -23,7 +25,7 @@ export class SlashBinder {
       void this.handleInteraction(interaction);
     });
 
-    logger.debug(`Slash binder bound , ${this.registry.size} handler(s)`);
+    this.log.debug(`Slash binder bound , ${this.registry.size} handler(s)`);
   }
 
   private async handleInteraction(interaction: Interaction): Promise<void> {
@@ -56,7 +58,21 @@ export class SlashBinder {
       return;
     }
 
+    const ctx = new SpraxiumExecutionContext(interaction, commandName);
+
     try {
+      const passed = await GuardExecutor.execute(
+        autocomplete.handlerCtor as new (
+          ...args: Array<unknown>
+        ) => unknown,
+        'handle',
+        ctx,
+      );
+      if (!passed) {
+        await ExceptionHandler.handle(new GuardDeniedException(), ctx, ConfigStore.getRaw().exceptions);
+        return;
+      }
+
       const proto = autocomplete.handlerCtor.prototype as object;
       const focusedIndex: number | undefined = Reflect.getOwnMetadata(
         METADATA_KEYS.SLASH_FOCUSED_PARAM,
@@ -79,7 +95,6 @@ export class SlashBinder {
         );
       }
     } catch (err) {
-      const ctx = new SpraxiumExecutionContext(interaction, commandName);
       await ExceptionHandler.handle(err, ctx, ConfigStore.getRaw().exceptions);
     }
   }

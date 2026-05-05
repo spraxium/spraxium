@@ -2,7 +2,7 @@ import type { ContextStorageAdapter } from '../interfaces/context-storage.interf
 import type { SpraxiumContext } from '../interfaces/spraxium-context.interface';
 
 /**
- * In-process memory adapter — identical behaviour to the original ContextRegistry.
+ * In-process memory adapter: identical behaviour to the original ContextRegistry.
  * All data is lost when the process restarts. Use as a lightweight default when
  * persistence is not required.
  */
@@ -12,7 +12,7 @@ export class MemoryContextAdapter implements ContextStorageAdapter {
   async get(id: string): Promise<SpraxiumContext<unknown> | undefined> {
     const ctx = this.store.get(id);
     if (!ctx) return undefined;
-    if (ctx.expiresAt <= Date.now()) {
+    if (ctx.expiresAt !== 0 && ctx.expiresAt <= Date.now()) {
       this.store.delete(id);
       return undefined;
     }

@@ -19,8 +19,25 @@ export { SlashCommand } from './slash-command.decorator';
 export { SlashCommandHandler } from './slash-command-handler.decorator';
 export { SlashOption } from './slash-option.decorator';
 export { SlashOpt } from './slash-opt.decorator';
+export {
+  SlashStringOption,
+  SlashIntegerOption,
+  SlashNumberOption,
+  SlashBooleanOption,
+  SlashUserOption,
+  SlashChannelOption,
+  SlashRoleOption,
+  SlashMentionableOption,
+  SlashAttachmentOption,
+} from './slash-typed-options.decorator';
 export { SlashFocused } from './slash-focused.decorator';
 export { SlashSubcommand } from './slash-subcommand.decorator';
 export { SlashSubcommandGroup } from './slash-subcommand-group.decorator';
 export { SlashSubcommandGroups } from './slash-subcommand-groups.decorator';
 export { SlashAutocompleteHandler } from './slash-autocomplete-handler.decorator';
+export { ContextMenuCommand } from './context-menu-command.decorator';
+export { ContextMenuCommandHandler } from './context-menu-command-handler.decorator';
+export { Defer } from './defer.decorator';
+export { AutoDefer } from './auto-defer.decorator';
+export type { AutoDeferOptions } from './auto-defer.decorator';
+export type { DeferOptions } from './defer.decorator';

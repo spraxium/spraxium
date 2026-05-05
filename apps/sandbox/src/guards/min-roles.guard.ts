@@ -1,6 +1,6 @@
 import { Guard, GuardOption } from '@spraxium/common';
 import type { ExecutionContext, SpraxiumGuard } from '@spraxium/common';
-import { Logger } from '@spraxium/core';
+import { Logger } from '@spraxium/logger';
 import type { ChatInputCommandInteraction, GuildMember } from 'discord.js';
 
 @Guard()

@@ -1,5 +1,5 @@
 import type { Constructor } from '@spraxium/common';
-import type { Client } from 'discord.js';
+import type { Client, RESTPostAPIApplicationCommandsJSONBody } from 'discord.js';
 import type { ResolvedSlashEntry } from './interfaces';
 import { SlashBinder } from './slash.binder';
 import { SlashRegistrar } from './slash.registrar';
@@ -27,8 +27,15 @@ export class SlashDispatcher {
     this.binder.bind(client);
   }
 
-  public async register(token: string, clientId: string, guildId?: string, force = false): Promise<void> {
-    await this.registrar.register(token, clientId, guildId, force);
+  public async register(
+    token: string,
+    clientId: string,
+    guildId?: string,
+    force = false,
+    extraPayloads: Array<RESTPostAPIApplicationCommandsJSONBody> = [],
+    extraGuildPayloads: Map<string, Array<RESTPostAPIApplicationCommandsJSONBody>> = new Map(),
+  ): Promise<void> {
+    await this.registrar.register(token, clientId, guildId, force, extraPayloads, extraGuildPayloads);
   }
 
   public buildPayloads(): ReturnType<SlashRegistrar['buildPayloads']> {

@@ -1,4 +1,4 @@
-import chalk from 'chalk';
+import { ANSI, nativeError, nativeLog } from '@spraxium/logger';
 import { UnicodeConstant } from '../constants';
 
 const SPINNER_FRAMES = [
@@ -16,54 +16,54 @@ const SPINNER_FRAMES = [
 
 export class CliLogger {
   info(message: string): void {
-    console.log(`  ${chalk.cyan(UnicodeConstant.INFO)}  ${message}`);
+    nativeLog(`  ${ANSI.cyan(UnicodeConstant.INFO)}  ${message}`);
   }
 
   success(message: string): void {
-    console.log(`  ${chalk.green(UnicodeConstant.CHECK)}  ${chalk.green(message)}`);
+    nativeLog(`  ${ANSI.green(UnicodeConstant.CHECK)}  ${ANSI.green(message)}`);
   }
 
   error(message: string): void {
-    console.error(`  ${chalk.red(UnicodeConstant.CROSS)}  ${chalk.red(message)}`);
+    nativeError(`  ${ANSI.red(UnicodeConstant.CROSS)}  ${ANSI.red(message)}`);
   }
 
   warn(message: string): void {
-    console.log(`  ${chalk.yellow(UnicodeConstant.WARN)}  ${chalk.yellow(message)}`);
+    nativeLog(`  ${ANSI.yellow(UnicodeConstant.WARN)}  ${ANSI.yellow(message)}`);
   }
 
   star(message: string): void {
-    console.log(`  ${chalk.yellow(UnicodeConstant.STAR)}  ${chalk.yellow(message)}`);
+    nativeLog(`  ${ANSI.yellow(UnicodeConstant.STAR)}  ${ANSI.yellow(message)}`);
   }
 
   blank(): void {
-    console.log();
+    nativeLog();
   }
 
   step(text: string): void {
-    process.stdout.write(`  ${chalk.dim(UnicodeConstant.CIRCLE)}  ${chalk.dim(text)}\r`);
+    process.stdout.write(`  ${ANSI.dim(UnicodeConstant.CIRCLE)}  ${ANSI.dim(text)}\r`);
   }
 
   result(ok: boolean, text: string): void {
-    const icon = ok ? chalk.green(UnicodeConstant.CHECK) : chalk.red(UnicodeConstant.CROSS);
-    const msg = ok ? chalk.green(text) : chalk.red(text);
-    console.log(`  ${icon}  ${msg}          `);
+    const icon = ok ? ANSI.green(UnicodeConstant.CHECK) : ANSI.red(UnicodeConstant.CROSS);
+    const msg = ok ? ANSI.green(text) : ANSI.red(text);
+    nativeLog(`  ${icon}  ${msg}          `);
   }
 
   async spinner(label: string, fn: () => Promise<{ ok: boolean; output: string }>): Promise<boolean> {
     let i = 0;
     const timer = setInterval(() => {
       process.stdout.write(
-        `  ${chalk.cyan(SPINNER_FRAMES[i++ % SPINNER_FRAMES.length] ?? '|')}  ${chalk.dim(label)}\r`,
+        `  ${ANSI.cyan(SPINNER_FRAMES[i++ % SPINNER_FRAMES.length] ?? '|')}  ${ANSI.dim(label)}\r`,
       );
     }, 80);
     const { ok, output } = await fn();
     clearInterval(timer);
     if (!ok && output) {
-      console.log();
-      console.log(chalk.dim('\u2500'.repeat(60)));
-      console.log(chalk.dim(output));
-      console.log(chalk.dim('\u2500'.repeat(60)));
-      console.log();
+      nativeLog();
+      nativeLog(ANSI.dim('\u2500'.repeat(60)));
+      nativeLog(ANSI.dim(output));
+      nativeLog(ANSI.dim('\u2500'.repeat(60)));
+      nativeLog();
     }
     return ok;
   }

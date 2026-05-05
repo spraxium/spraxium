@@ -2,22 +2,22 @@ import { Listener, On } from '@spraxium/common';
 import {
   CooldownException,
   GuildOnlyException,
-  Logger,
   OwnerOnlyException,
   PermissionDeniedException,
   ValidationException,
 } from '@spraxium/core';
+import { logger } from '@spraxium/logger';
 import { Events, type Message } from 'discord.js';
 import { AccountSuspendedException } from './account-suspended.exception';
 
 @Listener(Events.MessageCreate)
 export class ExceptionsDemoListener {
-  private logger = new Logger(ExceptionsDemoListener.name);
+  private readonly log = logger.child(ExceptionsDemoListener.name);
 
   @On()
   async onMessage(message: Message): Promise<void> {
     if (message.author.bot) return;
-    this.logger.info(`Received message: ${message.content}`);
+    this.log.info(`Received message: ${message.content}`);
     if (!message.content.startsWith('!ex')) return;
 
     const [, type] = message.content.split(' ');

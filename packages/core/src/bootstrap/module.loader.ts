@@ -7,9 +7,10 @@ import type {
 } from '@spraxium/common';
 import { METADATA_KEYS } from '@spraxium/common';
 import { ReadonlyContainer } from '@spraxium/common';
+import { logger } from '@spraxium/logger';
 import { Client } from 'discord.js';
+import { ContextMenuDispatcher } from '../context-menu';
 import { ListenerDispatcher } from '../listeners';
-import { logger } from '../logger';
 import { PrefixDispatcher } from '../prefix';
 import { SlashDispatcher } from '../slash';
 import { spraxiumError } from '../utils';
@@ -19,6 +20,7 @@ import { SpraxiumContainer } from './spraxium.container';
 
 export class ModuleLoader {
   static readonly instanceScanners: Set<(instance: unknown) => void> = new Set();
+  private readonly log = logger.child('ModuleLoader');
   private readonly rootContainer = new SpraxiumContainer();
   private readonly bootHooks: Array<SpraxiumOnBoot> = [];
   private readonly shutdownHooks: Array<SpraxiumOnShutdown> = [];
@@ -27,6 +29,7 @@ export class ModuleLoader {
   private readonly listenerDispatcher = new ListenerDispatcher();
   private readonly prefixDispatcher = new PrefixDispatcher();
   private readonly slashDispatcher = new SlashDispatcher();
+  private readonly contextMenuDispatcher = new ContextMenuDispatcher();
   private readonly moduleRows: Array<ModuleRow> = [];
 
   load(rootModule: Constructor, client: Client, globalProviders: Map<unknown, unknown> = new Map()): void {
@@ -36,10 +39,11 @@ export class ModuleLoader {
     this.rootContainer.set(ListenerDispatcher, this.listenerDispatcher);
     this.rootContainer.set(PrefixDispatcher, this.prefixDispatcher);
     this.rootContainer.set(SlashDispatcher, this.slashDispatcher);
+    this.rootContainer.set(ContextMenuDispatcher, this.contextMenuDispatcher);
     this.rootContainer.set(Client, client);
     this.rootContainer.set(ReadonlyContainer, this.rootContainer);
     this.loadModule(rootModule, this.rootContainer);
-    logger.debug('Module tree loaded');
+    this.log.debug('Module tree loaded');
   }
 
   private loadModule(moduleCtor: Constructor, parentContainer: SpraxiumContainer): void {
@@ -71,6 +75,7 @@ export class ModuleLoader {
     for (const commandCtor of metadata.commands ?? []) {
       this.prefixDispatcher.registerCommand(commandCtor);
       this.slashDispatcher.registerCommand(commandCtor);
+      this.contextMenuDispatcher.registerCommand(commandCtor);
     }
 
     for (const handlerCtor of metadata.handlers ?? []) {
@@ -79,6 +84,7 @@ export class ModuleLoader {
       this.prefixDispatcher.registerHandler(handlerCtor, instance);
       this.slashDispatcher.registerHandler(handlerCtor, instance);
       this.slashDispatcher.registerAutocompleteHandler(handlerCtor, instance);
+      this.contextMenuDispatcher.registerHandler(handlerCtor, instance);
       this.registerLifecycle(instance);
     }
 
@@ -100,7 +106,7 @@ export class ModuleLoader {
       global: isGlobal,
     });
 
-    logger.debug(`Loaded module: ${moduleCtor.name}`);
+    this.log.debug(`Loaded module: ${moduleCtor.name}`);
   }
 
   private instantiate<T>(ctor: Constructor<T>, container: SpraxiumContainer): T {
@@ -253,12 +259,17 @@ export class ModuleLoader {
     return this.slashDispatcher;
   }
 
+  getContextMenuDispatcher(): ContextMenuDispatcher {
+    return this.contextMenuDispatcher;
+  }
+
   printBootTables(): void {
     printBootTables(
       this.moduleRows,
       this.listenerDispatcher.getResolved(),
       this.prefixDispatcher.getResolved(),
       this.slashDispatcher.getResolved(),
+      this.contextMenuDispatcher.getResolved(),
     );
   }
 }

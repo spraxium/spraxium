@@ -1,4 +1,5 @@
 import type { ChannelType } from 'discord.js';
+import type { SelectI18nKeys } from '../../../interfaces';
 import type { SelectOptionConfig } from './select-option.interface';
 
 export interface SelectBaseConfig {
@@ -7,6 +8,8 @@ export interface SelectBaseConfig {
   minValues?: number;
   maxValues?: number;
   disabled?: boolean;
+  /** i18n key overrides resolved at render time via `buildLocalizedSelect()`. */
+  i18n?: SelectI18nKeys;
 }
 
 export interface StringSelectConfig extends SelectBaseConfig {

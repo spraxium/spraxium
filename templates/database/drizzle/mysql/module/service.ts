@@ -1,5 +1,5 @@
 import { Injectable, type SpraxiumOnBoot, type SpraxiumOnShutdown } from '@spraxium/common';
-import { Logger } from '@spraxium/core';
+import { Logger } from '@spraxium/logger';
 import { AppEnv } from '../../app.env';
 import { type MySql2Database, drizzle } from 'drizzle-orm/mysql2';
 import mysql from 'mysql2/promise';

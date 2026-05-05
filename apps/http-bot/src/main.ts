@@ -1,5 +1,6 @@
-﻿import { IntentPreset, Logger, SpraxiumFactory } from '@spraxium/core';
+﻿import { IntentPreset, SpraxiumFactory } from '@spraxium/core';
 import { EnvValidator } from '@spraxium/env';
+import { Logger } from '@spraxium/logger';
 import { AppEnv } from './app.env';
 import { AppModule } from './app.module';
 

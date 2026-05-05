@@ -1,12 +1,11 @@
 ﻿import 'reflect-metadata';
 import fs from 'node:fs';
 import path from 'node:path';
-import chalk from 'chalk';
+import { ANSI, nativeError, nativeLog, nativeWarn } from '@spraxium/logger';
 import { ICONS } from '../constants/icons.constant';
 import { MESSAGES } from '../constants/messages.constant';
 import { ENV_SCHEMA_METADATA_KEY } from '../constants/metadata-keys.constant';
-import type { FieldValidationResult } from '../interfaces/field-validation-result.interface';
-import type { ValidateOptions } from '../interfaces/validate-options.interface';
+import type { EnvFieldMeta, FieldValidationResult, ValidateOptions } from '../interfaces';
 import { EnvPrinter } from '../printer/env.printer';
 import { DotEnvParser } from '../utils/dotenv.parser';
 import { MetadataHelper } from '../utils/metadata.util';
@@ -31,7 +30,7 @@ export class EnvValidator {
 
     const hasMeta = Reflect.getMetadata(ENV_SCHEMA_METADATA_KEY, schemaClass);
     if (!hasMeta) {
-      console.warn(MESSAGES.WARN_MISSING_SCHEMA(schemaClass.name));
+      nativeWarn(MESSAGES.WARN_MISSING_SCHEMA(schemaClass.name));
     }
 
     const fieldsMap = MetadataHelper.collectAllFields(
@@ -71,13 +70,16 @@ export class EnvValidator {
   }
 
   private static waitForEnvFix(
-    fields: Array<import('../interfaces/env-field.interface').EnvFieldMeta>,
+    fields: Array<EnvFieldMeta>,
     initialErrors: Array<EnvFieldError>,
   ): Array<FieldValidationResult> {
     let errors = initialErrors;
+    // Snapshot the field state before we start polling for fixes so we can
+    // show the developer exactly which values changed once the env is valid.
+    let prevResults: Array<FieldValidationResult> = fields.map((f) => FieldValidator.validate(f));
 
     EnvPrinter.printReloadError(errors);
-    console.log(chalk.yellow(MESSAGES.WATCHING_ENV) + chalk.dim(MESSAGES.HINT_SAVE_TO_RETRY));
+    nativeLog(ANSI.yellow(MESSAGES.WATCHING_ENV) + ANSI.dim(MESSAGES.HINT_SAVE_TO_RETRY));
 
     let elapsed = 0;
 
@@ -86,7 +88,7 @@ export class EnvValidator {
       elapsed += EnvValidator.POLL_MS;
 
       if (elapsed >= EnvValidator.MAX_WAIT_MS) {
-        console.error(chalk.red(`\n${ICONS.ERROR} ${MESSAGES.TIMED_OUT}\n`));
+        nativeError(ANSI.red(`\n${ICONS.ERROR} ${MESSAGES.TIMED_OUT}\n`));
         EnvPrinter.printFailureAndExit(errors);
       }
 
@@ -98,7 +100,10 @@ export class EnvValidator {
         .map((r) => r.error);
 
       if (nextErrors.length === 0) {
-        console.log(chalk.green(`${ICONS.SUCCESS} ${MESSAGES.ENV_FIXED}`));
+        nativeLog(ANSI.green(`${ICONS.SUCCESS} ${MESSAGES.ENV_FIXED}`));
+        // Show the developer precisely which env values they just changed.
+        // Secrets are masked by the printer itself.
+        EnvPrinter.printReloadDiff(prevResults, nextResults);
         return nextResults;
       }
 
@@ -106,6 +111,10 @@ export class EnvValidator {
         EnvPrinter.printReloadError(nextErrors);
         errors = nextErrors;
       }
+      // Advance the previous snapshot so the diff on eventual success shows
+      // the last observed state against the successful reload, not the very
+      // first state from before any fixes were applied.
+      prevResults = nextResults;
     }
 
     return fields.map((f) => FieldValidator.validate(f));

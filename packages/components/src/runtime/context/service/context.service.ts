@@ -26,7 +26,7 @@ export class ContextService {
       data,
       createdAt: now,
       ttl,
-      expiresAt: now + ttl * 1_000,
+      expiresAt: ttl === 0 ? 0 : now + ttl * 1_000,
       restrictedTo: options?.restrictedTo,
     };
     await ContextStore.set(ctx as SpraxiumContext<unknown>);

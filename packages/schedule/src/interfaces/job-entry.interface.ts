@@ -5,6 +5,7 @@ export interface JobEntry {
   type: JobType;
   expression?: string;
   intervalMs?: number;
+  runAt?: Date;
   timezone?: string;
   fn: () => Promise<void>;
   running: boolean;
@@ -15,4 +16,5 @@ export interface JobEntry {
   runCount: number;
   intervalHandle?: ReturnType<typeof setInterval>;
   timeoutHandle?: ReturnType<typeof setTimeout>;
+  description?: string;
 }

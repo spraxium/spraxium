@@ -1,5 +1,6 @@
 import { Injectable } from '@spraxium/common';
-import { ConfigStore, Logger, ModuleLoader } from '@spraxium/core';
+import { ConfigStore, ModuleLoader } from '@spraxium/core';
+import { logger } from '@spraxium/logger';
 import { MESSAGES } from '../constants/messages.constant';
 import { MemoryDriver } from '../drivers/memory.driver';
 import type { JobEntry } from '../interfaces/job-entry.interface';
@@ -11,7 +12,7 @@ import { JobScanner } from './job.scanner';
 
 @Injectable()
 export class ScheduleRegistry {
-  private readonly log = new Logger('ScheduleRegistry');
+  private readonly log = logger.child('ScheduleRegistry');
   private readonly jobs = new Map<string, JobEntry>();
   private readonly pendingAfterOnline: Array<JobEntry> = [];
   private readonly scanner: JobScanner;
@@ -58,6 +59,10 @@ export class ScheduleRegistry {
     for (const job of this.pendingAfterOnline) {
       if (!job.disabled) this.startAfterOnlineJob(job);
     }
+    // Clear the pending list after draining - jobs have been handed off to
+    // their own timers and no longer need to be tracked here. Without this
+    // the array would hold references until shutdown(), causing a minor leak.
+    this.pendingAfterOnline.length = 0;
   }
 
   async shutdown(): Promise<void> {
@@ -149,6 +154,15 @@ export class ScheduleRegistry {
         await this.executeJob(job);
         this.jobs.delete(job.name);
       }, ms);
+      return;
+    }
+
+    if (job.type === 'run-once') {
+      const delay = Math.max(0, (job.runAt?.getTime() ?? Date.now()) - Date.now());
+      job.timeoutHandle = setTimeout(async () => {
+        await this.executeJob(job);
+        this.jobs.delete(job.name);
+      }, delay);
     }
   }
 
@@ -190,7 +204,9 @@ export class ScheduleRegistry {
     const ttlMs =
       job.type === 'cron'
         ? Math.max(30_000, getNextRunDate(job.expression ?? '', job.timezone).getTime() - Date.now())
-        : (job.intervalMs ?? this.lockTtlMs);
+        : job.type === 'run-once'
+          ? Math.max(30_000, (job.runAt?.getTime() ?? Date.now()) - Date.now())
+          : (job.intervalMs ?? this.lockTtlMs);
     const acquired = await this.driver.acquireLock(job.name, ttlMs);
 
     if (!acquired) {
@@ -221,6 +237,7 @@ export class ScheduleRegistry {
       lastRun: job.lastRun,
       nextRun: job.nextRun,
       runCount: job.runCount,
+      description: job.description,
     };
   }
 }

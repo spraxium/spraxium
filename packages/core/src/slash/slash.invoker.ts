@@ -1,31 +1,58 @@
 import 'reflect-metadata';
-import { METADATA_KEYS } from '@spraxium/common';
+import { type AutoDeferOptions, type DeferOptions, METADATA_KEYS } from '@spraxium/common';
+import { logger } from '@spraxium/logger';
 import type { ChatInputCommandInteraction } from 'discord.js';
 import { ConfigStore } from '../config';
 import { SpraxiumExecutionContext } from '../context';
 import { ExceptionHandler, GuardDeniedException } from '../exceptions';
 import { GuardExecutor } from '../guards';
+import { installAutoDefer } from '../utils/auto-defer.util';
 import { resolveOptionValue, resolveOptionsFromCommand } from './helpers';
 import type { ResolvedSlashHandler } from './interfaces';
 import type { SlashOptParam } from './types';
 
 export class SlashInvoker {
+  private static readonly warnedHandlers = new Set<object>();
+  private readonly log = logger.child('SlashInvoker');
+
   public async run(handler: ResolvedSlashHandler, interaction: ChatInputCommandInteraction): Promise<void> {
     const ctx = new SpraxiumExecutionContext(interaction, handler.config.name);
 
-    const passed = await GuardExecutor.execute(
-      handler.handlerCtor as new (
-        ...args: Array<unknown>
-      ) => unknown,
-      'handle',
-      ctx,
-    );
-    if (!passed) {
-      await ExceptionHandler.handle(new GuardDeniedException(), ctx, ConfigStore.getRaw().exceptions);
-      return;
+    const deferOptions = Reflect.getOwnMetadata(METADATA_KEYS.DEFER, handler.handlerCtor) as
+      | DeferOptions
+      | undefined;
+    const autoDeferOptions = Reflect.getOwnMetadata(METADATA_KEYS.AUTO_DEFER, handler.handlerCtor) as
+      | AutoDeferOptions
+      | undefined;
+
+    if (deferOptions && autoDeferOptions && !SlashInvoker.warnedHandlers.has(handler.handlerCtor)) {
+      SlashInvoker.warnedHandlers.add(handler.handlerCtor);
+      this.log.warn(
+        `${handler.handlerCtor.name} has both @Defer and @AutoDefer — @AutoDefer will be ignored`,
+      );
     }
 
+    let cleanupAutoDefer: (() => void) | undefined;
+
     try {
+      const passed = await GuardExecutor.execute(
+        handler.handlerCtor as new (
+          ...args: Array<unknown>
+        ) => unknown,
+        'handle',
+        ctx,
+      );
+      if (!passed) {
+        await ExceptionHandler.handle(new GuardDeniedException(), ctx, ConfigStore.getRaw().exceptions);
+        return;
+      }
+
+      if (deferOptions) {
+        await interaction.deferReply({ ephemeral: deferOptions.ephemeral ?? false });
+      }
+
+      cleanupAutoDefer = autoDeferOptions ? installAutoDefer(interaction, autoDeferOptions) : undefined;
+
       const params = this.buildParams(handler, interaction);
       const fn = this.resolveMethod(handler);
       if (!fn) return;
@@ -33,6 +60,8 @@ export class SlashInvoker {
       await Promise.resolve(fn.call(handler.instance, ...params));
     } catch (err) {
       await ExceptionHandler.handle(err, ctx, ConfigStore.getRaw().exceptions);
+    } finally {
+      cleanupAutoDefer?.();
     }
   }
 
@@ -64,7 +93,7 @@ export class SlashInvoker {
       } else {
         const optParam = optParamMap.find((p) => p.index === i);
         if (optParam) {
-          const meta = optionsByName.get(optParam.name);
+          const meta = optParam.type ? { type: optParam.type } : optionsByName.get(optParam.name);
           if (meta) {
             params.push(resolveOptionValue(interaction, optParam.name, meta.type));
           } else {

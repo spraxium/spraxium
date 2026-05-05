@@ -2,6 +2,23 @@
   "name": "@spraxium/cli",
   "version": "0.1.8",
   "private": false,
+  "description": "Spraxium CLI for project scaffolding, module generation and developer tooling",
+  "keywords": [
+    "discord",
+    "discord.js",
+    "discord-bot",
+    "spraxium",
+    "cli",
+    "scaffolding",
+    "code-generator",
+    "module-generator",
+    "bot-framework",
+    "typescript",
+    "create-bot",
+    "project-template",
+    "developer-tools",
+    "monorepo"
+  ],
   "type": "module",
   "bin": {
     "spraxium": "./dist/index.js"
@@ -13,16 +30,18 @@
   },
   "dependencies": {
     "@inquirer/prompts": "^8.3.2",
+    "@spraxium/logger": "workspace:*",
     "@swc-node/register": "^1.11.1",
     "@swc/core": "^1.15.18",
-    "chalk": "^5.4.0",
     "commander": "^13.1.0",
     "execa": "^9.5.0",
     "giget": "^3.2.0",
-    "minimatch": "^10.0.1"
+    "minimatch": "^10.0.1",
+    "shell-quote": "^1.8.3"
   },
   "devDependencies": {
     "@types/node": "^22.19.15",
+    "@types/shell-quote": "^1.7.5",
     "tsdown": "^0.12.0",
     "typescript": "^5.7.0",
     "vitest": "^3.0.0"

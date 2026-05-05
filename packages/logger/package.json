@@ -1,0 +1,32 @@
+{
+  "name": "@spraxium/logger",
+  "version": "0.1.0",
+  "private": false,
+  "description": "Centralized structured logging system for the Spraxium ecosystem",
+  "keywords": ["discord", "discord-bot", "spraxium", "typescript", "logger", "logging", "bot-framework"],
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "cli-table3": "^0.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.0",
+    "tsdown": "^0.12.0",
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0"
+  },
+  "files": ["dist"],
+  "license": "Apache-2.0"
+}

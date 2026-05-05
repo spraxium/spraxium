@@ -1,5 +1,5 @@
 import { Events, Listener, Once } from '@spraxium/common';
-import { Logger } from '@spraxium/core';
+import { Logger } from '@spraxium/logger';
 import type { Client } from 'discord.js';
 
 @Listener(Events.ClientReady)

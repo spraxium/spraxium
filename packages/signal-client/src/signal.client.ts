@@ -1,5 +1,6 @@
 import { AllWebhooksRateLimitedError } from './errors/all-webhooks-rate-limited.error';
 import { SignalClientError } from './errors/signal-client.error';
+import { SignalPayloadTooLargeError } from './errors/signal-payload-too-large.error';
 import { FallbackWorker } from './fallback/fallback.worker';
 import type { FallbackConfig, FallbackStore } from './fallback/interfaces';
 import type { SendOptions } from './interfaces/send-options.interface';
@@ -71,6 +72,38 @@ export class SignalClient {
   }
 
   /**
+   * Delivers a pre-built, signed envelope without constructing a new one.
+   * Use this for retries where the original nonce and signature must be
+   * preserved (e.g. {@link FallbackWorker}).
+   *
+   * @throws {SignalClientError} on non-2xx, non-429 HTTP responses.
+   * @throws {AllWebhooksRateLimitedError} when all webhooks are rate-limited (strategy 'skip').
+   * @throws {RangeError} if `options.webhookIndex` is out of bounds.
+   */
+  async sendEnvelope(envelope: SignalEnvelope, options: SendOptions = {}): Promise<void> {
+    try {
+      if (options.webhookIndex !== undefined) {
+        await this.deliver(this._pool.get(options.webhookIndex), options.webhookIndex, envelope);
+        return;
+      }
+
+      const entry = this._pool.next();
+      if (!entry) {
+        await this.handleAllRateLimited(envelope);
+        return;
+      }
+
+      await this.deliver(entry.url, entry.index, envelope);
+    } catch (err) {
+      if (this._fallback?.shouldTrack(envelope.event) && !options.skipFallback) {
+        await this._fallback.enqueue(envelope, envelope.event, envelope.guildId);
+        return;
+      }
+      throw err;
+    }
+  }
+
+  /**
    * Builds, signs, and delivers a signal envelope.
    *
    * On HTTP 429, the rate-limited webhook is marked in the pool and the next
@@ -94,35 +127,19 @@ export class SignalClient {
     payload: Record<string, unknown> = {},
     options: SendOptions = {},
   ): Promise<void> {
-    const envelope = this.builder.build(event, guildId, payload);
-
-    try {
-      if (options.webhookIndex !== undefined) {
-        await this.deliver(this._pool.get(options.webhookIndex), options.webhookIndex, envelope);
-        return;
-      }
-
-      const entry = this._pool.next();
-      if (!entry) {
-        await this.handleAllRateLimited(envelope);
-        return;
-      }
-
-      await this.deliver(entry.url, entry.index, envelope);
-    } catch (err) {
-      if (this._fallback?.shouldTrack(event) && !options.skipFallback) {
-        await this._fallback.enqueue(envelope, event, guildId);
-        return;
-      }
-      throw err;
-    }
+    return this.sendEnvelope(this.builder.build(event, guildId, payload), options);
   }
 
   private async deliver(url: string, index: number, envelope: SignalEnvelope): Promise<void> {
+    const serialized = JSON.stringify(envelope);
+    if (serialized.length > 1900) {
+      throw new SignalPayloadTooLargeError(envelope.event, envelope.guildId, serialized.length);
+    }
+
     const response = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ content: JSON.stringify(envelope) }),
+      body: JSON.stringify({ content: serialized }),
     });
 
     if (response.status === 429) {

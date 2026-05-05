@@ -1,4 +1,5 @@
 import type { SeparatorSpacingSize } from 'discord.js';
+import type { V2SectionI18nKeys, V2TextDisplayI18nKeys } from '../../../interfaces';
 import type { AnyConstructor } from '../../../types';
 import type { DescriptionBuilder } from '../../embed';
 
@@ -10,11 +11,13 @@ export type V2ChildType =
   | 'thumbnail'
   | 'file'
   | 'actionRow'
-  | 'dynamic';
+  | 'dynamic'
+  | 'dynamicRow';
 
 export interface V2TextDisplayConfig {
   // biome-ignore lint/suspicious/noExplicitAny: generic callable type required
   content: string | DescriptionBuilder | ((data: any) => string | DescriptionBuilder);
+  i18n?: V2TextDisplayI18nKeys;
 }
 
 export interface V2MediaGalleryItem {
@@ -33,6 +36,7 @@ export interface V2SectionConfig {
   text: string | DescriptionBuilder | ((data: any) => string | DescriptionBuilder);
   button?: AnyConstructor;
   thumbnail?: V2ThumbnailConfig;
+  i18n?: V2SectionI18nKeys;
 }
 
 export interface V2SeparatorConfig {
@@ -74,6 +78,25 @@ export interface V2DynamicConfig {
   factory: (data: any) => Array<V2DynamicChildSpec>;
 }
 
+/**
+ * Configuration for `@V2DynamicRow`: auto-chunked rows of dynamic buttons.
+ *
+ * Provide either:
+ *  - `dynamic` + `items`: render N items through a `@DynamicButton` class
+ *    (auto-chunked into rows of 5).
+ *  - `components`: a factory returning an array of `@Button` classes; these
+ *    are also auto-chunked into rows of 5.
+ */
+export interface V2DynamicRowConfig {
+  /** A `@DynamicButton`-decorated class. Each item produces one button. */
+  dynamic?: AnyConstructor;
+  // biome-ignore lint/suspicious/noExplicitAny: factory receives caller-defined data types
+  items?: ((data: any) => ReadonlyArray<unknown>) | ReadonlyArray<unknown>;
+  /** Or a factory returning a list of `@Button` classes (chunked into rows of 5). */
+  // biome-ignore lint/suspicious/noExplicitAny: factory receives caller-defined data types
+  components?: ((data: any) => Array<AnyConstructor>) | Array<AnyConstructor>;
+}
+
 export interface V2ChildDef {
   type: V2ChildType;
   propertyKey: string;
@@ -86,7 +109,8 @@ export interface V2ChildDef {
     | V2ThumbnailConfig
     | V2FileConfig
     | V2ActionRowConfig
-    | V2DynamicConfig;
+    | V2DynamicConfig
+    | V2DynamicRowConfig;
   // biome-ignore lint/suspicious/noExplicitAny: generic callable type required
   when?: (data: any) => boolean;
 }

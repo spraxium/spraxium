@@ -91,8 +91,37 @@ export class WebhookPool {
     return this.urls.map((url, index) => {
       const expiry = this.cooldowns.get(index) ?? 0;
       const rateLimitedUntil = expiry > now ? expiry : 0;
-      return { index, url, available: rateLimitedUntil === 0, rateLimitedUntil };
+      return {
+        index,
+        url: WebhookPool.redactWebhookUrl(url),
+        available: rateLimitedUntil === 0,
+        rateLimitedUntil,
+      };
     });
+  }
+
+  private static redactWebhookUrl(url: string): string {
+    try {
+      const parsed = new URL(url);
+      const parts = parsed.pathname.split('/').filter(Boolean);
+      const webhooksIndex = parts.findIndex((p) => p === 'webhooks');
+
+      if (webhooksIndex !== -1 && parts.length > webhooksIndex + 1) {
+        const webhookId = parts[webhooksIndex + 1];
+        return `${parsed.origin}/api/webhooks/${webhookId}/[REDACTED]`;
+      }
+
+      return `${parsed.origin}${parsed.pathname}`;
+    } catch {
+      const marker = '/api/webhooks/';
+      const markerIndex = url.indexOf(marker);
+      if (markerIndex !== -1) {
+        const pathStart = markerIndex + marker.length;
+        const id = url.slice(pathStart).split('/')[0];
+        if (id) return `${url.slice(0, pathStart)}${id}/[REDACTED]`;
+      }
+      return '[REDACTED]';
+    }
   }
 
   private isRateLimited(index: number, now: number): boolean {

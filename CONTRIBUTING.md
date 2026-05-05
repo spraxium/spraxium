@@ -140,7 +140,7 @@ For large changes, open an issue first to discuss the approach before investing 
 
 ## Reporting Issues
 
-Use [GitHub Issues](https://github.com/spacelaxy/spraxium/issues) for:
+Use [GitHub Issues](https://github.com/spraxium/spraxium/issues) for:
 
 - Bug reports
 - Feature requests
@@ -150,4 +150,4 @@ For **security vulnerabilities**, do **not** open a public issue, follow the [Se
 
 ---
 
-*Maintained by [Spacelaxy](https://spacelaxy.com)*
+*Maintained by [Spacelaxy](https://github.com/spacelaxy)*

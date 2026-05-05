@@ -1,6 +1,6 @@
 import { Inject, Injectable, type SpraxiumOnBoot } from '@spraxium/common';
-import { ConfigStore, SlashLocalizationBridge, logger } from '@spraxium/core';
-import chalk from 'chalk';
+import { ConfigStore, SlashLocalizationBridge } from '@spraxium/core';
+import { ANSI, logger } from '@spraxium/logger';
 import { buildSlashLocalizations } from './helpers/slash-localizations';
 import { defineI18n } from './i18n.config';
 import { ReferenceLoader } from './loaders/reference-loader';
@@ -44,7 +44,7 @@ export class I18nLifecycle implements SpraxiumOnBoot {
 
     const localeCount = LocaleRegistry.locales().length;
     logger.raw(
-      `${chalk.green('✔')}  i18n loaded , ${localeCount} locale(s), default: ${config.defaultLocale}`,
+      `${ANSI.green('✔')}  i18n loaded , ${localeCount} locale(s), default: ${config.defaultLocale}`,
     );
   }
 }

@@ -16,6 +16,8 @@ export const MESSAGES = {
   AFTER_ONLINE_REGISTERED: (name: string, ms: number) =>
     `Registered after-online job "${name}" \u2014 fires ${ms}ms after online`,
 
+  RUN_ONCE_REGISTERED: (name: string, date: string) => `Registered run-once job "${name}" - fires at ${date}`,
+
   DUPLICATE_JOB_NAME: (name: string) =>
     `Duplicate job name "${name}" \u2014 job names must be unique across the module tree.`,
   METHOD_NOT_FUNCTION: (method: string, className: string, jobName: string) =>

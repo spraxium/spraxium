@@ -2,7 +2,23 @@
   "name": "@spraxium/http",
   "version": "0.1.3",
   "private": false,
-  "description": "HTTP bridge layer for Spraxium bots — exposes bot state over a secured REST API",
+  "description": "Decorator-based REST API layer over Hono exposing bot state through a secured HTTP interface",
+  "keywords": [
+    "discord",
+    "discord.js",
+    "discord-bot",
+    "spraxium",
+    "typescript",
+    "decorators",
+    "http",
+    "rest-api",
+    "hono",
+    "web-server",
+    "bot-api",
+    "routes",
+    "bot-framework",
+    "api-layer"
+  ],
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -19,21 +35,23 @@
     "lint": "biome check src/"
   },
   "dependencies": {
-    "@hono/node-server": "^1.13.0",
+    "@hono/node-server": "^1.19.13",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.15.1",
-    "hono": "^4.7.0",
+    "hono": "^4.12.15",
     "reflect-metadata": "^0.2.2",
     "zod": "^3.22.0"
   },
   "peerDependencies": {
     "@spraxium/common": "*",
     "@spraxium/core": "*",
+    "@spraxium/logger": "*",
     "discord.js": "^14.26.3"
   },
   "devDependencies": {
     "@spraxium/common": "workspace:*",
     "@spraxium/core": "workspace:*",
+    "@spraxium/logger": "workspace:*",
     "@types/node": "^22.0.0",
     "tsdown": "^0.12.0",
     "typescript": "^5.7.0"

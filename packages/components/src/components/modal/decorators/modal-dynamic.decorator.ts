@@ -3,7 +3,7 @@ import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys.consta
 import type { ModalFieldDef } from '../interfaces';
 
 /**
- * Class decorator — marks a modal builder as accepting external runtime data.
+ * Class decorator that marks a modal builder as accepting external runtime data.
  * Purely informational; used for type-safety in `ModalService.build<T>()`.
  *
  * @example
@@ -18,7 +18,7 @@ export function ModalDynamic<_T = unknown>(): ClassDecorator {
 }
 
 /**
- * Method decorator — marks a method as the dynamic field factory.
+ * Method decorator that marks a method as the dynamic field factory.
  * The method receives the runtime data and returns an array of `ModalFieldDef`.
  *
  * @example
@@ -34,7 +34,7 @@ export function ModalDynamicFields(): MethodDecorator {
 }
 
 /**
- * Property decorator — conditionally includes a field based on runtime data.
+ * Property decorator that conditionally includes a field based on runtime data.
  *
  * @example
  * @ModalWhen(data => data.allowFiles)

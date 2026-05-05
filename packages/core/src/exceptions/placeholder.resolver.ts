@@ -14,7 +14,7 @@
  * // → 'Field {{field}} is invalid.'   (unknown key preserved)
  */
 export function resolvePlaceholders(template: string, props: Record<string, unknown>): string {
-  return template.replace(/\{\{([^}]+)\}\}/g, (match, key: string) => {
+  return template.replace(/\{\{([^{}]+)\}\}/g, (match, key: string) => {
     const trimmed = key.trim();
     return Object.prototype.hasOwnProperty.call(props, trimmed) ? String(props[trimmed]) : match;
   });

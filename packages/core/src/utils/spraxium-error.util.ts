@@ -1,21 +1,21 @@
-import chalk from 'chalk';
+import { ANSI } from '@spraxium/logger';
 
 function formatBlock(context: string, title: string, body: Array<string>, fix?: Array<string>): string {
   const lines: Array<string> = [];
 
   lines.push('');
-  lines.push(`  ${chalk.red('✖')}  ${chalk.bold.cyan(context)}  ${chalk.gray(title)}`);
+  lines.push(`  ${ANSI.red('✖')}  ${ANSI.bold(ANSI.cyan(context))}  ${ANSI.gray(title)}`);
   lines.push('');
 
   for (const line of body) {
-    lines.push(`     ${chalk.gray(line)}`);
+    lines.push(`     ${ANSI.gray(line)}`);
   }
 
   if (fix && fix.length > 0) {
     lines.push('');
-    lines.push(`     ${chalk.yellow('How to fix:')}`);
+    lines.push(`     ${ANSI.yellow('How to fix:')}`);
     for (const tip of fix) {
-      lines.push(`       ${chalk.dim(tip)}`);
+      lines.push(`       ${ANSI.dim(tip)}`);
     }
   }
 

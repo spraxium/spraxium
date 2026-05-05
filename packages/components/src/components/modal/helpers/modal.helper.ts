@@ -69,7 +69,7 @@ const field = {
   },
 
   /**
-   * Radio button group — single-choice from a list of options.
+   * Radio button group: single-choice from a list of options.
    *
    * @example
    * Modal.field.radioGroup({ id: 'priority', label: 'Priority', choices: [

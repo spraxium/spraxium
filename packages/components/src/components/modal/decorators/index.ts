@@ -19,4 +19,17 @@ export {
 export { ModalHandler } from './modal-handler.decorator';
 export { ModalValidate } from './modal-validate.decorator';
 export { ModalValidationConfig } from './modal-validation-config.decorator';
-export { Field } from './modal-field-param.decorator';
+export {
+  ModalField,
+  ModalTextField,
+  ModalStringSelectField,
+  ModalUserSelectField,
+  ModalRoleSelectField,
+  ModalMentionableSelectField,
+  ModalChannelSelectField,
+  ModalRadioGroupField,
+  ModalCheckboxGroupField,
+  ModalCheckboxField,
+  ModalFileUploadField,
+  Field,
+} from './modal-field-param.decorator';

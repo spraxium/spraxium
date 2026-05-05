@@ -8,6 +8,7 @@ import type {
   TextDisplayBuilder,
   ThumbnailBuilder,
 } from 'discord.js';
+import type { AnySelectBuilder } from '../../select/types';
 
 export type V2InnerBuilder =
   | TextDisplayBuilder
@@ -16,4 +17,5 @@ export type V2InnerBuilder =
   | MediaGalleryBuilder
   | ThumbnailBuilder
   | FileBuilder
-  | ActionRowBuilder<ButtonBuilder>;
+  | ActionRowBuilder<ButtonBuilder>
+  | ActionRowBuilder<AnySelectBuilder>;

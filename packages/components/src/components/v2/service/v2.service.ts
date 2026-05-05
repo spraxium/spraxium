@@ -25,6 +25,7 @@ import type {
   V2ChildDef,
   V2ContainerMeta,
   V2DynamicConfig,
+  V2DynamicRowConfig,
   V2FileConfig,
   V2InnerBuilder,
   V2MediaGalleryConfig,
@@ -42,41 +43,70 @@ export class V2Service {
     @Inject(SelectService) private readonly selects: SelectService,
   ) {}
 
-  build<T = unknown>(
+  /**
+   * Asynchronously builds a `ContainerBuilder` from a `@V2Container` class.
+   * Required when the container declares `@V2DynamicRow` or any child whose
+   * service call returns a Promise (e.g. dynamic select with async options).
+   */
+  async build<T = unknown>(
+    ContainerClass: AnyConstructor,
+    data?: T,
+    context?: SpraxiumContext<unknown>,
+  ): Promise<ContainerBuilder> {
+    const meta = this.requireMeta(ContainerClass);
+    const sorted = this.sortedChildren(ContainerClass);
+
+    const built: Array<V2InnerBuilder> = [];
+    for (const child of sorted) {
+      if (child.when && !child.when(data)) continue;
+      const result = await this.buildChild(child, data, context, true);
+      if (Array.isArray(result)) built.push(...result);
+      else built.push(result);
+    }
+    return buildContainer(meta, built);
+  }
+
+  /**
+   * Synchronous variant of {@link build}. Throws if the container declares any
+   * child that requires asynchronous resolution (`@V2DynamicRow`, dynamic
+   * selects, etc). Use {@link build} when in doubt.
+   */
+  buildSync<T = unknown>(
     ContainerClass: AnyConstructor,
     data?: T,
     context?: SpraxiumContext<unknown>,
   ): ContainerBuilder {
-    const meta: V2ContainerMeta | undefined = Reflect.getMetadata(
-      COMPONENT_METADATA_KEYS.V2_CONTAINER,
-      ContainerClass,
-    );
-    if (!meta) {
-      throw new Error(`[V2Service] ${ContainerClass.name} is not decorated with @V2Container.`);
+    const meta = this.requireMeta(ContainerClass);
+    const sorted = this.sortedChildren(ContainerClass);
+
+    const built: Array<V2InnerBuilder> = [];
+    for (const child of sorted) {
+      if (child.when && !child.when(data)) continue;
+      const result = this.buildChild(child, data, context, false) as V2InnerBuilder | Array<V2InnerBuilder>;
+      if (Array.isArray(result)) built.push(...result);
+      else built.push(result);
     }
-
-    const children: Array<V2ChildDef> =
-      Reflect.getMetadata(COMPONENT_METADATA_KEYS.V2_CHILDREN, ContainerClass) ?? [];
-    const sorted = [...children].sort((a, b) => a.order - b.order);
-
-    const built = sorted
-      .filter((child) => !child.when || child.when(data))
-      .flatMap((child) => {
-        const result = this.buildChild(child, data, context);
-        // biome-ignore lint/suspicious/noExplicitAny: generic callable type required
-        return Array.isArray(result) ? (result as Array<any>) : [result];
-      });
-
     return buildContainer(meta, built);
   }
 
-  buildReply<T = unknown>(
+  async buildReply<T = unknown>(
+    ContainerClass: AnyConstructor,
+    data?: T,
+    context?: SpraxiumContext<unknown>,
+  ): Promise<V2ReplyPayload> {
+    return {
+      components: [await this.build(ContainerClass, data, context)],
+      flags: MessageFlags.IsComponentsV2,
+    };
+  }
+
+  buildReplySync<T = unknown>(
     ContainerClass: AnyConstructor,
     data?: T,
     context?: SpraxiumContext<unknown>,
   ): V2ReplyPayload {
     return {
-      components: [this.build(ContainerClass, data, context)],
+      components: [this.buildSync(ContainerClass, data, context)],
       flags: MessageFlags.IsComponentsV2,
     };
   }
@@ -116,16 +146,47 @@ export class V2Service {
 
   section(text: string, accessory?: ThumbnailBuilder | ButtonBuilder): SectionBuilder {
     const sec = new SectionBuilder().addTextDisplayComponents(new TextDisplayBuilder().setContent(text));
-    if (accessory instanceof ButtonBuilder) {
-      sec.setButtonAccessory(accessory);
-    } else if (accessory instanceof ThumbnailBuilder) {
-      sec.setThumbnailAccessory(accessory);
-    }
+    if (accessory instanceof ButtonBuilder) sec.setButtonAccessory(accessory);
+    else if (accessory instanceof ThumbnailBuilder) sec.setThumbnailAccessory(accessory);
     return sec;
   }
 
-  // biome-ignore lint/suspicious/noExplicitAny: generic callable type required
-  private buildChild(child: V2ChildDef, data: unknown, context?: SpraxiumContext<unknown>): any {
+  private requireMeta(ContainerClass: AnyConstructor): V2ContainerMeta {
+    const meta: V2ContainerMeta | undefined = Reflect.getMetadata(
+      COMPONENT_METADATA_KEYS.V2_CONTAINER,
+      ContainerClass,
+    );
+    if (!meta) {
+      throw new Error(`[V2Service] ${ContainerClass.name} is not decorated with @V2Container.`);
+    }
+    return meta;
+  }
+
+  private sortedChildren(ContainerClass: AnyConstructor): Array<V2ChildDef> {
+    const children: Array<V2ChildDef> =
+      Reflect.getMetadata(COMPONENT_METADATA_KEYS.V2_CHILDREN, ContainerClass) ?? [];
+    // Merge any @V2When predicates stored separately by property key. These are
+    // written to V2_WHEN instead of V2_CHILDREN at decoration time so that
+    // decorator order does not matter (experimentalDecorators runs bottom-up,
+    // so @V2When above a child decorator would not yet see the child in V2_CHILDREN).
+    const pendingWhen: Map<string, NonNullable<V2ChildDef['when']>> = Reflect.getMetadata(
+      COMPONENT_METADATA_KEYS.V2_WHEN,
+      ContainerClass,
+    ) ?? new Map();
+    return [...children]
+      .sort((a, b) => a.order - b.order)
+      .map((child) => {
+        const when = pendingWhen.get(child.propertyKey);
+        return when ? { ...child, when } : child;
+      });
+  }
+
+  private buildChild(
+    child: V2ChildDef,
+    data: unknown,
+    context: SpraxiumContext<unknown> | undefined,
+    allowAsync: boolean,
+  ): V2InnerBuilder | Array<V2InnerBuilder> | Promise<V2InnerBuilder | Array<V2InnerBuilder>> {
     switch (child.type) {
       case 'textDisplay': {
         const cfg = child.config as V2TextDisplayConfig;
@@ -186,8 +247,7 @@ export class V2Service {
             context as SpraxiumContext<Record<string, unknown>>,
           ) as ActionRowBuilder<ButtonBuilder>;
           const rawButton = row.toJSON().components[0] as ReturnType<ButtonBuilder['toJSON']>;
-          const button = ButtonBuilder.from(rawButton);
-          sec.setButtonAccessory(button);
+          sec.setButtonAccessory(ButtonBuilder.from(rawButton));
         }
         return sec;
       }
@@ -205,13 +265,48 @@ export class V2Service {
         const rawComponents = typeof cfg.components === 'function' ? cfg.components(data) : cfg.components;
 
         if (rawComponents.length === 0) {
-          throw new Error('[V2Service] @V2Row — components array cannot be empty.');
+          throw new Error('[V2Service] @V2Row: components array cannot be empty.');
         }
 
         const firstClass = rawComponents[0];
+
+        // Validate all components in the row are of the same type - mixing
+        // buttons and selects in one row is not valid in Discord's component model.
+        const firstIsSelect = Reflect.hasMetadata(COMPONENT_METADATA_KEYS.SELECT_COMPONENT, firstClass);
+        const firstIsDynamic = Reflect.hasMetadata(COMPONENT_METADATA_KEYS.SELECT_DYNAMIC, firstClass);
+        for (const cls of rawComponents) {
+          const isSelect = Reflect.hasMetadata(COMPONENT_METADATA_KEYS.SELECT_COMPONENT, cls);
+          const isDynamic = Reflect.hasMetadata(COMPONENT_METADATA_KEYS.SELECT_DYNAMIC, cls);
+          if (isSelect !== firstIsSelect || isDynamic !== firstIsDynamic) {
+            throw new Error(
+              '[V2Service] @V2Row: all components must be of the same type. ' +
+                'Mixing buttons and selects in a single row is not supported.',
+            );
+          }
+        }
+
         if (Reflect.hasMetadata(COMPONENT_METADATA_KEYS.SELECT_COMPONENT, firstClass)) {
+          if (!allowAsync) {
+            throw new Error(
+              '[V2Service] @V2Row containing a select menu requires async build(). Use V2Service.build() instead of buildSync().',
+            );
+          }
           const resolvedRowData = typeof cfg.rowData === 'function' ? cfg.rowData(data) : cfg.rowData;
           return this.selects.build(
+            firstClass,
+            resolvedRowData,
+            context as SpraxiumContext<Record<string, unknown>>,
+          );
+        }
+
+        if (Reflect.hasMetadata(COMPONENT_METADATA_KEYS.SELECT_DYNAMIC, firstClass)) {
+          if (!allowAsync) {
+            throw new Error(
+              '[V2Service] @V2Row containing a @DynamicStringSelect requires async build(). Use V2Service.build() instead of buildSync().',
+            );
+          }
+          const resolvedRowData = typeof cfg.rowData === 'function' ? cfg.rowData(data) : cfg.rowData;
+          return this.selects.buildDynamic(
             firstClass,
             resolvedRowData,
             context as SpraxiumContext<Record<string, unknown>>,
@@ -223,15 +318,53 @@ export class V2Service {
 
       case 'dynamic': {
         const cfg = child.config as V2DynamicConfig;
-        return cfg
-          .factory(data)
-          .map((spec) =>
-            this.buildChild({ ...spec, propertyKey: '__dynamic__', order: -1 } as V2ChildDef, data, context),
+        return cfg.factory(data).flatMap((spec) => {
+          const result = this.buildChild(
+            { ...spec, propertyKey: '__dynamic__', order: -1 } as V2ChildDef,
+            data,
+            context,
+            allowAsync,
           );
+          if (result instanceof Promise) {
+            throw new Error('[V2Service] @V2Dynamic factories may not produce async children.');
+          }
+          return result;
+        }) as Array<V2InnerBuilder>;
+      }
+
+      case 'dynamicRow': {
+        if (!allowAsync) {
+          throw new Error(
+            '[V2Service] @V2DynamicRow requires async build(). Use V2Service.build() instead of buildSync().',
+          );
+        }
+        return this.buildDynamicRow(child.config as V2DynamicRowConfig, data, context);
       }
 
       default:
         throw new Error(`[V2Service] Unknown V2 child type: ${(child as V2ChildDef).type}`);
     }
+  }
+
+  private async buildDynamicRow(
+    cfg: V2DynamicRowConfig,
+    data: unknown,
+    context: SpraxiumContext<unknown> | undefined,
+  ): Promise<Array<ActionRowBuilder<ButtonBuilder>>> {
+    if (cfg.dynamic) {
+      const items = typeof cfg.items === 'function' ? cfg.items(data) : (cfg.items ?? []);
+      return this.buttons.buildDynamic(cfg.dynamic, items, context);
+    }
+    if (cfg.components) {
+      const classes = typeof cfg.components === 'function' ? cfg.components(data) : cfg.components;
+      const rows: Array<ActionRowBuilder<ButtonBuilder>> = [];
+      for (let i = 0; i < classes.length; i += 5) {
+        rows.push(
+          this.buttons.build(classes.slice(i, i + 5), context as SpraxiumContext<Record<string, unknown>>),
+        );
+      }
+      return rows;
+    }
+    return [];
   }
 }

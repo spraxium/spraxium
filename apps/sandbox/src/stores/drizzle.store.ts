@@ -1,5 +1,5 @@
 ﻿import type { I18nStore } from "@spraxium/i18n";
-import { Logger } from "@spraxium/core";
+import { Logger } from "@spraxium/logger";
 import { eq, sql } from "drizzle-orm";
 import { drizzle, type NodePgDatabase } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";

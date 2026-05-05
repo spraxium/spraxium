@@ -1,4 +1,5 @@
 import type { Constructor, PrefixConfig, SpraxiumGuard } from '@spraxium/common';
+import { Logger, logger } from '@spraxium/logger';
 import { type Client, GatewayIntentBits, Partials } from 'discord.js';
 import { ModuleLoader } from '../bootstrap';
 import { ClientFactory, PresenceManager, SpraxiumShardManager, isShardChild } from '../client';
@@ -6,10 +7,11 @@ import type { PresenceOptions, ShardOptions } from '../client/interfaces';
 import { IntentPreset, resolveIntents } from '../client/types';
 import { ConfigLoader, ConfigStore } from '../config';
 import { GuardRegistry } from '../guards';
-import { CommandLogger, Logger, logger } from '../logger';
 import { spraxiumFatal } from '../utils';
 import type { ApplicationState, SpraxiumOptions } from './interfaces';
+import { ProcessLock } from './lock';
 import { ShutdownHandler } from './shutdown.handler';
+import { UpgradeChecker } from './upgrade';
 
 export class SpraxiumApplication {
   private readonly state: ApplicationState;
@@ -99,13 +101,18 @@ export class SpraxiumApplication {
    */
   public async forceRegisterSlashCommands(): Promise<void> {
     const dispatcher = this.state.moduleLoader?.getSlashDispatcher();
-    if (!dispatcher || dispatcher.commandCount === 0) return;
+    const contextMenuDispatcher = this.state.moduleLoader?.getContextMenuDispatcher();
+    const slashCount = dispatcher?.commandCount ?? 0;
+    const contextMenuCount = contextMenuDispatcher?.commandCount ?? 0;
+    if (!dispatcher || slashCount + contextMenuCount === 0) return;
 
     const token = this.state.token ?? process.env.DISCORD_TOKEN;
     const clientId = this.state.client?.user?.id;
     if (!token || !clientId) return;
 
-    await dispatcher.register(token, clientId, undefined, true);
+    const extraPayloads = contextMenuDispatcher?.buildPayloads() ?? [];
+    const extraGuildPayloads = contextMenuDispatcher?.buildGuildGroupedPayloads() ?? new Map();
+    await dispatcher.register(token, clientId, undefined, true, extraPayloads, extraGuildPayloads);
   }
 
   public async listen(): Promise<void> {
@@ -121,6 +128,9 @@ export class SpraxiumApplication {
       );
     }
     this.booted = true;
+
+    await ProcessLock.acquire();
+    UpgradeChecker.check();
 
     await this.loadConfig();
     const token = this.resolveToken();
@@ -203,9 +213,10 @@ export class SpraxiumApplication {
   }
 
   private async wireClient(client: Client): Promise<void> {
+    // Logger.setClient() handles CommandLogger binding internally when
+    // `logger.commandLogging === true` is set via Logger.configure() in loadConfig().
     Logger.setClient(client);
     const raw = ConfigStore.getRaw();
-    if (raw.logger?.commandLogging) CommandLogger.bind(client);
     this.state.moduleLoader?.bindListeners(client);
 
     const prefixConfig = this.resolvePrefixConfig(raw.prefix);
@@ -223,6 +234,11 @@ export class SpraxiumApplication {
     const slashDispatcher = this.state.moduleLoader?.getSlashDispatcher();
     if (slashDispatcher && slashDispatcher.size > 0) {
       slashDispatcher.bind(client);
+    }
+
+    const contextMenuDispatcher = this.state.moduleLoader?.getContextMenuDispatcher();
+    if (contextMenuDispatcher && contextMenuDispatcher.size > 0) {
+      contextMenuDispatcher.bind(client);
     }
   }
 
@@ -273,10 +289,23 @@ export class SpraxiumApplication {
         await this.state.moduleLoader?.runReadyHooks(readyClient);
 
         const slashDispatcher = this.state.moduleLoader?.getSlashDispatcher();
-        if (slashDispatcher && slashDispatcher.commandCount > 0) {
+        const contextMenuDispatcher = this.state.moduleLoader?.getContextMenuDispatcher();
+        const slashCount = slashDispatcher?.commandCount ?? 0;
+        const contextMenuCount = contextMenuDispatcher?.commandCount ?? 0;
+
+        if (slashDispatcher && slashCount + contextMenuCount > 0) {
           const token = this.state.token ?? process.env.DISCORD_TOKEN;
           if (token) {
-            await slashDispatcher.register(token, readyClient.user.id);
+            const extraPayloads = contextMenuDispatcher?.buildPayloads() ?? [];
+            const extraGuildPayloads = contextMenuDispatcher?.buildGuildGroupedPayloads() ?? new Map();
+            await slashDispatcher.register(
+              token,
+              readyClient.user.id,
+              undefined,
+              false,
+              extraPayloads,
+              extraGuildPayloads,
+            );
           }
         }
 

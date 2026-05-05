@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import type { Context } from 'hono';
 import { HTTP_METADATA_KEYS } from '../constants';
+import { ValidationError } from '../errors/validation.error';
 import type { ParamDefinition } from '../types';
 import { ValidationPipe } from './validation-pipe.service';
 
@@ -30,7 +31,11 @@ export class ParamResolver {
           break;
         case 'body':
           if (parsedBody === undefined) {
-            parsedBody = await ctx.req.json().catch(() => ({}));
+            parsedBody = await ctx.req.json().catch(() => {
+              throw new ValidationError([
+                { property: 'body', constraints: { json: 'Body is not valid JSON.' } },
+              ]);
+            });
           }
           args[def.index] = def.dto ? await this.validation.transform(def.dto, parsedBody) : parsedBody;
           break;

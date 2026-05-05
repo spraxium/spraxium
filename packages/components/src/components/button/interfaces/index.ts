@@ -11,3 +11,11 @@ export type {
   ButtonHandlerMeta,
 } from './button-metadata.interface';
 export type { StaticButtonDef, LinkButtonDef, ButtonDef } from './button-def.interface';
+export type {
+  DynamicButtonConfig,
+  ButtonRenderConfig,
+  DynamicButtonComponentMeta,
+  DynamicButtonHandlerMeta,
+  DynamicButtonRenderable,
+} from './dynamic-button.interface';
+export type { ButtonBuildOverrides } from './button-build.interface';

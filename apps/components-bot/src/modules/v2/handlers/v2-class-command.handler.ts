@@ -23,7 +23,7 @@ export class V2ClassCommandHandler {
         interaction.guild.iconURL({ size: 128 }) ?? 'https://placehold.co/128x128/5865f2/ffffff.png?text=G',
     };
 
-    const payload = this.v2.buildReply(ServerStatsContainer, data);
+    const payload = await this.v2.buildReply(ServerStatsContainer, data);
 
     await interaction.reply({
       ...payload,

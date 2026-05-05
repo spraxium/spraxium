@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 import { METADATA_KEYS } from '@spraxium/common';
+import { GuardExecutor } from '@spraxium/core';
 import { type Client, Events, type Interaction, type ModalSubmitInteraction } from 'discord.js';
 import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys.constant';
 import type {
@@ -16,13 +17,11 @@ import {
   ModalValidatorRunner,
   buildDefaultValidationEmbed,
 } from '../../../components/modal';
+import { ComponentExecutionContext } from '../../guards';
 import type { ComponentsConfig } from '../../lifecycle';
+import { reportHandlerError } from '../helpers/handler-error.helper';
 import type { Constructor, ResolvedModalHandler } from '../interfaces';
 
-/**
- * Handles registration and dispatch of modal submission interactions.
- * Manages field resolution, validation, and cache clearing.
- */
 export class ModalDispatcher {
   private readonly handlers: Array<ResolvedModalHandler> = [];
 
@@ -75,7 +74,15 @@ export class ModalDispatcher {
     resolved: ResolvedModalHandler,
     config?: ComponentsConfig,
   ): Promise<void> {
+    const handlerName = `@ModalHandler(${resolved.handlerCtor.name})`;
     try {
+      const guardPassed = await GuardExecutor.execute(
+        resolved.handlerCtor,
+        'handle',
+        new ComponentExecutionContext(modal, resolved.customId),
+      );
+      if (!guardPassed) return;
+
       const errors = ModalValidatorRunner.validate(resolved.builderCtor, modal);
       if (errors.length > 0) {
         await this.handleValidationFailure(modal, resolved, errors, config);
@@ -91,7 +98,14 @@ export class ModalDispatcher {
 
       this.clearCacheOnSuccess(resolved, modal);
     } catch (err) {
-      console.error('[Spraxium] Unhandled error in @ModalHandler:', err);
+      await reportHandlerError(
+        err,
+        modal,
+        handlerName,
+        config,
+        config?.modal?.ephemeralErrors !== false,
+        config?.modal?.onErrorReply,
+      );
     }
   }
 
@@ -197,6 +211,15 @@ export class ModalDispatcher {
       }
       if (def.type === 'file_upload') {
         return modal.fields.getUploadedFiles(fieldId);
+      }
+      if (def.type === 'radio_group') {
+        return modal.fields.getRadioGroup(fieldId) ?? null;
+      }
+      if (def.type === 'checkbox_group') {
+        return modal.fields.getCheckboxGroup(fieldId);
+      }
+      if (def.type === 'checkbox') {
+        return modal.fields.getCheckbox(fieldId);
       }
       return null;
     } catch {

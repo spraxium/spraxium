@@ -1,5 +1,5 @@
 import { Injectable } from '@spraxium/common';
-import { Logger } from '@spraxium/core';
+import { Logger } from '@spraxium/logger';
 import { Cron, CronExpression, Interval, IntervalExpression } from '@spraxium/schedule';
 import { ActivityType, Client } from 'discord.js';
 

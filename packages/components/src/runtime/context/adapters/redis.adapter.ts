@@ -8,7 +8,7 @@ import type { SpraxiumContext } from '../interfaces/spraxium-context.interface';
  *
  * Each context entry is stored as a Redis string (JSON serialised) with an
  * absolute TTL derived from `ctx.expiresAt` so that Redis handles eviction
- * automatically — no separate cleanup timers are needed.
+ * automatically; no separate cleanup timers are needed.
  *
  * Install the optional peer dependency before enabling this adapter:
  * ```
@@ -48,7 +48,7 @@ export class RedisContextAdapter implements ContextStorageAdapter {
     const raw: string | null = await (this.client.get(this.key(id)) as Promise<string | null>);
     if (!raw) return undefined;
     const ctx = JSON.parse(raw) as SpraxiumContext<unknown>;
-    if (ctx.expiresAt <= Date.now()) {
+    if (ctx.expiresAt !== 0 && ctx.expiresAt <= Date.now()) {
       await this.delete(id);
       return undefined;
     }
@@ -56,6 +56,10 @@ export class RedisContextAdapter implements ContextStorageAdapter {
   }
 
   async set(ctx: SpraxiumContext<unknown>): Promise<void> {
+    if (ctx.expiresAt === 0) {
+      await (this.client.set(this.key(ctx.id), JSON.stringify(ctx)) as Promise<unknown>);
+      return;
+    }
     const ttlMs = ctx.expiresAt - Date.now();
     if (ttlMs <= 0) return;
     await (this.client.set(this.key(ctx.id), JSON.stringify(ctx), 'PX', ttlMs) as Promise<unknown>);
@@ -66,7 +70,20 @@ export class RedisContextAdapter implements ContextStorageAdapter {
   }
 
   async entries(): Promise<ReadonlyArray<SpraxiumContext<unknown>>> {
-    const keys: Array<string> = await (this.client.keys(`${this.prefix}*`) as Promise<Array<string>>);
+    const keys: Array<string> = [];
+    let cursor = '0';
+    do {
+      const [nextCursor, batch]: [string, Array<string>] = await (this.client.scan(
+        cursor,
+        'MATCH',
+        `${this.prefix}*`,
+        'COUNT',
+        100,
+      ) as Promise<[string, Array<string>]>);
+      cursor = nextCursor;
+      keys.push(...batch);
+    } while (cursor !== '0');
+
     if (keys.length === 0) return [];
     const values: Array<string | null> = await (this.client.mget(...keys) as Promise<Array<string | null>>);
     const now = Date.now();
@@ -74,7 +91,7 @@ export class RedisContextAdapter implements ContextStorageAdapter {
     for (const raw of values) {
       if (!raw) continue;
       const ctx = JSON.parse(raw) as SpraxiumContext<unknown>;
-      if (ctx.expiresAt > now) results.push(ctx);
+      if (ctx.expiresAt === 0 || ctx.expiresAt > now) results.push(ctx);
     }
     return results;
   }

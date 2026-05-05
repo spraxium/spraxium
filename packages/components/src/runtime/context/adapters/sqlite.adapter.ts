@@ -9,14 +9,14 @@ import type { SpraxiumContext } from '../interfaces/spraxium-context.interface';
  * SQLite-backed persistence adapter (requires `better-sqlite3` as a peer dependency).
  *
  * Contexts are stored as individual rows in a `contexts` table, so every
- * `set` and `delete` is a targeted row-level operation — no full-file rewrite
+ * `set` and `delete` is a targeted row-level operation; no full-file rewrite
  * on every change, unlike the JSON file adapter.
  *
  * Properties:
- * - **Persistent** — survives process restarts.
- * - **No external process** — single `.db` file, embedded in the application.
- * - **Binary B-tree storage** — more compact and faster than JSON for large stores.
- * - **ACID** — each write is an atomic transaction.
+ * - **Persistent**: survives process restarts.
+ * - **No external process**: single `.db` file, embedded in the application.
+ * - **Binary B-tree storage**: more compact and faster than JSON for large stores.
+ * - **ACID**: each write is an atomic transaction.
  *
  * Install the optional peer dependency before enabling this adapter:
  * ```
@@ -64,7 +64,7 @@ export class SqliteContextAdapter implements ContextStorageAdapter {
 
     if (!row) return undefined;
 
-    if (row.expires_at <= Date.now()) {
+    if (row.expires_at !== 0 && row.expires_at <= Date.now()) {
       this.db.prepare('DELETE FROM contexts WHERE id = ?').run(id);
       return undefined;
     }
@@ -87,7 +87,9 @@ export class SqliteContextAdapter implements ContextStorageAdapter {
   }
 
   async entries(): Promise<ReadonlyArray<SpraxiumContext<unknown>>> {
-    const rows = this.db.prepare('SELECT data FROM contexts WHERE expires_at > ?').all(Date.now()) as Array<{
+    const rows = this.db
+      .prepare('SELECT data FROM contexts WHERE expires_at = 0 OR expires_at > ?')
+      .all(Date.now()) as Array<{
       data: string;
     }>;
 

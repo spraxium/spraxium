@@ -1,10 +1,10 @@
 import { Module } from '@spraxium/common';
 import { EmbedService, SelectService } from '@spraxium/components';
 import { SelectsCommand } from './commands/selects.command';
-import { AreasMultiSelectHandler } from './handlers/areas-multi-select.handler';
+import { AreasMultiSelectCommandHandler } from './handlers/areas-multi-select-command.handler';
 import { MultiSelectCommandHandler } from './handlers/multi-select-command.handler';
 import { StringSelectCommandHandler } from './handlers/string-select-command.handler';
-import { TopicStringSelectHandler } from './handlers/topic-string-select.handler';
+import { TopicStringSelectCommandHandler } from './handlers/topic-string-select-command.handler';
 import { TypesSelectCommandHandler } from './handlers/types-select-command.handler';
 
 @Module({
@@ -14,8 +14,8 @@ import { TypesSelectCommandHandler } from './handlers/types-select-command.handl
     StringSelectCommandHandler,
     MultiSelectCommandHandler,
     TypesSelectCommandHandler,
-    TopicStringSelectHandler,
-    AreasMultiSelectHandler,
+    TopicStringSelectCommandHandler,
+    AreasMultiSelectCommandHandler,
   ],
 })
 export class SelectsModule {}

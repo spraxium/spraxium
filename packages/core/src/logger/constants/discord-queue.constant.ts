@@ -1,1 +1,0 @@
-export const DISCORD_MAX_QUEUE_SIZE = 100;

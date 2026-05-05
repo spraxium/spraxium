@@ -143,7 +143,7 @@ export class InfoCollector {
       }
 
       const quotedArgs = args
-        .map((arg) => (arg.includes(' ') ? `"${arg.replace(/"/g, '\\"')}"` : arg))
+        .map((arg) => (arg.includes(' ') ? `"${arg.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"` : arg))
         .join(' ');
 
       const cmdFallback = spawnSync('cmd.exe', ['/d', '/s', '/c', `${command} ${quotedArgs}`], {

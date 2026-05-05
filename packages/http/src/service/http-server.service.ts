@@ -4,7 +4,8 @@ import { serve } from '@hono/node-server';
 // biome-ignore lint/style/useImportType: runtime reference required for DI reflection
 import { Injectable, Optional, ReadonlyContainer } from '@spraxium/common';
 import type { SpraxiumOnBoot, SpraxiumOnShutdown } from '@spraxium/common';
-import { ConfigStore, Logger, ParentHookRegistry } from '@spraxium/core';
+import { ConfigStore, ParentHookRegistry } from '@spraxium/core';
+import { logger } from '@spraxium/logger';
 import { Client } from 'discord.js';
 import type { ShardingManager } from 'discord.js';
 import { Hono } from 'hono';
@@ -19,6 +20,8 @@ import { BotBridge } from '../interfaces';
 import type { HttpClientModuleMetadata, HttpGuard } from '../interfaces';
 import { BodyLimitMiddleware } from '../middleware/body-limit.middleware';
 import { CorsMiddleware } from '../middleware/cors.middleware';
+import { LoggerMiddleware } from '../middleware/logger.middleware';
+import { RateLimitMiddleware } from '../middleware/rate-limit.middleware';
 import { SecurityHeadersMiddleware } from '../middleware/security-headers.middleware';
 import { HttpRegistry } from './http-registry.service';
 import { RouteBuilder } from './route-builder.service';
@@ -43,8 +46,9 @@ export class HttpServer implements SpraxiumOnBoot, SpraxiumOnShutdown {
     });
   }
 
-  private readonly log = new Logger('HttpServer');
+  private readonly log = logger.child('HttpServer');
   private server: Server | undefined;
+  private readonly middlewareDisposables: Array<{ destroy(): void }> = [];
 
   constructor(
     @Optional() private readonly client?: Client,
@@ -73,6 +77,10 @@ export class HttpServer implements SpraxiumOnBoot, SpraxiumOnShutdown {
   async start(client?: Client): Promise<void> {
     const config = ConfigStore.getPluginConfig(defineHttp);
     if (!config) return;
+
+    for (const disposable of this.middlewareDisposables.splice(0)) {
+      disposable.destroy();
+    }
 
     const moduleMeta: HttpClientModuleMetadata = config.module
       ? (Reflect.getOwnMetadata(HTTP_METADATA_KEYS.HTTP_CLIENT_MODULE, config.module) ?? {})
@@ -109,6 +117,24 @@ export class HttpServer implements SpraxiumOnBoot, SpraxiumOnShutdown {
     if (sec?.bodyLimit !== false) {
       const bodyLimitMiddleware = new BodyLimitMiddleware(sec?.bodyLimit || SECURITY_DEFAULTS.bodyLimit);
       app.use('*', (ctx: Context, next: Next) => bodyLimitMiddleware.handle(ctx, next));
+    }
+
+    if (config.rateLimit) {
+      const trustedProxies =
+        config.rateLimit.trustedProxies ??
+        sec?.trustedProxies?.proxies ??
+        SECURITY_DEFAULTS.trustedProxies.proxies;
+      const rateLimitMiddleware = new RateLimitMiddleware({
+        ...config.rateLimit,
+        trustedProxies,
+      });
+      this.middlewareDisposables.push(rateLimitMiddleware);
+      app.use('*', (ctx: Context, next: Next) => rateLimitMiddleware.handle(ctx, next));
+    }
+
+    if (config.accessLog !== false) {
+      const loggerMiddleware = new LoggerMiddleware(config.accessLog);
+      app.use('*', (ctx: Context, next: Next) => loggerMiddleware.handle(ctx, next));
     }
 
     const globalMiddleware = moduleMeta.middleware ?? [];
@@ -168,6 +194,10 @@ export class HttpServer implements SpraxiumOnBoot, SpraxiumOnShutdown {
   }
 
   async onShutdown(): Promise<void> {
+    for (const disposable of this.middlewareDisposables.splice(0)) {
+      disposable.destroy();
+    }
+
     if (!this.server) return;
     await new Promise<void>((resolve, reject) => {
       (this.server as Server).close((err) => (err ? reject(err) : resolve()));

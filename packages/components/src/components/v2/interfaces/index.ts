@@ -13,6 +13,7 @@ export type {
   V2ActionRowConfig,
   V2DynamicConfig,
   V2DynamicChildSpec,
+  V2DynamicRowConfig,
 } from './v2-component.interface';
 export type { V2InnerBuilder } from '../types';
 export type { V2ReplyPayload } from './v2-reply-payload.interface';

@@ -1,7 +1,6 @@
 import { Injectable } from '@spraxium/common';
-import { Logger } from '@spraxium/core';
+import { Logger } from '@spraxium/logger';
 import { Cron, CronExpression, ScheduleService } from '@spraxium/schedule';
-import { AppEnv } from '../app.env';
 
 export interface LeaderboardEntry {
   userId: string;
@@ -13,14 +12,10 @@ export class LeaderboardService {
   private readonly logger = new Logger(LeaderboardService.name);
   private rankings: LeaderboardEntry[] = [];
 
-  constructor(
-    private readonly scheduleService: ScheduleService,
-    private readonly env: AppEnv
-  ) {}
+  constructor(private readonly scheduleService: ScheduleService) {}
 
   addPoints(userId: string, points: number): void {
-    console.log('Enviroment', this.env.DISCORD_WEB);
-    const existing = this.rankings.find(e => e.userId === userId);
+    const existing = this.rankings.find((e) => e.userId === userId);
 
     if (existing) {
       existing.points += points;

@@ -2,7 +2,7 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "rootDir": "./src",
-    "types": ["node"]
+    "types": ["node", "shell-quote"]
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist"]

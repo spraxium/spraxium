@@ -4,4 +4,5 @@ export interface CronJobMetadata {
   runOnInit?: boolean;
   disabled?: boolean;
   timezone?: string;
+  description?: string;
 }

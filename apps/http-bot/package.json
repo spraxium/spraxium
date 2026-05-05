@@ -1,5 +1,5 @@
 {
-  "name": "@spraxium/sandbox",
+  "name": "@spraxium/http-bot",
   "version": "0.0.1",
   "private": true,
   "type": "module",
@@ -16,8 +16,10 @@
     "@spraxium/env": "workspace:*",
     "@spraxium/http": "workspace:*",
     "@spraxium/i18n": "workspace:*",
+    "@spraxium/logger": "workspace:*",
     "@spraxium/schedule": "workspace:*",
     "discord.js": "^14.26.3",
+    "hono": "^4.9.8",
     "reflect-metadata": "^0.2.2"
   },
   "devDependencies": {

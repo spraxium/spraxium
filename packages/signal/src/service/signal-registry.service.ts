@@ -1,16 +1,19 @@
 import 'reflect-metadata';
 import { Inject, Injectable } from '@spraxium/common';
 import type { SpraxiumOnBoot, SpraxiumOnShutdown } from '@spraxium/common';
-import { ConfigStore, ModuleLoader, logger } from '@spraxium/core';
+import { ConfigStore, ModuleLoader } from '@spraxium/core';
+import { logger } from '@spraxium/logger';
 import type { Client, Message } from 'discord.js';
 import { SIGNAL_MESSAGES, SIGNAL_METADATA_KEYS } from '../constants';
 import type { OnSignalMetadata, SignalConfig, SignalEnvelope } from '../interfaces';
+import type { NonceCache } from '../security';
 import { defineSignal } from '../signal.config';
 import { MethodSignalHandler } from './method-signal-handler';
 import type { SignalProcessor } from './signal-processor.service';
 import type { SignalRouter } from './signal-router.service';
 
 const CTX = 'SignalRegistry';
+const log = logger.child(CTX);
 
 /**
  * Discovers `@SignalListener()` classes, extracts `@OnSignal()` methods,
@@ -25,6 +28,7 @@ export class SignalRegistry implements SpraxiumOnBoot, SpraxiumOnShutdown {
     @Inject('Client') private readonly client: Client,
     private readonly processor: SignalProcessor,
     private readonly router: SignalRouter,
+    private readonly nonceCache: NonceCache,
   ) {
     this.scannerFn = this.scan.bind(this);
     ModuleLoader.instanceScanners.add(this.scannerFn);
@@ -34,9 +38,11 @@ export class SignalRegistry implements SpraxiumOnBoot, SpraxiumOnShutdown {
     const config: SignalConfig | undefined = ConfigStore.getPluginConfig(defineSignal);
 
     if (!config) {
-      logger.warn(`[${CTX}] ${SIGNAL_MESSAGES.NO_CONFIG}`);
+      log.warn(SIGNAL_MESSAGES.NO_CONFIG);
       return;
     }
+
+    this.nonceCache.configure(config);
 
     this.messageHandler = (message: Message): void => {
       this.processor.process(message, config).catch(() => {});
@@ -45,7 +51,7 @@ export class SignalRegistry implements SpraxiumOnBoot, SpraxiumOnShutdown {
     this.client.on('messageCreate', this.messageHandler);
 
     const channels = Array.isArray(config.channelId) ? config.channelId.join(', ') : config.channelId;
-    logger.info(`[${CTX}] ${SIGNAL_MESSAGES.LISTENING(channels)}`);
+    log.info(SIGNAL_MESSAGES.LISTENING(channels));
   }
 
   async onShutdown(): Promise<void> {
@@ -55,6 +61,8 @@ export class SignalRegistry implements SpraxiumOnBoot, SpraxiumOnShutdown {
       this.client.off('messageCreate', this.messageHandler);
       this.messageHandler = undefined;
     }
+
+    await this.nonceCache.destroy();
   }
 
   private scan(instance: unknown): void {

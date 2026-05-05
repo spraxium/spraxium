@@ -1,10 +1,12 @@
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { logger } from '../logger';
+import { logger } from '@spraxium/logger';
 import { ConfigStore } from './config.store';
 import { CONFIG_FILE_NAMES } from './constants';
 import type { ConfigEnv, SpraxiumConfigExport, SpraxiumConfigInput } from './interfaces';
+
+const log = logger.child('ConfigLoader');
 
 export class ConfigLoader {
   static async load(projectRoot?: string): Promise<SpraxiumConfigInput> {
@@ -12,13 +14,13 @@ export class ConfigLoader {
     const configPath = ConfigLoader.findConfigFile(root);
 
     if (!configPath) {
-      logger.debug('No spraxium.config found, using defaults');
+      log.debug('No spraxium.config found, using defaults');
       const config: SpraxiumConfigInput = {};
       ConfigStore.load(config);
       return config;
     }
 
-    logger.debug(`Loading config from ${configPath}`);
+    log.debug(`Loading config from ${configPath}`);
 
     const fileUrl = pathToFileURL(configPath).href;
     const imported = await import(fileUrl);

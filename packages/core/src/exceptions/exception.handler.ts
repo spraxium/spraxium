@@ -1,11 +1,13 @@
 import type { ExecutionContext } from '@spraxium/common';
+import { logger } from '@spraxium/logger';
 import type { BaseInteraction, Message } from 'discord.js';
-import { logger } from '../logger';
 import { InternalException } from './built-in';
 import { DiscordReplyStrategy } from './discord-reply.strategy';
 import type { ExceptionOptions } from './interfaces';
 import { LayoutRegistry } from './layout.registry';
 import { SpraxiumException } from './spraxium.exception';
+
+const log = logger.child('ExceptionHandler');
 
 /**
  * Central exception handler for the Spraxium interaction pipeline.
@@ -44,8 +46,8 @@ export class ExceptionHandler {
       await DiscordReplyStrategy.reply(raw, payload);
     } catch (layoutErr) {
       // Layout/reply failures must never cascade into the pipeline.
-      logger.warn(
-        `[ExceptionHandler] Failed to send exception reply: ${layoutErr instanceof Error ? layoutErr.message : String(layoutErr)}`,
+      log.warn(
+        `Failed to send exception reply: ${layoutErr instanceof Error ? layoutErr.message : String(layoutErr)}`,
       );
     }
   }
@@ -62,8 +64,8 @@ export class ExceptionHandler {
     if (shouldLogUnhandled) {
       const msg = err instanceof Error ? err.message : String(err);
       const stack = err instanceof Error ? (err.stack ?? '') : '';
-      logger.error(`[UNHANDLED] ${msg}`);
-      if (stack) logger.error(stack);
+      log.error(`[UNHANDLED] ${msg}`);
+      if (stack) log.error(stack);
     }
 
     const cause = err instanceof Error ? err.message : String(err);
@@ -72,7 +74,7 @@ export class ExceptionHandler {
 
   private static logException(exception: SpraxiumException, ctx: ExecutionContext): void {
     const command = ctx.getCommandName();
-    logger.error(`[${exception.code}] ${exception.name} in "${command}": ${exception.message}`);
-    if (exception.stack) logger.error(exception.stack);
+    log.error(`[${exception.code}] ${exception.name} in "${command}": ${exception.message}`);
+    if (exception.stack) log.error(exception.stack);
   }
 }

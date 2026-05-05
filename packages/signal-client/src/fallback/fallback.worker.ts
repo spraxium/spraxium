@@ -64,7 +64,10 @@ export class FallbackWorker {
   start(): void {
     if (this.timer) return;
     this.timer = setInterval(() => {
-      this.processBatch().catch(() => {});
+      this.processBatch().catch((err) => {
+        const message = err instanceof Error ? err.message : String(err);
+        process.emitWarning(`Signal fallback worker batch failed: ${message}`);
+      });
     }, this.retryIntervalMs);
     if (this.timer.unref) this.timer.unref();
   }
@@ -89,12 +92,7 @@ export class FallbackWorker {
     const attempt = entry.attempts + 1;
 
     try {
-      await this.client.send(
-        entry.event,
-        entry.guildId,
-        (entry.envelope.payload ?? {}) as Record<string, unknown>,
-        { skipFallback: true },
-      );
+      await this.client.sendEnvelope(entry.envelope, { skipFallback: true });
       await this.store.markProcessed(entry.id);
     } catch (err) {
       const reason = err instanceof Error ? err.message : String(err);

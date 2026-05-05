@@ -9,7 +9,7 @@ import type { ButtonComponentMeta, ButtonConfig } from '../interfaces';
  */
 export function Button(config: ButtonConfig): ClassDecorator {
   return (target): void => {
-    const meta: ButtonComponentMeta = { isLink: false, isDynamic: false, ...config };
+    const meta: ButtonComponentMeta = { isLink: false, ...config };
     Reflect.defineMetadata(COMPONENT_METADATA_KEYS.BUTTON_COMPONENT, meta, target);
   };
 }

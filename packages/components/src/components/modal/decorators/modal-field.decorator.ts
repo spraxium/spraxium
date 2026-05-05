@@ -73,7 +73,7 @@ function appendChoice(target: object, propertyKey: string | symbol, choice: Moda
     return;
   }
 
-  // Field decorator hasn't run yet — store choices in a pending key.
+  // Field decorator hasn't run yet; store choices in a pending key.
   const pending: Array<ModalChoiceItem> =
     Reflect.getMetadata(COMPONENT_METADATA_KEYS.MODAL_PENDING_CHOICES, target, propertyKey) ?? [];
   pending.unshift(choice);
@@ -101,6 +101,7 @@ export function ModalInput(config: ModalTextFieldConfig): PropertyDecorator {
       maxLength: config.maxLength,
       placeholder: config.placeholder,
       value: config.value,
+      i18n: config.i18n,
     });
   };
 }
@@ -128,6 +129,7 @@ export function ModalSelect(config: ModalStringSelectFieldConfig): PropertyDecor
       minValues: config.minValues,
       maxValues: config.maxValues,
       placeholder: config.placeholder,
+      i18n: config.i18n,
     });
   };
 }
@@ -152,6 +154,7 @@ export function ModalUserSelect(config: ModalUserSelectFieldConfig): PropertyDec
       minValues: config.minValues,
       maxValues: config.maxValues,
       placeholder: config.placeholder,
+      i18n: config.i18n,
     });
   };
 }
@@ -176,6 +179,7 @@ export function ModalRoleSelect(config: ModalRoleSelectFieldConfig): PropertyDec
       minValues: config.minValues,
       maxValues: config.maxValues,
       placeholder: config.placeholder,
+      i18n: config.i18n,
     });
   };
 }
@@ -200,6 +204,7 @@ export function ModalMentionableSelect(config: ModalMentionableSelectFieldConfig
       minValues: config.minValues,
       maxValues: config.maxValues,
       placeholder: config.placeholder,
+      i18n: config.i18n,
     });
   };
 }
@@ -225,6 +230,7 @@ export function ModalChannelSelect(config: ModalChannelSelectFieldConfig): Prope
       maxValues: config.maxValues,
       placeholder: config.placeholder,
       channelTypes: config.channelTypes,
+      i18n: config.i18n,
     });
   };
 }
@@ -248,6 +254,7 @@ export function ModalRadioGroup(config: ModalRadioGroupFieldConfig): PropertyDec
       description: config.description,
       required: config.required,
       choices: [],
+      i18n: config.i18n,
     });
   };
 }
@@ -273,6 +280,7 @@ export function ModalCheckboxGroup(config: ModalCheckboxGroupFieldConfig): Prope
       choices: [],
       minValues: config.minValues,
       maxValues: config.maxValues,
+      i18n: config.i18n,
     });
   };
 }
@@ -293,6 +301,7 @@ export function ModalCheckbox(config: ModalCheckboxFieldConfig): PropertyDecorat
       label: config.label,
       description: config.description,
       defaultChecked: config.defaultChecked,
+      i18n: config.i18n,
     });
   };
 }
@@ -315,12 +324,13 @@ export function ModalFileUpload(config: ModalFileUploadFieldConfig): PropertyDec
       required: config.required,
       minFiles: config.minFiles,
       maxFiles: config.maxFiles,
+      i18n: config.i18n,
     });
   };
 }
 
 /**
- * Class decorator — adds a top-level text display (read-only markdown) to the modal.
+ * Class decorator that adds a top-level text display (read-only markdown) to the modal.
  * Text displays are rendered before other fields and have no `custom_id`.
  *
  * @example
@@ -355,9 +365,10 @@ export function ModalChoice(config: ModalChoiceConfig): PropertyDecorator {
       description: config.description,
       default: config.default,
       emoji: config.emoji,
+      i18n: config.i18n,
     });
   };
 }
 
-/** Semantic alias for `@ModalChoice` — reads naturally on string select fields. */
+/** Semantic alias for `@ModalChoice`; reads naturally on string select fields. */
 export const ModalOption = ModalChoice;

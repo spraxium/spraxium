@@ -8,6 +8,8 @@ export type { IntervalOptions } from './interval-options.interface';
 export type { JobEntry } from './job-entry.interface';
 export type { JobStatus } from './job-status.interface';
 export type { RedisScheduleDriverOptions } from './redis-schedule-driver-options.interface';
+export type { RunOnceJobMetadata } from './run-once-job-metadata.interface';
+export type { RunOnceOptions } from './run-once-options.interface';
 export type { ScheduleConfig } from './schedule-config.interface';
 export type { ScheduleDriver } from './schedule-driver.interface';
 export type { TimeoutJobMetadata } from './timeout-job-metadata.interface';

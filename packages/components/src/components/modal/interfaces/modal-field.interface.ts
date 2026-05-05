@@ -1,4 +1,5 @@
 import type { ChannelType } from 'discord.js';
+import type { ModalChoiceI18nKeys, ModalFieldI18nKeys } from '../../../interfaces';
 
 /**
  * All field types Spraxium can render inside a Discord modal.
@@ -42,6 +43,8 @@ export interface ModalChoiceItem {
   description?: string;
   default?: boolean;
   emoji?: ModalEmojiConfig;
+  /** i18n key overrides resolved at render time via `buildLocalizedModal()`. */
+  i18n?: ModalChoiceI18nKeys;
 }
 
 export interface ModalTextFieldDef {
@@ -55,6 +58,7 @@ export interface ModalTextFieldDef {
   maxLength?: number;
   placeholder?: string;
   value?: string;
+  i18n?: ModalFieldI18nKeys;
 }
 
 export interface ModalStringSelectFieldDef {
@@ -68,6 +72,7 @@ export interface ModalStringSelectFieldDef {
   minValues?: number;
   maxValues?: number;
   placeholder?: string;
+  i18n?: ModalFieldI18nKeys;
 }
 
 export interface ModalUserSelectFieldDef {
@@ -80,6 +85,7 @@ export interface ModalUserSelectFieldDef {
   minValues?: number;
   maxValues?: number;
   placeholder?: string;
+  i18n?: ModalFieldI18nKeys;
 }
 
 export interface ModalRoleSelectFieldDef {
@@ -92,6 +98,7 @@ export interface ModalRoleSelectFieldDef {
   minValues?: number;
   maxValues?: number;
   placeholder?: string;
+  i18n?: ModalFieldI18nKeys;
 }
 
 export interface ModalMentionableSelectFieldDef {
@@ -104,6 +111,7 @@ export interface ModalMentionableSelectFieldDef {
   minValues?: number;
   maxValues?: number;
   placeholder?: string;
+  i18n?: ModalFieldI18nKeys;
 }
 
 export interface ModalChannelSelectFieldDef {
@@ -117,6 +125,7 @@ export interface ModalChannelSelectFieldDef {
   maxValues?: number;
   placeholder?: string;
   channelTypes?: Array<ChannelType>;
+  i18n?: ModalFieldI18nKeys;
 }
 
 export interface ModalRadioGroupFieldDef {
@@ -126,6 +135,7 @@ export interface ModalRadioGroupFieldDef {
   description?: string;
   required?: boolean;
   choices: Array<ModalChoiceItem>;
+  i18n?: ModalFieldI18nKeys;
 }
 
 export interface ModalCheckboxGroupFieldDef {
@@ -137,6 +147,7 @@ export interface ModalCheckboxGroupFieldDef {
   choices: Array<ModalChoiceItem>;
   minValues?: number;
   maxValues?: number;
+  i18n?: ModalFieldI18nKeys;
 }
 
 export interface ModalCheckboxFieldDef {
@@ -145,6 +156,7 @@ export interface ModalCheckboxFieldDef {
   label: string;
   description?: string;
   defaultChecked?: boolean;
+  i18n?: ModalFieldI18nKeys;
 }
 
 export interface ModalFileUploadFieldDef {
@@ -155,6 +167,7 @@ export interface ModalFileUploadFieldDef {
   required?: boolean;
   minFiles?: number;
   maxFiles?: number;
+  i18n?: ModalFieldI18nKeys;
 }
 
 /** Top-level text display, rendered without a Label wrapper. */
@@ -187,6 +200,7 @@ export interface ModalTextFieldConfig {
   maxLength?: number;
   placeholder?: string;
   value?: string;
+  i18n?: ModalFieldI18nKeys;
 }
 
 export interface ModalStringSelectFieldConfig {
@@ -198,6 +212,7 @@ export interface ModalStringSelectFieldConfig {
   minValues?: number;
   maxValues?: number;
   placeholder?: string;
+  i18n?: ModalFieldI18nKeys;
 }
 
 export interface ModalUserSelectFieldConfig {
@@ -209,6 +224,7 @@ export interface ModalUserSelectFieldConfig {
   minValues?: number;
   maxValues?: number;
   placeholder?: string;
+  i18n?: ModalFieldI18nKeys;
 }
 
 export interface ModalRoleSelectFieldConfig {
@@ -220,6 +236,7 @@ export interface ModalRoleSelectFieldConfig {
   minValues?: number;
   maxValues?: number;
   placeholder?: string;
+  i18n?: ModalFieldI18nKeys;
 }
 
 export interface ModalMentionableSelectFieldConfig {
@@ -231,6 +248,7 @@ export interface ModalMentionableSelectFieldConfig {
   minValues?: number;
   maxValues?: number;
   placeholder?: string;
+  i18n?: ModalFieldI18nKeys;
 }
 
 export interface ModalChannelSelectFieldConfig {
@@ -243,6 +261,7 @@ export interface ModalChannelSelectFieldConfig {
   maxValues?: number;
   placeholder?: string;
   channelTypes?: Array<ChannelType>;
+  i18n?: ModalFieldI18nKeys;
 }
 
 export interface ModalRadioGroupFieldConfig {
@@ -250,6 +269,7 @@ export interface ModalRadioGroupFieldConfig {
   label: string;
   description?: string;
   required?: boolean;
+  i18n?: ModalFieldI18nKeys;
 }
 
 export interface ModalCheckboxGroupFieldConfig {
@@ -259,6 +279,7 @@ export interface ModalCheckboxGroupFieldConfig {
   required?: boolean;
   minValues?: number;
   maxValues?: number;
+  i18n?: ModalFieldI18nKeys;
 }
 
 export interface ModalCheckboxFieldConfig {
@@ -266,6 +287,7 @@ export interface ModalCheckboxFieldConfig {
   label: string;
   description?: string;
   defaultChecked?: boolean;
+  i18n?: ModalFieldI18nKeys;
 }
 
 export interface ModalFileUploadFieldConfig {
@@ -275,6 +297,7 @@ export interface ModalFileUploadFieldConfig {
   required?: boolean;
   minFiles?: number;
   maxFiles?: number;
+  i18n?: ModalFieldI18nKeys;
 }
 
 export interface ModalTextDisplayConfig {
@@ -287,6 +310,8 @@ export interface ModalChoiceConfig {
   description?: string;
   default?: boolean;
   emoji?: ModalEmojiConfig;
+  /** i18n key overrides resolved at render time via `buildLocalizedModal()`. */
+  i18n?: ModalChoiceI18nKeys;
 }
 
 export interface ModalFieldMetadata {

@@ -1,9 +1,9 @@
 import { Module } from '@spraxium/common';
 import { EmbedService } from '@spraxium/components';
 import { EmbedDemoCommand } from './commands/embed-demo.command';
-import { EmbedDemoBuildHandler } from './handlers/embed-demo-build.handler';
-import { EmbedDemoDataHandler } from './handlers/embed-demo-data.handler';
-import { EmbedDemoPaginatorHandler } from './handlers/embed-demo-paginator.handler';
+import { EmbedDemoBuildHandler } from './handlers/embed-demo-build-command.handler';
+import { EmbedDemoDataHandler } from './handlers/embed-demo-data-command.handler';
+import { EmbedDemoPaginatorHandler } from './handlers/embed-demo-paginator-command.handler';
 
 @Module({
   providers: [EmbedService],

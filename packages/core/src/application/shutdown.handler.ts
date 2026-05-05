@@ -1,12 +1,17 @@
+import { logger } from '@spraxium/logger';
 import type { Client } from 'discord.js';
 import type { ModuleLoader } from '../bootstrap';
 import { PresenceManager } from '../client';
-import { logger } from '../logger';
+import { ProcessLock } from './lock';
+
+const log = logger.child('ShutdownHandler');
 
 export class ShutdownHandler {
   static register(client: Client, moduleLoader: ModuleLoader | undefined): void {
     const shutdown = async (signal: string): Promise<void> => {
-      logger.info(`Received ${signal}, shutting down`);
+      log.info(`Received ${signal}, shutting down`);
+
+      ProcessLock.release();
 
       if (moduleLoader) {
         await moduleLoader.runShutdownHooks();
@@ -14,12 +19,18 @@ export class ShutdownHandler {
 
       PresenceManager.stopRotation();
       client.destroy();
-      logger.info('Bot disconnected cleanly');
+      log.info('Bot disconnected cleanly');
       await ShutdownHandler.drain(0);
     };
 
     process.once('SIGINT', () => void shutdown('SIGINT'));
     process.once('SIGTERM', () => void shutdown('SIGTERM'));
+    process.once('unhandledRejection', (reason) => {
+      log.error(
+        `Unhandled promise rejection: ${reason instanceof Error ? (reason.stack ?? reason.message) : String(reason)}`,
+      );
+      void shutdown('unhandledRejection');
+    });
   }
 
   static drain(code: number): Promise<void> {

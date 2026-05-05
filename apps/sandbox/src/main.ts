@@ -1,6 +1,7 @@
-import { IntentPreset, Logger, SpraxiumFactory } from '@spraxium/core';
+import { IntentPreset, SpraxiumFactory } from '@spraxium/core';
 import { EnvValidator } from '@spraxium/env';
 import { I18nStoreRegistry } from '@spraxium/i18n';
+import { Logger } from '@spraxium/logger';
 import { AppEnv } from './app.env';
 import { AppModule } from './app.module';
 import { DrizzleLocaleStore } from './stores/drizzle.store';

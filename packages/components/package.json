@@ -2,6 +2,25 @@
   "name": "@spraxium/components",
   "version": "0.1.4",
   "private": false,
+  "description": "Decorator-based Discord UI components system for buttons, select menus, modals and embeds",
+  "keywords": [
+    "discord",
+    "discord.js",
+    "discord-bot",
+    "spraxium",
+    "typescript",
+    "decorators",
+    "buttons",
+    "select-menu",
+    "modals",
+    "embeds",
+    "ui-components",
+    "interactive",
+    "button-handler",
+    "modal-handler",
+    "flow-context",
+    "bot-framework"
+  ],
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -17,6 +36,7 @@
   },
   "dependencies": {
     "@discordjs/builders": "^1.14.1",
+    "@spraxium/logger": "workspace:*",
     "discord.js": "^14.26.3",
     "reflect-metadata": "^0.2.2"
   },
@@ -44,8 +64,6 @@
     "tsdown": "^0.12.0",
     "typescript": "^5.7.0"
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "license": "Apache-2.0"
 }

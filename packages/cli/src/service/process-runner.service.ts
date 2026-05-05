@@ -1,9 +1,12 @@
 import { type Options, type ResultPromise, execa } from 'execa';
 
+const SAFE_CMD = /^[a-zA-Z0-9._@/\\:-]+$/;
+
 export class ProcessRunner {
   async inherit(cmd: string, args: Array<string> = [], options: Options = {}): Promise<boolean> {
+    ProcessRunner.assertSafeCommand(cmd);
     try {
-      await execa(cmd, args, { stdio: 'inherit', preferLocal: true, ...options });
+      await execa(cmd, args, { stdio: 'inherit', shell: false, preferLocal: true, ...options });
       return true;
     } catch {
       return false;
@@ -11,8 +14,9 @@ export class ProcessRunner {
   }
 
   async silent(cmd: string, args: Array<string> = [], options: Options = {}): Promise<boolean> {
+    ProcessRunner.assertSafeCommand(cmd);
     try {
-      await execa(cmd, args, { stdio: 'pipe', preferLocal: true, ...options });
+      await execa(cmd, args, { stdio: 'pipe', shell: false, preferLocal: true, ...options });
       return true;
     } catch {
       return false;
@@ -24,8 +28,9 @@ export class ProcessRunner {
     args: Array<string> = [],
     options: Options = {},
   ): Promise<{ ok: boolean; output: string }> {
+    ProcessRunner.assertSafeCommand(cmd);
     try {
-      const result = await execa(cmd, args, { stdio: 'pipe', preferLocal: true, ...options });
+      const result = await execa(cmd, args, { stdio: 'pipe', shell: false, preferLocal: true, ...options });
       return { ok: true, output: this.asText(result.stdout) };
     } catch (error: unknown) {
       const output =
@@ -45,6 +50,13 @@ export class ProcessRunner {
   }
 
   spawn(cmd: string, args: Array<string> = [], options: Options = {}): ResultPromise {
-    return execa(cmd, args, { stdio: 'inherit', ...options });
+    ProcessRunner.assertSafeCommand(cmd);
+    return execa(cmd, args, { stdio: 'inherit', shell: false, ...options });
+  }
+
+  private static assertSafeCommand(cmd: string): void {
+    if (!SAFE_CMD.test(cmd)) {
+      throw new Error(`Unsafe command name: "${cmd}"`);
+    }
   }
 }
