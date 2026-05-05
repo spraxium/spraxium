@@ -15,10 +15,22 @@ export class WebhookRegistry {
   private readonly entries = new Map<string, WebhookEntry>();
   private readonly scannerFn: (instance: unknown) => void;
   private errorHandler?: (name: string, error: Error) => void;
+  private _globalUsername: string | undefined;
+  private _globalAvatarUrl: string | undefined;
 
   constructor() {
     this.scannerFn = this.scan.bind(this);
     ModuleLoader.instanceScanners.add(this.scannerFn);
+  }
+
+  /** Default `username` applied to every send that omits the field. */
+  get globalUsername(): string | undefined {
+    return this._globalUsername;
+  }
+
+  /** Default `avatarURL` applied to every send that omits the field. */
+  get globalAvatarUrl(): string | undefined {
+    return this._globalAvatarUrl;
   }
 
   boot(): void {
@@ -32,6 +44,9 @@ export class WebhookRegistry {
     if (config.onError) {
       this.errorHandler = config.onError;
     }
+
+    this._globalUsername = config.globalUsername;
+    this._globalAvatarUrl = config.globalAvatarUrl;
 
     for (const [name, url] of Object.entries(config.webhooks)) {
       if (!url) {
@@ -82,6 +97,17 @@ export class WebhookRegistry {
   }
 
   /**
+   * Returns a plain object with the registered global username/avatar values,
+   * omitting keys that are not configured. Used by `@Send`-patched methods.
+   */
+  private buildGlobalOptions(): Record<string, string> {
+    const out: Record<string, string> = {};
+    if (this._globalUsername) out.username = this._globalUsername;
+    if (this._globalAvatarUrl) out.avatarURL = this._globalAvatarUrl;
+    return out;
+  }
+
+  /**
    * Scans each DI-instantiated class decorated with `@WebhookSender()` and wraps
    * any method decorated with `@Send(name)` to auto-dispatch the return value.
    */
@@ -108,7 +134,15 @@ export class WebhookRegistry {
 
     if (!meta) return;
 
-    const original = instance[method] as (...args: unknown[]) => Promise<unknown>;
+    // Guard against double-wrapping if scan() is called more than once on the
+    // same instance (e.g. hot-reload or test re-wiring). Without this check
+    // the method would be wrapped twice, causing two webhook sends per call.
+    const current = instance[method] as ((...args: unknown[]) => Promise<unknown>) & {
+      __spraxiumPatched?: true;
+    };
+    if (current.__spraxiumPatched) return;
+
+    const original = current;
 
     instance[method] = async (...args: unknown[]): Promise<unknown> => {
       const result = await original.apply(instance, args);
@@ -121,18 +155,20 @@ export class WebhookRegistry {
         return result;
       }
 
+      const globals = this.buildGlobalOptions();
       try {
         if (typeof result === 'string') {
-          await entry.client.send({ content: result });
+          await entry.client.send({ content: result, ...globals });
         } else if (
           typeof result === 'object' &&
           'data' in (result as object) &&
           'toJSON' in (result as object)
         ) {
           // EmbedBuilder (has .data and .toJSON from discord.js)
-          await entry.client.send({ embeds: [result as never] });
+          await entry.client.send({ embeds: [result as never], ...globals });
         } else if (typeof result === 'object') {
-          await entry.client.send(result as never);
+          // Per-call fields in the returned payload take precedence over globals.
+          await entry.client.send({ ...globals, ...(result as object) } as never);
         }
       } catch (error) {
         const err = error instanceof Error ? error : new Error(String(error));
@@ -147,5 +183,8 @@ export class WebhookRegistry {
 
       return result;
     };
+
+    // Mark the wrapper so a second scan() call on the same instance is a no-op.
+    (instance[method] as { __spraxiumPatched?: true }).__spraxiumPatched = true;
   }
 }

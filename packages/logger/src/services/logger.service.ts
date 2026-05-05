@@ -3,12 +3,15 @@ import { ConsoleTransport, nativeLog } from '../transports/console.transport';
 import { DiscordTransport } from '../transports/discord.transport';
 import { isClientAwareTransport } from '../utils';
 import { TokenMasker } from '../utils/token-masker.util';
+import { CommandLogger } from './command-logger.service';
 
 export class Logger {
   private static transports: Array<LogTransport> = [new ConsoleTransport()];
   private static readonly masker = new TokenMasker();
   private static readonly levelColors = new Map<string, LogColorInput>();
   private static debugEnabled = false;
+  private static commandLoggingEnabled = false;
+  private static commandLoggingBound = false;
 
   constructor(private readonly context?: string) {}
 
@@ -25,10 +28,20 @@ export class Logger {
       ConsoleTransport.setTimestampFormat(config.timestampFormat);
     }
 
+    if (config.timestampLocale !== undefined) {
+      ConsoleTransport.setLocale(config.timestampLocale);
+    }
+
     Logger.removeTransport('discord');
     if (config.discord) {
       Logger.addTransport(new DiscordTransport(config.discord));
     }
+
+    // Remember the command-logging preference. Binding happens in setClient()
+    // because CommandLogger needs a live discord.js client. A client may
+    // already be attached (configure() called after setClient()), so bind now
+    // if we can.
+    Logger.commandLoggingEnabled = config.commandLogging === true;
   }
 
   /** Enable or disable debug-level output. Also honoured via `SPRAXIUM_DEBUG=true`. */
@@ -42,6 +55,13 @@ export class Logger {
       if (isClientAwareTransport(transport)) {
         transport.setClient(client);
       }
+    }
+    // Bind slash-command logging if the user requested it via configure(). We
+    // guard against double-binding so re-entering setClient() (e.g. tests,
+    // shard re-wiring) does not register duplicate listeners.
+    if (Logger.commandLoggingEnabled && !Logger.commandLoggingBound) {
+      CommandLogger.bind(client);
+      Logger.commandLoggingBound = true;
     }
   }
 
@@ -87,7 +107,7 @@ export class Logger {
   /**
    * Emit on an arbitrary log level with optional structured metadata.
    *
-   * Security: do NOT pass secrets as metadata values — they are forwarded to
+   * Security: do NOT pass secrets as metadata values - they are forwarded to
    * all transports, including remote ones.
    */
   log(level: string, message: string, metadata?: Record<string, unknown>): void {

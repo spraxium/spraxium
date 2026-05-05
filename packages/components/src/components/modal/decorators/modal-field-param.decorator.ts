@@ -45,8 +45,21 @@ export function ModalField(fieldId: string): ParameterDecorator {
  *   \@Ctx() ctx: ModalContext,
  * ) { ... }
  */
+const _warnedField = new Set<string>();
+
 export function Field(fieldId: string): ParameterDecorator {
-  return createFieldParamDecorator(fieldId);
+  return (target, methodKey, parameterIndex): void => {
+    const className = (target as { constructor: { name: string } }).constructor.name;
+    const site = `${className}:${String(methodKey ?? 'handle')}:${parameterIndex}`;
+    if (!_warnedField.has(site)) {
+      _warnedField.add(site);
+      console.warn(
+        `[Spraxium] @Field('${fieldId}') is deprecated - use @ModalField('${fieldId}') or a typed decorator ` +
+          `such as @ModalTextField('${fieldId}') instead. Found in ${className}.${String(methodKey ?? 'handle')}`,
+      );
+    }
+    createFieldParamDecorator(fieldId)(target, methodKey, parameterIndex);
+  };
 }
 
 /**

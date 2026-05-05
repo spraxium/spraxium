@@ -165,7 +165,20 @@ export class V2Service {
   private sortedChildren(ContainerClass: AnyConstructor): Array<V2ChildDef> {
     const children: Array<V2ChildDef> =
       Reflect.getMetadata(COMPONENT_METADATA_KEYS.V2_CHILDREN, ContainerClass) ?? [];
-    return [...children].sort((a, b) => a.order - b.order);
+    // Merge any @V2When predicates stored separately by property key. These are
+    // written to V2_WHEN instead of V2_CHILDREN at decoration time so that
+    // decorator order does not matter (experimentalDecorators runs bottom-up,
+    // so @V2When above a child decorator would not yet see the child in V2_CHILDREN).
+    const pendingWhen: Map<string, NonNullable<V2ChildDef['when']>> = Reflect.getMetadata(
+      COMPONENT_METADATA_KEYS.V2_WHEN,
+      ContainerClass,
+    ) ?? new Map();
+    return [...children]
+      .sort((a, b) => a.order - b.order)
+      .map((child) => {
+        const when = pendingWhen.get(child.propertyKey);
+        return when ? { ...child, when } : child;
+      });
   }
 
   private buildChild(
@@ -256,6 +269,21 @@ export class V2Service {
         }
 
         const firstClass = rawComponents[0];
+
+        // Validate all components in the row are of the same type - mixing
+        // buttons and selects in one row is not valid in Discord's component model.
+        const firstIsSelect = Reflect.hasMetadata(COMPONENT_METADATA_KEYS.SELECT_COMPONENT, firstClass);
+        const firstIsDynamic = Reflect.hasMetadata(COMPONENT_METADATA_KEYS.SELECT_DYNAMIC, firstClass);
+        for (const cls of rawComponents) {
+          const isSelect = Reflect.hasMetadata(COMPONENT_METADATA_KEYS.SELECT_COMPONENT, cls);
+          const isDynamic = Reflect.hasMetadata(COMPONENT_METADATA_KEYS.SELECT_DYNAMIC, cls);
+          if (isSelect !== firstIsSelect || isDynamic !== firstIsDynamic) {
+            throw new Error(
+              '[V2Service] @V2Row: all components must be of the same type. ' +
+                'Mixing buttons and selects in a single row is not supported.',
+            );
+          }
+        }
 
         if (Reflect.hasMetadata(COMPONENT_METADATA_KEYS.SELECT_COMPONENT, firstClass)) {
           if (!allowAsync) {

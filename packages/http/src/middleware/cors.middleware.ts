@@ -1,12 +1,22 @@
+import { logger } from '@spraxium/logger';
 import type { Context, Next } from 'hono';
 import { cors } from 'hono/cors';
 import { DEFAULT_HEADERS, DEFAULT_METHODS } from '../constants';
 import type { CorsConfig, HttpMiddleware } from '../interfaces';
 
+const log = logger.child('CorsMiddleware');
+
 export class CorsMiddleware implements HttpMiddleware {
   private readonly handler: ReturnType<typeof cors>;
 
   constructor(config: CorsConfig) {
+    if (config.origins.includes('*') && config.credentials === true) {
+      log.warn(
+        "CORS misconfiguration: origins: ['*'] combined with credentials: true is rejected by all browsers. " +
+          'Use explicit origin(s) instead of wildcard when credentials are required.',
+      );
+    }
+
     this.handler = cors({
       origin: config.origins.includes('*') ? '*' : (config.origins as Array<string>),
       allowMethods: (config.methods ?? DEFAULT_METHODS) as Array<string>,

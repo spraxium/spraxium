@@ -20,9 +20,20 @@ import { METADATA_KEYS } from '../constants/metadata-keys.constant';
  *   await interaction.reply(message ?? '');
  * }
  */
+const _warnedSlashOpt = new Set<string>();
+
 export function SlashOpt(name: string): ParameterDecorator {
   return (target: object, propertyKey: string | symbol | undefined, parameterIndex: number): void => {
     if (propertyKey === undefined) return;
+
+    const site = `${(target as { constructor: { name: string } }).constructor.name}:${String(propertyKey)}:${parameterIndex}`;
+    if (!_warnedSlashOpt.has(site)) {
+      _warnedSlashOpt.add(site);
+      console.warn(
+        `[Spraxium] @SlashOpt('${name}') is deprecated - use @SlashOption('${name}') or a typed decorator such as @SlashStringOption('${name}') instead. ` +
+          `Found in ${(target as { constructor: { name: string } }).constructor.name}.${String(propertyKey)}`,
+      );
+    }
 
     const existing: Array<{ index: number; name: string }> =
       Reflect.getMetadata(METADATA_KEYS.SLASH_OPT_PARAM, target, propertyKey) ?? [];

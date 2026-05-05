@@ -1,6 +1,6 @@
 import { ANSI, CONSOLE_LEVEL_COLORS } from '../constants';
 import type { LogColorInput, LogEntry, LogTransport } from '../interfaces';
-import { type TimestampFormat, formatTimestamp } from '../utils';
+import { type TimestampFormat, formatTimestamp, setLocale } from '../utils';
 
 // Bind native console methods at module load time so they remain
 // unaffected if anything overrides the console globals later.
@@ -44,6 +44,11 @@ export class ConsoleTransport implements LogTransport {
   /** Set the timestamp format used in the prefix of every log line. */
   static setTimestampFormat(format: TimestampFormat): void {
     activeTimestampFormat = format;
+  }
+
+  /** Set the locale used for time formatting (e.g. `'en-US'`, `'pt-BR'`). Defaults to `'en-US'`. */
+  static setLocale(locale: string): void {
+    setLocale(locale);
   }
 
   log(entry: LogEntry): void {

@@ -72,7 +72,19 @@ export class ModalSchemaBuilder {
     let dynamicFields: Array<ModalFieldDef> = [];
 
     if (dynamicMethodKey) {
-      const instance = new ModalClass() as Record<string, unknown>;
+      /**
+       * The modal class must have a no-arg constructor. If it requires
+       * DI-injected arguments, instantiating it here will throw. In that
+       * case, use static methods or move dynamic field logic outside the class.
+       */
+      let instance: Record<string, unknown>;
+      try {
+        instance = new ModalClass() as Record<string, unknown>;
+      } catch (e) {
+        throw new Error(
+          `ModalSchemaBuilder: ${ModalClass.name} has a @ModalDynamicFields method but its constructor threw during instantiation. Classes with @ModalDynamicFields must have a no-arg constructor (DI parameters are not supported here). Cause: ${e instanceof Error ? e.message : String(e)}`,
+        );
+      }
       const method = instance[dynamicMethodKey];
       if (typeof method === 'function') {
         // biome-ignore lint/suspicious/noExplicitAny: dynamic method result via reflect instantiation

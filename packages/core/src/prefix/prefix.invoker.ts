@@ -25,19 +25,13 @@ export class PrefixInvoker {
     const ctx = new SpraxiumExecutionContext(message, commandName);
 
     const cooldownSeconds = commandConfig.cooldown ?? config.defaultCooldown ?? 0;
-    if (cooldownSeconds > 0) {
-      const remaining = this.cooldowns.check(commandName, message.author.id);
-      if (remaining > 0) {
-        await ExceptionHandler.handle(
-          new CooldownException({ seconds: remaining, command: commandName }),
-          ctx,
-          ConfigStore.getRaw().exceptions,
-        );
-        return;
-      }
-    }
 
     try {
+      // Guards run first so a user denied by GuildOnly / PermissionGuard /
+      // OwnerOnly gets the access-denied response instead of a cooldown
+      // message - avoiding the confusing UX where a restricted command
+      // appears to be "on cooldown" even though the user would never be
+      // allowed to run it.
       const passed = await GuardExecutor.execute(
         handler.handlerCtor as new (
           ...args: Array<unknown>
@@ -48,6 +42,20 @@ export class PrefixInvoker {
       if (!passed) {
         await ExceptionHandler.handle(new GuardDeniedException(), ctx, ConfigStore.getRaw().exceptions);
         return;
+      }
+
+      // Cooldown check runs after guards so only users who would actually
+      // be allowed to invoke the handler can be throttled by it.
+      if (cooldownSeconds > 0) {
+        const remaining = this.cooldowns.check(commandName, message.author.id);
+        if (remaining > 0) {
+          await ExceptionHandler.handle(
+            new CooldownException({ seconds: remaining, command: commandName }),
+            ctx,
+            ConfigStore.getRaw().exceptions,
+          );
+          return;
+        }
       }
 
       const coercedArgs = this.argParser.parse(argv, argMetas, message);

@@ -74,6 +74,9 @@ export class EnvValidator {
     initialErrors: Array<EnvFieldError>,
   ): Array<FieldValidationResult> {
     let errors = initialErrors;
+    // Snapshot the field state before we start polling for fixes so we can
+    // show the developer exactly which values changed once the env is valid.
+    let prevResults: Array<FieldValidationResult> = fields.map((f) => FieldValidator.validate(f));
 
     EnvPrinter.printReloadError(errors);
     console.log(ANSI.yellow(MESSAGES.WATCHING_ENV) + ANSI.dim(MESSAGES.HINT_SAVE_TO_RETRY));
@@ -98,6 +101,9 @@ export class EnvValidator {
 
       if (nextErrors.length === 0) {
         console.log(ANSI.green(`${ICONS.SUCCESS} ${MESSAGES.ENV_FIXED}`));
+        // Show the developer precisely which env values they just changed.
+        // Secrets are masked by the printer itself.
+        EnvPrinter.printReloadDiff(prevResults, nextResults);
         return nextResults;
       }
 
@@ -105,6 +111,10 @@ export class EnvValidator {
         EnvPrinter.printReloadError(nextErrors);
         errors = nextErrors;
       }
+      // Advance the previous snapshot so the diff on eventual success shows
+      // the last observed state against the successful reload, not the very
+      // first state from before any fixes were applied.
+      prevResults = nextResults;
     }
 
     return fields.map((f) => FieldValidator.validate(f));

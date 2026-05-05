@@ -46,7 +46,8 @@ export class SlashRegistrar {
     const rest = new REST({ version: '10' }).setToken(token);
 
     if (globalPayloads.length > 0) {
-      const skipGlobal = !force && process.env.NODE_ENV === 'development' && this.isUnchanged(globalPayloads);
+      const skipGlobal =
+        !force && process.env.NODE_ENV === 'development' && this.isUnchanged('global', globalPayloads);
 
       if (skipGlobal) {
         this.log.raw(`${ANSI.yellow('⊘')}  Application commands unchanged , skipped REST registration (dev)`);
@@ -68,7 +69,7 @@ export class SlashRegistrar {
         );
 
         if (process.env.NODE_ENV === 'development') {
-          this.writeHash(globalPayloads);
+          this.writeHash('global', globalPayloads);
         }
       }
     }
@@ -80,26 +81,51 @@ export class SlashRegistrar {
       ];
       if (perGuildPayloads.length === 0) continue;
 
+      const skipGuild =
+        !force &&
+        process.env.NODE_ENV === 'development' &&
+        this.isUnchanged(`guild:${cmdGuild}`, perGuildPayloads);
+
+      if (skipGuild) {
+        this.log.raw(
+          `${ANSI.yellow('⊘')}  Guild ${cmdGuild} commands unchanged - skipped REST registration (dev)`,
+        );
+        continue;
+      }
+
       await rest.put(Routes.applicationGuildCommands(clientId, cmdGuild), { body: perGuildPayloads });
       this.log.raw(
         `${ANSI.green('✔')}  Registered ${perGuildPayloads.length} command(s) for guild ${cmdGuild} (per-command override)`,
       );
+
+      if (process.env.NODE_ENV === 'development') {
+        this.writeHash(`guild:${cmdGuild}`, perGuildPayloads);
+      }
     }
   }
 
-  private isUnchanged(payloads: Array<RESTPostAPIApplicationCommandsJSONBody>): boolean {
+  private isUnchanged(cacheKey: string, payloads: Array<RESTPostAPIApplicationCommandsJSONBody>): boolean {
     const hash = this.computeHash(payloads);
     try {
-      return fs.readFileSync(HASH_FILE, 'utf-8').trim() === hash;
+      const raw = fs.readFileSync(HASH_FILE, 'utf-8').trim();
+      const cache = JSON.parse(raw) as Record<string, string>;
+      return cache[cacheKey] === hash;
     } catch {
       return false;
     }
   }
 
-  private writeHash(payloads: Array<RESTPostAPIApplicationCommandsJSONBody>): void {
+  private writeHash(cacheKey: string, payloads: Array<RESTPostAPIApplicationCommandsJSONBody>): void {
     try {
       fs.mkdirSync(HASH_DIR, { recursive: true });
-      fs.writeFileSync(HASH_FILE, this.computeHash(payloads), 'utf-8');
+      let cache: Record<string, string> = {};
+      try {
+        cache = JSON.parse(fs.readFileSync(HASH_FILE, 'utf-8')) as Record<string, string>;
+      } catch {
+        /* fresh cache */
+      }
+      cache[cacheKey] = this.computeHash(payloads);
+      fs.writeFileSync(HASH_FILE, JSON.stringify(cache), 'utf-8');
     } catch {
       /* non-fatal */
     }

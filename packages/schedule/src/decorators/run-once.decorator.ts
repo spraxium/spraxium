@@ -1,6 +1,5 @@
 import 'reflect-metadata';
 import { ConfigurationException } from '@spraxium/core';
-import { MESSAGES } from '../constants/messages.constant';
 import { SCHEDULE_METADATA_KEYS } from '../constants/metadata-keys.constant';
 import type { RunOnceJobMetadata } from '../interfaces/run-once-job-metadata.interface';
 import type { RunOnceOptions } from '../interfaces/run-once-options.interface';
@@ -10,7 +9,7 @@ import type { RunOnceOptions } from '../interfaces/run-once-options.interface';
  *
  * Unlike `@Cron`, `@Interval`, or `@Timeout`, the job fires at an absolute moment
  * in the future rather than a relative delay or recurring pattern. After execution,
- * the job is automatically unregistered — it will not appear in `ScheduleService.getAll()`
+ * the job is automatically unregistered - it will not appear in `ScheduleService.getAll()`
  * afterwards.
  *
  * If the provided date is already in the past when the bot boots, the job is

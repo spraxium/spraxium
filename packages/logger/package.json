@@ -2,7 +2,7 @@
   "name": "@spraxium/logger",
   "version": "0.1.0",
   "private": false,
-  "description": "Centralized, zero-dependency logging system for the Spraxium ecosystem",
+  "description": "Centralized structured logging system for the Spraxium ecosystem",
   "keywords": ["discord", "discord-bot", "spraxium", "typescript", "logger", "logging", "bot-framework"],
   "type": "module",
   "main": "./dist/index.js",

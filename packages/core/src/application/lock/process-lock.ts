@@ -91,11 +91,26 @@ export class ProcessLock {
     console.log('');
   }
 
+  private static cleanupRegistered = false;
+
   private static registerCleanup(): void {
+    // Guard against double-registration when acquire() is re-entered
+    // (e.g. after forceTakeover in tests or repeated CLI invocations).
+    if (ProcessLock.cleanupRegistered) return;
+    ProcessLock.cleanupRegistered = true;
+
     const release = (): void => LockStore.remove();
     process.once('exit', release);
     process.once('SIGINT', release);
     process.once('SIGTERM', release);
-    process.once('uncaughtException', release);
+    // Important: do NOT just `release()` and return on uncaughtException -
+    // Node would keep the process running in an undefined state (the fatal
+    // error gets swallowed). Clean up, log the crash so the context is not
+    // lost, and exit with a non-zero code.
+    process.once('uncaughtException', (err) => {
+      release();
+      console.error(err);
+      process.exit(1);
+    });
   }
 }

@@ -1,13 +1,21 @@
 import { Logger } from './logger.service';
 
 export class CommandLogger {
-  private static readonly logger = new Logger('CommandLogger');
+  // Lazy-initialized to avoid a circular import with `logger.service.ts`.
+  // Instantiating `new Logger(...)` at class-eval time would throw when the
+  // module graph is still being resolved (CommandLogger is imported BY
+  // Logger to wire `commandLogging`).
+  private static logger: Logger | undefined;
 
   /**
    * Bind interaction logging to a discord.js Client.
    * The client is typed as `unknown` to avoid a hard dependency on discord.js.
    */
   static bind(client: unknown): void {
+    if (!CommandLogger.logger) {
+      CommandLogger.logger = new Logger('CommandLogger');
+    }
+    const log = CommandLogger.logger;
     const c = client as {
       on(event: string, cb: (interaction: unknown) => void): void;
     };

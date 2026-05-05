@@ -19,5 +19,13 @@ import type { ModalValidationRule } from '../interfaces';
 export function ModalValidate(rules: Array<ModalValidationRule>): PropertyDecorator {
   return (target, propertyKey): void => {
     Reflect.defineMetadata(COMPONENT_METADATA_KEYS.MODAL_VALIDATOR, rules, target, propertyKey);
+    const meta = Reflect.getMetadata(COMPONENT_METADATA_KEYS.MODAL_FIELD, target, propertyKey) as
+      | { type: string }
+      | undefined;
+    if (meta && meta.type !== 'text') {
+      console.warn(
+        `@ModalValidate on "${String(propertyKey)}" has no effect - validation only applies to text fields (detected type: "${meta.type}").`,
+      );
+    }
   };
 }

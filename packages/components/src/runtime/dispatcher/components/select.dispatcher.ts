@@ -41,6 +41,10 @@ export class SelectDispatcher {
     this.config = config;
   }
 
+  setPayloadService(svc: PayloadService): void {
+    this.payloads = svc;
+  }
+
   get size(): number {
     return this.handlers.length + this.dynamicHandlers.length;
   }

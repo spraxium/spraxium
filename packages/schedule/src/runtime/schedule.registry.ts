@@ -59,6 +59,10 @@ export class ScheduleRegistry {
     for (const job of this.pendingAfterOnline) {
       if (!job.disabled) this.startAfterOnlineJob(job);
     }
+    // Clear the pending list after draining - jobs have been handed off to
+    // their own timers and no longer need to be tracked here. Without this
+    // the array would hold references until shutdown(), causing a minor leak.
+    this.pendingAfterOnline.length = 0;
   }
 
   async shutdown(): Promise<void> {
@@ -233,6 +237,7 @@ export class ScheduleRegistry {
       lastRun: job.lastRun,
       nextRun: job.nextRun,
       runCount: job.runCount,
+      description: job.description,
     };
   }
 }

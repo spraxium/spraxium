@@ -1,5 +1,6 @@
 import type { Client } from 'discord.js';
 import type { ComponentsConfig } from '../../lifecycle';
+import { PayloadService } from '../../payload';
 import { ButtonDispatcher } from '../components/button.dispatcher';
 import { ModalDispatcher } from '../components/modal.dispatcher';
 import { SelectDispatcher } from '../components/select.dispatcher';
@@ -13,6 +14,7 @@ export class ComponentDispatcher {
   private readonly modals = new ModalDispatcher();
   private readonly selects = new SelectDispatcher();
   private readonly buttons = new ButtonDispatcher();
+  private readonly payloads = new PayloadService();
 
   private config?: ComponentsConfig;
 
@@ -43,6 +45,8 @@ export class ComponentDispatcher {
       this.buttons.setConfig(this.config);
       this.selects.setConfig(this.config);
     }
+    this.buttons.setPayloadService(this.payloads);
+    this.selects.setPayloadService(this.payloads);
     this.modals.bind(client, this.config);
     this.selects.bind(client);
     this.buttons.bind(client);

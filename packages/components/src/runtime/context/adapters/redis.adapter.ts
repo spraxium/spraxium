@@ -70,7 +70,20 @@ export class RedisContextAdapter implements ContextStorageAdapter {
   }
 
   async entries(): Promise<ReadonlyArray<SpraxiumContext<unknown>>> {
-    const keys: Array<string> = await (this.client.keys(`${this.prefix}*`) as Promise<Array<string>>);
+    const keys: Array<string> = [];
+    let cursor = '0';
+    do {
+      const [nextCursor, batch]: [string, Array<string>] = await (this.client.scan(
+        cursor,
+        'MATCH',
+        `${this.prefix}*`,
+        'COUNT',
+        100,
+      ) as Promise<[string, Array<string>]>);
+      cursor = nextCursor;
+      keys.push(...batch);
+    } while (cursor !== '0');
+
     if (keys.length === 0) return [];
     const values: Array<string | null> = await (this.client.mget(...keys) as Promise<Array<string | null>>);
     const now = Date.now();

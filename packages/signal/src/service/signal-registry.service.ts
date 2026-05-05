@@ -6,6 +6,7 @@ import { logger } from '@spraxium/logger';
 import type { Client, Message } from 'discord.js';
 import { SIGNAL_MESSAGES, SIGNAL_METADATA_KEYS } from '../constants';
 import type { OnSignalMetadata, SignalConfig, SignalEnvelope } from '../interfaces';
+import type { NonceCache } from '../security';
 import { defineSignal } from '../signal.config';
 import { MethodSignalHandler } from './method-signal-handler';
 import type { SignalProcessor } from './signal-processor.service';
@@ -27,6 +28,7 @@ export class SignalRegistry implements SpraxiumOnBoot, SpraxiumOnShutdown {
     @Inject('Client') private readonly client: Client,
     private readonly processor: SignalProcessor,
     private readonly router: SignalRouter,
+    private readonly nonceCache: NonceCache,
   ) {
     this.scannerFn = this.scan.bind(this);
     ModuleLoader.instanceScanners.add(this.scannerFn);
@@ -39,6 +41,8 @@ export class SignalRegistry implements SpraxiumOnBoot, SpraxiumOnShutdown {
       log.warn(SIGNAL_MESSAGES.NO_CONFIG);
       return;
     }
+
+    this.nonceCache.configure(config);
 
     this.messageHandler = (message: Message): void => {
       this.processor.process(message, config).catch(() => {});
@@ -57,6 +61,8 @@ export class SignalRegistry implements SpraxiumOnBoot, SpraxiumOnShutdown {
       this.client.off('messageCreate', this.messageHandler);
       this.messageHandler = undefined;
     }
+
+    await this.nonceCache.destroy();
   }
 
   private scan(instance: unknown): void {

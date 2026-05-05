@@ -91,6 +91,27 @@ export class ContextStore {
     await ContextStore.adapter.delete(id);
   }
 
+  /**
+   * Returns all non-expired contexts whose `id` starts with `prefix`. Reads
+   * from the in-process hot cache (hydrated from the adapter at
+   * {@link ContextStore.initialize}), so this is synchronous-cost from the
+   * caller's perspective despite returning a Promise for adapter-async
+   * compatibility.
+   *
+   * Used by secondary caches (e.g. `ModalFieldCache`) that share the
+   * adapter but need to enumerate their own namespace at boot.
+   */
+  static async entriesWithPrefix(prefix: string): Promise<ReadonlyArray<SpraxiumContext<unknown>>> {
+    const now = Date.now();
+    const out: Array<SpraxiumContext<unknown>> = [];
+    for (const ctx of ContextStore.hot.values()) {
+      if (!ctx.id.startsWith(prefix)) continue;
+      if (ctx.expiresAt !== 0 && ctx.expiresAt <= now) continue;
+      out.push(ctx);
+    }
+    return out;
+  }
+
   /** Stop the periodic cleanup timer. Primarily useful in test environments. */
   static destroy(): void {
     if (ContextStore.timer) {

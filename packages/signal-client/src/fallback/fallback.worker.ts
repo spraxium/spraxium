@@ -89,12 +89,7 @@ export class FallbackWorker {
     const attempt = entry.attempts + 1;
 
     try {
-      await this.client.send(
-        entry.event,
-        entry.guildId,
-        (entry.envelope.payload ?? {}) as Record<string, unknown>,
-        { skipFallback: true },
-      );
+      await this.client.sendEnvelope(entry.envelope, { skipFallback: true });
       await this.store.markProcessed(entry.id);
     } catch (err) {
       const reason = err instanceof Error ? err.message : String(err);

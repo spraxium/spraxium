@@ -125,7 +125,7 @@ export class WebhookService {
 
   /**
    * Interpolates a template string with the provided variables and returns the result.
-   * Does not send anything — useful for building content before branching send logic.
+   * Does not send anything - useful for building content before branching send logic.
    *
    * @param template - Template string with `{{key}}` placeholders.
    * @param vars - Map of variable names to their string values.
@@ -169,11 +169,18 @@ export class WebhookService {
   }
 
   private buildOptions(options?: SendOptions): Record<string, string | undefined> {
-    if (!options) return {};
+    // Merge per-call options over globals registered on the WebhookRegistry.
+    // Per-call values always win; globals fill in whatever is missing so the
+    // `globalUsername` / `globalAvatarUrl` fields on `defineWebhook` actually
+    // flow through to the wire.
+    const username = options?.username ?? this.registry.globalUsername;
+    const avatarURL = options?.avatarURL ?? this.registry.globalAvatarUrl;
+    const threadId = options?.threadId;
+
     const out: Record<string, string | undefined> = {};
-    if (options.username) out.username = options.username;
-    if (options.avatarURL) out.avatarURL = options.avatarURL;
-    if (options.threadId) out.threadId = options.threadId;
+    if (username) out.username = username;
+    if (avatarURL) out.avatarURL = avatarURL;
+    if (threadId) out.threadId = threadId;
     return out;
   }
 

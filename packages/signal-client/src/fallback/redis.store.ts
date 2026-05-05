@@ -1,10 +1,18 @@
 import type { FallbackEntry, FallbackStore } from './interfaces';
 
+/**
+ * Minimal shape of the Redis client consumed by this store. Compatible with
+ * node-redis v4's API. The `scan` signature matches node-redis's options-based
+ * call; ioredis users can wrap their client to match this shape.
+ */
 type RedisClient = {
   get(key: string): Promise<string | null>;
   set(key: string, value: string): Promise<unknown>;
   del(key: string | string[]): Promise<unknown>;
-  keys(pattern: string): Promise<string[]>;
+  scan(
+    cursor: number | string,
+    options?: { MATCH?: string; COUNT?: number },
+  ): Promise<{ cursor: number | string; keys: string[] }>;
   sAdd(key: string, member: string): Promise<unknown>;
   sIsMember(key: string, member: string): Promise<number | boolean>;
   sCard(key: string): Promise<number>;
@@ -15,6 +23,10 @@ const PENDING = `${PREFIX}:pending`;
 const DL = `${PREFIX}:deadletter`;
 const PROCESSED = `${PREFIX}:processed`;
 
+// Batch size for each SCAN iteration. Small enough to stay responsive, large
+// enough that realistic queues (< 10k pending) finish in 1-2 round trips.
+const SCAN_COUNT = 200;
+
 export class RedisFallbackStore implements FallbackStore {
   constructor(private readonly redis: RedisClient) {}
 
@@ -23,10 +35,9 @@ export class RedisFallbackStore implements FallbackStore {
   }
 
   async claimBatch(limit: number, now: number): Promise<FallbackEntry[]> {
-    const keys = await this.redis.keys(`${PENDING}:*`);
     const results: FallbackEntry[] = [];
 
-    for (const key of keys) {
+    for await (const key of this.scanKeys(`${PENDING}:*`)) {
       if (results.length >= limit) break;
       const raw = await this.redis.get(key);
       if (!raw) continue;
@@ -63,12 +74,30 @@ export class RedisFallbackStore implements FallbackStore {
   }
 
   async pendingCount(): Promise<number> {
-    const keys = await this.redis.keys(`${PENDING}:*`);
-    return keys.length;
+    return this.countKeys(`${PENDING}:*`);
   }
 
   async deadLetterCount(): Promise<number> {
-    const keys = await this.redis.keys(`${DL}:*`);
-    return keys.length;
+    return this.countKeys(`${DL}:*`);
+  }
+
+  /**
+   * Cursor-based iterator over keys matching `pattern`. Replaces the previously
+   * used `KEYS` command, which is O(N) and blocks the Redis server for the
+   * duration of the scan - unsafe in production for large keyspaces.
+   */
+  private async *scanKeys(pattern: string): AsyncGenerator<string, void, void> {
+    let cursor: number | string = 0;
+    do {
+      const result = await this.redis.scan(cursor, { MATCH: pattern, COUNT: SCAN_COUNT });
+      cursor = result.cursor;
+      for (const key of result.keys) yield key;
+    } while (String(cursor) !== '0');
+  }
+
+  private async countKeys(pattern: string): Promise<number> {
+    let count = 0;
+    for await (const _ of this.scanKeys(pattern)) count++;
+    return count;
   }
 }

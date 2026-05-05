@@ -30,6 +30,10 @@ export class ButtonDispatcher {
     this.config = config;
   }
 
+  setPayloadService(svc: PayloadService): void {
+    this.payloads = svc;
+  }
+
   get size(): number {
     return this.staticHandlers.length + this.dynamicHandlers.length;
   }

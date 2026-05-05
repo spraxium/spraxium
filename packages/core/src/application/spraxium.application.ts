@@ -1,5 +1,5 @@
 import type { Constructor, PrefixConfig, SpraxiumGuard } from '@spraxium/common';
-import { CommandLogger, Logger, logger } from '@spraxium/logger';
+import { Logger, logger } from '@spraxium/logger';
 import { type Client, GatewayIntentBits, Partials } from 'discord.js';
 import { ModuleLoader } from '../bootstrap';
 import { ClientFactory, PresenceManager, SpraxiumShardManager, isShardChild } from '../client';
@@ -213,9 +213,10 @@ export class SpraxiumApplication {
   }
 
   private async wireClient(client: Client): Promise<void> {
+    // Logger.setClient() handles CommandLogger binding internally when
+    // `logger.commandLogging === true` is set via Logger.configure() in loadConfig().
     Logger.setClient(client);
     const raw = ConfigStore.getRaw();
-    if (raw.logger?.commandLogging) CommandLogger.bind(client);
     this.state.moduleLoader?.bindListeners(client);
 
     const prefixConfig = this.resolvePrefixConfig(raw.prefix);

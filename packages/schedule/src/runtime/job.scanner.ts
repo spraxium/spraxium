@@ -89,6 +89,7 @@ export class JobScanner {
       runOnInit: meta.runOnInit ?? false,
       nextRun: getNextRunDate(meta.expression, meta.timezone),
       runCount: 0,
+      description: meta.description,
     };
     this.jobs.set(name, entry);
     this.log.debug(MESSAGES.CRON_REGISTERED(name, meta.expression, meta.timezone));
@@ -107,6 +108,7 @@ export class JobScanner {
       runOnInit: meta.runOnInit ?? false,
       nextRun: new Date(Date.now() + meta.ms),
       runCount: 0,
+      description: meta.description,
     };
     this.jobs.set(name, entry);
     this.log.debug(MESSAGES.INTERVAL_REGISTERED(name, meta.ms));
@@ -125,6 +127,7 @@ export class JobScanner {
       runOnInit: false,
       nextRun: new Date(Date.now() + meta.ms),
       runCount: 0,
+      description: meta.description,
     };
     this.jobs.set(name, entry);
     this.log.debug(MESSAGES.TIMEOUT_REGISTERED(name, meta.ms));
@@ -143,6 +146,7 @@ export class JobScanner {
       runOnInit: false,
       nextRun: new Date(Date.now() + meta.ms),
       runCount: 0,
+      description: meta.description,
     };
     this.jobs.set(name, entry);
     this.pendingAfterOnline.push(entry);
@@ -154,7 +158,12 @@ export class JobScanner {
     this.assertUniqueName(name);
     const dateStr = meta.date.toISOString();
     if (meta.date.getTime() <= Date.now()) {
-      this.log.warn(MESSAGES.RUN_ONCE_PAST_DATE(dateStr));
+      const local = meta.date.toLocaleString();
+      const utc = meta.date.toUTCString();
+      const now = new Date().toUTCString();
+      this.log.warn(
+        `@RunOnce job "${name}" will never fire: scheduled for ${local} (${utc}) which is in the past (now: ${now})`,
+      );
     }
     const entry: JobEntry = {
       name,
@@ -166,6 +175,7 @@ export class JobScanner {
       runOnInit: false,
       nextRun: meta.date,
       runCount: 0,
+      description: meta.description,
     };
     this.jobs.set(name, entry);
     this.log.debug(MESSAGES.RUN_ONCE_REGISTERED(name, dateStr));

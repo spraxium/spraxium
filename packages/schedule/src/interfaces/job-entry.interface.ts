@@ -16,4 +16,5 @@ export interface JobEntry {
   runCount: number;
   intervalHandle?: ReturnType<typeof setInterval>;
   timeoutHandle?: ReturnType<typeof setTimeout>;
+  description?: string;
 }

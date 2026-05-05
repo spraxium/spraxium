@@ -1,4 +1,4 @@
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, rename, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import type { FileContextAdapterOptions } from '../interfaces/context-adapter-options.interface';
 import type { ContextStorageAdapter } from '../interfaces/context-storage.interface';
@@ -17,6 +17,7 @@ export class FileContextAdapter implements ContextStorageAdapter {
   private readonly path: string;
   private readonly store = new Map<string, SpraxiumContext<unknown>>();
   private ready: Promise<void>;
+  private flushChain: Promise<void> = Promise.resolve();
 
   constructor(options: FileContextAdapterOptions = {}) {
     const dir = options.dir ?? '.spraxium';
@@ -38,11 +39,18 @@ export class FileContextAdapter implements ContextStorageAdapter {
     }
   }
 
-  private async flush(): Promise<void> {
-    await this.ready;
-    await mkdir(join(this.path, '..'), { recursive: true });
+  private flush(): Promise<void> {
+    this.flushChain = this.flushChain.then(() => this.doFlush());
+    return this.flushChain;
+  }
+
+  private async doFlush(): Promise<void> {
+    const dir = join(this.path, '..');
+    await mkdir(dir, { recursive: true });
+    const tmp = `${this.path}.tmp`;
     const values = Array.from(this.store.values());
-    await writeFile(this.path, JSON.stringify(values), 'utf-8');
+    await writeFile(tmp, JSON.stringify(values), 'utf-8');
+    await rename(tmp, this.path);
   }
 
   async get(id: string): Promise<SpraxiumContext<unknown> | undefined> {

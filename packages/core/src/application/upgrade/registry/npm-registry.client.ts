@@ -6,7 +6,7 @@ export class NpmRegistryClient {
     const timeout = setTimeout(() => controller.abort(), NpmRegistryClient.TIMEOUT_MS);
 
     try {
-      const res = await fetch(`https://registry.npmjs.org/${packageName}/latest`, {
+      const res = await fetch(`https://registry.npmjs.org/${encodeURIComponent(packageName)}/latest`, {
         signal: controller.signal,
         headers: { accept: 'application/json' },
       });

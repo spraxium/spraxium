@@ -31,24 +31,26 @@ export class SignalProcessor {
 
     const { envelope } = result;
 
-    if (this.nonceCache.has(envelope.nonce)) {
+    const isNew = await this.nonceCache.addIfAbsent(envelope.nonce);
+    if (!isNew) {
       if (dbg) log.warn(SIGNAL_MESSAGES.NONCE_REPLAY(envelope.nonce));
       return;
     }
-    this.nonceCache.add(envelope.nonce);
 
-    const handler = this.router.resolve(envelope.event);
-    if (!handler) {
+    const handlers = this.router.resolveAll(envelope.event);
+    if (handlers.length === 0) {
       if (dbg) log.warn(SIGNAL_MESSAGES.NO_HANDLER(envelope.event));
       return;
     }
 
-    const payload = this.resolvePayload(handler, envelope, dbg);
-    if (payload === null) return;
-
     if (config.deleteAfterProcessing) await this.tryDeleteMessage(message, dbg);
 
-    await this.invokeHandler(handler, payload, envelope, dbg);
+    await Promise.allSettled(
+      handlers.map(async (handler) => {
+        const payload = this.resolvePayload(handler, envelope, dbg);
+        if (payload !== null) await this.invokeHandler(handler, payload, envelope, dbg);
+      }),
+    );
   }
 
   private resolvePayload(handler: SignalHandler, envelope: SignalEnvelope, dbg: boolean): unknown | null {

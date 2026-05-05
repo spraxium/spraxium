@@ -18,11 +18,11 @@ import { COMPONENT_METADATA_KEYS } from '../component-metadata-keys.constant';
  */
 export function ButtonPayload(): ParameterDecorator {
   return (target: object, propertyKey: string | symbol | undefined, parameterIndex: number): void => {
-    Reflect.defineMetadata(
-      COMPONENT_METADATA_KEYS.BUTTON_PAYLOAD_PARAM,
-      parameterIndex,
-      target,
-      propertyKey ?? 'handle',
-    );
+    const key = propertyKey ?? 'handle';
+    const existing = Reflect.getMetadata(COMPONENT_METADATA_KEYS.BUTTON_PAYLOAD_PARAM, target, key);
+    if (existing !== undefined) {
+      throw new Error('@ButtonPayload() can only be used once per handler method.');
+    }
+    Reflect.defineMetadata(COMPONENT_METADATA_KEYS.BUTTON_PAYLOAD_PARAM, parameterIndex, target, key);
   };
 }

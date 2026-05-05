@@ -1,6 +1,7 @@
 export { SignalClient } from './signal.client';
 export { SignalClientError } from './errors/signal-client.error';
 export { AllWebhooksRateLimitedError } from './errors/all-webhooks-rate-limited.error';
+export { SignalPayloadTooLargeError } from './errors/signal-payload-too-large.error';
 export { WebhookPool } from './webhook.pool';
 export { FallbackWorker } from './fallback/fallback.worker';
 export { FileFallbackStore } from './fallback/file.store';

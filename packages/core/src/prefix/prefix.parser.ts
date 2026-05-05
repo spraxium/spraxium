@@ -78,8 +78,11 @@ export class PrefixParser {
   ): string | undefined {
     const prefixes = Array.isArray(prefix) ? prefix : [prefix];
     const compare = caseSensitive ? content : content.toLowerCase();
+    // Sort longest-first so that '!!' is tried before '!' when both are
+    // registered - prevents '!!cmd' being parsed as the '!'-prefix command '!cmd'.
+    const sorted = [...prefixes].sort((a, b) => b.length - a.length);
 
-    for (const p of prefixes) {
+    for (const p of sorted) {
       const target = caseSensitive ? p : p.toLowerCase();
       if (compare.startsWith(target)) return content.slice(0, p.length);
     }

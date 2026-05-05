@@ -5,6 +5,7 @@ import type { AfterOnlineJobMetadata } from '../interfaces/after-online-job-meta
 import type { CronJobMetadata } from '../interfaces/cron-job-metadata.interface';
 import type { DiscoveredJob } from '../interfaces/discovered-job.interface';
 import type { IntervalJobMetadata } from '../interfaces/interval-job-metadata.interface';
+import type { RunOnceJobMetadata } from '../interfaces/run-once-job-metadata.interface';
 import type { TimeoutJobMetadata } from '../interfaces/timeout-job-metadata.interface';
 import type { JobType } from '../types/job.type';
 
@@ -94,6 +95,20 @@ export class ScheduleTester {
           intervalMs: afterOnlineMeta.ms,
           name: afterOnlineMeta.name,
           disabled: afterOnlineMeta.disabled ?? false,
+        });
+        continue;
+      }
+
+      const runOnceMeta = Reflect.getMetadata(SCHEDULE_METADATA_KEYS.RUN_ONCE, proto, method) as
+        | RunOnceJobMetadata
+        | undefined;
+
+      if (runOnceMeta) {
+        jobs.push({
+          methodName: method,
+          type: 'run-once',
+          name: runOnceMeta.name,
+          disabled: runOnceMeta.disabled ?? false,
         });
       }
     }
