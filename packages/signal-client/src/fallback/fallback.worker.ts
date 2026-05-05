@@ -64,7 +64,10 @@ export class FallbackWorker {
   start(): void {
     if (this.timer) return;
     this.timer = setInterval(() => {
-      this.processBatch().catch(() => {});
+      this.processBatch().catch((err) => {
+        const message = err instanceof Error ? err.message : String(err);
+        process.emitWarning(`Signal fallback worker batch failed: ${message}`);
+      });
     }, this.retryIntervalMs);
     if (this.timer.unref) this.timer.unref();
   }

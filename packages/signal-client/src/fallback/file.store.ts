@@ -107,9 +107,27 @@ export class FileFallbackStore implements FallbackStore {
   private async loadLocked(): Promise<void> {
     try {
       const raw = await readFile(this.filePath, 'utf-8');
-      this.data = JSON.parse(raw) as FileData;
-    } catch {
+      const parsed = JSON.parse(raw) as unknown;
+      if (!FileFallbackStore.isFileData(parsed)) {
+        throw new Error('Invalid fallback snapshot shape');
+      }
+      this.data = parsed;
+    } catch (err) {
+      if (FileFallbackStore.isEnoent(err)) {
+        this.data = { pending: [], deadLetter: [], processed: [] };
+        return;
+      }
+
+      const backupPath = `${this.filePath}.corrupt-${Date.now()}`;
+      try {
+        await rename(this.filePath, backupPath);
+      } catch {}
+
       this.data = { pending: [], deadLetter: [], processed: [] };
+      const reason = err instanceof Error ? err.message : String(err);
+      process.emitWarning(
+        `FileFallbackStore reset an invalid snapshot. Backup: ${backupPath}. Reason: ${reason}`,
+      );
     }
   }
 
@@ -211,6 +229,16 @@ export class FileFallbackStore implements FallbackStore {
 
   private static isEExist(err: unknown): boolean {
     return typeof err === 'object' && err !== null && (err as NodeJS.ErrnoException).code === 'EEXIST';
+  }
+
+  private static isEnoent(err: unknown): boolean {
+    return typeof err === 'object' && err !== null && (err as NodeJS.ErrnoException).code === 'ENOENT';
+  }
+
+  private static isFileData(value: unknown): value is FileData {
+    if (typeof value !== 'object' || value === null) return false;
+    const data = value as Partial<FileData>;
+    return Array.isArray(data.pending) && Array.isArray(data.deadLetter) && Array.isArray(data.processed);
   }
 
   private static isProcessAlive(pid: number): boolean {

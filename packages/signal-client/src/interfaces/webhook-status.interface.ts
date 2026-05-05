@@ -5,7 +5,7 @@
 export interface WebhookStatus {
   /** Zero-based index in the pool. */
   readonly index: number;
-  /** The Discord webhook URL. */
+  /** Redacted Discord webhook URL safe for logs and monitoring output. */
   readonly url: string;
   /** Whether this webhook is currently available (not rate-limited). */
   readonly available: boolean;

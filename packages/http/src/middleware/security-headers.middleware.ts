@@ -13,8 +13,11 @@ export class SecurityHeadersMiddleware implements HttpMiddleware {
     }
 
     const c = { ...SECURITY_DEFAULTS.headers, ...config };
+    const permissionsPolicyHeader = typeof c.permissionsPolicy === 'string' ? c.permissionsPolicy : undefined;
+    const contentSecurityPolicyHeader =
+      typeof c.contentSecurityPolicy === 'string' ? c.contentSecurityPolicy : undefined;
 
-    this.handler = secureHeaders({
+    const baseHandler = secureHeaders({
       xContentTypeOptions: c.noSniff ? 'nosniff' : undefined,
       xFrameOptions: c.frameOptions || undefined,
       xXssProtection: c.xssProtection ? '1; mode=block' : undefined,
@@ -24,15 +27,32 @@ export class SecurityHeadersMiddleware implements HttpMiddleware {
           : undefined,
       referrerPolicy: c.referrerPolicy || undefined,
       permissionsPolicy: c.permissionsPolicy
-        ? { camera: [''], microphone: [''], geolocation: [''] }
+        ? permissionsPolicyHeader
+          ? undefined
+          : { camera: [''], microphone: [''], geolocation: [''] }
         : undefined,
-      contentSecurityPolicy: c.contentSecurityPolicy ? { defaultSrc: ["'none'"] } : undefined,
+      contentSecurityPolicy: c.contentSecurityPolicy
+        ? contentSecurityPolicyHeader
+          ? undefined
+          : { defaultSrc: ["'none'"] }
+        : undefined,
       crossOriginOpenerPolicy: c.crossOriginOpenerPolicy || undefined,
       crossOriginResourcePolicy: c.crossOriginResourcePolicy || undefined,
       xPermittedCrossDomainPolicies: c.crossDomainPolicies || undefined,
       xDnsPrefetchControl: c.dnsPrefetchControl || undefined,
       xDownloadOptions: c.downloadOptions ? 'noopen' : undefined,
     });
+
+    this.handler = async (ctx: Context, next: Next): Promise<undefined | Response> => {
+      const result = (await baseHandler(ctx, next)) as undefined | Response;
+      if (permissionsPolicyHeader) {
+        ctx.res.headers.set('Permissions-Policy', permissionsPolicyHeader);
+      }
+      if (contentSecurityPolicyHeader) {
+        ctx.res.headers.set('Content-Security-Policy', contentSecurityPolicyHeader);
+      }
+      return result;
+    };
   }
 
   handle(ctx: Context, next: Next): Promise<undefined | Response> {

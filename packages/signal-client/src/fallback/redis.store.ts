@@ -41,7 +41,11 @@ export class RedisFallbackStore implements FallbackStore {
       if (results.length >= limit) break;
       const raw = await this.redis.get(key);
       if (!raw) continue;
-      const entry = JSON.parse(raw) as FallbackEntry;
+      const entry = RedisFallbackStore.parseEntry(raw);
+      if (!entry) {
+        await this.redis.del(key);
+        continue;
+      }
       if (entry.nextAttemptAt <= now) results.push(entry);
     }
 
@@ -56,7 +60,11 @@ export class RedisFallbackStore implements FallbackStore {
   async reschedule(id: string, nextAttemptAt: number, reason: string, attempts: number): Promise<void> {
     const raw = await this.redis.get(`${PENDING}:${id}`);
     if (!raw) return;
-    const entry = JSON.parse(raw) as FallbackEntry;
+    const entry = RedisFallbackStore.parseEntry(raw);
+    if (!entry) {
+      await this.redis.del(`${PENDING}:${id}`);
+      return;
+    }
     const updated: FallbackEntry = { ...entry, nextAttemptAt, attempts, lastError: reason };
     await this.redis.set(`${PENDING}:${id}`, JSON.stringify(updated));
   }
@@ -99,5 +107,30 @@ export class RedisFallbackStore implements FallbackStore {
     let count = 0;
     for await (const _ of this.scanKeys(pattern)) count++;
     return count;
+  }
+
+  private static parseEntry(raw: string): FallbackEntry | null {
+    try {
+      const parsed = JSON.parse(raw) as unknown;
+      if (!RedisFallbackStore.isEntryShape(parsed)) return null;
+      return parsed;
+    } catch {
+      return null;
+    }
+  }
+
+  private static isEntryShape(value: unknown): value is FallbackEntry {
+    if (typeof value !== 'object' || value === null) return false;
+    const v = value as Partial<FallbackEntry>;
+    return (
+      typeof v.id === 'string' &&
+      typeof v.event === 'string' &&
+      typeof v.guildId === 'string' &&
+      typeof v.attempts === 'number' &&
+      typeof v.nextAttemptAt === 'number' &&
+      typeof v.createdAt === 'number' &&
+      typeof v.envelope === 'object' &&
+      v.envelope !== null
+    );
   }
 }
