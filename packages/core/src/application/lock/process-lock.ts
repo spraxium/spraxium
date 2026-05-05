@@ -1,4 +1,4 @@
-import { ANSI } from '@spraxium/logger';
+import { ANSI, nativeError, nativeLog } from '@spraxium/logger';
 import { ProcessInspector } from './inspector/process.inspector';
 import { LockConflictPrinter } from './printer/lock-conflict.printer';
 import { LockStore } from './store/lock.store';
@@ -9,10 +9,8 @@ export class ProcessLock {
 
   static async acquire(): Promise<void> {
     if (ProcessLock.shouldSkip()) {
-      console.log(
-        ANSI.yellow('  Lock check skipped (--no-lock). Concurrent instances will not be detected.'),
-      );
-      console.log('');
+      nativeLog(ANSI.yellow('  Lock check skipped (--no-lock). Concurrent instances will not be detected.'));
+      nativeLog('');
       return;
     }
 
@@ -62,10 +60,9 @@ export class ProcessLock {
   }
 
   private static async forceTakeover(existing: { pid: number; launcherPid?: number }): Promise<void> {
-    console.log('');
-    console.log(ANSI.yellow(`  Terminating existing instance (bot PID ${existing.pid})...`));
+    nativeLog('');
+    nativeLog(ANSI.yellow(`  Terminating existing instance (bot PID ${existing.pid})...`));
 
-    // The launcher (dev/start CLI) must die first, otherwise it will respawn the bot child.
     const ownLauncher = ProcessLock.readLauncherPid();
     const targetLauncher = existing.launcherPid;
 
@@ -74,28 +71,26 @@ export class ProcessLock {
       targetLauncher !== ownLauncher &&
       ProcessInspector.isRunning(targetLauncher)
     ) {
-      console.log(ANSI.yellow(`  Terminating its launcher (PID ${targetLauncher}) to prevent respawn...`));
+      nativeLog(ANSI.yellow(`  Terminating its launcher (PID ${targetLauncher}) to prevent respawn...`));
       await ProcessInspector.terminateAndWait(targetLauncher, 2000);
     }
 
     if (ProcessInspector.isRunning(existing.pid)) {
       const ok = await ProcessInspector.terminateAndWait(existing.pid, 2000);
       if (!ok) {
-        console.log(ANSI.red(`  Failed to terminate PID ${existing.pid}. Aborting.`));
+        nativeLog(ANSI.red(`  Failed to terminate PID ${existing.pid}. Aborting.`));
         process.exit(1);
       }
     }
 
     LockStore.remove();
-    console.log(ANSI.green('  Previous instance terminated. Continuing startup.'));
-    console.log('');
+    nativeLog(ANSI.green('  Previous instance terminated. Continuing startup.'));
+    nativeLog('');
   }
 
   private static cleanupRegistered = false;
 
   private static registerCleanup(): void {
-    // Guard against double-registration when acquire() is re-entered
-    // (e.g. after forceTakeover in tests or repeated CLI invocations).
     if (ProcessLock.cleanupRegistered) return;
     ProcessLock.cleanupRegistered = true;
 
@@ -103,13 +98,9 @@ export class ProcessLock {
     process.once('exit', release);
     process.once('SIGINT', release);
     process.once('SIGTERM', release);
-    // Important: do NOT just `release()` and return on uncaughtException -
-    // Node would keep the process running in an undefined state (the fatal
-    // error gets swallowed). Clean up, log the crash so the context is not
-    // lost, and exit with a non-zero code.
     process.once('uncaughtException', (err) => {
       release();
-      console.error(err);
+      nativeError(err);
       process.exit(1);
     });
   }

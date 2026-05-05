@@ -1,7 +1,7 @@
 ﻿import 'reflect-metadata';
 import fs from 'node:fs';
 import path from 'node:path';
-import { ANSI } from '@spraxium/logger';
+import { ANSI, nativeError, nativeLog, nativeWarn } from '@spraxium/logger';
 import { ICONS } from '../constants/icons.constant';
 import { MESSAGES } from '../constants/messages.constant';
 import { ENV_SCHEMA_METADATA_KEY } from '../constants/metadata-keys.constant';
@@ -30,7 +30,7 @@ export class EnvValidator {
 
     const hasMeta = Reflect.getMetadata(ENV_SCHEMA_METADATA_KEY, schemaClass);
     if (!hasMeta) {
-      console.warn(MESSAGES.WARN_MISSING_SCHEMA(schemaClass.name));
+      nativeWarn(MESSAGES.WARN_MISSING_SCHEMA(schemaClass.name));
     }
 
     const fieldsMap = MetadataHelper.collectAllFields(
@@ -79,7 +79,7 @@ export class EnvValidator {
     let prevResults: Array<FieldValidationResult> = fields.map((f) => FieldValidator.validate(f));
 
     EnvPrinter.printReloadError(errors);
-    console.log(ANSI.yellow(MESSAGES.WATCHING_ENV) + ANSI.dim(MESSAGES.HINT_SAVE_TO_RETRY));
+    nativeLog(ANSI.yellow(MESSAGES.WATCHING_ENV) + ANSI.dim(MESSAGES.HINT_SAVE_TO_RETRY));
 
     let elapsed = 0;
 
@@ -88,7 +88,7 @@ export class EnvValidator {
       elapsed += EnvValidator.POLL_MS;
 
       if (elapsed >= EnvValidator.MAX_WAIT_MS) {
-        console.error(ANSI.red(`\n${ICONS.ERROR} ${MESSAGES.TIMED_OUT}\n`));
+        nativeError(ANSI.red(`\n${ICONS.ERROR} ${MESSAGES.TIMED_OUT}\n`));
         EnvPrinter.printFailureAndExit(errors);
       }
 
@@ -100,7 +100,7 @@ export class EnvValidator {
         .map((r) => r.error);
 
       if (nextErrors.length === 0) {
-        console.log(ANSI.green(`${ICONS.SUCCESS} ${MESSAGES.ENV_FIXED}`));
+        nativeLog(ANSI.green(`${ICONS.SUCCESS} ${MESSAGES.ENV_FIXED}`));
         // Show the developer precisely which env values they just changed.
         // Secrets are masked by the printer itself.
         EnvPrinter.printReloadDiff(prevResults, nextResults);

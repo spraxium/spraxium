@@ -13,11 +13,6 @@ function resolveReply(
   if (typeof value === 'string') return { content: value, ephemeral };
   return { embeds: [value], ephemeral };
 }
-
-/**
- * Reports a handler-thrown error: invokes the global `onError` hook (defaulting
- * to `console.error`) and replies to the user with the configured message.
- */
 export async function reportHandlerError(
   err: unknown,
   interaction: Interaction,
@@ -30,10 +25,10 @@ export async function reportHandlerError(
     if (config?.onError) {
       await config.onError(err, { interaction, handler: handlerName });
     } else {
-      nativeError(`[Spraxium] Unhandled error in ${handlerName}:`, err);
+      nativeError(`Unhandled error in ${handlerName}:`, err);
     }
   } catch (hookErr) {
-    nativeError('[Spraxium] onError hook itself threw:', hookErr);
+    nativeError('onError hook itself threw:', hookErr);
   }
 
   if (!isRepliable(interaction)) return;
@@ -43,7 +38,7 @@ export async function reportHandlerError(
     const replyOptions = resolveReply(reply, err, interaction, ephemeralErrors);
     await interaction.reply(replyOptions);
   } catch (replyErr) {
-    nativeError('[Spraxium] failed to send error reply:', replyErr);
+    nativeError('Failed to send error reply:', replyErr);
   }
 }
 

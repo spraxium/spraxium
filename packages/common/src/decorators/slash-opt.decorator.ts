@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import { logger } from '@spraxium/logger';
 import { METADATA_KEYS } from '../constants/metadata-keys.constant';
 
 /**
@@ -21,6 +22,7 @@ import { METADATA_KEYS } from '../constants/metadata-keys.constant';
  * }
  */
 const _warnedSlashOpt = new Set<string>();
+const log = logger.child('SlashOptDecorator');
 
 export function SlashOpt(name: string): ParameterDecorator {
   return (target: object, propertyKey: string | symbol | undefined, parameterIndex: number): void => {
@@ -29,8 +31,8 @@ export function SlashOpt(name: string): ParameterDecorator {
     const site = `${(target as { constructor: { name: string } }).constructor.name}:${String(propertyKey)}:${parameterIndex}`;
     if (!_warnedSlashOpt.has(site)) {
       _warnedSlashOpt.add(site);
-      console.warn(
-        `[Spraxium] @SlashOpt('${name}') is deprecated - use @SlashOption('${name}') or a typed decorator such as @SlashStringOption('${name}') instead. ` +
+      log.warn(
+        `@SlashOpt('${name}') is deprecated - use @SlashOption('${name}') or a typed decorator such as @SlashStringOption('${name}') instead. ` +
           `Found in ${(target as { constructor: { name: string } }).constructor.name}.${String(propertyKey)}`,
       );
     }

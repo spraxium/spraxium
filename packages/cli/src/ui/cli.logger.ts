@@ -1,4 +1,4 @@
-import { ANSI } from '@spraxium/logger';
+import { ANSI, nativeError, nativeLog } from '@spraxium/logger';
 import { UnicodeConstant } from '../constants';
 
 const SPINNER_FRAMES = [
@@ -16,27 +16,27 @@ const SPINNER_FRAMES = [
 
 export class CliLogger {
   info(message: string): void {
-    console.log(`  ${ANSI.cyan(UnicodeConstant.INFO)}  ${message}`);
+    nativeLog(`  ${ANSI.cyan(UnicodeConstant.INFO)}  ${message}`);
   }
 
   success(message: string): void {
-    console.log(`  ${ANSI.green(UnicodeConstant.CHECK)}  ${ANSI.green(message)}`);
+    nativeLog(`  ${ANSI.green(UnicodeConstant.CHECK)}  ${ANSI.green(message)}`);
   }
 
   error(message: string): void {
-    console.error(`  ${ANSI.red(UnicodeConstant.CROSS)}  ${ANSI.red(message)}`);
+    nativeError(`  ${ANSI.red(UnicodeConstant.CROSS)}  ${ANSI.red(message)}`);
   }
 
   warn(message: string): void {
-    console.log(`  ${ANSI.yellow(UnicodeConstant.WARN)}  ${ANSI.yellow(message)}`);
+    nativeLog(`  ${ANSI.yellow(UnicodeConstant.WARN)}  ${ANSI.yellow(message)}`);
   }
 
   star(message: string): void {
-    console.log(`  ${ANSI.yellow(UnicodeConstant.STAR)}  ${ANSI.yellow(message)}`);
+    nativeLog(`  ${ANSI.yellow(UnicodeConstant.STAR)}  ${ANSI.yellow(message)}`);
   }
 
   blank(): void {
-    console.log();
+    nativeLog();
   }
 
   step(text: string): void {
@@ -46,7 +46,7 @@ export class CliLogger {
   result(ok: boolean, text: string): void {
     const icon = ok ? ANSI.green(UnicodeConstant.CHECK) : ANSI.red(UnicodeConstant.CROSS);
     const msg = ok ? ANSI.green(text) : ANSI.red(text);
-    console.log(`  ${icon}  ${msg}          `);
+    nativeLog(`  ${icon}  ${msg}          `);
   }
 
   async spinner(label: string, fn: () => Promise<{ ok: boolean; output: string }>): Promise<boolean> {
@@ -59,11 +59,11 @@ export class CliLogger {
     const { ok, output } = await fn();
     clearInterval(timer);
     if (!ok && output) {
-      console.log();
-      console.log(ANSI.dim('\u2500'.repeat(60)));
-      console.log(ANSI.dim(output));
-      console.log(ANSI.dim('\u2500'.repeat(60)));
-      console.log();
+      nativeLog();
+      nativeLog(ANSI.dim('\u2500'.repeat(60)));
+      nativeLog(ANSI.dim(output));
+      nativeLog(ANSI.dim('\u2500'.repeat(60)));
+      nativeLog();
     }
     return ok;
   }

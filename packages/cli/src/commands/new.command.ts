@@ -1,7 +1,7 @@
 import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { checkbox, confirm, input, select } from '@inquirer/prompts';
-import { ANSI } from '@spraxium/logger';
+import { ANSI, nativeLog } from '@spraxium/logger';
 import type { Command } from 'commander';
 import { MessageConstant, NewCommandConstant } from '../constants';
 import { BaseCommand } from '../core/base.command';
@@ -144,27 +144,27 @@ export class NewCommand extends BaseCommand {
   }
 
   private printTree(name: string): void {
-    console.log(`  ${ANSI.bold('Project structure:')}`);
-    console.log();
-    console.log(`    ${ANSI.cyan(`${name}/`)}`);
-    console.log(`    ${ANSI.dim('├──')} .env`);
-    console.log(`    ${ANSI.dim('├──')} .env.example`);
-    console.log(`    ${ANSI.dim('├──')} .gitignore`);
-    console.log(`    ${ANSI.dim('├──')} package.json`);
-    console.log(`    ${ANSI.dim('├──')} spraxium.config.ts`);
-    console.log(`    ${ANSI.dim('├──')} tsconfig.json`);
-    console.log(`    ${ANSI.dim('└──')} ${ANSI.cyan('src/')}`);
-    console.log(`    ${ANSI.dim('    ├──')} app.env.ts`);
-    console.log(`    ${ANSI.dim('    ├──')} app.module.ts`);
-    console.log(`    ${ANSI.dim('    └──')} main.ts`);
-    console.log();
+    nativeLog(`  ${ANSI.bold('Project structure:')}`);
+    nativeLog();
+    nativeLog(`    ${ANSI.cyan(`${name}/`)}`);
+    nativeLog(`    ${ANSI.dim('├──')} .env`);
+    nativeLog(`    ${ANSI.dim('├──')} .env.example`);
+    nativeLog(`    ${ANSI.dim('├──')} .gitignore`);
+    nativeLog(`    ${ANSI.dim('├──')} package.json`);
+    nativeLog(`    ${ANSI.dim('├──')} spraxium.config.ts`);
+    nativeLog(`    ${ANSI.dim('├──')} tsconfig.json`);
+    nativeLog(`    ${ANSI.dim('└──')} ${ANSI.cyan('src/')}`);
+    nativeLog(`    ${ANSI.dim('    ├──')} app.env.ts`);
+    nativeLog(`    ${ANSI.dim('    ├──')} app.module.ts`);
+    nativeLog(`    ${ANSI.dim('    └──')} main.ts`);
+    nativeLog();
   }
 
   private printNextSteps(name: string, pm: PackageManager): void {
     const runCmd = pm === 'npm' ? 'npm run' : pm;
     this.logger.info(ANSI.bold('Next steps:'));
-    console.log(`    ${ANSI.dim('$')} ${ANSI.cyan(`cd ${name}`)}`);
-    console.log(`    ${ANSI.dim('$')} ${ANSI.cyan(`${runCmd} dev`)}`);
+    nativeLog(`    ${ANSI.dim('$')} ${ANSI.cyan(`cd ${name}`)}`);
+    nativeLog(`    ${ANSI.dim('$')} ${ANSI.cyan(`${runCmd} dev`)}`);
     this.logger.blank();
     this.logger.info(`Add your bot token to ${ANSI.yellow('.env')}  →  DISCORD_TOKEN=<token>`);
     this.logger.blank();

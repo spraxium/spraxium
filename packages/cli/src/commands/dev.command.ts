@@ -1,5 +1,5 @@
 import path from 'node:path';
-import { ANSI } from '@spraxium/logger';
+import { ANSI, nativeLog } from '@spraxium/logger';
 import type { Command } from 'commander';
 import { type ResultPromise, execa } from 'execa';
 import { DevConstant, MessageConstant, UnicodeConstant } from '../constants';
@@ -63,7 +63,7 @@ export class DevCommand extends BaseCommand {
       if (restartReason) {
         process.stdout.write(UnicodeConstant.CLEAR_SCREEN);
         const label = path.relative(cwd, restartReason);
-        console.log(
+        nativeLog(
           `\n  ${ANSI.cyan(UnicodeConstant.RESTART)}  ${ANSI.cyan(label)}${ANSI.gray(' changed, restarting...')}\n`,
         );
         crashCount = 0;

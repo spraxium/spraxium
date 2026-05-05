@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import { logger } from '@spraxium/logger';
 import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys.constant';
 
 function createFieldParamDecorator(fieldId: string): ParameterDecorator {
@@ -46,6 +47,7 @@ export function ModalField(fieldId: string): ParameterDecorator {
  * ) { ... }
  */
 const _warnedField = new Set<string>();
+const log = logger.child('ModalFieldParamDecorator');
 
 export function Field(fieldId: string): ParameterDecorator {
   return (target, methodKey, parameterIndex): void => {
@@ -53,8 +55,8 @@ export function Field(fieldId: string): ParameterDecorator {
     const site = `${className}:${String(methodKey ?? 'handle')}:${parameterIndex}`;
     if (!_warnedField.has(site)) {
       _warnedField.add(site);
-      console.warn(
-        `[Spraxium] @Field('${fieldId}') is deprecated - use @ModalField('${fieldId}') or a typed decorator ` +
+      log.warn(
+        `@Field('${fieldId}') is deprecated - use @ModalField('${fieldId}') or a typed decorator ` +
           `such as @ModalTextField('${fieldId}') instead. Found in ${className}.${String(methodKey ?? 'handle')}`,
       );
     }

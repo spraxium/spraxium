@@ -1,6 +1,6 @@
 import path from 'node:path';
 import { confirm, input, select } from '@inquirer/prompts';
-import { ANSI } from '@spraxium/logger';
+import { ANSI, nativeLog } from '@spraxium/logger';
 import type { Command } from 'commander';
 import { type ParseEntry, parse as parseShellArgs } from 'shell-quote';
 import { MessageConstant, UnicodeConstant } from '../constants';
@@ -229,14 +229,14 @@ export class DatabaseCommand extends BaseCommand {
   }
 
   private printNextSteps(dbEntry: DbEntry, moduleName: string, pascalName: string): void {
-    console.log(`  ${ANSI.bold('Next steps:')}`);
-    console.log();
+    nativeLog(`  ${ANSI.bold('Next steps:')}`);
+    nativeLog();
     for (const step of dbEntry.nextSteps) {
       const resolved = step.replace('the generated module', `${pascalName}Module`);
-      console.log(`    ${ANSI.dim(UnicodeConstant.DASH)}  ${resolved}`);
+      nativeLog(`    ${ANSI.dim(UnicodeConstant.DASH)}  ${resolved}`);
     }
-    console.log();
-    console.log(`  ${ANSI.dim('Module path:')} src/modules/${moduleName}/`);
-    console.log();
+    nativeLog();
+    nativeLog(`  ${ANSI.dim('Module path:')} src/modules/${moduleName}/`);
+    nativeLog();
   }
 }

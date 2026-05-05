@@ -105,7 +105,7 @@ export class DiscordTransport implements ClientAwareTransport {
         body: JSON.stringify({ embeds: [embed] }),
       });
     } catch {
-      nativeWarn('[Spraxium] Discord webhook transport failed');
+      nativeWarn('Discord webhook transport failed');
     }
   }
 
@@ -123,7 +123,7 @@ export class DiscordTransport implements ClientAwareTransport {
       const embed = this.buildEmbed(entry);
       await (raw as SendableChannel).send({ embeds: [embed] });
     } catch {
-      nativeWarn('[Spraxium] Discord channel transport failed');
+      nativeWarn('Discord channel transport failed');
     }
   }
 

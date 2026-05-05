@@ -1,4 +1,4 @@
-﻿import { ANSI, TableBuilder } from '@spraxium/logger';
+﻿import { ANSI, TableBuilder, nativeError, nativeLog } from '@spraxium/logger';
 import { ICONS } from '../constants/icons.constant';
 import { MESSAGES } from '../constants/messages.constant';
 import type { EnvDiffEntry, FieldValidationResult } from '../interfaces';
@@ -25,30 +25,30 @@ export class EnvPrinter {
       table.push([ANSI.cyan(meta.envKey), val, ANSI.dim(source)]);
     }
 
-    console.log('');
-    console.log(ANSI.bold(MESSAGES.HEADER_ENVIRONMENT));
-    console.log(ANSI.dim(MESSAGES.DESC_LOADED_VARS));
-    console.log(ANSI.dim(MESSAGES.DESC_SECRETS_HINT));
-    console.log('');
-    console.log(table.toString());
-    console.log('');
+    nativeLog('');
+    nativeLog(ANSI.bold(MESSAGES.HEADER_ENVIRONMENT));
+    nativeLog(ANSI.dim(MESSAGES.DESC_LOADED_VARS));
+    nativeLog(ANSI.dim(MESSAGES.DESC_SECRETS_HINT));
+    nativeLog('');
+    nativeLog(table.toString());
+    nativeLog('');
   }
 
   static printFailureAndExit(errors: Array<EnvFieldError>): never {
-    console.log('');
-    console.error(ANSI.red(ANSI.bold(` ${ICONS.ERROR}  ${MESSAGES.VALIDATION_FAILED}`)));
-    console.error('');
+    nativeLog('');
+    nativeError(ANSI.red(ANSI.bold(` ${ICONS.ERROR}  ${MESSAGES.VALIDATION_FAILED}`)));
+    nativeError('');
     EnvPrinter.printErrorList(errors);
-    console.error('');
+    nativeError('');
     process.exit(1);
   }
 
   static printReloadError(errors: Array<EnvFieldError>): void {
-    console.error('');
-    console.error(ANSI.red(ANSI.bold(` ${ICONS.ERROR}  ${MESSAGES.RELOAD_FAILED}`)));
-    console.error('');
+    nativeError('');
+    nativeError(ANSI.red(ANSI.bold(` ${ICONS.ERROR}  ${MESSAGES.RELOAD_FAILED}`)));
+    nativeError('');
     EnvPrinter.printErrorList(errors);
-    console.error('');
+    nativeError('');
   }
 
   static printReloadDiff(
@@ -87,11 +87,11 @@ export class EnvPrinter {
       table.push([ANSI.cyan(row.key), row.from, row.to, row.src]);
     }
 
-    console.log('');
-    console.log(ANSI.bold(ANSI.cyan(` ${ICONS.RELOAD}  ${MESSAGES.RELOAD_SUCCESS}`)));
-    console.log('');
-    console.log(table.toString());
-    console.log('');
+    nativeLog('');
+    nativeLog(ANSI.bold(ANSI.cyan(` ${ICONS.RELOAD}  ${MESSAGES.RELOAD_SUCCESS}`)));
+    nativeLog('');
+    nativeLog(table.toString());
+    nativeLog('');
   }
 
   private static printErrorList(errors: Array<EnvFieldError>): void {
@@ -101,7 +101,7 @@ export class EnvPrinter {
       const received = err.received
         ? `  ${ANSI.dim(`${MESSAGES.LABEL_RECEIVED}`)} ${err.secret ? ICONS.SECRET_MASK : ANSI.yellow(err.received)}`
         : '';
-      console.error(` ${ANSI.red(ICONS.BULLET)} ${ANSI.cyan(err.key)}  ${label}${received}${detail}`);
+      nativeError(` ${ANSI.red(ICONS.BULLET)} ${ANSI.cyan(err.key)}  ${label}${received}${detail}`);
     }
   }
 

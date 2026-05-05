@@ -674,6 +674,9 @@ importers:
 
   packages/common:
     dependencies:
+      '@spraxium/logger':
+        specifier: workspace:*
+        version: link:../logger
       reflect-metadata:
         specifier: ^0.2.2
         version: 0.2.2
