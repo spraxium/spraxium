@@ -44,7 +44,7 @@ export class PayloadService {
       id,
       data,
       createdAt: now,
-      expiresAt: now + ttl * 1_000,
+      expiresAt: ttl === 0 ? 0 : now + ttl * 1_000,
     };
     // Reuse ContextStore as the persistence backbone.
     await ContextStore.set({

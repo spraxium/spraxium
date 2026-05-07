@@ -9,6 +9,7 @@ export default defineConfig({
       'packages/env',
       'packages/cli',
       'packages/schedule',
+      'packages/components',
       'apps/sandbox',
     ],
   },
