@@ -306,11 +306,9 @@ export class V2Service {
             );
           }
           const resolvedRowData = typeof cfg.rowData === 'function' ? cfg.rowData(data) : cfg.rowData;
-          return this.selects.buildDynamic(
-            firstClass,
-            resolvedRowData,
-            context as SpraxiumContext<Record<string, unknown>>,
-          );
+          return this.selects
+            .buildDynamic(firstClass, resolvedRowData, context as SpraxiumContext<Record<string, unknown>>)
+            .then(([row]) => row);
         }
 
         return this.buttons.build(rawComponents, context as SpraxiumContext<Record<string, unknown>>);
@@ -353,7 +351,8 @@ export class V2Service {
   ): Promise<Array<ActionRowBuilder<ButtonBuilder>>> {
     if (cfg.dynamic) {
       const items = typeof cfg.items === 'function' ? cfg.items(data) : (cfg.items ?? []);
-      return this.buttons.buildDynamic(cfg.dynamic, items, context);
+      const [rows] = await this.buttons.buildDynamic(cfg.dynamic, items, context);
+      return rows;
     }
     if (cfg.components) {
       const classes = typeof cfg.components === 'function' ? cfg.components(data) : cfg.components;

@@ -38,10 +38,12 @@ export const COMPONENT_METADATA_KEYS = {
   BUTTON_DYNAMIC: 'spraxium:button_dynamic',
   BUTTON_DYNAMIC_HANDLER: 'spraxium:button_dynamic_handler',
   BUTTON_PAYLOAD_PARAM: 'spraxium:button_payload_param',
+  BUTTON_PARAMS_PARAM: 'spraxium:button_params_param',
 
   SELECT_DYNAMIC: 'spraxium:select_dynamic',
   SELECT_DYNAMIC_HANDLER: 'spraxium:select_dynamic_handler',
   SELECT_PAYLOAD_PARAM: 'spraxium:select_payload_param',
+  SELECT_PARAMS_PARAM: 'spraxium:select_params_param',
 
   PAYLOAD_REF_PARAM: 'spraxium:payload_ref_param',
 

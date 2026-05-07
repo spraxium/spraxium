@@ -9,6 +9,9 @@ import { COMPONENT_METADATA_KEYS } from '../component-metadata-keys.constant';
  * Use `@PayloadRef()` when you additionally need to call `consume()` to
  * permanently delete the payload and prevent the handler from running again.
  *
+ * Note: for `@DynamicButton({ encoding: 'inline' })`, payload refs do not
+ * exist and this decorator is invalid.
+ *
  * @example
  * ```ts
  * @DynamicButtonHandler(BuyButton)

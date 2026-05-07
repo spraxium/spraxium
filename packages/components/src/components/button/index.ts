@@ -1,6 +1,7 @@
 export * from './types';
 export * from './constants';
 export * from './interfaces';
+export * from './errors';
 export * from './decorators';
 export { ButtonRenderer } from './renderer';
 export { ButtonService } from './service';

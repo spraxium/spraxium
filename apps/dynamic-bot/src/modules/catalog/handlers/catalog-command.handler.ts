@@ -11,7 +11,7 @@ export class CatalogCommandHandler {
   constructor(private readonly buttons: ButtonService) {}
 
   async handle(@Ctx() interaction: ChatInputCommandInteraction): Promise<void> {
-    const dynamicRows = await this.buttons.buildDynamic(BuyBookButton, CATALOG);
+    const [dynamicRows] = await this.buttons.buildDynamic(BuyBookButton, CATALOG);
 
     const browseRow = this.buttons.build([PrevPageButton, NextPageButton], undefined, [
       { label: '◀ Previous page', style: 'secondary' },

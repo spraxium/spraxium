@@ -24,6 +24,7 @@ export function DynamicStringSelect(config: DynamicStringSelectConfig): ClassDec
     const meta: DynamicSelectComponentMeta = {
       baseId: config.baseId,
       payloadTtl: config.payloadTtl,
+      encoding: config.encoding ?? 'store',
       placeholder: config.placeholder,
       minValues: config.minValues,
       maxValues: config.maxValues,

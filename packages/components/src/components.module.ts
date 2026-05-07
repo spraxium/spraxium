@@ -8,7 +8,7 @@ import { V2Service } from './components/v2';
 import { ContextService } from './runtime/context';
 import { createInstanceScanner } from './runtime/dispatcher';
 import { ComponentLifecycle } from './runtime/lifecycle/components.lifecycle';
-import { PayloadService } from './runtime/payload';
+import { ButtonPayloadService, PayloadService } from './runtime/payload';
 
 ModuleLoader.instanceScanners.add(createInstanceScanner());
 
@@ -16,7 +16,13 @@ const COMPONENT_SERVICES = [ButtonService, SelectService, ModalService, EmbedSer
 
 @Global()
 @Module({
-  providers: [ComponentLifecycle, ContextService, PayloadService, ...COMPONENT_SERVICES],
-  exports: [ContextService, PayloadService, ...COMPONENT_SERVICES],
+  providers: [
+    ComponentLifecycle,
+    ContextService,
+    PayloadService,
+    ButtonPayloadService,
+    ...COMPONENT_SERVICES,
+  ],
+  exports: [ContextService, PayloadService, ButtonPayloadService, ...COMPONENT_SERVICES],
 })
 export class ComponentsModule {}

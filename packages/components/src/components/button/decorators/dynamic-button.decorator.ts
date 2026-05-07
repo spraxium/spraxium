@@ -22,6 +22,7 @@ export function DynamicButton(config: DynamicButtonConfig): ClassDecorator {
     const meta: DynamicButtonComponentMeta = {
       baseId: config.baseId,
       payloadTtl: config.payloadTtl,
+      encoding: config.encoding ?? 'store',
     };
     Reflect.defineMetadata(COMPONENT_METADATA_KEYS.BUTTON_DYNAMIC, meta, target);
   };

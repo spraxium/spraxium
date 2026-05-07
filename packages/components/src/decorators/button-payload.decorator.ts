@@ -6,6 +6,8 @@ import { COMPONENT_METADATA_KEYS } from '../component-metadata-keys.constant';
  * `@DynamicButton`'s render call. The dispatcher fetches the payload via the
  * `~p:<id>` segment in the custom ID and passes it to the handler.
  *
+ * This decorator is valid for `encoding: 'store'` dynamic buttons.
+ *
  * @example
  * ```ts
  * @DynamicButtonHandler(BookButton)

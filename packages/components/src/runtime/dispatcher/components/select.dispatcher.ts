@@ -22,7 +22,7 @@ import type { ComponentsConfig, SpraxiumContext } from '../../lifecycle';
 import { PayloadService } from '../../payload';
 import { resolveContextError } from '../helpers/context-error.helper';
 import { reportHandlerError } from '../helpers/handler-error.helper';
-import { splitCustomId } from '../helpers/split-custom-id.helper';
+import { type InlineParams, decodeInlineParams, splitCustomId } from '../helpers/split-custom-id.helper';
 import type { Constructor, ResolvedDynamicSelectHandler, ResolvedSelectHandler } from '../interfaces';
 
 /**
@@ -89,6 +89,17 @@ export class SelectDispatcher {
           `${ctor.name}: @DynamicSelectHandler references ${componentClass.name} which is not decorated with @DynamicStringSelect().`,
         );
       }
+      if (dyn.encoding === 'inline') {
+        const proto = ctor.prototype as Record<string | symbol, unknown>;
+        if (
+          Reflect.getMetadata(COMPONENT_METADATA_KEYS.SELECT_PAYLOAD_PARAM, proto, 'handle') !== undefined ||
+          Reflect.getMetadata(COMPONENT_METADATA_KEYS.PAYLOAD_REF_PARAM, proto, 'handle') !== undefined
+        ) {
+          throw new Error(
+            `${ctor.name}: @SelectPayload() and @PayloadRef() cannot be used in a handler for an inline-encoded @DynamicStringSelect. Use @SelectParams() instead.`,
+          );
+        }
+      }
       this.assertNoCollision(dyn.baseId);
       this.dynamicHandlers.push({ baseId: dyn.baseId, handlerCtor: ctor, handlerInstance: instance });
     }
@@ -108,7 +119,7 @@ export class SelectDispatcher {
         return;
 
       const select = interaction as AnySelectMenuInteraction;
-      const { baseId, contextId, payloadId } = splitCustomId(select.customId);
+      const { baseId, contextId, payloadId, inlineParams } = splitCustomId(select.customId);
 
       const resolved = this.handlers.find((h) => h.customId === baseId);
       if (resolved) {
@@ -118,7 +129,7 @@ export class SelectDispatcher {
 
       const dynResolved = this.dynamicHandlers.find((h) => h.baseId === baseId);
       if (dynResolved && select.isStringSelectMenu()) {
-        void this.handleDynamic(select, dynResolved, contextId, payloadId);
+        void this.handleDynamic(select, dynResolved, contextId, payloadId, inlineParams);
       }
     });
   }
@@ -152,6 +163,7 @@ export class SelectDispatcher {
     resolved: ResolvedDynamicSelectHandler,
     contextId: string | undefined,
     payloadId: string | undefined,
+    rawInlineParams: string | undefined,
   ): Promise<void> {
     const handlerName = `@DynamicSelectHandler(${resolved.handlerCtor.name})`;
     try {
@@ -159,6 +171,8 @@ export class SelectDispatcher {
       if (flowCtx === null) return;
 
       let payload: unknown;
+      let inlineParams: InlineParams | undefined;
+
       if (payloadId) {
         payload = await this.payloads.get(payloadId);
         if (payload === undefined) {
@@ -172,6 +186,8 @@ export class SelectDispatcher {
           );
           return;
         }
+      } else if (rawInlineParams !== undefined) {
+        inlineParams = decodeInlineParams(rawInlineParams) ?? {};
       }
 
       const guardPassed = await GuardExecutor.execute(
@@ -181,7 +197,7 @@ export class SelectDispatcher {
       );
       if (!guardPassed) return;
 
-      const args = this.buildArgs(resolved, select, flowCtx, payload, payloadId);
+      const args = this.buildArgs(resolved, select, flowCtx, payload, payloadId, inlineParams);
       await this.invoke(resolved.handlerInstance, args);
     } catch (err) {
       await this.reportError(err, select, handlerName);
@@ -194,6 +210,7 @@ export class SelectDispatcher {
     flowCtx: SpraxiumContext<unknown> | undefined,
     payload: unknown,
     payloadId?: string,
+    inlineParams?: InlineParams,
   ): Array<unknown> {
     const proto = resolved.handlerCtor.prototype as Record<string | symbol, unknown>;
     const ctxIndex: number | undefined = Reflect.getMetadata(METADATA_KEYS.CTX_PARAM, proto, 'handle');
@@ -214,6 +231,11 @@ export class SelectDispatcher {
       proto,
       'handle',
     );
+    const selectParamsIndex: number | undefined = Reflect.getMetadata(
+      COMPONENT_METADATA_KEYS.SELECT_PARAMS_PARAM,
+      proto,
+      'handle',
+    );
 
     const args: Array<unknown> = [];
     if (ctxIndex !== undefined) args[ctxIndex] = select;
@@ -226,6 +248,7 @@ export class SelectDispatcher {
         consume: () => this.payloads.delete(payloadId),
       };
     }
+    if (selectParamsIndex !== undefined) args[selectParamsIndex] = inlineParams;
     return args;
   }
 

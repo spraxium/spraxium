@@ -6,7 +6,8 @@ import type { DynamicButtonHandlerMeta } from '../interfaces';
 /**
  * Class decorator that links a handler to a `@DynamicButton()` component.
  * The handler's `handle()` method may accept `@Ctx()`, `@FlowContext()` and
- * `@ButtonPayload()` parameters.
+ * `@ButtonPayload()` / `@PayloadRef()` (store mode) or `@ButtonParams()`
+ * (inline mode) parameters.
  */
 export function DynamicButtonHandler(component: AnyConstructor): ClassDecorator {
   return (target): void => {

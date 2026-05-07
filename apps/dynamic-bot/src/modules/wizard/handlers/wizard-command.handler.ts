@@ -18,7 +18,7 @@ export class WizardCommandHandler {
       { ttl: 300, restrictedTo: interaction.user.id },
     );
 
-    const rows = await this.buttons.buildDynamic(PickColorButton, COLOR_OPTIONS, ctx);
+    const [rows] = await this.buttons.buildDynamic(PickColorButton, COLOR_OPTIONS, ctx);
 
     await interaction.reply({
       content: [

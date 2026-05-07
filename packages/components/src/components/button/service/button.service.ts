@@ -3,9 +3,10 @@ import { Inject, Injectable, Optional } from '@spraxium/common';
 import { ActionRowBuilder, type ButtonBuilder } from 'discord.js';
 import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys.constant';
 import type { SpraxiumContext } from '../../../runtime/context';
-import { joinCustomId } from '../../../runtime/dispatcher/helpers/split-custom-id.helper';
+import { encodeInlineParams, joinCustomId } from '../../../runtime/dispatcher/helpers/split-custom-id.helper';
 import { PayloadService } from '../../../runtime/payload';
 import type { AnyConstructor } from '../../../types';
+import { DynamicButtonInlinePayloadTooLargeError } from '../errors';
 import type {
   ButtonBuildOverrides,
   ButtonComponentMeta,
@@ -16,6 +17,8 @@ import type {
 import type { ButtonEmojiConfig } from '../interfaces';
 import { ButtonRenderer } from '../renderer';
 import type { ButtonStyleName } from '../types';
+
+const DISCORD_CUSTOM_ID_MAX_LENGTH = 100;
 
 @Injectable()
 export class ButtonService {
@@ -63,38 +66,79 @@ export class ButtonService {
   /**
    * Builds N dynamic buttons from a `@DynamicButton` class and a list of items.
    * Each item produces one button: `DynamicButtonClass.render(item)` provides
-   * the appearance, the item itself is persisted as a payload and referenced
-   * via `~p:<id>` in the custom ID. Auto-chunks into action rows of up to 5.
+   * the appearance. In `encoding: 'store'`, the item is persisted as a payload
+   * and referenced via `~p:<id>` in the custom ID. In `encoding: 'inline'`, the
+   * `render().params` object is URL-encoded directly into the custom ID.
+   *
+   * Returns a tuple:
+   * - rows: action rows chunked in groups of 5 buttons.
+   * - refs: payload refs created during render (store encoding only).
    */
   async buildDynamic<TItem>(
     DynamicButtonClass: AnyConstructor,
     items: ReadonlyArray<TItem>,
     context?: SpraxiumContext<unknown>,
-  ): Promise<Array<ActionRowBuilder<ButtonBuilder>>> {
-    const flat = await this.buildDynamicButtons(DynamicButtonClass, items, context);
+  ): Promise<[rows: Array<ActionRowBuilder<ButtonBuilder>>, refs: string[]]> {
+    const [flat, refs] = await this.buildDynamicButtonsWithRefs(DynamicButtonClass, items, context);
     const rows: Array<ActionRowBuilder<ButtonBuilder>> = [];
     for (let i = 0; i < flat.length; i += 5) {
       rows.push(new ActionRowBuilder<ButtonBuilder>().addComponents(flat.slice(i, i + 5)));
     }
-    return rows;
+    return [rows, refs];
+  }
+
+  /**
+   * Builds a **single ActionRow** from multiple dynamic-button entries in one
+   * call. Entries can mix different button classes and encodings (inline or
+   * store). All payload refs minted across entries are collected and returned.
+   *
+   * ```ts
+   * const [row, refs] = await this.buttons.buildMixedRow([
+   *   { button: AssignTicketButton, items: [ticket] },
+   *   { button: CloseTicketButton,  items: [ticket] },
+   * ]);
+   * ```
+   */
+  async buildMixedRow(
+    entries: ReadonlyArray<{ button: AnyConstructor; items: ReadonlyArray<unknown> }>,
+    context?: SpraxiumContext<unknown>,
+  ): Promise<[row: ActionRowBuilder<ButtonBuilder>, refs: string[]]> {
+    const allButtons: ButtonBuilder[] = [];
+    const allRefs: string[] = [];
+    for (const entry of entries) {
+      const [buttons, refs] = await this.buildDynamicButtonsWithRefs(entry.button, entry.items, context);
+      allButtons.push(...buttons);
+      allRefs.push(...refs);
+    }
+    return [new ActionRowBuilder<ButtonBuilder>().addComponents(allButtons.slice(0, 5)), allRefs];
   }
 
   /**
    * Like {@link buildDynamic}, but returns the flat list of `ButtonBuilder`s
    * without wrapping them in action rows. Used internally by `@V2DynamicRow`
-   * and available for callers composing rows manually.
+   * and available for callers composing rows manually. This helper does not
+   * return payload refs.
    */
   async buildDynamicButtons<TItem>(
     DynamicButtonClass: AnyConstructor,
     items: ReadonlyArray<TItem>,
     context?: SpraxiumContext<unknown>,
   ): Promise<Array<ButtonBuilder>> {
-    if (!this.payloads) {
-      throw new Error(
-        '[ButtonService] PayloadService is not registered. Ensure ComponentsModule is imported in your AppModule.',
-      );
-    }
+    const [buttons] = await this.buildDynamicButtonsWithRefs(DynamicButtonClass, items, context);
+    return buttons;
+  }
+
+  private async buildDynamicButtonsWithRefs<TItem>(
+    DynamicButtonClass: AnyConstructor,
+    items: ReadonlyArray<TItem>,
+    context?: SpraxiumContext<unknown>,
+  ): Promise<[buttons: Array<ButtonBuilder>, refs: string[]]> {
     const meta = this.getDynamicMeta(DynamicButtonClass);
+
+    if (meta.encoding === 'store') {
+      this.requirePayloads();
+    }
+
     const renderable = DynamicButtonClass as unknown as DynamicButtonRenderable<TItem>;
     if (typeof renderable.render !== 'function') {
       throw new Error(
@@ -103,21 +147,42 @@ export class ButtonService {
     }
 
     const buttons: Array<ButtonBuilder> = [];
+    const refs: string[] = [];
     for (const item of items) {
       const cfg: ButtonRenderConfig = renderable.render(item);
-      const envelope = await this.payloads.create(item, { ttl: meta.payloadTtl });
+      let customId: string;
+
+      if (meta.encoding === 'inline') {
+        customId = joinCustomId(meta.baseId, {
+          contextId: context?.id,
+          inlineParams: encodeInlineParams(cfg.params),
+        });
+
+        if (customId.length > DISCORD_CUSTOM_ID_MAX_LENGTH) {
+          throw new DynamicButtonInlinePayloadTooLargeError(
+            meta.baseId,
+            customId.length,
+            DISCORD_CUSTOM_ID_MAX_LENGTH,
+          );
+        }
+      } else {
+        const payloads = this.requirePayloads();
+        const envelope = await payloads.create(item, { ttl: meta.payloadTtl });
+        refs.push(envelope.id);
+        customId = joinCustomId(meta.baseId, { contextId: context?.id, payloadId: envelope.id });
+      }
+
       const btn = this.renderer.render({
         isLink: false,
-        customId: meta.baseId,
+        customId,
         label: cfg.label,
         style: cfg.style,
         emoji: cfg.emoji,
         disabled: cfg.disabled,
       } as ButtonComponentMeta);
-      btn.setCustomId(joinCustomId(meta.baseId, { contextId: context?.id, payloadId: envelope.id }));
       buttons.push(btn);
     }
-    return buttons;
+    return [buttons, refs];
   }
 
   private applyOverrides(meta: ButtonComponentMeta, ov?: ButtonBuildOverrides): ButtonComponentMeta {
@@ -143,6 +208,15 @@ export class ButtonService {
       );
     }
     return meta;
+  }
+
+  private requirePayloads(): PayloadService {
+    if (!this.payloads) {
+      throw new Error(
+        '[ButtonService] PayloadService is not registered. Ensure ComponentsModule is imported in your AppModule.',
+      );
+    }
+    return this.payloads;
   }
 
   private getDynamicMeta(DynamicButtonClass: AnyConstructor): DynamicButtonComponentMeta {

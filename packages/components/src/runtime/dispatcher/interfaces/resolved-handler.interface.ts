@@ -22,6 +22,8 @@ export interface ResolvedButtonHandler {
 export interface ResolvedDynamicButtonHandler {
   /** Base ID configured on `@DynamicButton({ baseId })`. */
   baseId: string;
+  /** Payload transport mode configured on `@DynamicButton({ encoding })`. */
+  encoding: 'store' | 'inline';
   handlerCtor: Constructor;
   handlerInstance: unknown;
 }

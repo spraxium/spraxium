@@ -3,7 +3,7 @@ import { Colors } from 'discord.js';
 
 export const componentsConfig = defineComponents({
   context: {
-    storage: { type: 'sqlite' },
+    storage: { type: 'file' },
     defaultTtl: 300,
   },
   button: {

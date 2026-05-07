@@ -64,15 +64,14 @@ export interface ComponentsConfig {
   /** Flow-context storage configuration. */
   context?: {
     /**
-     * Storage backend to use for flow contexts.
+     * Storage backend to use for flow contexts. Required — in-memory storage
+     * is not supported because it silently drops all state on every restart.
      *
-     * - `'memory'`: in-process Map, data lost on restart (default).
-     * - `'file'`: JSON snapshot in `.spraxium/contexts.json`, survives restarts.
-     * - `{ type: 'file'; dir?: string }`: file adapter with a custom directory.
-     * - `{ type: 'sqlite'; path?: string }`: SQLite via `better-sqlite3` (requires `pnpm add better-sqlite3`). Row-level storage, no full-file rewrite, ACID.
-     * - `{ type: 'redis'; ... }`: Redis via ioredis (requires `pnpm add ioredis`).
+     * - `{ type: 'file'; dir?: string }`: JSON snapshot on disk. Zero infrastructure. Good default for single-instance bots.
+     * - `{ type: 'sqlite'; path?: string }`: SQLite via `better-sqlite3` (requires `pnpm add better-sqlite3`). Row-level storage, ACID, no full-file rewrite.
+     * - `{ type: 'redis'; ... }`: Redis via ioredis (requires `pnpm add ioredis`). Required for multi-process / sharded deployments.
      */
-    storage?: ContextStorageConfig;
+    storage: ContextStorageConfig;
     /**
      * Default TTL in seconds applied when `ContextService.create()` is called
      * without an explicit `ttl` option. Defaults to `300` (5 minutes).

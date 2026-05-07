@@ -15,7 +15,7 @@ export class TopicsCommandHandler {
       topics: TOPICS.slice(0, 4),
     };
 
-    const row = await this.selects.buildDynamic(TopicSelect, query);
+    const [row] = await this.selects.buildDynamic(TopicSelect, query);
 
     await interaction.reply({
       content: '## 🧭 Pick your interests',

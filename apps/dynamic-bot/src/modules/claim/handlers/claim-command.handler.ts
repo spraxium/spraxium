@@ -12,7 +12,7 @@ export class ClaimCommandHandler {
   constructor(private readonly buttons: ButtonService) {}
 
   async handle(@Ctx() interaction: ChatInputCommandInteraction): Promise<void> {
-    const rows = await this.buttons.buildDynamic(ClaimRewardButton, [REWARD]);
+    const [rows] = await this.buttons.buildDynamic(ClaimRewardButton, [REWARD]);
 
     await interaction.reply({
       content: [

@@ -8,6 +8,7 @@ import type {
   ButtonComponentMeta,
   ButtonHandlerMeta,
   DynamicButtonComponentMeta,
+  DynamicButtonEncoding,
   DynamicButtonHandlerMeta,
 } from '../../../components/button';
 import { ContextStore } from '../../context';
@@ -16,7 +17,7 @@ import type { ComponentsConfig, SpraxiumContext } from '../../lifecycle';
 import { PayloadService } from '../../payload';
 import { resolveContextError } from '../helpers/context-error.helper';
 import { reportHandlerError } from '../helpers/handler-error.helper';
-import { splitCustomId } from '../helpers/split-custom-id.helper';
+import { type InlineParams, decodeInlineParams, splitCustomId } from '../helpers/split-custom-id.helper';
 import type { Constructor, ResolvedButtonHandler, ResolvedDynamicButtonHandler } from '../interfaces';
 
 export class ButtonDispatcher {
@@ -81,8 +82,39 @@ export class ButtonDispatcher {
           `${ctor.name}: @DynamicButtonHandler references ${componentClass.name} which is not decorated with @DynamicButton().`,
         );
       }
+
+      const proto = ctor.prototype as Record<string | symbol, unknown>;
+      const payloadIndex: number | undefined = Reflect.getMetadata(
+        COMPONENT_METADATA_KEYS.BUTTON_PAYLOAD_PARAM,
+        proto,
+        'handle',
+      );
+      const paramsIndex: number | undefined = Reflect.getMetadata(
+        COMPONENT_METADATA_KEYS.BUTTON_PARAMS_PARAM,
+        proto,
+        'handle',
+      );
+      const payloadRefIndex: number | undefined = Reflect.getMetadata(
+        COMPONENT_METADATA_KEYS.PAYLOAD_REF_PARAM,
+        proto,
+        'handle',
+      );
+
+      this.assertDecoratorCompatibility({
+        handlerName: ctor.name,
+        encoding: dyn.encoding,
+        payloadIndex,
+        paramsIndex,
+        payloadRefIndex,
+      });
+
       this.assertNoCollision(dyn.baseId);
-      this.dynamicHandlers.push({ baseId: dyn.baseId, handlerCtor: ctor, handlerInstance: instance });
+      this.dynamicHandlers.push({
+        baseId: dyn.baseId,
+        encoding: dyn.encoding,
+        handlerCtor: ctor,
+        handlerInstance: instance,
+      });
     }
   }
 
@@ -93,7 +125,7 @@ export class ButtonDispatcher {
       if (!interaction.isButton()) return;
 
       const button = interaction as ButtonInteraction;
-      const { baseId, contextId, payloadId } = splitCustomId(button.customId);
+      const { baseId, contextId, payloadId, inlineParams } = splitCustomId(button.customId);
 
       const staticResolved = this.staticHandlers.find((h) => h.customId === baseId);
       if (staticResolved) {
@@ -103,7 +135,7 @@ export class ButtonDispatcher {
 
       const dynResolved = this.dynamicHandlers.find((h) => h.baseId === baseId);
       if (dynResolved) {
-        void this.dispatchDynamic(button, dynResolved, contextId, payloadId);
+        void this.dispatchDynamic(button, dynResolved, contextId, payloadId, inlineParams);
       }
     });
   }
@@ -137,6 +169,7 @@ export class ButtonDispatcher {
     resolved: ResolvedDynamicButtonHandler,
     contextId: string | undefined,
     payloadId: string | undefined,
+    inlineParams: string | undefined,
   ): Promise<void> {
     const handlerName = `@DynamicButtonHandler(${resolved.handlerCtor.name})`;
     try {
@@ -144,17 +177,19 @@ export class ButtonDispatcher {
       if (flowCtx === null) return;
 
       let payload: unknown;
-      if (payloadId) {
+      let params: InlineParams | undefined;
+
+      if (resolved.encoding === 'inline') {
+        params = decodeInlineParams(inlineParams) ?? {};
+      } else {
+        if (!payloadId) {
+          await this.replyExpired(button);
+          return;
+        }
+
         payload = await this.payloads.get(payloadId);
         if (payload === undefined) {
-          const ephemeral = this.config?.button?.ephemeralErrors !== false;
-          await button.reply(
-            resolveContextError(
-              this.config?.errorMessages?.payloadExpired,
-              '❌ This action has expired.',
-              ephemeral,
-            ),
-          );
+          await this.replyExpired(button);
           return;
         }
       }
@@ -166,7 +201,7 @@ export class ButtonDispatcher {
       );
       if (!guardPassed) return;
 
-      const args = this.buildArgs(resolved, button, flowCtx, payload, payloadId);
+      const args = this.buildArgs(resolved, button, flowCtx, payload, payloadId, params);
       await this.invoke(resolved.handlerInstance, args);
     } catch (err) {
       await this.reportError(err, button, handlerName);
@@ -179,6 +214,7 @@ export class ButtonDispatcher {
     flowCtx: SpraxiumContext<unknown> | undefined,
     payload: unknown,
     payloadId?: string,
+    params?: InlineParams,
   ): Array<unknown> {
     const proto = resolved.handlerCtor.prototype as Record<string | symbol, unknown>;
     const ctxIndex: number | undefined = Reflect.getMetadata(METADATA_KEYS.CTX_PARAM, proto, 'handle');
@@ -192,6 +228,11 @@ export class ButtonDispatcher {
       proto,
       'handle',
     );
+    const paramsIndex: number | undefined = Reflect.getMetadata(
+      COMPONENT_METADATA_KEYS.BUTTON_PARAMS_PARAM,
+      proto,
+      'handle',
+    );
     const payloadRefIndex: number | undefined = Reflect.getMetadata(
       COMPONENT_METADATA_KEYS.PAYLOAD_REF_PARAM,
       proto,
@@ -202,6 +243,7 @@ export class ButtonDispatcher {
     if (ctxIndex !== undefined) args[ctxIndex] = button;
     if (flowCtxIndex !== undefined) args[flowCtxIndex] = flowCtx;
     if (payloadIndex !== undefined) args[payloadIndex] = payload;
+    if (paramsIndex !== undefined) args[paramsIndex] = params;
     if (payloadRefIndex !== undefined && payloadId !== undefined) {
       args[payloadRefIndex] = {
         id: payloadId,
@@ -268,5 +310,46 @@ export class ButtonDispatcher {
         `Button customId/baseId collision for "${id}". Two handlers share the same identifier; only the first registered will fire.`,
       );
     }
+  }
+
+  private assertDecoratorCompatibility(opts: {
+    handlerName: string;
+    encoding: DynamicButtonEncoding;
+    payloadIndex: number | undefined;
+    paramsIndex: number | undefined;
+    payloadRefIndex: number | undefined;
+  }): void {
+    const { handlerName, encoding, payloadIndex, paramsIndex, payloadRefIndex } = opts;
+
+    if (encoding === 'inline') {
+      if (payloadIndex !== undefined) {
+        throw new Error(
+          `${handlerName}: @ButtonPayload() cannot be used with encoding: 'inline'. Use @ButtonParams() instead.`,
+        );
+      }
+      if (payloadRefIndex !== undefined) {
+        throw new Error(
+          `${handlerName}: @PayloadRef() cannot be used with encoding: 'inline'. Use @ButtonParams() instead.`,
+        );
+      }
+      return;
+    }
+
+    if (paramsIndex !== undefined) {
+      throw new Error(
+        `${handlerName}: @ButtonParams() can only be used with encoding: 'inline'. Use @ButtonPayload() instead.`,
+      );
+    }
+  }
+
+  private async replyExpired(button: ButtonInteraction): Promise<void> {
+    const ephemeral = this.config?.button?.ephemeralErrors !== false;
+    await button.reply(
+      resolveContextError(
+        this.config?.errorMessages?.expired ?? this.config?.errorMessages?.payloadExpired,
+        '❌ This action has expired.',
+        ephemeral,
+      ),
+    );
   }
 }
