@@ -1,5 +1,11 @@
 # @spraxium/http
 
+## 0.2.1
+
+### Patch Changes
+
+- 826cd16: bump hono to 4.12.18
+
 ## 0.1.2
 
 ### Patch Changes
