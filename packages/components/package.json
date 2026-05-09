@@ -1,6 +1,6 @@
 {
   "name": "@spraxium/components",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": false,
   "description": "Decorator-based Discord UI components system for buttons, select menus, modals and embeds",
   "keywords": [
@@ -64,7 +64,9 @@
     "tsdown": "^0.12.0",
     "typescript": "^5.7.0"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "license": "Apache-2.0",
   "repository": {
     "type": "git",

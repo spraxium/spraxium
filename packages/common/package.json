@@ -1,6 +1,6 @@
 {
   "name": "@spraxium/common",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": false,
   "description": "Shared decorators, interfaces and types used across the Spraxium framework",
   "keywords": [
@@ -47,7 +47,9 @@
     "typescript": "^5.7.0",
     "vitest": "^3.0.0"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "license": "Apache-2.0",
   "repository": {
     "type": "git",

@@ -1,6 +1,6 @@
 {
   "name": "@spraxium/webhook",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "private": false,
   "description": "Decorator-based Discord webhook management for Spraxium bots with a rich send API",
   "keywords": [
@@ -51,7 +51,9 @@
     "tsdown": "^0.12.0",
     "typescript": "^5.7.0"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
