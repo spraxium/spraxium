@@ -1,6 +1,6 @@
 {
   "name": "@spraxium/components",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "private": false,
   "description": "Decorator-based Discord UI components system for buttons, select menus, modals and embeds",
   "keywords": [

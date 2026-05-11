@@ -1,5 +1,11 @@
 # @spraxium/components
 
+## 0.2.3
+
+### Patch Changes
+
+- 8a81354: fix: prevent removed memory context adapter error on startup when no configuration is provided
+
 ## 0.2.2
 
 ### Patch Changes
