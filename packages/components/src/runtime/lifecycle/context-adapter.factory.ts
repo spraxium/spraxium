@@ -7,15 +7,17 @@ export async function initContextAdapter(
 ): Promise<void> {
   if (defaultTtl != null) ContextStore.defaultTtl = defaultTtl;
 
+  if (cfg === undefined || cfg === null) return;
+
   let adapter: FileContextAdapter | SqliteContextAdapter | RedisContextAdapter;
 
   const VALID_TYPES = ['file', 'sqlite', 'redis'];
 
-  if (!cfg || typeof cfg !== 'object' || !VALID_TYPES.includes((cfg as { type?: string }).type ?? '')) {
+  if (typeof cfg !== 'object' || !VALID_TYPES.includes((cfg as { type?: string }).type ?? '')) {
     const received =
       typeof cfg === 'object' ? `{ type: '${(cfg as { type?: string }).type}' }` : JSON.stringify(cfg);
     throw new Error(
-      `[Spraxium] Invalid context.storage value: ${received}. In-memory storage has been removed. Use { type: 'file' } for single-instance bots, { type: 'sqlite' } for higher write volume, or { type: 'redis' } for multi-process deployments.`,
+      `[Spraxium] Invalid context.storage value: ${received}. Use { type: 'file' } for single-instance bots, { type: 'sqlite' } for higher write volume, or { type: 'redis' } for multi-process deployments.`,
     );
   }
   if (cfg.type === 'file') {
