@@ -229,7 +229,7 @@ export class V2Service {
         const rawText = typeof cfg.text === 'function' ? cfg.text(data) : cfg.text;
         const text = rawText instanceof DescriptionBuilder ? rawText.toString() : (rawText as string);
 
-        if (!cfg.button && !cfg.thumbnail) {
+        if (!cfg.button && !cfg.thumbnail && !cfg.dynamic) {
           return new TextDisplayBuilder().setContent(text);
         }
 
@@ -241,6 +241,24 @@ export class V2Service {
           if (cfg.thumbnail.description) t.setDescription(cfg.thumbnail.description);
           if (cfg.thumbnail.spoiler) t.setSpoiler(true);
           sec.setThumbnailAccessory(t);
+        } else if (cfg.dynamic) {
+          if (!allowAsync) {
+            throw new Error(
+              '[V2Service] @V2Section with dynamic button requires async build(). Use V2Service.build() instead of buildSync().',
+            );
+          }
+
+          const item =
+            typeof cfg.dynamic.item === 'function' ? cfg.dynamic.item(data) : (cfg.dynamic.item ?? data);
+
+          return this.buttons.buildDynamicButtons(cfg.dynamic.button, [item], context).then(([button]) => {
+            if (!button) {
+              throw new Error('[V2Service] @V2Section dynamic button produced no button.');
+            }
+
+            sec.setButtonAccessory(button);
+            return sec;
+          });
         } else if (cfg.button) {
           const row = this.buttons.build(
             cfg.button,
@@ -316,18 +334,37 @@ export class V2Service {
 
       case 'dynamic': {
         const cfg = child.config as V2DynamicConfig;
-        return cfg.factory(data).flatMap((spec) => {
-          const result = this.buildChild(
-            { ...spec, propertyKey: '__dynamic__', order: -1 } as V2ChildDef,
-            data,
-            context,
-            allowAsync,
-          );
-          if (result instanceof Promise) {
-            throw new Error('[V2Service] @V2Dynamic factories may not produce async children.');
-          }
-          return result;
-        }) as Array<V2InnerBuilder>;
+        const specs = cfg.factory(data);
+
+        if (!allowAsync) {
+          return specs.flatMap((spec) => {
+            const result = this.buildChild(
+              { ...spec, propertyKey: '__dynamic__', order: -1 } as V2ChildDef,
+              data,
+              context,
+              false,
+            );
+
+            if (result instanceof Promise) {
+              throw new Error(
+                '[V2Service] @V2Dynamic produced async children. Use V2Service.build() instead of buildSync().',
+              );
+            }
+
+            return result;
+          }) as Array<V2InnerBuilder>;
+        }
+
+        return Promise.all(
+          specs.map((spec) =>
+            this.buildChild(
+              { ...spec, propertyKey: '__dynamic__', order: -1 } as V2ChildDef,
+              data,
+              context,
+              true,
+            ),
+          ),
+        ).then((results) => results.flat());
       }
 
       case 'dynamicRow': {

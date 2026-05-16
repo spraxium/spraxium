@@ -64,9 +64,7 @@
     "tsdown": "^0.12.0",
     "typescript": "^5.7.0"
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "license": "Apache-2.0",
   "repository": {
     "type": "git",

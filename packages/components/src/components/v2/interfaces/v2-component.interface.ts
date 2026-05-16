@@ -35,6 +35,11 @@ export interface V2SectionConfig {
   // biome-ignore lint/suspicious/noExplicitAny: generic callable type required
   text: string | DescriptionBuilder | ((data: any) => string | DescriptionBuilder);
   button?: AnyConstructor;
+  dynamic?: {
+    button: AnyConstructor;
+    // biome-ignore lint/suspicious/noExplicitAny: factory receives caller-defined data types
+    item?: unknown | ((data: any) => unknown);
+  };
   thumbnail?: V2ThumbnailConfig;
   i18n?: V2SectionI18nKeys;
 }
