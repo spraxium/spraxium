@@ -1,5 +1,11 @@
 # @spraxium/i18n-bot
 
+## 0.0.8
+
+### Patch Changes
+
+- @spraxium/i18n@1.0.1
+
 ## 0.0.7
 
 ### Patch Changes

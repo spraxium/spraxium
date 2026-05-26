@@ -1,5 +1,13 @@
 # @spraxium/http-bot
 
+## 0.0.7
+
+### Patch Changes
+
+- Updated dependencies [808b582]
+  - @spraxium/components@0.3.1
+  - @spraxium/i18n@1.0.1
+
 ## 0.0.6
 
 ### Patch Changes

@@ -1,5 +1,12 @@
 # @spraxium/guard-bot
 
+## 0.0.6
+
+### Patch Changes
+
+- Updated dependencies [808b582]
+  - @spraxium/components@0.3.1
+
 ## 0.0.5
 
 ### Patch Changes
