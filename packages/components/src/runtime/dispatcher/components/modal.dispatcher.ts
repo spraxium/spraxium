@@ -17,19 +17,26 @@ import {
   ModalValidatorRunner,
   buildDefaultValidationEmbed,
 } from '../../../components/modal';
+import { ContextStore } from '../../context';
 import { ComponentExecutionContext } from '../../guards';
-import type { ComponentsConfig } from '../../lifecycle';
+import type { ComponentsConfig, SpraxiumContext } from '../../lifecycle';
 import { PayloadService } from '../../payload';
+import { resolveContextError } from '../helpers/context-error.helper';
 import { reportHandlerError } from '../helpers/handler-error.helper';
 import { type InlineParams, decodeInlineParams, splitCustomId } from '../helpers/split-custom-id.helper';
 import type { Constructor, ResolvedModalHandler } from '../interfaces';
 
 export class ModalDispatcher {
   private readonly handlers: Array<ResolvedModalHandler> = [];
+  private config?: ComponentsConfig;
   private payloads = new PayloadService();
 
   get size(): number {
     return this.handlers.length;
+  }
+
+  setConfig(config: ComponentsConfig): void {
+    this.config = config;
   }
 
   setPayloadService(svc: PayloadService): void {
@@ -62,30 +69,33 @@ export class ModalDispatcher {
     });
   }
 
-  bind(client: Client, config?: ComponentsConfig): void {
+  bind(client: Client): void {
     if (this.handlers.length === 0) return;
 
     client.on(Events.InteractionCreate, (interaction: Interaction) => {
       if (!interaction.isModalSubmit()) return;
 
       const modal = interaction as ModalSubmitInteraction;
-      const { baseId, inlineParams, payloadId } = splitCustomId(modal.customId);
+      const { baseId, contextId, inlineParams, payloadId } = splitCustomId(modal.customId);
       const resolved = this.handlers.find((h) => h.baseId === baseId);
       if (!resolved) return;
 
-      void this.handleSubmission(modal, resolved, config, inlineParams, payloadId);
+      void this.handleSubmission(modal, resolved, contextId, inlineParams, payloadId);
     });
   }
 
   private async handleSubmission(
     modal: ModalSubmitInteraction,
     resolved: ResolvedModalHandler,
-    config?: ComponentsConfig,
+    contextId?: string,
     inlineParams?: string,
     payloadId?: string,
   ): Promise<void> {
     const handlerName = `@ModalHandler(${resolved.handlerCtor.name})`;
     try {
+      const flowCtx = await this.resolveFlowContext(modal, contextId);
+      if (flowCtx === null) return;
+
       const guardPassed = await GuardExecutor.execute(
         resolved.handlerCtor,
         'handle',
@@ -95,7 +105,7 @@ export class ModalDispatcher {
 
       const errors = ModalValidatorRunner.validate(resolved.builderCtor, modal);
       if (errors.length > 0) {
-        await this.handleValidationFailure(modal, resolved, errors, config);
+        await this.handleValidationFailure(modal, resolved, errors, this.config);
         return;
       }
 
@@ -112,7 +122,7 @@ export class ModalDispatcher {
       }
 
       const params = decodeInlineParams(inlineParams);
-      const args = this.resolveHandlerArgs(modal, resolved, params, payload);
+      const args = this.resolveHandlerArgs(modal, resolved, params, payload, flowCtx);
 
       const fn = (resolved.handlerInstance as Record<string | symbol, (...a: Array<unknown>) => unknown>)
         .handle;
@@ -126,9 +136,9 @@ export class ModalDispatcher {
         err,
         modal,
         handlerName,
-        config,
-        config?.modal?.ephemeralErrors !== false,
-        config?.modal?.onErrorReply,
+        this.config,
+        this.config?.modal?.ephemeralErrors !== false,
+        this.config?.modal?.onErrorReply,
       );
     }
   }
@@ -170,9 +180,15 @@ export class ModalDispatcher {
     resolved: ResolvedModalHandler,
     params: InlineParams | undefined,
     payload: unknown,
+    flowCtx: SpraxiumContext<unknown> | undefined,
   ): Array<unknown> {
     const proto = resolved.handlerCtor.prototype as Record<string | symbol, unknown>;
     const ctxIndex: number | undefined = Reflect.getMetadata(METADATA_KEYS.CTX_PARAM, proto, 'handle');
+    const flowCtxIndex: number | undefined = Reflect.getMetadata(
+      COMPONENT_METADATA_KEYS.FLOW_CONTEXT_PARAM,
+      proto,
+      'handle',
+    );
     const paramsIndex: number | undefined = Reflect.getMetadata(
       COMPONENT_METADATA_KEYS.MODAL_PARAMS_PARAM,
       proto,
@@ -190,6 +206,7 @@ export class ModalDispatcher {
 
     const args: Array<unknown> = [];
     if (ctxIndex !== undefined) args[ctxIndex] = modal;
+    if (flowCtxIndex !== undefined) args[flowCtxIndex] = flowCtx;
     if (paramsIndex !== undefined) args[paramsIndex] = params ?? {};
     if (payloadIndex !== undefined) args[payloadIndex] = payload;
 
@@ -198,6 +215,38 @@ export class ModalDispatcher {
     }
 
     return args;
+  }
+
+  private async resolveFlowContext(
+    modal: ModalSubmitInteraction,
+    contextId: string | undefined,
+  ): Promise<SpraxiumContext<unknown> | undefined | null> {
+    if (!contextId) return undefined;
+
+    const ephemeral = this.config?.modal?.ephemeralErrors !== false;
+
+    const flowCtx = await ContextStore.get(contextId);
+    if (!flowCtx) {
+      await modal.reply(
+        resolveContextError(
+          this.config?.errorMessages?.expired,
+          '❌ This interaction has expired.',
+          ephemeral,
+        ),
+      );
+      return null;
+    }
+    if (flowCtx.restrictedTo && flowCtx.restrictedTo !== modal.user.id) {
+      await modal.reply(
+        resolveContextError(
+          this.config?.errorMessages?.restricted,
+          '❌ You are not allowed to use this component.',
+          ephemeral,
+        ),
+      );
+      return null;
+    }
+    return flowCtx;
   }
 
   private buildFieldDefMap(builderCtor: Constructor): Map<string, ModalFieldDef> {

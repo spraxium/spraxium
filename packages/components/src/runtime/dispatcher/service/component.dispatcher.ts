@@ -44,11 +44,12 @@ export class ComponentDispatcher {
     if (this.config) {
       this.buttons.setConfig(this.config);
       this.selects.setConfig(this.config);
+      this.modals.setConfig(this.config);
     }
     this.buttons.setPayloadService(this.payloads);
     this.selects.setPayloadService(this.payloads);
     this.modals.setPayloadService(this.payloads);
-    this.modals.bind(client, this.config);
+    this.modals.bind(client);
     this.selects.bind(client);
     this.buttons.bind(client);
   }
