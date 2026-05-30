@@ -2,7 +2,8 @@ import 'reflect-metadata';
 import { Injectable } from '@spraxium/common';
 import type { ModalBuilder, ModalSubmitInteraction } from 'discord.js';
 import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys.constant';
-import type { PayloadService } from '../../../runtime/payload';
+// biome-ignore lint/style/useImportType: needed for DI runtime injection
+import { PayloadService } from '../../../runtime/payload';
 import type { AnyConstructor } from '../../../types';
 import { type InlineParams, encodeInlineParams, joinCustomId } from '../../../utils/custom-id';
 import { ModalFieldCache } from '../cache';
@@ -55,7 +56,9 @@ export class ModalService {
     options?: { ttl?: number; data?: T },
   ): Promise<ModalBuilder> {
     const meta = this.getComponentMeta(ModalClass);
-    const envelope = await this.payloads.create(payload, { ttl: options?.ttl ?? 900 });
+    const envelope = await this.payloads.create(payload, {
+      ttl: options?.ttl ?? 900,
+    });
     const customId = joinCustomId(meta.id, { payloadId: envelope.id });
     const built = this.renderer.render(
       this.schema.build(ModalClass, options?.data as Record<string, unknown>),
