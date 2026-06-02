@@ -57,7 +57,7 @@
     "@types/node": "^22.13.0",
     "tsdown": "^0.12.0",
     "typescript": "^5.7.0",
-    "vitest": "^3.0.0"
+    "vitest": "^4.1.0"
   },
   "files": ["dist"],
   "license": "Apache-2.0",

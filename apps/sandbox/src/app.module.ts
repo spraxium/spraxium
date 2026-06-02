@@ -8,6 +8,7 @@ import { ExceptionsModule } from "./exceptions/exceptions.module";
 import { EmbedDemoModule } from "./modules/embed-demo/embed-demo.module";
 import { FlowContextDemoModule } from "./modules/flow-context-demo/flow-context-demo.module";
 import { ModalDemoModule } from "./modules/modal-demo/modal-demo.module";
+import { ModalParamsDemoModule } from "./modules/modal-params-demo/modal-params-demo.module";
 import { ComponentDemoModule } from "./modules/component-demo/component-demo.module";
 import { V2DemoModule } from "./modules/v2-demo/v2-demo.module";
 import { I18nDemoModule } from "./modules/i18n-demo/i18n-demo.module";
@@ -34,6 +35,7 @@ import { DatabaseModule } from './modules/database/database.module';
     I18nDemoModule,
     EmbedDemoModule,
     ModalDemoModule,
+    ModalParamsDemoModule,
     ComponentDemoModule,
     V2DemoModule,
     FlowContextDemoModule,
