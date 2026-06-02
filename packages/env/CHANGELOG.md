@@ -1,5 +1,13 @@
 # @spraxium/env
 
+## 0.2.3
+
+### Patch Changes
+
+- 79acfea: Added flow context support for modal components, matching the behavior already available in other components. Also fixed general bugs and updated dependencies to maintain framework integrity.
+- Updated dependencies [79acfea]
+  - @spraxium/logger@0.2.4
+
 ## 0.2.2
 
 ### Patch Changes
