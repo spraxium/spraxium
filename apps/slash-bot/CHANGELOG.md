@@ -1,5 +1,15 @@
 # @spraxium/slash-bot
 
+## 0.0.8
+
+### Patch Changes
+
+- Updated dependencies [fc31895]
+  - @spraxium/common@0.2.5
+  - @spraxium/core@0.2.5
+  - @spraxium/env@0.2.4
+  - @spraxium/logger@0.2.5
+
 ## 0.0.7
 
 ### Patch Changes
