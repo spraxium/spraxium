@@ -37,7 +37,7 @@
     "execa": "^9.5.0",
     "giget": "^3.2.0",
     "minimatch": "^10.0.1",
-    "shell-quote": "^1.8.3"
+    "shell-quote": "^1.8.4"
   },
   "devDependencies": {
     "@types/node": "^22.19.15",
@@ -46,9 +46,7 @@
     "typescript": "^5.7.0",
     "vitest": "^4.1.0"
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
