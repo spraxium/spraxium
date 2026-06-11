@@ -1,5 +1,11 @@
 # @spraxium/signal-client
 
+## 0.2.2
+
+### Patch Changes
+
+- 79acfea: Added flow context support for modal components, matching the behavior already available in other components. Also fixed general bugs and updated dependencies to maintain framework integrity.
+
 ## 0.2.1
 
 ### Patch Changes

@@ -1,9 +1,17 @@
 {
   "name": "@spraxium/logger",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "private": false,
   "description": "Centralized structured logging system for the Spraxium ecosystem",
-  "keywords": ["discord", "discord-bot", "spraxium", "typescript", "logger", "logging", "bot-framework"],
+  "keywords": [
+    "discord",
+    "discord-bot",
+    "spraxium",
+    "typescript",
+    "logger",
+    "logging",
+    "bot-framework"
+  ],
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -27,7 +35,9 @@
     "typescript": "^5.7.0",
     "vitest": "^4.1.0"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
