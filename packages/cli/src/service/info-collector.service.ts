@@ -1,9 +1,7 @@
 import { spawnSync } from 'node:child_process';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
-import { createRequire } from 'node:module';
 import os from 'node:os';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { RegexConstant } from '../constants';
 import type { EnvInfo, InfoReport } from '../interfaces';
 
@@ -12,7 +10,6 @@ export class InfoCollector {
     const projectPkg = this.readNearestPackageJson(cwd);
 
     return {
-      cliVersion: this.readCliVersion(),
       projectName: typeof projectPkg?.name === 'string' ? projectPkg.name : '(unknown)',
       env: {
         os: `${os.platform()} ${os.release()} (${os.arch()})`,
@@ -29,39 +26,6 @@ export class InfoCollector {
       },
       frameworkVersions: this.collectFrameworkVersions(cwd, projectPkg),
     };
-  }
-
-  readCliVersion(): string {
-    const require = createRequire(import.meta.url);
-
-    try {
-      const pkgPath = require.resolve('@spraxium/cli/package.json');
-      const pkg = JSON.parse(readFileSync(pkgPath, 'utf-8')) as { version?: string };
-      return pkg.version ?? 'unknown';
-    } catch {
-      // fallback to local workspace scan
-    }
-
-    let current = path.dirname(fileURLToPath(import.meta.url));
-    while (true) {
-      const pkgPath = path.join(current, 'package.json');
-      if (existsSync(pkgPath)) {
-        try {
-          const pkg = JSON.parse(readFileSync(pkgPath, 'utf-8')) as { name?: string; version?: string };
-          if (pkg.name === '@spraxium/cli') {
-            return pkg.version ?? 'unknown';
-          }
-        } catch {
-          return 'unknown';
-        }
-      }
-
-      const parent = path.dirname(current);
-      if (parent === current) break;
-      current = parent;
-    }
-
-    return 'unknown';
   }
 
   private readNearestPackageJson(cwd: string): Record<string, unknown> | null {

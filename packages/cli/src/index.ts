@@ -8,7 +8,7 @@ import { InfoCommand } from './commands/info.command';
 import { NewCommand } from './commands/new.command';
 import { StartCommand } from './commands/start.command';
 import { CommandRegistry } from './core/command.registry';
-import { ALL_SCHEMATICS } from './schematics/schematic.registry';
+import { SchematicRegistry } from './schematics/schematic.registry';
 import { ConfigReader } from './service/config-reader.service';
 import { DatabaseTemplateService } from './service/database-template.service';
 import { FileSystem } from './service/file-system.service';
@@ -30,6 +30,7 @@ const runner = new ProcessRunner();
 const registrar = new ModuleRegistrar(fs);
 const infoCollector = new InfoCollector();
 const schematicLoader = new SchematicLoader();
+const schematicRegistry = new SchematicRegistry();
 const templateService = new TemplateService();
 const scaffolder = new ScaffoldService(templateService, fs);
 const installer = new ProjectInstaller(runner);
@@ -39,7 +40,7 @@ const registry = new CommandRegistry([
   new DevCommand(logger, detector, configReader),
   new StartCommand(logger),
   new BuildCommand(logger, runner),
-  new GenerateCommand(logger, ALL_SCHEMATICS, fs, detector, registrar, schematicLoader),
+  new GenerateCommand(logger, schematicRegistry, fs, detector, registrar, schematicLoader),
   new InfoCommand(logger, infoCollector),
   new NewCommand(logger, scaffolder, installer, runner),
   new DatabaseCommand(logger, detector, fs, installer, runner, registrar, dbTemplateService),

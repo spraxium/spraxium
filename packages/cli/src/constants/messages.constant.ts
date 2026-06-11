@@ -17,6 +17,10 @@ export const MessageConstant = {
   GENERATE_NAME_REQUIRED: 'Name is required',
   GENERATE_FILE_EXISTS: (fileName: string): string => `${fileName} already exists. Overwrite?`,
   GENERATE_NAME_PROMPT: (schematicName: string): string => `${schematicName} name:`,
+  GENERATE_UNKNOWN_SCHEMATIC: (name: string, available: string): string =>
+    `Unknown schematic "${name}". Available schematics: ${available}.`,
+  GENERATE_INVALID_NAME: (name: string): string =>
+    `Invalid name "${name}". Use letters, numbers, dashes or underscores (e.g. "user-profile").`,
   GENERATE_SUFFIX_ERROR: (kebabName: string, suffix: string): string =>
     `Name "${kebabName}" already contains the schematic suffix "${suffix}". ` +
     `This would generate "${kebabName}.${suffix}.ts". Please choose a different name.`,

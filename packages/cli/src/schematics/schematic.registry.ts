@@ -1,3 +1,5 @@
+import { MessageConstant } from '../constants';
+import { CliError } from '../errors';
 import type { Schematic } from '../interfaces';
 
 export const ALL_SCHEMATICS: Array<Schematic> = [
@@ -145,4 +147,38 @@ export function buildSchematicLookup(schematics: Array<Schematic>): Map<string, 
     }
   }
   return map;
+}
+
+/**
+ * Read-only registry of available schematics with name/alias resolution.
+ *
+ * Centralises schematic lookups so commands do not have to manage the
+ * name → schematic mapping themselves, and provides consistent validation
+ * errors for unknown schematic names.
+ */
+export class SchematicRegistry {
+  private readonly lookup: Map<string, Schematic>;
+
+  constructor(private readonly schematics: ReadonlyArray<Schematic> = ALL_SCHEMATICS) {
+    this.lookup = buildSchematicLookup([...schematics]);
+  }
+
+  /** All registered schematics, in declaration order. */
+  list(): ReadonlyArray<Schematic> {
+    return this.schematics;
+  }
+
+  /** Resolves a schematic by name or alias, or `undefined` when unknown. */
+  find(nameOrAlias: string): Schematic | undefined {
+    return this.lookup.get(nameOrAlias);
+  }
+
+  /** Resolves a schematic by name or alias, throwing a `CliError` when unknown. */
+  resolve(nameOrAlias: string): Schematic {
+    const found = this.find(nameOrAlias);
+    if (found) return found;
+
+    const available = this.schematics.map((s) => s.name).join(', ');
+    throw new CliError(MessageConstant.GENERATE_UNKNOWN_SCHEMATIC(nameOrAlias, available));
+  }
 }

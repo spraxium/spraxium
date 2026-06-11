@@ -2,10 +2,11 @@ import path from 'node:path';
 import { confirm, input, select } from '@inquirer/prompts';
 import { ANSI } from '@spraxium/logger';
 import type { Command } from 'commander';
-import { GenerateConstant, MessageConstant } from '../constants';
+import { GenerateConstant, MessageConstant, RegexConstant } from '../constants';
 import { BaseCommand } from '../core/base.command';
+import { CliError } from '../errors';
 import type { Schematic } from '../interfaces';
-import { buildSchematicLookup } from '../schematics/schematic.registry';
+import type { SchematicRegistry } from '../schematics/schematic.registry';
 import type { FileSystem } from '../service/file-system.service';
 import type { ModuleRegistrar } from '../service/module-registrar.service';
 import type { ProjectDetector } from '../service/project-detector.service';
@@ -15,25 +16,22 @@ import { toKebabCase, toPascalCase } from '../utils/case.util';
 import { buildRelativeImport } from '../utils/path.util';
 
 export class GenerateCommand extends BaseCommand {
-  private readonly lookup: Map<string, Schematic>;
-
   constructor(
     logger: CliLogger,
-    private readonly schematics: Array<Schematic>,
+    private readonly registry: SchematicRegistry,
     private readonly fs: FileSystem,
     private readonly detector: ProjectDetector,
     private readonly registrar: ModuleRegistrar,
     private readonly loader: SchematicLoader,
   ) {
     super(logger);
-    this.lookup = buildSchematicLookup(schematics);
   }
 
   register(program: Command): void {
     program
       .command('generate [schematic] [name]')
       .alias('g')
-      .description('Generate a Spraxium schematic (module, service, task, boot-service, listener)')
+      .description('Generate a Spraxium schematic (module, service, listener, command, and more)')
       .action((schematic?: string, name?: string) => this.run(() => this.execute(schematic, name)));
   }
 
@@ -58,45 +56,47 @@ export class GenerateCommand extends BaseCommand {
       }
     }
 
-    await this.fs.writeFile(destPath, this.loader.render(schematic.name, pascalName, kebabName));
+    const contents = await this.loader.render(schematic.name, pascalName, kebabName);
+    await this.fs.writeFile(destPath, contents);
     this.logger.success(`Created  ${path.relative(process.cwd(), destPath)}`);
 
     if (schematic.moduleArray && chosenModuleDir) {
-      const moduleFile = await this.registrar.findModuleFile(chosenModuleDir);
-      if (moduleFile) {
-        const relImport = buildRelativeImport(moduleFile, destPath);
-        const className = this.resolveClassName(schematic, pascalName);
+      await this.registerInModule(schematic, pascalName, chosenModuleDir, destPath);
+    }
+  }
 
-        const patched = await this.registrar.register(
-          moduleFile,
-          className,
-          relImport,
-          schematic.moduleArray,
-        );
-        if (patched) {
-          this.logger.success(
-            `Registered ${className} in ${path.relative(process.cwd(), moduleFile)} → ${schematic.moduleArray}[]`,
-          );
-        }
-      }
+  private async registerInModule(
+    schematic: Schematic,
+    pascalName: string,
+    chosenModuleDir: string,
+    destPath: string,
+  ): Promise<void> {
+    const moduleFile = await this.registrar.findModuleFile(chosenModuleDir);
+    if (!moduleFile) return;
+
+    const relImport = buildRelativeImport(moduleFile, destPath);
+    const className = this.resolveClassName(schematic, pascalName);
+
+    const patched = await this.registrar.register(moduleFile, className, relImport, schematic.moduleArray);
+    if (patched) {
+      this.logger.success(
+        `Registered ${className} in ${path.relative(process.cwd(), moduleFile)} → ${schematic.moduleArray}[]`,
+      );
     }
   }
 
   private async resolveSchematic(arg?: string): Promise<Schematic> {
-    if (arg) {
-      const found = this.lookup.get(arg);
-      if (found) return found;
-    }
+    if (arg) return this.registry.resolve(arg);
 
     const chosen = await select({
       message: MessageConstant.GENERATE_WHICH_SCHEMATIC,
       loop: false,
-      choices: this.schematics.map((s) => ({
+      choices: this.registry.list().map((s) => ({
         value: s.name,
         name: `${s.name.padEnd(16)} ${ANSI.dim(s.description)}`,
       })),
     });
-    return this.lookup.get(chosen) as Schematic;
+    return this.registry.resolve(chosen);
   }
 
   private async resolveName(
@@ -110,16 +110,21 @@ export class GenerateCommand extends BaseCommand {
         validate: (v) => v.trim().length > 0 || MessageConstant.GENERATE_NAME_REQUIRED,
       }));
 
-    const kebabName = toKebabCase(rawName);
+    const trimmed = rawName.trim();
+    if (!RegexConstant.SCHEMATIC_NAME.test(trimmed)) {
+      throw new CliError(MessageConstant.GENERATE_INVALID_NAME(trimmed));
+    }
+
+    const kebabName = toKebabCase(trimmed);
     this.validateNameDoesNotRepeatSuffix(kebabName, schematic);
 
-    return { pascalName: toPascalCase(rawName), kebabName };
+    return { pascalName: toPascalCase(trimmed), kebabName };
   }
 
   private validateNameDoesNotRepeatSuffix(kebabName: string, schematic: Schematic): void {
     const suffix = schematic.fileSuffix;
     if (kebabName === suffix || kebabName.endsWith(`-${suffix}`)) {
-      throw new Error(MessageConstant.GENERATE_SUFFIX_ERROR(kebabName, suffix));
+      throw new CliError(MessageConstant.GENERATE_SUFFIX_ERROR(kebabName, suffix));
     }
   }
 
@@ -130,7 +135,7 @@ export class GenerateCommand extends BaseCommand {
 
   private findSrcRoot(): string {
     const srcDir = this.detector.findSrcDir();
-    if (!srcDir) throw new Error(MessageConstant.NO_SRC_DIR);
+    if (!srcDir) throw new CliError(MessageConstant.NO_SRC_DIR);
     return srcDir;
   }
 

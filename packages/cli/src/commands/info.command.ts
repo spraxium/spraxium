@@ -39,7 +39,6 @@ export class InfoCommand extends BaseCommand {
     this.logger.blank();
 
     this.line('Project', report.projectName);
-    this.line('CLI', report.cliVersion);
     this.line('Node', report.env.node);
     this.line('OS', report.env.os);
     this.line('Runtime', report.env.runtime);

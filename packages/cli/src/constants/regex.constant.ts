@@ -10,4 +10,7 @@ export const RegexConstant = {
 
   /** Matches platform newlines */
   NEWLINE: /\r?\n/,
+
+  /** Valid schematic/module name: letters, numbers, dashes, underscores and spaces */
+  SCHEMATIC_NAME: /^[A-Za-z0-9][A-Za-z0-9 _-]*$/,
 } as const;
