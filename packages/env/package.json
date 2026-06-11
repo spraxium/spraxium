@@ -1,6 +1,6 @@
 {
   "name": "@spraxium/env",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "private": false,
   "description": "Typed environment variable validation with class decorators and clear startup errors",
   "keywords": [
@@ -42,7 +42,9 @@
     "typescript": "^5.7.0",
     "vitest": "^4.1.0"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "license": "Apache-2.0",
   "repository": {
     "type": "git",

@@ -1,6 +1,6 @@
 {
   "name": "@spraxium/cli",
-  "version": "0.2.4",
+  "version": "0.3.0",
   "private": false,
   "description": "Spraxium CLI for project scaffolding, module generation and developer tooling",
   "keywords": [
@@ -46,7 +46,9 @@
     "typescript": "^5.7.0",
     "vitest": "^4.1.0"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
