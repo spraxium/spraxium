@@ -46,7 +46,7 @@
     "@spraxium/common": "*",
     "@spraxium/core": "*",
     "@spraxium/logger": "*",
-    "discord.js": "^14.26.4"
+    "discord.js": "^14.27.0"
   },
   "devDependencies": {
     "@spraxium/common": "workspace:*",
@@ -56,9 +56,7 @@
     "tsdown": "^0.12.0",
     "typescript": "^5.7.0"
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "license": "Apache-2.0",
   "type": "module",
   "repository": {

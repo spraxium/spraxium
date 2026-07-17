@@ -18,11 +18,11 @@
     "@spraxium/logger": "workspace:*",
     "@spraxium/schedule": "workspace:*",
     "class-validator": "^0.14.2",
-    "discord.js": "^14.26.4",
+    "discord.js": "^14.27.0",
     "drizzle-orm": "^0.45.2",
     "pg": "^8.20.0",
     "reflect-metadata": "^0.2.2",
-    "typeorm": "^0.3.28"
+    "typeorm": "^0.3.29"
   },
   "devDependencies": {
     "@spraxium/cli": "workspace:*",

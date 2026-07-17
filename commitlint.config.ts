@@ -14,7 +14,7 @@ const config: UserConfig = {
     'type-enum': [
       2,
       'always',
-      ['feat', 'fix', 'docs', 'refactor', 'test', 'chore', 'perf', 'security', 'release', 'breaking'],
+      ['feat', 'fix', 'docs', 'refactor', 'test', 'chore', 'perf', 'security', 'release', 'breaking', 'security'],
     ],
 
     'scope-empty': [2, 'never'],

@@ -36,7 +36,7 @@
   },
   "dependencies": {
     "@spraxium/logger": "workspace:*",
-    "discord.js": "^14.26.4",
+    "discord.js": "^14.27.0",
     "reflect-metadata": "^0.2.2"
   },
   "peerDependencies": {
@@ -60,9 +60,7 @@
     "typescript": "^5.7.0",
     "vitest": "^4.1.0"
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "license": "Apache-2.0",
   "repository": {
     "type": "git",

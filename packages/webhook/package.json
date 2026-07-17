@@ -40,20 +40,18 @@
     "@spraxium/common": "*",
     "@spraxium/core": "*",
     "@spraxium/logger": "*",
-    "discord.js": "^14.26.4"
+    "discord.js": "^14.27.0"
   },
   "devDependencies": {
     "@spraxium/common": "workspace:*",
     "@spraxium/core": "workspace:*",
     "@spraxium/logger": "workspace:*",
     "@types/node": "^22.0.0",
-    "discord.js": "^14.26.4",
+    "discord.js": "^14.27.0",
     "tsdown": "^0.12.0",
     "typescript": "^5.7.0"
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
