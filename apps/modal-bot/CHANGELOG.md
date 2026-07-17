@@ -1,5 +1,14 @@
 # @spraxium/modal-bot
 
+## 0.0.12
+
+### Patch Changes
+
+- Updated dependencies [f92017d]
+  - @spraxium/common@0.2.6
+  - @spraxium/components@0.3.4
+  - @spraxium/core@0.2.6
+
 ## 0.0.11
 
 ### Patch Changes
