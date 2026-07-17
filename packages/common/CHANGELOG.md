@@ -1,5 +1,11 @@
 # @spraxium/common
 
+## 0.2.6
+
+### Patch Changes
+
+- f92017d: Update Discord.js compatibility to 14.27.0 and adopt patched transitive dependencies.
+
 ## 0.2.5
 
 ### Patch Changes
