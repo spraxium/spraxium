@@ -1,5 +1,12 @@
 # @spraxium/modal-params-bot
 
+## 0.0.6
+
+### Patch Changes
+
+- Updated dependencies [842ad5c]
+  - @spraxium/components@0.3.5
+
 ## 0.0.5
 
 ### Patch Changes

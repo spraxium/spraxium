@@ -1,5 +1,11 @@
 # @spraxium/components
 
+## 0.3.5
+
+### Patch Changes
+
+- 842ad5c: Use Discord interaction flags for ephemeral component error and modal validation replies.
+
 ## 0.3.4
 
 ### Patch Changes
