@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { METADATA_KEYS } from '@spraxium/common';
 import { GuardExecutor } from '@spraxium/core';
-import { type Client, Events, type Interaction, type ModalSubmitInteraction } from 'discord.js';
+import { type Client, Events, type Interaction, MessageFlags, type ModalSubmitInteraction } from 'discord.js';
 import { COMPONENT_METADATA_KEYS } from '../../../component-metadata-keys.constant';
 import type {
   ModalCacheConfig,
@@ -171,7 +171,7 @@ export class ModalDispatcher {
     await modal.reply({
       // biome-ignore lint/suspicious/noExplicitAny: discord.js embed type mismatch
       embeds: [embed as any],
-      ephemeral: validationConfig?.ephemeral ?? true,
+      flags: validationConfig?.ephemeral === false ? undefined : MessageFlags.Ephemeral,
     });
   }
 

@@ -39,6 +39,8 @@
     "ignore": [
       "**/dist/**",
       "**/node_modules/**",
+      "**/.spraxium/**",
+      "**/local/**",
       "**/*.d.ts",
       "_old/**",
       "web/.next/**",

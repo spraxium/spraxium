@@ -1,5 +1,5 @@
 import { nativeError } from '@spraxium/logger';
-import type { Interaction, RepliableInteraction } from 'discord.js';
+import { type Interaction, MessageFlags, type RepliableInteraction } from 'discord.js';
 import type { ModalErrorEmbed } from '../../../components/modal';
 import type { ComponentsConfig, HandlerErrorReply } from '../../lifecycle';
 
@@ -8,10 +8,13 @@ function resolveReply(
   err: unknown,
   interaction: Interaction,
   ephemeral: boolean,
-): { content: string; ephemeral: boolean } | { embeds: Array<ModalErrorEmbed>; ephemeral: boolean } {
+):
+  | { content: string; flags?: MessageFlags.Ephemeral }
+  | { embeds: Array<ModalErrorEmbed>; flags?: MessageFlags.Ephemeral } {
   const value = typeof reply === 'function' ? reply(err, interaction) : (reply ?? '❌ Something went wrong.');
-  if (typeof value === 'string') return { content: value, ephemeral };
-  return { embeds: [value], ephemeral };
+  const flags = ephemeral ? MessageFlags.Ephemeral : undefined;
+  if (typeof value === 'string') return { content: value, flags };
+  return { embeds: [value], flags };
 }
 export async function reportHandlerError(
   err: unknown,

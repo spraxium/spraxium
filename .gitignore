@@ -6,3 +6,5 @@ dist/
 !.env.example
 .spraxium
 local/
+# spacelaxy internal bot
+/apps/updates-bot
