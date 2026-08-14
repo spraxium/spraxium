@@ -6,6 +6,7 @@ Only the latest release receives security patches.
 
 | Version | Supported          |
 | ------- | ------------------ |
+| 0.3.x   | ✅ |
 | 0.2.x   | ✅ |
 | 0.1.x   | ❌ |
 
@@ -78,4 +79,4 @@ We are grateful to the security researchers and community members who responsibl
 
 ---
 
-*This security policy is maintained by [Spacelaxy](https://spacelaxy.com).*
+*This security policy is maintained by [Spacelaxy](https://github.com/spacelaxy).*

@@ -39,7 +39,7 @@
     "execa": "^9.5.0",
     "giget": "^3.2.0",
     "minimatch": "^10.0.1",
-    "shell-quote": "^1.8.4"
+    "shell-quote": "^1.10.0"
   },
   "devDependencies": {
     "@types/node": "^26.1.2",

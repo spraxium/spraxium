@@ -19,7 +19,7 @@
     "@spraxium/logger": "workspace:*",
     "@spraxium/schedule": "workspace:*",
     "discord.js": "^14.27.0",
-    "hono": "^4.12.21",
+    "hono": "^4.13.2",
     "reflect-metadata": "^0.2.2"
   },
   "devDependencies": {
