@@ -1,5 +1,12 @@
 # @spraxium/cli
 
+## 0.3.1
+
+### Patch Changes
+
+- 90871eb: Fix `spraxium dev` startup failures with TypeScript 7 and current Node.js releases.
+- f72fd16: Update vulnerable runtime and transitive dependencies to patched releases.
+
 ## 0.3.0
 
 ### Minor Changes

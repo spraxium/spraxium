@@ -1,5 +1,11 @@
 # @spraxium/http
 
+## 0.2.7
+
+### Patch Changes
+
+- f72fd16: Update vulnerable runtime and transitive dependencies to patched releases.
+
 ## 0.2.6
 
 ### Patch Changes
