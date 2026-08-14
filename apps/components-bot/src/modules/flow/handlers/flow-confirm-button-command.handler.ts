@@ -1,5 +1,5 @@
 import { Ctx } from '@spraxium/common';
-import { ButtonHandler, type ContextService, FlowContext } from '@spraxium/components';
+import { ButtonHandler, ContextService, FlowContext } from '@spraxium/components';
 import type { SpraxiumContext } from '@spraxium/components';
 import type { ButtonInteraction } from 'discord.js';
 import { FlowConfirmButton } from '../components/flow-confirm-button.component';
