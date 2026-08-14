@@ -1,9 +1,9 @@
 import { existsSync } from 'node:fs';
-import { register } from 'node:module';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { ConfigConstant } from '../constants';
 import type { SpraxiumDevConfig } from '../interfaces';
+import { registerTypeScriptLoader } from './typescript-loader.service';
 
 export class ConfigReader {
   private loaderRegistered = false;
@@ -38,7 +38,7 @@ export class ConfigReader {
 
   private ensureLoader(configPath: string): void {
     if (this.loaderRegistered || !configPath.endsWith('.ts')) return;
-    register('@swc-node/register/esm', import.meta.url);
+    registerTypeScriptLoader();
     this.loaderRegistered = true;
   }
 }

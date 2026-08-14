@@ -1,3 +1,3 @@
-import { register } from 'node:module';
+import { registerTypeScriptLoader } from './service/typescript-loader.service';
 
-register('@swc-node/register/esm', import.meta.url);
+registerTypeScriptLoader();

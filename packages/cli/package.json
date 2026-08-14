@@ -20,6 +20,9 @@
     "monorepo"
   ],
   "type": "module",
+  "engines": {
+    "node": ">=20.12.0"
+  },
   "bin": {
     "spraxium": "./dist/index.js"
   },
@@ -31,7 +34,6 @@
   "dependencies": {
     "@inquirer/prompts": "^8.3.2",
     "@spraxium/logger": "workspace:*",
-    "@swc-node/register": "^1.11.1",
     "@swc/core": "^1.15.18",
     "commander": "^13.1.0",
     "execa": "^9.5.0",
@@ -40,10 +42,10 @@
     "shell-quote": "^1.8.4"
   },
   "devDependencies": {
-    "@types/node": "^22.19.15",
+    "@types/node": "^26.1.2",
     "@types/shell-quote": "^1.7.5",
-    "tsdown": "^0.12.0",
-    "typescript": "^5.7.0",
+    "tsdown": "^0.22.14",
+    "typescript": "^7.0.2",
     "vitest": "^4.1.0"
   },
   "files": ["dist"],

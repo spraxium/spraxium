@@ -4,6 +4,8 @@ The Spraxium CLI is the primary development tool for bootstrapping and managing 
 
 Beyond project creation, the CLI provides code generation for modules, services, and listeners, eliminating most of the boilerplate involved in adding new features to an existing project. The `database` command adds a supported database driver and its configuration files to an existing project, while `info` prints a full diagnostic snapshot of your Node.js environment and Spraxium package versions: useful when debugging or filing an issue.
 
+Development mode uses Node.js module hooks with SWC directly. This preserves legacy decorator metadata while avoiding a runtime dependency on the TypeScript compiler API, so projects can use current TypeScript and Node.js releases independently.
+
 ## Installation
 
 ```bash
