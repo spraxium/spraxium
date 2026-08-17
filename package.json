@@ -12,7 +12,7 @@
     "lint": "biome check .",
     "format": "biome format . --write",
     "changeset": "changeset",
-    "version": "changeset version",
+    "version": "changeset version && biome format --write packages apps",
     "release": "pnpm run build && changeset publish --provenance --access public",
     "prepare": "husky"
   },
