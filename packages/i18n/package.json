@@ -1,6 +1,6 @@
 {
   "name": "@spraxium/i18n",
-  "version": "1.0.5",
+  "version": "2.0.0",
   "private": false,
   "description": "Internationalization module with variable interpolation, plural resolution and Discord locale support",
   "keywords": [
@@ -63,7 +63,9 @@
     "typescript": "^5.7.0",
     "vitest": "^4.1.0"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "license": "Apache-2.0",
   "repository": {
     "type": "git",

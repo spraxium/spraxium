@@ -1,5 +1,16 @@
 # @spraxium/env
 
+## 0.3.0
+
+### Minor Changes
+
+- effbe15: Drop Node.js 20 support and add compatibility with the maintained Node.js 22, 24, and 26 release lines. The minimum supported runtime is now Node.js 22.23.2.
+
+### Patch Changes
+
+- Updated dependencies [effbe15]
+  - @spraxium/logger@0.3.0
+
 ## 0.2.4
 
 ### Patch Changes
