@@ -10,7 +10,7 @@
   <img src="https://img.shields.io/badge/typescript-5.7-3178c6?style=flat-square" alt="TypeScript" />
   <img src="https://img.shields.io/badge/discord.js-14-5865f2?style=flat-square" alt="discord.js" />
   <img src="https://img.shields.io/badge/license-Apache_2.0-green?style=flat-square" alt="License" />
-  <img src="https://img.shields.io/badge/node-20+-339933?style=flat-square" alt="Node.js" />
+  <img src="https://img.shields.io/badge/node-22%20%7C%2024%20%7C%2026-339933?style=flat-square" alt="Node.js" />
 </p>
 
 > [!IMPORTANT]
@@ -57,7 +57,7 @@ Spraxium supports Discord sharding through `ShardingManager`. When sharding is e
 
 ## Requirements
 
-- Node.js 20 or newer
+- Node.js 22.23.2+, 24.19.0+, or 26.7.0+ within the respective major release line
 - TypeScript 5.7 or newer
 - discord.js 14
 - `experimentalDecorators` and `emitDecoratorMetadata` enabled in `tsconfig.json`

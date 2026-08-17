@@ -52,15 +52,16 @@
     "@spraxium/common": "workspace:*",
     "@spraxium/core": "workspace:*",
     "@spraxium/logger": "workspace:*",
-    "@types/node": "^22.0.0",
+    "@types/node": "^22.20.1",
     "tsdown": "^0.12.0",
     "typescript": "^5.7.0"
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "license": "Apache-2.0",
   "type": "module",
+  "engines": {
+    "node": ">=22.23.2 <27"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/spraxium/spraxium",

@@ -10,6 +10,9 @@ Only the latest release receives security patches.
 | 0.2.x   | ✅ |
 | 0.1.x   | ❌ |
 
+Supported releases require Node.js 22.23.2+ (Maintenance LTS), 24.19.0+ (LTS), or 26.7.0+ (Current), staying within the respective major release line.
+End-of-life Node.js releases, including the 20, 23, and 25 release lines, do not receive compatibility or security support.
+
 ## Reporting a Vulnerability
 
 **Please do not report security vulnerabilities through public GitHub issues.**

@@ -20,6 +20,9 @@
     "prefix-commands"
   ],
   "type": "module",
+  "engines": {
+    "node": ">=22.23.2 <27"
+  },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -41,15 +44,13 @@
     "discord.js": "^14.27.0"
   },
   "devDependencies": {
-    "@types/node": "^22.13.0",
+    "@types/node": "^22.20.1",
     "discord.js": "^14.27.0",
     "tsdown": "^0.12.0",
     "typescript": "^5.7.0",
     "vitest": "^4.1.0"
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "license": "Apache-2.0",
   "repository": {
     "type": "git",

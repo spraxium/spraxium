@@ -4,6 +4,9 @@
   "private": true,
   "description": "{{description}}",
   "type": "module",
+  "engines": {
+    "node": ">=22.23.2 <27"
+  },
   "scripts": {
     "dev": "spraxium dev",
     "build": "spraxium build",

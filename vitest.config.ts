@@ -11,7 +11,6 @@ export default defineConfig({
       'packages/schedule',
       'packages/components',
       'apps/sandbox',
-      'apps/updates-bot',
     ],
   },
 });

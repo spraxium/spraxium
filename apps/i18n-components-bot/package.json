@@ -3,6 +3,9 @@
   "version": "0.0.10",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": ">=22.23.2 <27"
+  },
   "scripts": {
     "dev": "spraxium dev",
     "build": "spraxium build",
@@ -20,7 +23,7 @@
   },
   "devDependencies": {
     "@spraxium/cli": "workspace:*",
-    "@types/node": "^22.19.15",
+    "@types/node": "^22.20.1",
     "tsx": "^4.19.0",
     "typescript": "^5.7.0"
   }
