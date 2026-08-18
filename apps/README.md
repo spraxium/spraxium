@@ -19,6 +19,7 @@ If the documentation is not enough for a specific use case, start from one of th
 | i18n-bot | Internationalization | Locale files, per-user translation, and locale management commands |
 | schedule-bot | Scheduled tasks | AfterOnline, Timeout, Interval, Cron, and RunOnce usage |
 | signal-bot | Async signals | Webhook-driven events with SignalListener, OnSignal, and Zod schemas |
+| storage-bot | JSON persistence | Documents, collections, Zod validation, path overrides, and persisted data across restarts |
 | webhook-bot | Discord webhooks | Declarative (@WebhookSender + @Send) and imperative (WebhookService) webhook APIs |
 | sandbox | Full integration | Combined use of multiple packages in a broader modular architecture |
 

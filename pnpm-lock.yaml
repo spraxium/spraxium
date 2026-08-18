@@ -591,6 +591,49 @@ importers:
         specifier: ^5.7.0
         version: 5.9.3
 
+  apps/storage-bot:
+    dependencies:
+      '@spraxium/common':
+        specifier: workspace:*
+        version: link:../../packages/common
+      '@spraxium/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@spraxium/env':
+        specifier: workspace:*
+        version: link:../../packages/env
+      '@spraxium/logger':
+        specifier: workspace:*
+        version: link:../../packages/logger
+      '@spraxium/storage-json':
+        specifier: workspace:*
+        version: link:../../packages/storage-json
+      discord.js:
+        specifier: ^14.27.0
+        version: 14.27.0
+      reflect-metadata:
+        specifier: ^0.2.2
+        version: 0.2.2
+      zod:
+        specifier: ^3.24.0
+        version: 3.25.76
+    devDependencies:
+      '@spraxium/cli':
+        specifier: workspace:*
+        version: link:../../packages/cli
+      '@types/node':
+        specifier: ^22.20.1
+        version: 22.20.1
+      tsx:
+        specifier: ^4.19.0
+        version: 4.21.0
+      typescript:
+        specifier: ^5.7.0
+        version: 5.9.3
+      vitest:
+        specifier: ^4.1.0
+        version: 4.1.8(@types/node@22.20.1)(vite@6.4.3(@types/node@22.20.1)(jiti@2.6.1)(tsx@4.21.0))
+
   apps/webhook-bot:
     dependencies:
       '@spraxium/common':

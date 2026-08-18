@@ -12,6 +12,7 @@ export default defineConfig({
       'packages/storage-json',
       'packages/components',
       'apps/sandbox',
+      'apps/storage-bot',
     ],
   },
 });
