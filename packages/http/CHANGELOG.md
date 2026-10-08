@@ -1,5 +1,11 @@
 # @spraxium/http
 
+## 1.0.1
+
+### Patch Changes
+
+- 5d80203: Require patched Hono and shell-quote releases to address upstream security vulnerabilities.
+
 ## 1.0.0
 
 ### Minor Changes

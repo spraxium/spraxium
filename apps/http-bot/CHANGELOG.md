@@ -1,5 +1,12 @@
 # @spraxium/http-bot
 
+## 0.0.14
+
+### Patch Changes
+
+- Updated dependencies [5d80203]
+  - @spraxium/http@1.0.1
+
 ## 0.0.13
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@spraxium/http",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": false,
   "description": "Decorator-based REST API layer over Hono exposing bot state through a secured HTTP interface",
   "keywords": [
