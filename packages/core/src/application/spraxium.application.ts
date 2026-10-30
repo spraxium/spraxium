@@ -8,6 +8,7 @@ import { IntentPreset, resolveIntents } from '../client/types';
 import { ConfigLoader, ConfigStore } from '../config';
 import { GuardRegistry } from '../guards';
 import { spraxiumFatal } from '../utils';
+import { SpraxiumStartupError, type SpraxiumStartupErrorCode } from './errors';
 import type { ApplicationState, SpraxiumOptions } from './interfaces';
 import { ProcessLock } from './lock';
 import { ShutdownHandler } from './shutdown.handler';
@@ -117,8 +118,8 @@ export class SpraxiumApplication {
 
   public async listen(): Promise<void> {
     if (this.booted) {
-      spraxiumFatal(
-        'SpraxiumApplication',
+      this.failStartup(
+        'ALREADY_LISTENING',
         'listen() called more than once',
         [
           'The application has already been bootstrapped.',
@@ -130,21 +131,45 @@ export class SpraxiumApplication {
     this.booted = true;
 
     await ProcessLock.acquire();
-    UpgradeChecker.check();
+    try {
+      UpgradeChecker.check();
 
-    await this.loadConfig();
-    const token = this.resolveToken();
+      await this.loadConfig();
+      const token = this.resolveToken();
 
-    if (await this.trySpawnShards(token)) return;
+      if (await this.trySpawnShards(token)) return;
 
-    const client = this.buildClient();
-    this.loadModules(client);
-    await this.runBootHooks();
-    await this.wireClient(client);
+      const client = this.buildClient();
+      this.loadModules(client);
+      await this.runBootHooks();
+      await this.wireClient(client);
 
-    ShutdownHandler.register(client, this.state.moduleLoader);
+      ShutdownHandler.register(client, this.state.moduleLoader);
 
-    await this.loginAndAwaitReady(client, token);
+      await this.loginAndAwaitReady(client, token);
+    } catch (err) {
+      if (!this.exitOnStartupFailure || err instanceof SpraxiumStartupError) ProcessLock.release();
+      throw err;
+    }
+  }
+
+  private get exitOnStartupFailure(): boolean {
+    return this.options.exitOnStartupFailure !== false;
+  }
+
+  /**
+   * Reports a startup failure: prints the diagnostic and exits (default), or
+   * throws a typed `SpraxiumStartupError` when `exitOnStartupFailure` is false.
+   */
+  private failStartup(
+    code: SpraxiumStartupErrorCode,
+    title: string,
+    body: Array<string>,
+    fix: Array<string>,
+    cause?: unknown,
+  ): never {
+    if (this.exitOnStartupFailure) spraxiumFatal('SpraxiumApplication', title, body, fix);
+    throw new SpraxiumStartupError(code, `[SpraxiumApplication] ${title}: ${body.join(' ')}`, { cause });
   }
 
   private async loadConfig(): Promise<void> {
@@ -158,8 +183,8 @@ export class SpraxiumApplication {
     const token = this.state.token ?? process.env.DISCORD_TOKEN;
 
     if (!token) {
-      spraxiumFatal(
-        'SpraxiumApplication',
+      this.failStartup(
+        'NO_TOKEN',
         'no Discord token found',
         [
           'A bot token is required to authenticate with the Discord API.',
@@ -272,19 +297,31 @@ export class SpraxiumApplication {
 
   private static readonly READY_TIMEOUT_MS = 30_000;
 
-  private waitForReady(client: Client): Promise<void> {
-    return new Promise((resolve, reject) => {
-      const timeout = setTimeout(() => {
+  private waitForReady(client: Client): { ready: Promise<void>; cancel: () => void } {
+    const timeoutMs = this.options.readyTimeoutMs ?? SpraxiumApplication.READY_TIMEOUT_MS;
+    let timeout: ReturnType<typeof setTimeout> | undefined;
+    let onReady: ((readyClient: Client<true>) => Promise<void>) | undefined;
+
+    const cancel = (): void => {
+      if (timeout !== undefined) clearTimeout(timeout);
+      timeout = undefined;
+      if (onReady) client.off('clientReady', onReady);
+    };
+
+    const ready = new Promise<void>((resolve, reject) => {
+      timeout = setTimeout(() => {
+        cancel();
         client.destroy();
         reject(
-          new Error(
-            `Client did not receive READY within ${SpraxiumApplication.READY_TIMEOUT_MS / 1_000}s. Check your intents configuration and network connectivity.`,
+          new SpraxiumStartupError(
+            'READY_TIMEOUT',
+            `Client did not receive READY within ${timeoutMs / 1_000}s. Check your intents configuration and network connectivity.`,
           ),
         );
-      }, SpraxiumApplication.READY_TIMEOUT_MS);
+      }, timeoutMs);
 
-      client.once('clientReady', async (readyClient) => {
-        clearTimeout(timeout);
+      onReady = async (readyClient) => {
+        cancel();
         PresenceManager.initialize(readyClient, this.state.presence);
         await this.state.moduleLoader?.runReadyHooks(readyClient);
 
@@ -317,20 +354,24 @@ export class SpraxiumApplication {
         }
 
         resolve();
-      });
+      };
+      client.once('clientReady', onReady);
     });
+
+    return { ready, cancel };
   }
 
   private async loginAndAwaitReady(client: Client, token: string): Promise<void> {
-    const readyPromise = this.waitForReady(client);
+    const { ready, cancel } = this.waitForReady(client);
 
     try {
       await client.login(token);
     } catch (err: unknown) {
+      cancel();
       const message = err instanceof Error ? err.message : String(err);
       client.destroy();
-      spraxiumFatal(
-        'SpraxiumApplication',
+      this.failStartup(
+        'LOGIN_FAILED',
         'failed to connect to Discord',
         [`discord.js rejected the login attempt: ${message}`],
         [
@@ -339,9 +380,10 @@ export class SpraxiumApplication {
           'Discord Developer Portal → Your App → Bot → Privileged Gateway Intents.',
           'Get a fresh token at: discord.com/developers/applications',
         ],
+        err,
       );
     }
 
-    await readyPromise;
+    await ready;
   }
 }
