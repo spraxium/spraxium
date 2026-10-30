@@ -23,6 +23,7 @@ export class SpraxiumApplication {
   ) {
     this.state = {
       token: options.token,
+      intents: options.intents,
       sharding: options.sharding,
       globalProviders: new Map(),
     };
