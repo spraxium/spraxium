@@ -10,17 +10,20 @@ export class CommandLogger {
   /**
    * Bind interaction logging to a discord.js Client.
    * The client is typed as `unknown` to avoid a hard dependency on discord.js.
+   *
+   * Returns a function that removes the listener again.
    */
-  static bind(client: unknown): void {
+  static bind(client: unknown): () => void {
     if (!CommandLogger.logger) {
       CommandLogger.logger = new Logger('CommandLogger');
     }
     const log = CommandLogger.logger;
     const c = client as {
       on(event: string, cb: (interaction: unknown) => void): void;
+      off?(event: string, cb: (interaction: unknown) => void): void;
     };
 
-    c.on('interactionCreate', (interaction) => {
+    const listener = (interaction: unknown): void => {
       const i = interaction as {
         isChatInputCommand(): boolean;
         commandName: string;
@@ -47,6 +50,9 @@ export class CommandLogger {
         guildId,
         channel,
       });
-    });
+    };
+
+    c.on('interactionCreate', listener);
+    return () => c.off?.('interactionCreate', listener);
   }
 }
