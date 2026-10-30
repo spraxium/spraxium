@@ -10,6 +10,7 @@ import { ReadonlyContainer } from '@spraxium/common';
 import { logger } from '@spraxium/logger';
 import { Client } from 'discord.js';
 import { ContextMenuDispatcher } from '../context-menu';
+import { GuardExecutor } from '../guards';
 import { ListenerDispatcher } from '../listeners';
 import { PrefixDispatcher } from '../prefix';
 import { SlashDispatcher } from '../slash';
@@ -63,12 +64,14 @@ export class ModuleLoader {
     for (const provider of sortedProviders) {
       const instance = this.instantiate(provider, container);
       container.set(provider, instance);
+      GuardExecutor.bindContainer(instance, container);
       this.registerLifecycle(instance);
     }
 
     for (const listenerCtor of metadata.listeners ?? []) {
       const instance = this.instantiate(listenerCtor, container);
       container.set(listenerCtor, instance);
+      GuardExecutor.bindContainer(instance, container);
       this.listenerDispatcher.registerListener(listenerCtor, instance);
     }
 
@@ -81,6 +84,7 @@ export class ModuleLoader {
     for (const handlerCtor of metadata.handlers ?? []) {
       const instance = this.instantiate(handlerCtor, container);
       container.set(handlerCtor, instance);
+      GuardExecutor.bindContainer(instance, container);
       this.prefixDispatcher.registerHandler(handlerCtor, instance);
       this.slashDispatcher.registerHandler(handlerCtor, instance);
       this.slashDispatcher.registerAutocompleteHandler(handlerCtor, instance);

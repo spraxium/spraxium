@@ -87,7 +87,10 @@ export class SpraxiumApplication {
    *   app.useGlobalGuards(GuildOnly);
    *   app.useGlobalGuards(OwnerOnly, { ownerIds: ['123456789012345678'] });
    */
-  public useGlobalGuards(guardClass: new () => SpraxiumGuard, options: Record<string, unknown> = {}): this {
+  public useGlobalGuards(
+    guardClass: new (...args: Array<never>) => SpraxiumGuard,
+    options: Record<string, unknown> = {},
+  ): this {
     GuardRegistry.register(guardClass, options);
     return this;
   }

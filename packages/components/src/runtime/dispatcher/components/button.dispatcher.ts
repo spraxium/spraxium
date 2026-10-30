@@ -193,6 +193,7 @@ export class ButtonDispatcher {
         resolved.handlerCtor,
         'handle',
         new ComponentExecutionContext(button, resolved.customId),
+        resolved.handlerInstance,
       );
       if (!guardPassed) return;
 
@@ -237,6 +238,7 @@ export class ButtonDispatcher {
         resolved.handlerCtor,
         'handle',
         new ComponentExecutionContext(button, resolved.baseId),
+        resolved.handlerInstance,
       );
       if (!guardPassed) return;
 

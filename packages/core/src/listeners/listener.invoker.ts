@@ -48,6 +48,7 @@ export class ListenerInvoker {
         ) => unknown,
         handler.method,
         ctx,
+        handler.instance,
       );
       if (!passed) {
         await ExceptionHandler.handle(new GuardDeniedException(), ctx, ConfigStore.getRaw().exceptions);

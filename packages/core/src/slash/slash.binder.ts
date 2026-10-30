@@ -67,6 +67,7 @@ export class SlashBinder {
         ) => unknown,
         'handle',
         ctx,
+        autocomplete.instance,
       );
       if (!passed) {
         await ExceptionHandler.handle(new GuardDeniedException(), ctx, ConfigStore.getRaw().exceptions);

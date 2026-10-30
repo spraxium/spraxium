@@ -28,7 +28,7 @@ export function UseGuards(...inputs: Array<GuardInput>): ClassDecorator & Method
       const [guard, options = {}] = input;
       return { guard, options };
     }
-    return { guard: input as new () => SpraxiumGuard, options: {} };
+    return { guard: input as new (...args: Array<never>) => SpraxiumGuard, options: {} };
   });
 
   return (target: object, propertyKey?: string | symbol): void => {

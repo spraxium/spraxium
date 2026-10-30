@@ -42,6 +42,7 @@ export class ContextMenuInvoker {
         ) => unknown,
         'handle',
         ctx,
+        handler.instance,
       );
       if (!passed) {
         await ExceptionHandler.handle(new GuardDeniedException(), ctx, ConfigStore.getRaw().exceptions);
