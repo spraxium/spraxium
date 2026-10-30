@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import type { ReadonlyContainer } from '@spraxium/common';
 import type { Context, Handler, Hono, Next } from 'hono';
-import { HTTP_METADATA_KEYS } from '../constants';
+import { HTTP_MESSAGES, HTTP_METADATA_KEYS } from '../constants';
 import { GuardExecutor } from '../guards';
 import type { HttpGuard, HttpMiddleware, RegisteredController } from '../interfaces';
 import type { Constructor } from '../types';
@@ -33,8 +33,14 @@ export class RouteBuilder {
         const allMiddlewareClasses = [...ctrl.classMiddlewares, ...methodMiddlewareClasses];
 
         const middlewareHandlers: Array<Handler> = allMiddlewareClasses
-          .map((cls) => middlewareProviders.get(cls))
-          .filter((mw): mw is HttpMiddleware => mw !== undefined)
+          .map((cls) =>
+            RouteBuilder.resolveMiddleware(cls, middlewareProviders, deps, fallback, {
+              controller: (ctrl.instance as object).constructor.name,
+              handlerName: route.handlerName,
+              method: route.method,
+              path: fullPath,
+            }),
+          )
           .map((mw) => async (ctx: Context, next: Next): Promise<void> => {
             await mw.handle(ctx, next);
           });
@@ -81,5 +87,35 @@ export class RouteBuilder {
         app.on([route.method], [fullPath], ...guardHandlers, ...middlewareHandlers, routeHandler);
       }
     }
+  }
+
+  /**
+   * Resolves a middleware class declared via `@HttpUseMiddleware()`.
+   *
+   * Lookup order: `middlewareProviders`, then instances already resolved for the
+   * HTTP module, then the core container. A declared middleware that cannot be
+   * resolved fails startup instead of being silently skipped, because a missing
+   * authentication or validation middleware would leave the route unprotected.
+   */
+  private static resolveMiddleware(
+    cls: Constructor,
+    middlewareProviders: Map<Constructor, HttpMiddleware>,
+    deps: Map<unknown, unknown>,
+    fallback: ReadonlyContainer | undefined,
+    site: { controller: string; handlerName: string; method: string; path: string },
+  ): HttpMiddleware {
+    const candidate = middlewareProviders.get(cls) ?? deps.get(cls) ?? fallback?.get(cls);
+    if (candidate && typeof (candidate as Partial<HttpMiddleware>).handle === 'function') {
+      return candidate as HttpMiddleware;
+    }
+
+    throw new Error(
+      HTTP_MESSAGES.unresolvedMiddleware(
+        cls?.name || String(cls),
+        site.controller,
+        site.handlerName,
+        `${site.method} ${site.path}`,
+      ),
+    );
   }
 }

@@ -7,4 +7,6 @@ export const HTTP_MESSAGES = {
   started: (host: string, port: number) => `HTTP server listening on ${host}:${port}`,
   stopped: 'HTTP server stopped.',
   unhandledError: (msg: string) => `Unhandled error: ${msg}`,
+  unresolvedMiddleware: (middleware: string, controller: string, handler: string, route: string) =>
+    `[HttpServer] Middleware "${middleware}" declared on ${controller}.${handler} (${route}) is not registered. Add an instance to @HttpClientModule({ middlewareProviders }) or register it as a provider.`,
 } as const;
