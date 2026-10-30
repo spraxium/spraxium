@@ -3,6 +3,7 @@ import { defineConfig } from 'vitest/config';
 export default defineConfig({
   test: {
     projects: [
+      'packages/http',
       'packages/logger',
       'packages/signal',
       'packages/signal-client',

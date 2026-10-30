@@ -7,4 +7,6 @@ export const HTTP_MESSAGES = {
   started: (host: string, port: number) => `HTTP server listening on ${host}:${port}`,
   stopped: 'HTTP server stopped.',
   unhandledError: (msg: string) => `Unhandled error: ${msg}`,
+  unresolvedDependency: (target: string, dependency: string, index: number) =>
+    `[HttpServer] Cannot resolve "${dependency}" at constructor parameter index ${index} of ${target}. List it in @HttpClientModule({ services }), register it as an application provider, or mark the parameter @Optional().`,
 } as const;

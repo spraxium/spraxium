@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { METADATA_KEYS } from '@spraxium/common';
 import type { ReadonlyContainer } from '@spraxium/common';
-import { HTTP_METADATA_KEYS } from '../constants';
+import { HTTP_MESSAGES, HTTP_METADATA_KEYS } from '../constants';
 import type { RegisteredController } from '../interfaces';
 import type { AnyConstructor, Constructor, RouteDefinition } from '../types';
 
@@ -14,8 +14,8 @@ export class RouteRegistry {
     const sorted = this.sortByDependency(serviceCls, deps, fallback);
 
     for (const cls of sorted) {
-      const instance = this.instantiate(cls as AnyConstructor, deps, fallback);
-      deps.set(cls, instance);
+      if (deps.has(cls)) continue;
+      deps.set(cls, this.resolveOrInstantiate(cls as AnyConstructor, deps, fallback));
     }
   }
 
@@ -24,7 +24,23 @@ export class RouteRegistry {
     deps: Map<unknown, unknown>,
     fallback?: ReadonlyContainer,
   ): Array<object> {
-    return guardClasses.map((cls) => this.instantiate(cls as AnyConstructor, deps, fallback));
+    return guardClasses.map((cls) => this.resolveOrInstantiate(cls as AnyConstructor, deps, fallback));
+  }
+
+  /**
+   * Returns the instance already owned by the HTTP dependency map or the core
+   * container, constructing a new one only when neither has it. This keeps a
+   * class listed both as an application provider and as an HTTP service/guard
+   * a single instance with a single lifecycle owner.
+   */
+  private resolveOrInstantiate(
+    ctor: AnyConstructor,
+    deps: Map<unknown, unknown>,
+    fallback?: ReadonlyContainer,
+  ): object {
+    const existing = deps.get(ctor) ?? fallback?.get(ctor);
+    if (existing !== undefined) return existing as object;
+    return this.instantiate(ctor, deps, fallback);
   }
 
   resolveAll(
@@ -118,19 +134,20 @@ export class RouteRegistry {
     const injectMap = new Map<number, unknown>(injectOnProto);
     for (const [index, token] of injectOnCtor) injectMap.set(index, token);
 
+    const optionalSet: Set<number> = Reflect.getOwnMetadata(METADATA_KEYS.OPTIONAL, ctor) ?? new Set();
     const paramTypes: Array<Constructor> | undefined = Reflect.getMetadata('design:paramtypes', ctor);
     const args: Array<unknown> = new Array(paramCount).fill(undefined);
 
-    for (const [index, token] of injectMap) {
-      args[index] = deps.get(token) ?? fallback?.get(token);
-    }
+    for (let i = 0; i < paramCount; i++) {
+      const token = injectMap.has(i) ? injectMap.get(i) : paramTypes?.[i];
+      if (token === undefined) continue;
 
-    if (paramTypes) {
-      for (let i = 0; i < paramCount; i++) {
-        if (args[i] !== undefined) continue;
-        const type = paramTypes[i];
-        if (type) args[i] = deps.get(type) ?? fallback?.get(type);
+      const resolved = deps.get(token) ?? fallback?.get(token);
+      if (resolved === undefined && !optionalSet.has(i)) {
+        const name = typeof token === 'function' ? (token as { name: string }).name : String(token);
+        throw new Error(HTTP_MESSAGES.unresolvedDependency(ctor.name, name, i));
       }
+      args[i] = resolved;
     }
 
     return new ctor(...args);
