@@ -72,12 +72,26 @@ function encodeInlinePart(raw: string): string {
   return encodeURIComponent(raw).replace(/~/g, '%7E');
 }
 
+/**
+ * Coerces a decoded inline value back to a scalar.
+ *
+ * A numeric-looking string only becomes a number when the conversion is
+ * lossless: it must round-trip exactly (`String(Number(raw)) === raw`) and,
+ * for integers, stay within `Number.MAX_SAFE_INTEGER`. Discord snowflakes such
+ * as `"1541331179284987915"` exceed the safe integer range and would otherwise
+ * be silently rounded, so they stay strings, as do forms like `"007"` or `"1e3"`.
+ */
 function coerceInlineValue(raw: string): InlineParamValue {
   if (raw === 'true') return true;
   if (raw === 'false') return false;
 
   const numeric = Number(raw);
-  if (raw.trim() !== '' && Number.isFinite(numeric)) return numeric;
+  const lossless =
+    raw.trim() !== '' &&
+    Number.isFinite(numeric) &&
+    String(numeric) === raw &&
+    (!Number.isInteger(numeric) || Number.isSafeInteger(numeric));
+  if (lossless) return numeric;
 
   return raw;
 }
