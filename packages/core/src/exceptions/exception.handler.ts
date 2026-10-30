@@ -55,7 +55,8 @@ export class ExceptionHandler {
   /**
    * Normalizes any thrown value into a SpraxiumException.
    * Native SpraxiumExceptions pass through unchanged.
-   * Everything else is wrapped in an InternalException.
+   * Everything else is wrapped in an InternalException whose standard `cause`
+   * is the original thrown value, so its stack and cause chain are preserved.
    */
   private static normalize(err: unknown, options?: ExceptionOptions): SpraxiumException {
     if (err instanceof SpraxiumException) return err;
@@ -69,7 +70,7 @@ export class ExceptionHandler {
     }
 
     const cause = err instanceof Error ? err.message : String(err);
-    return new InternalException({ cause });
+    return new InternalException({ cause }, { cause: err });
   }
 
   private static logException(exception: SpraxiumException, ctx: ExecutionContext): void {

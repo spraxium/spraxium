@@ -135,4 +135,11 @@ export interface SpraxiumExceptionOptions {
    * including @WithLayout and the global exception config map.
    */
   layout?: ExceptionLayoutClass;
+
+  /**
+   * The original error (or thrown value) that caused this exception.
+   * Exposed as the standard `Error.prototype.cause`, so its stack and own
+   * `cause` chain stay available to layouts, loggers and observers.
+   */
+  cause?: unknown;
 }
