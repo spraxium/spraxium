@@ -58,6 +58,10 @@ import { TaskService } from './task.service';
 export class AppModule {}
 ```
 
+### Lock guarantees
+
+The Redis lock is mutual exclusion, not per-occurrence deduplication. Each acquisition gets its own ownership token and only that owner can release it, so an invocation that outlives its TTL cannot release a lease acquired after it expired. The lock is released as soon as the job finishes, so a replica whose timer fires later can still run the same occurrence. Jobs whose side effects must happen exactly once should remain idempotent. Lock acquisition or release failures are logged and never surface as unhandled rejections.
+
 ## Links
 
 [npm](https://www.npmjs.com/package/@spraxium/schedule) · [GitHub](https://github.com/spraxium/spraxium) · [node-cron](https://github.com/node-cron/node-cron) · [Documentation](https://spraxium.com)

@@ -10,6 +10,10 @@ import { defineSchedule } from '../schedule.config';
 import { getNextRunDate } from '../utils/cron.parser';
 import { JobScanner } from './job.scanner';
 
+function describeError(err: unknown): string {
+  return err instanceof Error ? (err.stack ?? err.message) : String(err);
+}
+
 @Injectable()
 export class ScheduleRegistry {
   private readonly log = logger.child('ScheduleRegistry');
@@ -207,12 +211,19 @@ export class ScheduleRegistry {
         : job.type === 'run-once'
           ? Math.max(30_000, (job.runAt?.getTime() ?? Date.now()) - Date.now())
           : (job.intervalMs ?? this.lockTtlMs);
-    const acquired = await this.driver.acquireLock(job.name, ttlMs);
+    let acquired: boolean | string;
+    try {
+      acquired = await this.driver.acquireLock(job.name, ttlMs);
+    } catch (err) {
+      this.log.error(MESSAGES.JOB_LOCK_ACQUIRE_FAILED(job.name, describeError(err)));
+      return;
+    }
 
     if (!acquired) {
       this.log.debug(MESSAGES.JOB_LOCK_SKIPPED(job.name));
       return;
     }
+    const token = typeof acquired === 'string' ? acquired : undefined;
 
     job.lastRun = new Date();
     job.runCount++;
@@ -220,10 +231,13 @@ export class ScheduleRegistry {
     try {
       await job.fn();
     } catch (err) {
-      const detail = err instanceof Error ? (err.stack ?? err.message) : String(err);
-      this.log.error(MESSAGES.JOB_ERROR(job.name, job.type, detail));
+      this.log.error(MESSAGES.JOB_ERROR(job.name, job.type, describeError(err)));
     } finally {
-      await this.driver.releaseLock(job.name);
+      try {
+        await this.driver.releaseLock(job.name, token);
+      } catch (err) {
+        this.log.error(MESSAGES.JOB_LOCK_RELEASE_FAILED(job.name, describeError(err)));
+      }
     }
   }
 

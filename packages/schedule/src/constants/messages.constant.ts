@@ -33,6 +33,10 @@ export const MESSAGES = {
   JOB_NOT_FOUND_RUN_NOW: (name: string) => `Cannot runNow: no job named "${name}"`,
 
   JOB_LOCK_SKIPPED: (name: string) => `Job "${name}" skipped \u2014 lock held by another process`,
+  JOB_LOCK_ACQUIRE_FAILED: (name: string, detail: string) =>
+    `Job "${name}" skipped — failed to acquire lock: ${detail}`,
+  JOB_LOCK_RELEASE_FAILED: (name: string, detail: string) =>
+    `Job "${name}" finished but its lock could not be released (it will expire by TTL): ${detail}`,
   JOB_ERROR: (name: string, type: string, detail: string) =>
     `Unhandled error in scheduled job "${name}" (${type}) \u2014 ${detail}`,
 

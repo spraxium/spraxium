@@ -38,20 +38,31 @@ export class RedisScheduleDriver implements ScheduleDriver {
     await (this.client as Record<string, (...args: Array<unknown>) => Promise<unknown>>).connect();
   }
 
-  async acquireLock(jobName: string, ttlMs: number): Promise<boolean> {
+  /**
+   * Acquires the lease with a token unique to this acquisition (not just to this
+   * driver instance), so an invocation that outlived its TTL cannot release a
+   * lease that a later invocation in the same process acquired.
+   */
+  async acquireLock(jobName: string, ttlMs: number): Promise<string | false> {
     if (!this.client) return false;
     const key = `${this.keyPrefix}lock:${jobName}`;
     const ttlSeconds = Math.max(1, Math.ceil(ttlMs / 1000));
+    const token = `${this.instanceId}:${randomUUID()}`;
     const redis = this.client as Record<string, (...args: Array<unknown>) => Promise<unknown>>;
-    const result = await redis.set(key, this.instanceId, 'EX', ttlSeconds, 'NX');
-    return result === 'OK';
+    const result = await redis.set(key, token, 'EX', ttlSeconds, 'NX');
+    return result === 'OK' ? token : false;
   }
 
-  async releaseLock(jobName: string): Promise<void> {
-    if (!this.client) return;
+  /**
+   * Compare-and-delete: only removes the lease if it is still owned by `token`.
+   * Without a token there is no ownership to prove, so the lease is left to
+   * expire through its TTL.
+   */
+  async releaseLock(jobName: string, token?: string): Promise<void> {
+    if (!this.client || !token) return;
     const key = `${this.keyPrefix}lock:${jobName}`;
     const redis = this.client as Record<string, (...args: Array<unknown>) => Promise<unknown>>;
-    await redis.eval(RELEASE_LOCK_SCRIPT, 1, key, this.instanceId);
+    await redis.eval(RELEASE_LOCK_SCRIPT, 1, key, token);
   }
 
   async destroy(): Promise<void> {
