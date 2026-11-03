@@ -1,5 +1,15 @@
 # @spraxium/core
 
+## 0.3.2
+
+### Patch Changes
+
+- 5556777: Honor `intents` passed to `SpraxiumFactory.create()`. They were dropped when the application state was initialized, so the Discord client silently fell back to the Standard preset. `addIntents()` now extends the factory-supplied intents, and `intents()` still replaces them.
+- a2a013f: Preserve the original error when the exception handler wraps a non-Spraxium error in `InternalException`. The original value is now available as the standard `Error.prototype.cause` (with its stack and cause chain) instead of being reduced to its message string. `SpraxiumException` accepts a `cause` option, and `InternalException` accepts `{ cause }` as a second argument. The `{{cause}}` template prop is unchanged.
+- Updated dependencies [d940413]
+  - @spraxium/logger@0.3.2
+  - @spraxium/common@0.3.2
+
 ## 0.3.1
 
 ### Patch Changes

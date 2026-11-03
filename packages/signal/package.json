@@ -1,6 +1,6 @@
 {
   "name": "@spraxium/signal",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "private": false,
   "description": "Async unidirectional event signal system dispatched through Discord webhooks with schema validation",
   "keywords": [

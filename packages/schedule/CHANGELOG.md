@@ -1,5 +1,16 @@
 # @spraxium/schedule
 
+## 1.0.2
+
+### Patch Changes
+
+- Updated dependencies [5556777]
+- Updated dependencies [a2a013f]
+- Updated dependencies [d940413]
+  - @spraxium/core@0.3.2
+  - @spraxium/logger@0.3.2
+  - @spraxium/common@0.3.2
+
 ## 1.0.1
 
 ### Patch Changes

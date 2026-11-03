@@ -1,6 +1,6 @@
 {
   "name": "@spraxium/core",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "private": false,
   "description": "Application factory, dependency injection container, lifecycle hooks and command pipeline for Spraxium bots",
   "keywords": [

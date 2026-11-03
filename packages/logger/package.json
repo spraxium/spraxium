@@ -1,6 +1,6 @@
 {
   "name": "@spraxium/logger",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "private": false,
   "description": "Centralized structured logging system for the Spraxium ecosystem",
   "keywords": ["discord", "discord-bot", "spraxium", "typescript", "logger", "logging", "bot-framework"],
