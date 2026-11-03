@@ -9,6 +9,9 @@ import { SpraxiumException } from '../spraxium.exception';
  * Available props in layout templates:
  * - `{{cause}}` , the raw error message (NOT shown to users by default layout)
  *
+ * Pass the original error as `options.cause` to keep it (with its stack and
+ * cause chain) on the standard `Error.prototype.cause` property.
+ *
  * @example
  * try {
  *   await someRiskyOperation();
@@ -17,12 +20,13 @@ import { SpraxiumException } from '../spraxium.exception';
  * }
  */
 export class InternalException extends SpraxiumException {
-  constructor(props?: { cause?: string } & Record<string, unknown>) {
+  constructor(props?: { cause?: string } & Record<string, unknown>, options?: { cause?: unknown }) {
     super({
       code: 'INTERNAL_ERROR',
       message: 'An unexpected error occurred. Please try again later.',
       props: props ?? {},
       shouldLog: true,
+      cause: options?.cause,
     });
   }
 }

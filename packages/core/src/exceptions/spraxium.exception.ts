@@ -25,7 +25,10 @@ export class SpraxiumException extends Error {
   public readonly layout?: ExceptionLayoutClass;
 
   public constructor(options: SpraxiumExceptionOptions) {
-    super(options.message ?? options.code);
+    super(
+      options.message ?? options.code,
+      options.cause !== undefined ? { cause: options.cause } : undefined,
+    );
     this.name = this.constructor.name;
     this.code = options.code;
     this.props = options.props ?? {};
