@@ -1,5 +1,16 @@
 # @spraxium/signal
 
+## 0.3.3
+
+### Patch Changes
+
+- Updated dependencies [5556777]
+- Updated dependencies [a2a013f]
+- Updated dependencies [d940413]
+  - @spraxium/core@0.3.2
+  - @spraxium/logger@0.3.2
+  - @spraxium/common@0.3.2
+
 ## 0.3.2
 
 ### Patch Changes

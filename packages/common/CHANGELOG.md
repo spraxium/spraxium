@@ -1,5 +1,12 @@
 # @spraxium/common
 
+## 0.3.2
+
+### Patch Changes
+
+- Updated dependencies [d940413]
+  - @spraxium/logger@0.3.2
+
 ## 0.3.1
 
 ### Patch Changes

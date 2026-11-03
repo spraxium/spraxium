@@ -1,6 +1,6 @@
 {
   "name": "@spraxium/common",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "private": false,
   "description": "Shared decorators, interfaces and types used across the Spraxium framework",
   "keywords": [

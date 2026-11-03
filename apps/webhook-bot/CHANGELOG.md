@@ -1,5 +1,18 @@
 # @spraxium/webhook-bot
 
+## 0.0.10
+
+### Patch Changes
+
+- Updated dependencies [5556777]
+- Updated dependencies [a2a013f]
+- Updated dependencies [d940413]
+  - @spraxium/core@0.3.2
+  - @spraxium/logger@0.3.2
+  - @spraxium/webhook@1.0.2
+  - @spraxium/common@0.3.2
+  - @spraxium/env@0.3.2
+
 ## 0.0.9
 
 ### Patch Changes

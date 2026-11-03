@@ -1,5 +1,18 @@
 # @spraxium/schedule-bot
 
+## 0.0.12
+
+### Patch Changes
+
+- Updated dependencies [5556777]
+- Updated dependencies [a2a013f]
+- Updated dependencies [d940413]
+  - @spraxium/core@0.3.2
+  - @spraxium/logger@0.3.2
+  - @spraxium/schedule@1.0.2
+  - @spraxium/common@0.3.2
+  - @spraxium/env@0.3.2
+
 ## 0.0.11
 
 ### Patch Changes
