@@ -3,7 +3,10 @@ import type { GuardEntry, SpraxiumGuard } from '@spraxium/common';
 export class GuardRegistry {
   private static entries: Array<GuardEntry> = [];
 
-  public static register(guardClass: new () => SpraxiumGuard, options: Record<string, unknown> = {}): void {
+  public static register(
+    guardClass: new (...args: Array<never>) => SpraxiumGuard,
+    options: Record<string, unknown> = {},
+  ): void {
     GuardRegistry.entries.push({ guard: guardClass, options });
   }
 

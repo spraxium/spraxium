@@ -100,6 +100,7 @@ export class ModalDispatcher {
         resolved.handlerCtor,
         'handle',
         new ComponentExecutionContext(modal, resolved.baseId),
+        resolved.handlerInstance,
       );
       if (!guardPassed) return;
 

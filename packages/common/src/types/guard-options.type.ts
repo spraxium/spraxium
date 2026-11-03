@@ -8,4 +8,8 @@ export type GuardOptions<T extends SpraxiumGuard> = {
       : K]?: T[K];
 };
 
-export type GuardInput = (new () => SpraxiumGuard) | [new () => SpraxiumGuard, Record<string, unknown>?];
+export type GuardInput =
+  | (new (
+      ...args: Array<never>
+    ) => SpraxiumGuard)
+  | [new (...args: Array<never>) => SpraxiumGuard, Record<string, unknown>?];

@@ -172,6 +172,7 @@ export class SelectDispatcher {
         resolved.handlerCtor,
         'handle',
         new ComponentExecutionContext(select, resolved.customId),
+        resolved.handlerInstance,
       );
       if (!guardPassed) return;
 
@@ -218,6 +219,7 @@ export class SelectDispatcher {
         resolved.handlerCtor,
         'handle',
         new ComponentExecutionContext(select, resolved.baseId),
+        resolved.handlerInstance,
       );
       if (!guardPassed) return;
 
