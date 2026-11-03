@@ -11,7 +11,8 @@ export class Logger {
   private static readonly levelColors = new Map<string, LogColorInput>();
   private static debugEnabled = false;
   private static commandLoggingEnabled = false;
-  private static commandLoggingBound = false;
+  /** Clients that already have a command-logging listener, with their unbind function. */
+  private static commandLoggingBindings = new WeakMap<object, () => void>();
 
   constructor(private readonly context?: string) {}
 
@@ -56,13 +57,27 @@ export class Logger {
         transport.setClient(client);
       }
     }
-    // Bind slash-command logging if the user requested it via configure(). We
-    // guard against double-binding so re-entering setClient() (e.g. tests,
-    // shard re-wiring) does not register duplicate listeners.
-    if (Logger.commandLoggingEnabled && !Logger.commandLoggingBound) {
-      CommandLogger.bind(client);
-      Logger.commandLoggingBound = true;
+    // Bind slash-command logging if the user requested it via configure().
+    // Binding is tracked per client: re-entering setClient() with the same
+    // client (e.g. tests, shard re-wiring) does not register duplicate
+    // listeners, while every distinct client gets its own listener.
+    if (
+      Logger.commandLoggingEnabled &&
+      typeof client === 'object' &&
+      client !== null &&
+      !Logger.commandLoggingBindings.has(client)
+    ) {
+      Logger.commandLoggingBindings.set(client, CommandLogger.bind(client));
     }
+  }
+
+  /** Remove the command-logging listener previously attached to `client` by {@link setClient}. */
+  static detachClient(client: unknown): void {
+    if (typeof client !== 'object' || client === null) return;
+    const unbind = Logger.commandLoggingBindings.get(client);
+    if (!unbind) return;
+    unbind();
+    Logger.commandLoggingBindings.delete(client);
   }
 
   /** Add a transport. If a transport with the same name already exists it is replaced. */
