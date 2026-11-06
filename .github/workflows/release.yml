@@ -53,8 +53,8 @@ jobs:
         with:
           version: pnpm run version
           publish: pnpm run release
-          title: "chore: version packages"
-          commit: "chore: version packages"
+          title: "🚀 release(repo): bump package versions"
+          commit: "🚀 release(repo): bump package versions"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           HUSKY: "0"
