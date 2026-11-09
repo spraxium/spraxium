@@ -111,10 +111,6 @@ export class EnvPrinter {
         return ANSI.red(MESSAGES.REASON_MISSING);
       case 'invalid_value':
         return ANSI.yellow(MESSAGES.REASON_INVALID_VALUE);
-      case 'enum_mismatch':
-        return ANSI.yellow(MESSAGES.REASON_ENUM_MISMATCH);
-      case 'validation_failed':
-        return ANSI.yellow(MESSAGES.REASON_VALIDATION_FAILED);
     }
   }
 }
