@@ -32,6 +32,7 @@ export class RedisContextAdapter implements ContextStorageAdapter {
       this.client = new Redis({
         host: options.host ?? '127.0.0.1',
         port: options.port ?? 6379,
+        username: options.username,
         password: options.password,
         db: options.db ?? 0,
       });

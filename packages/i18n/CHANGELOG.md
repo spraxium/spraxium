@@ -1,5 +1,9 @@
 # @spraxium/i18n
 
+## 0.9.0
+
+Align the package version with the rest of the framework before the stable release.
+
 ## 2.0.2
 
 ### Patch Changes

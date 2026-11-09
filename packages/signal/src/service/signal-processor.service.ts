@@ -1,11 +1,11 @@
-import { Injectable } from '@spraxium/common';
+import { Inject, Injectable } from '@spraxium/common';
 import { logger } from '@spraxium/logger';
 import type { Message } from 'discord.js';
 import { SIGNAL_MESSAGES } from '../constants';
 import type { SignalConfig, SignalEnvelope, SignalHandler } from '../interfaces';
-import type { NonceCache } from '../security';
-import type { SignalRouter } from './signal-router.service';
-import type { SignalValidator } from './signal-validator.service';
+import { NonceCache } from '../security/nonce-cache.service';
+import { SignalRouter } from './signal-router.service';
+import { SignalValidator } from './signal-validator.service';
 
 const CTX = 'SignalProcessor';
 const log = logger.child(CTX);
@@ -13,9 +13,9 @@ const log = logger.child(CTX);
 @Injectable()
 export class SignalProcessor {
   constructor(
-    private readonly validator: SignalValidator,
-    private readonly router: SignalRouter,
-    private readonly nonceCache: NonceCache,
+    @Inject(SignalValidator) private readonly validator: SignalValidator,
+    @Inject(SignalRouter) private readonly router: SignalRouter,
+    @Inject(NonceCache) private readonly nonceCache: NonceCache,
   ) {}
 
   async process(message: Message, config: SignalConfig): Promise<void> {

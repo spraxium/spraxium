@@ -75,7 +75,12 @@ describe('initContextAdapter', () => {
   });
 
   it('initializes redis adapter when type is redis', async () => {
-    const cfg = { type: 'redis', url: 'redis://localhost:6379' } as const;
+    const cfg = {
+      type: 'redis',
+      host: 'redis.internal',
+      username: 'component-cache',
+      password: 'test-only-password',
+    } as const;
     await initContextAdapter(cfg);
 
     expect(redisCtorMock).toHaveBeenCalledWith(cfg);

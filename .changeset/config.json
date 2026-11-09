@@ -2,7 +2,22 @@
   "$schema": "https://unpkg.com/@changesets/config@3.0.0/schema.json",
   "changelog": "@changesets/cli/changelog",
   "commit": false,
-  "fixed": [],
+  "fixed": [
+    [
+      "@spraxium/cli",
+      "@spraxium/common",
+      "@spraxium/components",
+      "@spraxium/core",
+      "@spraxium/env",
+      "@spraxium/http",
+      "@spraxium/i18n",
+      "@spraxium/logger",
+      "@spraxium/schedule",
+      "@spraxium/signal",
+      "@spraxium/signal-client",
+      "@spraxium/webhook"
+    ]
+  ],
   "linked": [],
   "access": "public",
   "baseBranch": "main",

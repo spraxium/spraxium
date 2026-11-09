@@ -6,6 +6,7 @@ export interface FileContextAdapterOptions {
 export interface RedisContextAdapterOptions {
   host?: string;
   port?: number;
+  username?: string;
   password?: string;
   db?: number;
   /**

@@ -1,5 +1,7 @@
 # @spraxium/http
 
+Deprecated. This package will be replaced as part of the framework stabilization. Avoid using it in new projects; migration details will follow before the stable release.
+
 `@spraxium/http` exposes your Spraxium bot's internal state over a secured REST API. It wraps [Hono](https://hono.dev) with a decorator-based controller system where routes are defined with `@HttpController`, `@HttpGet`, `@HttpPost`, and other method decorators, and the module wires everything together at startup. Built-in middleware handles CORS, per-route rate limiting, body size limits, trusted proxy configuration, and a full set of security response headers all configured through a single options object.
 
 The package introduces a `BotBridge` abstraction that lets HTTP handlers read Discord data regardless of whether the bot runs in a single process or across multiple shards. `DirectBotBridge` queries the local `Client` instance directly, while `ShardedBotBridge` fans requests out to the Discord.js shard manager. Built-in serializers for guilds, members, and bans convert Discord.js objects into plain JSON-friendly shapes ready to be returned from any endpoint.

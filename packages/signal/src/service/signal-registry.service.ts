@@ -3,14 +3,14 @@ import { Inject, Injectable } from '@spraxium/common';
 import type { SpraxiumOnBoot, SpraxiumOnShutdown } from '@spraxium/common';
 import { ConfigStore, ModuleLoader } from '@spraxium/core';
 import { logger } from '@spraxium/logger';
-import type { Client, Message } from 'discord.js';
+import { Client, type Message } from 'discord.js';
 import { SIGNAL_MESSAGES, SIGNAL_METADATA_KEYS } from '../constants';
 import type { OnSignalMetadata, SignalConfig, SignalEnvelope } from '../interfaces';
-import type { NonceCache } from '../security';
+import { NonceCache } from '../security/nonce-cache.service';
 import { defineSignal } from '../signal.config';
 import { MethodSignalHandler } from './method-signal-handler';
-import type { SignalProcessor } from './signal-processor.service';
-import type { SignalRouter } from './signal-router.service';
+import { SignalProcessor } from './signal-processor.service';
+import { SignalRouter } from './signal-router.service';
 
 const CTX = 'SignalRegistry';
 const log = logger.child(CTX);
@@ -25,10 +25,10 @@ export class SignalRegistry implements SpraxiumOnBoot, SpraxiumOnShutdown {
   private messageHandler: ((message: Message) => void) | undefined;
 
   constructor(
-    @Inject('Client') private readonly client: Client,
-    private readonly processor: SignalProcessor,
-    private readonly router: SignalRouter,
-    private readonly nonceCache: NonceCache,
+    @Inject(Client) private readonly client: Client,
+    @Inject(SignalProcessor) private readonly processor: SignalProcessor,
+    @Inject(SignalRouter) private readonly router: SignalRouter,
+    @Inject(NonceCache) private readonly nonceCache: NonceCache,
   ) {
     this.scannerFn = this.scan.bind(this);
     ModuleLoader.instanceScanners.add(this.scannerFn);

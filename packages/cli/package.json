@@ -1,6 +1,6 @@
 {
   "name": "@spraxium/cli",
-  "version": "0.4.2",
+  "version": "0.9.0",
   "private": false,
   "description": "Spraxium CLI for project scaffolding, module generation and developer tooling",
   "keywords": [
@@ -38,7 +38,7 @@
     "commander": "^13.1.0",
     "execa": "^9.5.0",
     "giget": "^3.2.0",
-    "minimatch": "^10.0.1",
+    "minimatch": "^11.0.5",
     "shell-quote": "^1.11.0"
   },
   "devDependencies": {

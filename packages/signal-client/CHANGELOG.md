@@ -1,5 +1,9 @@
 # @spraxium/signal-client
 
+## 0.9.0
+
+Align the package version with the rest of the framework before the stable release.
+
 ## 0.3.1
 
 ### Patch Changes

@@ -1,5 +1,9 @@
 # @spraxium/cli
 
+## 0.9.0
+
+Update minimatch to fix globparts amplification denial of service.
+
 ## 0.4.2
 
 ### Patch Changes

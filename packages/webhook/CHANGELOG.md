@@ -1,5 +1,9 @@
 # @spraxium/webhook
 
+## 0.9.0
+
+Align the package version with the rest of the framework before the stable release.
+
 ## 1.0.2
 
 ### Patch Changes

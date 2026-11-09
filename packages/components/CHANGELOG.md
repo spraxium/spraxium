@@ -1,5 +1,9 @@
 # @spraxium/components
 
+## 0.9.0
+
+Support named Redis ACL users in context storage. Keep password-only configuration working.
+
 ## 1.0.2
 
 ### Patch Changes

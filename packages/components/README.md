@@ -53,6 +53,34 @@ import { ConfirmButtonHandler } from './confirm-button.handler';
 export class ActionsModule {}
 ```
 
+## Redis context storage
+
+Install `ioredis` and configure context storage through `defineComponents`. Set `username` when Redis uses a named ACL user, including deployments where the default user is disabled. Omit it for password-only authentication with the default user.
+
+```bash
+pnpm add ioredis
+```
+
+```typescript
+import { defineComponents } from '@spraxium/components';
+
+const components = defineComponents({
+  context: {
+    storage: {
+      type: 'redis',
+      host: process.env.REDIS_HOST ?? '127.0.0.1',
+      port: 6379,
+      username: process.env.REDIS_USERNAME,
+      password: process.env.REDIS_PASSWORD,
+      db: 0,
+      keyPrefix: 'bot:ctx:',
+    },
+  },
+});
+```
+
+Add this configuration to the application's `plugins` array. The ACL user must have access to the configured key namespace and the commands used by the adapter: `GET`, `SET`, `DEL`, `SCAN` and `MGET`.
+
 ## Links
 
 [npm](https://www.npmjs.com/package/@spraxium/components) · [GitHub](https://github.com/spraxium/spraxium) · [Discord Components](https://discord.com/developers/docs/components/overview) · [Documentation](https://spraxium.com)
