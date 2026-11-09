@@ -46,7 +46,7 @@
     "@spraxium/common": "*",
     "@spraxium/core": "*",
     "@spraxium/logger": "*",
-    "discord.js": "^14.27.0"
+    "discord.js": "^14.28.1"
   },
   "devDependencies": {
     "@spraxium/common": "workspace:*",
