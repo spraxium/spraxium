@@ -1,8 +1,8 @@
 import 'reflect-metadata';
 import type { Server } from 'node:http';
 import { serve } from '@hono/node-server';
-// biome-ignore lint/style/useImportType: runtime reference required for DI reflection
-import { Injectable, Optional, ReadonlyContainer } from '@spraxium/common';
+
+import { Inject, Injectable, Optional, ReadonlyContainer } from '@spraxium/common';
 import type { SpraxiumOnBoot, SpraxiumOnShutdown } from '@spraxium/common';
 import { ConfigStore, ParentHookRegistry } from '@spraxium/core';
 import { logger } from '@spraxium/logger';
@@ -52,7 +52,7 @@ export class HttpServer implements SpraxiumOnBoot, SpraxiumOnShutdown {
 
   constructor(
     @Optional() private readonly client?: Client,
-    @Optional() private readonly coreContainer?: ReadonlyContainer,
+    @Inject(ReadonlyContainer) @Optional() private readonly coreContainer?: ReadonlyContainer,
   ) {}
 
   async onBoot(): Promise<void> {

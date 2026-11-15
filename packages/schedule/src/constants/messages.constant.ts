@@ -4,15 +4,11 @@ export const MESSAGES = {
   CRON_REGISTERED: (name: string, expression: string, timezone?: string) =>
     `Registered cron job "${name}" \u2014 ${expression}${timezone ? ` (${timezone})` : ''}`,
 
-  INTERVAL_NEGATIVE_MS: (ms: number) => `@Interval requires a positive millisecond value, got ${ms}`,
   INTERVAL_REGISTERED: (name: string, ms: number) => `Registered interval job "${name}" \u2014 every ${ms}ms`,
 
-  TIMEOUT_NEGATIVE_MS: (ms: number) => `@Timeout requires a non-negative millisecond value, got ${ms}`,
   TIMEOUT_REGISTERED: (name: string, ms: number) =>
     `Registered timeout job "${name}" \u2014 fires in ${ms}ms`,
 
-  AFTER_ONLINE_NEGATIVE_MS: (ms: number) =>
-    `@AfterOnline requires a non-negative millisecond value, got ${ms}`,
   AFTER_ONLINE_REGISTERED: (name: string, ms: number) =>
     `Registered after-online job "${name}" \u2014 fires ${ms}ms after online`,
 
@@ -20,8 +16,6 @@ export const MESSAGES = {
 
   DUPLICATE_JOB_NAME: (name: string) =>
     `Duplicate job name "${name}" \u2014 job names must be unique across the module tree.`,
-  METHOD_NOT_FUNCTION: (method: string, className: string, jobName: string) =>
-    `"${method}" on ${className} is not a function (job "${jobName}")`,
 
   JOB_PAUSED: (name: string) => `Job "${name}" paused`,
   JOB_RESUMED: (name: string) => `Job "${name}" resumed`,

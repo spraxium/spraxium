@@ -1,64 +1,108 @@
 import { randomUUID } from 'node:crypto';
+import { ConfigurationException } from '@spraxium/core';
+import type { RedisScheduleClient } from '../interfaces/redis-schedule-client.interface';
 import type { RedisScheduleDriverOptions } from '../interfaces/redis-schedule-driver-options.interface';
 import type { ScheduleDriver } from '../interfaces/schedule-driver.interface';
+import { ScheduleValidator } from '../validation/schedule.validator';
+import { RedisClientFactory } from './redis-client.factory';
 
 const RELEASE_LOCK_SCRIPT =
   "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end";
+const RENEW_LOCK_SCRIPT =
+  "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('pexpire', KEYS[1], ARGV[2]) else return 0 end";
 
 export class RedisScheduleDriver implements ScheduleDriver {
-  private client: unknown = null;
   private readonly options: RedisScheduleDriverOptions;
-  private readonly keyPrefix: string;
-  private readonly instanceId: string = randomUUID();
+  private readonly tokens = new Map<string, string>();
+  private client?: RedisScheduleClient;
+  private initialization?: Promise<void>;
+  private initialized = false;
+  private destroyed = false;
 
-  constructor(options: RedisScheduleDriverOptions = {}) {
-    this.options = options;
-    this.keyPrefix = options.keyPrefix ?? 'spraxium:schedule:';
+  constructor(
+    options: RedisScheduleDriverOptions = {},
+    private readonly factory = new RedisClientFactory(),
+  ) {
+    if (
+      options.keyPrefix !== undefined &&
+      (typeof options.keyPrefix !== 'string' || !options.keyPrefix.trim())
+    )
+      throw new ConfigurationException({
+        key: 'schedule.redis.keyPrefix',
+        reason: 'Redis keyPrefix must not be empty',
+      });
+    this.options = { ...options };
   }
 
   async init(): Promise<void> {
-    const ioredis = (await import('ioredis' as string)) as Record<string, unknown>;
-    const Redis = (ioredis.default ?? ioredis) as new (
-      opts: unknown,
-    ) => Record<string, (...args: Array<unknown>) => Promise<unknown>>;
-
-    this.client = new Redis({
-      host: this.options.host ?? '127.0.0.1',
-      port: this.options.port ?? 6379,
-      username: this.options.username,
-      password: this.options.password,
-      db: this.options.db ?? 0,
-      tls: this.options.tls ? {} : undefined,
-      connectTimeout: this.options.connectTimeout ?? 10_000,
-      maxRetriesPerRequest: this.options.maxRetriesPerRequest ?? null,
-      family: this.options.family ?? 4,
-      lazyConnect: true,
-    });
-
-    await (this.client as Record<string, (...args: Array<unknown>) => Promise<unknown>>).connect();
+    if (this.initialized) return;
+    if (!this.initialization) {
+      this.destroyed = false;
+      this.initialization = this.connect();
+    }
+    try {
+      await this.initialization;
+    } finally {
+      this.initialization = undefined;
+    }
   }
 
   async acquireLock(jobName: string, ttlMs: number): Promise<boolean> {
-    if (!this.client) return false;
-    const key = `${this.keyPrefix}lock:${jobName}`;
-    const ttlSeconds = Math.max(1, Math.ceil(ttlMs / 1000));
-    const redis = this.client as Record<string, (...args: Array<unknown>) => Promise<unknown>>;
-    const result = await redis.set(key, this.instanceId, 'EX', ttlSeconds, 'NX');
-    return result === 'OK';
+    ScheduleValidator.milliseconds(ttlMs, 1, 'schedule.lockTtlMs');
+    const client = this.client;
+    if (!client || !this.initialized || this.tokens.has(jobName)) return false;
+    const token = randomUUID();
+    this.tokens.set(jobName, token);
+    try {
+      const result = await client.set(this.key(jobName), token, 'PX', ttlMs, 'NX');
+      if (result === 'OK' && this.initialized && client === this.client) return true;
+      if (this.tokens.get(jobName) === token) this.tokens.delete(jobName);
+      return false;
+    } catch (error) {
+      if (this.tokens.get(jobName) === token) this.tokens.delete(jobName);
+      throw error;
+    }
+  }
+
+  async renewLock(jobName: string, ttlMs: number): Promise<boolean> {
+    ScheduleValidator.milliseconds(ttlMs, 1, 'schedule.lockTtlMs');
+    const token = this.tokens.get(jobName);
+    if (!this.initialized || !this.client || !token) return false;
+    return (await this.client.eval(RENEW_LOCK_SCRIPT, 1, this.key(jobName), token, ttlMs)) === 1;
   }
 
   async releaseLock(jobName: string): Promise<void> {
-    if (!this.client) return;
-    const key = `${this.keyPrefix}lock:${jobName}`;
-    const redis = this.client as Record<string, (...args: Array<unknown>) => Promise<unknown>>;
-    await redis.eval(RELEASE_LOCK_SCRIPT, 1, key, this.instanceId);
+    const token = this.tokens.get(jobName);
+    if (!token || !this.client) return;
+    this.tokens.delete(jobName);
+    await this.client.eval(RELEASE_LOCK_SCRIPT, 1, this.key(jobName), token);
   }
 
   async destroy(): Promise<void> {
-    if (this.client) {
-      const redis = this.client as Record<string, (...args: Array<unknown>) => unknown>;
-      redis.disconnect();
-      this.client = null;
+    this.destroyed = true;
+    this.initialized = false;
+    const client = this.client;
+    this.client = undefined;
+    this.tokens.clear();
+    client?.disconnect();
+  }
+
+  private key(jobName: string): string {
+    return `${this.options.keyPrefix ?? 'spraxium:schedule:'}lock:${jobName}`;
+  }
+
+  private async connect(): Promise<void> {
+    const client = await this.factory.create(this.options);
+    try {
+      if (this.destroyed) throw new Error('Redis driver was destroyed during initialization');
+      this.client = client;
+      await client.connect();
+      if (this.destroyed) throw new Error('Redis driver was destroyed during initialization');
+      this.initialized = true;
+    } catch (error) {
+      client.disconnect();
+      if (this.client === client) this.client = undefined;
+      throw error;
     }
   }
 }

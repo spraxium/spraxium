@@ -1,6 +1,6 @@
 # @spraxium/http
 
-Deprecated. This package will be replaced as part of the framework stabilization. Avoid using it in new projects; migration details will follow before the stable release.
+`@spraxium/http` is deprecated. It is retained for existing applications. Do not use it for new integrations.
 
 `@spraxium/http` exposes your Spraxium bot's internal state over a secured REST API. It wraps [Hono](https://hono.dev) with a decorator-based controller system where routes are defined with `@HttpController`, `@HttpGet`, `@HttpPost`, and other method decorators, and the module wires everything together at startup. Built-in middleware handles CORS, per-route rate limiting, body size limits, trusted proxy configuration, and a full set of security response headers all configured through a single options object.
 
@@ -15,7 +15,6 @@ npm install @spraxium/http
 ## Usage
 
 ```typescript
-// status.controller.ts
 import { HttpController, HttpCtx, HttpGet } from '@spraxium/http';
 import type { Context } from 'hono';
 
@@ -29,7 +28,6 @@ export class StatusController {
 ```
 
 ```typescript
-// http.module.ts: decorated with @HttpClientModule, not @Module
 import { HttpClientModule } from '@spraxium/http';
 import { StatusController } from './controllers/status.controller';
 
@@ -40,7 +38,6 @@ export class AppHttpModule {}
 ```
 
 ```typescript
-// app.module.ts
 import { Module } from '@spraxium/common';
 import { HttpModule } from '@spraxium/http';
 
@@ -51,7 +48,6 @@ export class AppModule {}
 ```
 
 ```typescript
-// spraxium.config.ts: HTTP server config lives here, not in the module decorator
 import { defineConfig } from '@spraxium/core';
 import { defineHttp } from '@spraxium/http';
 

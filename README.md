@@ -41,7 +41,7 @@ Runnable examples live in [apps/](./apps/). They are also used to test how the p
 | `@spraxium/core` | Application factory, DI container, lifecycle hooks, and the slash and prefix command pipeline |
 | `@spraxium/common` | Shared decorators (`@Injectable`, `@Module`, `@Global`) and base interfaces used across all packages |
 | `@spraxium/components` | Decorator-based system for Discord UI components: buttons, select menus, modals, embeds, and V2 container layouts |
-| `@spraxium/http` | Deprecated HTTP integration. A replacement is in development; migration details will follow before the stable release. |
+| `@spraxium/http` | Deprecated HTTP integration retained for existing applications. |
 | `@spraxium/i18n` | Internationalization with variable interpolation, plural resolution via `Intl.PluralRules`, and locale fallback |
 | `@spraxium/schedule` | Cron-based job scheduler with an optional Redis driver for distributed and sharded environments |
 | `@spraxium/signal` | Async unidirectional event signals dispatched through Discord webhooks with schema validation |
@@ -53,7 +53,7 @@ Runnable examples live in [apps/](./apps/). They are also used to test how the p
 
 ## Sharding
 
-Spraxium supports Discord sharding through `ShardingManager`. When sharding is enabled, `@spraxium/http` runs the HTTP server in the manager process and communicates with the shards through its bridge layer. API consumers still get one view of the bot, regardless of which shard owns the requested data. This HTTP bridge remains available during the transition to its replacement.
+Spraxium supports Discord sharding through `ShardingManager`. When sharding is enabled, `@spraxium/http` runs the HTTP server in the manager process and communicates with the shards through its bridge layer. API consumers still get one view of the bot, regardless of which shard owns the requested data. The HTTP bridge is deprecated.
 
 ## Requirements
 

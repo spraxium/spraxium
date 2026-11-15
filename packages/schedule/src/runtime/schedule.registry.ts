@@ -1,116 +1,101 @@
 import { Injectable } from '@spraxium/common';
-import { ConfigStore, ModuleLoader } from '@spraxium/core';
+import { ConfigStore, ConfigurationException, ModuleLoader } from '@spraxium/core';
 import { logger } from '@spraxium/logger';
 import { MESSAGES } from '../constants/messages.constant';
 import { MemoryDriver } from '../drivers/memory.driver';
 import type { JobEntry } from '../interfaces/job-entry.interface';
 import type { JobStatus } from '../interfaces/job-status.interface';
 import type { ScheduleDriver } from '../interfaces/schedule-driver.interface';
+import { JobMetadataReader } from '../metadata/job-metadata.reader';
 import { defineSchedule } from '../schedule.config';
-import { getNextRunDate } from '../utils/cron.parser';
+import { CronParser } from '../utils/cron.parser';
+import { ScheduleValidator } from '../validation/schedule.validator';
+import { JobExecutor } from './job.executor';
 import { JobScanner } from './job.scanner';
+import { JobScheduler } from './job.scheduler';
 
 @Injectable()
 export class ScheduleRegistry {
-  private readonly log = logger.child('ScheduleRegistry');
   private readonly jobs = new Map<string, JobEntry>();
-  private readonly pendingAfterOnline: Array<JobEntry> = [];
-  private readonly scanner: JobScanner;
-  private readonly scannerFn: (instance: unknown) => void;
+  private readonly scanner = new JobScanner(this.jobs, new JobMetadataReader());
+  private readonly scannerFn = this.scan.bind(this);
+  private readonly executor = new JobExecutor(this.canExecute.bind(this));
+  private readonly scheduler = new JobScheduler(this.jobs, this.executor);
   private driver: ScheduleDriver = new MemoryDriver();
-  private lockTtlMs = 60_000;
+  private bootPromise?: Promise<void>;
+  private shutdownPromise?: Promise<void>;
+  private booted = false;
+  private online = false;
+  private closing = false;
+  private disabled = false;
   private driverInitialized = false;
+  private scope?: ModuleLoader;
 
   constructor() {
-    this.scanner = new JobScanner(this.jobs, this.pendingAfterOnline);
-    this.scannerFn = this.scanner.scan.bind(this.scanner);
     ModuleLoader.instanceScanners.add(this.scannerFn);
   }
 
   setDriver(driver: ScheduleDriver): void {
+    if (this.bootPromise || this.closing)
+      throw new ConfigurationException({ key: 'schedule.driver', reason: 'Set the driver before boot' });
+    ScheduleValidator.driver(driver);
     this.driver = driver;
   }
 
-  async boot(): Promise<void> {
-    const config = ConfigStore.getPluginConfig(defineSchedule);
-    if (config?.driver) this.driver = config.driver;
-    if (config?.defaultLockTtlMs) this.lockTtlMs = config.defaultLockTtlMs;
-
-    if (config?.disableAll) {
-      this.log.warn(MESSAGES.SCHEDULE_DISABLED);
-      return;
-    }
-
-    await this.driver.init();
-    this.driverInitialized = true;
-
-    if (config?.timezone) {
-      for (const job of this.jobs.values()) {
-        if (job.type === 'cron' && !job.timezone) job.timezone = config.timezone;
-      }
-    }
-
-    for (const job of this.jobs.values()) {
-      if (!job.disabled) this.startJob(job);
-    }
+  boot(): Promise<void> {
+    if (this.closing) return Promise.resolve();
+    this.bootPromise ??= this.initialize().catch(this.resetBoot.bind(this));
+    return this.bootPromise;
   }
 
   async ready(): Promise<void> {
-    for (const job of this.pendingAfterOnline) {
-      if (!job.disabled) this.startAfterOnlineJob(job);
-    }
-    // Clear the pending list after draining - jobs have been handed off to
-    // their own timers and no longer need to be tracked here. Without this
-    // the array would hold references until shutdown(), causing a minor leak.
-    this.pendingAfterOnline.length = 0;
+    if (!this.bootPromise || this.closing) return;
+    await this.bootPromise;
+    if (!this.booted || this.disabled || this.closing || this.online) return;
+    this.online = true;
+    for (const job of this.jobs.values()) if (job.type === 'after-online') this.start(job);
   }
 
-  async shutdown(): Promise<void> {
+  shutdown(): Promise<void> {
+    this.closing = true;
     ModuleLoader.instanceScanners.delete(this.scannerFn);
-
-    for (const job of this.jobs.values()) {
-      this.clearJobTimers(job);
-    }
-
-    this.jobs.clear();
-    this.pendingAfterOnline.length = 0;
-    if (this.driverInitialized) await this.driver.destroy();
+    for (const job of this.jobs.values()) this.scheduler.cancel(job);
+    this.shutdownPromise ??= this.dispose();
+    return this.shutdownPromise;
   }
 
   pause(name: string): void {
     const job = this.jobs.get(name);
     if (!job) {
-      this.log.warn(MESSAGES.JOB_NOT_FOUND_PAUSE(name));
+      logger.warn(MESSAGES.JOB_NOT_FOUND_PAUSE(name));
       return;
     }
-    if (!job.running) return;
-    this.clearJobTimers(job);
-    job.running = false;
-    this.log.info(MESSAGES.JOB_PAUSED(name));
+    job.paused = true;
+    this.scheduler.cancel(job);
+    logger.debug(MESSAGES.JOB_PAUSED(name));
   }
 
   resume(name: string): void {
     const job = this.jobs.get(name);
     if (!job) {
-      this.log.warn(MESSAGES.JOB_NOT_FOUND_RESUME(name));
+      logger.warn(MESSAGES.JOB_NOT_FOUND_RESUME(name));
       return;
     }
-    if (job.running || job.disabled) return;
-    this.startJob(job);
-    this.log.info(MESSAGES.JOB_RESUMED(name));
+    if (job.running || this.closing) return;
+    job.paused = false;
+    this.start(job, false);
+    if (job.running) logger.debug(MESSAGES.JOB_RESUMED(name));
   }
 
   destroy(name: string): void {
     const job = this.jobs.get(name);
     if (!job) {
-      this.log.warn(MESSAGES.JOB_NOT_FOUND_DESTROY(name));
+      logger.warn(MESSAGES.JOB_NOT_FOUND_DESTROY(name));
       return;
     }
-    this.clearJobTimers(job);
+    this.scheduler.cancel(job);
     this.jobs.delete(name);
-    const idx = this.pendingAfterOnline.indexOf(job);
-    if (idx !== -1) this.pendingAfterOnline.splice(idx, 1);
-    this.log.info(MESSAGES.JOB_DESTROYED(name));
+    logger.debug(MESSAGES.JOB_DESTROYED(name));
   }
 
   get(name: string): JobStatus | null {
@@ -119,112 +104,93 @@ export class ScheduleRegistry {
   }
 
   getAll(): Array<JobStatus> {
-    return Array.from(this.jobs.values()).map((j) => this.toStatus(j));
+    const statuses: Array<JobStatus> = [];
+    for (const job of this.jobs.values()) statuses.push(this.toStatus(job));
+    return statuses;
   }
 
   async runNow(name: string): Promise<void> {
     const job = this.jobs.get(name);
     if (!job) {
-      this.log.warn(MESSAGES.JOB_NOT_FOUND_RUN_NOW(name));
+      logger.warn(MESSAGES.JOB_NOT_FOUND_RUN_NOW(name));
       return;
     }
-    await this.executeJob(job);
+    if (!this.canExecute(job) || (job.type === 'after-online' && !this.online)) return;
+    await this.scheduler.runNow(job);
   }
 
-  private startJob(job: JobEntry): void {
-    job.running = true;
+  private canExecute(job: JobEntry): boolean {
+    return this.booted && !this.closing && !this.disabled && !job.disabled && this.jobs.get(job.name) === job;
+  }
 
-    if (job.type === 'cron') {
-      this.scheduleCronNext(job);
-      if (job.runOnInit) void this.executeJob(job);
-      return;
-    }
-
-    if (job.type === 'interval') {
-      const ms = job.intervalMs ?? 0;
-      job.intervalHandle = setInterval(() => void this.executeJob(job), ms);
-      job.nextRun = new Date(Date.now() + ms);
-      if (job.runOnInit) void this.executeJob(job);
-      return;
-    }
-
-    if (job.type === 'timeout') {
-      const ms = job.intervalMs ?? 0;
-      job.timeoutHandle = setTimeout(async () => {
-        await this.executeJob(job);
-        this.jobs.delete(job.name);
-      }, ms);
-      return;
-    }
-
-    if (job.type === 'run-once') {
-      const delay = Math.max(0, (job.runAt?.getTime() ?? Date.now()) - Date.now());
-      job.timeoutHandle = setTimeout(async () => {
-        await this.executeJob(job);
-        this.jobs.delete(job.name);
-      }, delay);
+  private scan(instance: unknown, scope?: ModuleLoader): void {
+    if (this.closing) return;
+    if (this.scope && scope && this.scope !== scope) return;
+    this.scope ??= scope;
+    for (const job of this.scanner.scan(instance)) {
+      if (this.booted) this.start(job);
     }
   }
 
-  private startAfterOnlineJob(job: JobEntry): void {
-    job.running = true;
-    const ms = job.intervalMs ?? 0;
-    job.nextRun = new Date(Date.now() + ms);
-
-    job.timeoutHandle = setTimeout(async () => {
-      await this.executeJob(job);
-      this.jobs.delete(job.name);
-    }, ms);
+  private start(job: JobEntry, runOnInit = true): void {
+    if (!this.canExecute(job) || job.paused || (job.type === 'after-online' && !this.online)) return;
+    this.scheduler.start(job, runOnInit);
   }
 
-  private scheduleCronNext(job: JobEntry): void {
-    const next = getNextRunDate(job.expression ?? '', job.timezone);
-    const delay = Math.max(0, next.getTime() - Date.now());
-    job.nextRun = next;
-
-    job.timeoutHandle = setTimeout(async () => {
-      if (!job.running) return;
-      await this.executeJob(job);
-      if (job.running) this.scheduleCronNext(job);
-    }, delay);
-  }
-
-  private clearJobTimers(job: JobEntry): void {
-    if (job.intervalHandle !== undefined) {
-      clearInterval(job.intervalHandle);
-      job.intervalHandle = undefined;
+  private async initialize(): Promise<void> {
+    const config = ConfigStore.getPluginConfig(defineSchedule) ?? {};
+    ScheduleValidator.config(config);
+    this.driver = config.driver ?? this.driver;
+    ScheduleValidator.driver(this.driver);
+    this.disabled = config.disableAll ?? false;
+    this.scheduler.configure(config.timezone);
+    for (const job of this.jobs.values()) {
+      if (job.type === 'cron') {
+        CronParser.validate(job.expression ?? '', job.timezone ?? config.timezone);
+      }
     }
-    if (job.timeoutHandle !== undefined) {
-      clearTimeout(job.timeoutHandle);
-      job.timeoutHandle = undefined;
-    }
-  }
-
-  private async executeJob(job: JobEntry): Promise<void> {
-    const ttlMs =
-      job.type === 'cron'
-        ? Math.max(30_000, getNextRunDate(job.expression ?? '', job.timezone).getTime() - Date.now())
-        : job.type === 'run-once'
-          ? Math.max(30_000, (job.runAt?.getTime() ?? Date.now()) - Date.now())
-          : (job.intervalMs ?? this.lockTtlMs);
-    const acquired = await this.driver.acquireLock(job.name, ttlMs);
-
-    if (!acquired) {
-      this.log.debug(MESSAGES.JOB_LOCK_SKIPPED(job.name));
+    if (this.disabled) {
+      logger.warn(MESSAGES.SCHEDULE_DISABLED);
       return;
     }
-
-    job.lastRun = new Date();
-    job.runCount++;
-
     try {
-      await job.fn();
-    } catch (err) {
-      const detail = err instanceof Error ? (err.stack ?? err.message) : String(err);
-      this.log.error(MESSAGES.JOB_ERROR(job.name, job.type, detail));
-    } finally {
-      await this.driver.releaseLock(job.name);
+      await this.driver.init();
+      this.driverInitialized = true;
+      if (this.closing) return;
+      this.booted = true;
+      this.executor.start(this.driver, config.defaultLockTtlMs ?? 60_000);
+      for (const job of this.jobs.values()) this.start(job);
+    } catch (error) {
+      this.booted = false;
+      for (const job of this.jobs.values()) this.scheduler.cancel(job);
+      await this.executor.stop();
+      try {
+        await this.driver.destroy();
+      } catch (cleanupError) {
+        logger.error(String(cleanupError));
+      }
+      this.driverInitialized = false;
+      throw error;
     }
+  }
+
+  private async dispose(): Promise<void> {
+    try {
+      if (this.bootPromise) await this.bootPromise.catch(this.ignoreBootFailure.bind(this));
+      await this.executor.stop();
+      if (this.driverInitialized) await this.driver.destroy();
+    } finally {
+      this.driverInitialized = false;
+      this.booted = false;
+      this.jobs.clear();
+    }
+  }
+
+  private ignoreBootFailure(): void {}
+
+  private resetBoot(error: unknown): never {
+    this.bootPromise = undefined;
+    throw error;
   }
 
   private toStatus(job: JobEntry): JobStatus {
@@ -234,9 +200,10 @@ export class ScheduleRegistry {
       expression: job.expression,
       intervalMs: job.intervalMs,
       running: job.running,
-      lastRun: job.lastRun,
-      nextRun: job.nextRun,
+      executing: job.executing ?? false,
       runCount: job.runCount,
+      lastRun: job.lastRun ? new Date(job.lastRun) : undefined,
+      nextRun: job.nextRun ? new Date(job.nextRun) : undefined,
       description: job.description,
     };
   }

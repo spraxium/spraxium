@@ -2,7 +2,7 @@
   "name": "@spraxium/http",
   "version": "0.9.0",
   "private": false,
-  "description": "Deprecated HTTP integration for Spraxium. A replacement is in development.",
+  "description": "Deprecated HTTP integration for Spraxium.",
   "keywords": [
     "discord",
     "discord.js",

@@ -29,13 +29,11 @@ function makeInstance<T extends object>(proto: T): T {
 
 describe('JobScanner', () => {
   let jobs: Map<string, JobEntry>;
-  let pendingAfterOnline: Array<JobEntry>;
   let scanner: JobScanner;
 
   beforeEach(() => {
     jobs = new Map();
-    pendingAfterOnline = [];
-    scanner = new JobScanner(jobs, pendingAfterOnline);
+    scanner = new JobScanner(jobs);
   });
 
   it('ignores null input', () => {
@@ -80,7 +78,7 @@ describe('JobScanner', () => {
       scanner.scan(makeInstance(proto));
 
       expect(jobs.size).toBe(1);
-      expect([...jobs.keys()][0]).toMatch(/^cron-\d+$/);
+      expect([...jobs.keys()][0]).toBe('cron-Object.tick');
     });
 
     it('sets disabled flag from metadata', () => {
@@ -122,7 +120,7 @@ describe('JobScanner', () => {
 
       scanner.scan(makeInstance(proto));
 
-      expect([...jobs.keys()][0]).toMatch(/^interval-\d+$/);
+      expect([...jobs.keys()][0]).toBe('interval-Object.poll');
     });
   });
 
@@ -150,8 +148,6 @@ describe('JobScanner', () => {
 
       const entry = jobs.get('post-boot');
       expect(entry?.type).toBe('after-online');
-      expect(pendingAfterOnline).toHaveLength(1);
-      expect(pendingAfterOnline[0]).toBe(entry);
     });
   });
 
@@ -176,7 +172,7 @@ describe('JobScanner', () => {
       expect(() => scanner.scan(makeInstance(proto2))).toThrow();
     });
 
-    it('scans only the first matching decorator per method', () => {
+    it('rejects multiple schedule decorators on the same method', () => {
       const proto = { work: () => {} };
       Reflect.defineMetadata(
         SCHEDULE_METADATA_KEYS.CRON,
@@ -191,10 +187,8 @@ describe('JobScanner', () => {
         'work',
       );
 
-      scanner.scan(makeInstance(proto));
-
-      expect(jobs.has('job-a')).toBe(true);
-      expect(jobs.has('job-b')).toBe(false);
+      expect(() => scanner.scan(makeInstance(proto))).toThrow('Multiple schedule decorators');
+      expect(jobs.size).toBe(0);
     });
   });
 

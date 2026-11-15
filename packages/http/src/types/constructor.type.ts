@@ -1,3 +1,5 @@
-// biome-ignore lint/suspicious/noExplicitAny: generic constructor must accept any params
-export type Constructor<T = object> = new (...args: any[]) => T;
+import type { Constructor as CommonConstructor } from '@spraxium/common';
+
+export type Constructor<T = object> = CommonConstructor<T>;
+
 export type AnyConstructor = new (...args: Array<unknown>) => object;

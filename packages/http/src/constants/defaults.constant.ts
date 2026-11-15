@@ -4,4 +4,5 @@ export const HTTP_DEFAULTS = {
 } as const;
 
 export const DEFAULT_METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'];
+
 export const DEFAULT_HEADERS = ['Content-Type', 'Authorization', 'X-Api-Key'];

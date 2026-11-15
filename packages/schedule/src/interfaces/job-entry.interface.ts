@@ -14,6 +14,8 @@ export interface JobEntry {
   lastRun?: Date;
   nextRun?: Date;
   runCount: number;
+  executing?: boolean;
+  paused?: boolean;
   intervalHandle?: ReturnType<typeof setInterval>;
   timeoutHandle?: ReturnType<typeof setTimeout>;
   description?: string;
