@@ -14,7 +14,8 @@
     "changeset": "changeset",
     "version": "changeset version && biome format --write packages apps",
     "release": "pnpm run build && changeset publish --provenance --access public",
-    "prepare": "husky"
+    "prepare": "husky",
+    "typecheck": "pnpm -r --filter=\"./packages/*\" exec tsc --noEmit"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.0",

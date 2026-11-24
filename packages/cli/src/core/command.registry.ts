@@ -1,21 +1,6 @@
-import { readFileSync } from 'node:fs';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { Command } from 'commander';
+import pkg from '../../package.json';
 import type { CliCommand } from '../interfaces';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
-function readVersion(): string {
-  try {
-    const pkg = JSON.parse(readFileSync(path.join(__dirname, '..', '..', 'package.json'), 'utf-8')) as {
-      version?: string;
-    };
-    return pkg.version ?? '0.0.1';
-  } catch {
-    return '0.0.1';
-  }
-}
 
 export class CommandRegistry {
   private readonly program: Command;
@@ -24,14 +9,14 @@ export class CommandRegistry {
     this.program = new Command()
       .name('spraxium')
       .description('Spraxium Framework CLI \u2014 build Discord bots at scale')
-      .version(readVersion());
+      .version(pkg.version);
   }
 
   registerAll(): void {
     for (const cmd of this.commands) cmd.register(this.program);
   }
 
-  parse(): void {
-    this.program.parse();
+  async parse(): Promise<void> {
+    await this.program.parseAsync();
   }
 }

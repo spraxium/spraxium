@@ -23,6 +23,7 @@ npm install -g @spraxium/cli
 | `spraxium start` | Start the built project |
 | `spraxium database` | Add a database driver to the project |
 | `spraxium info` | Print environment and project diagnostics |
+| `spraxium use <version>` | Install `next`, `stable`, or an exact Spraxium version across the project |
 
 ## Usage
 
@@ -36,6 +37,18 @@ spraxium generate module moderation
 # Run in development mode with watch and auto-restart
 spraxium dev
 ```
+
+### Switching Spraxium releases
+
+Run `use` from your bot directory. The CLI resolves `next` or `latest` from the Spraxium Core package and checks that the same release is available for every Spraxium dependency declared in the bot. It pins the packages to that exact version and updates the project's lockfile. The npm CLI is used for registry metadata, including scope-specific settings in `.npmrc`.
+
+```bash
+spraxium use next --dry-run
+spraxium use next
+spraxium use stable
+```
+
+Pass an exact version to reproduce a previous build. For example, `spraxium use 1.0.0-dev.42` selects that build if it is published in your registry. Once a preview CLI is available, `pnpm dlx @spraxium/cli@next use next` also works from a bot with an older CLI.
 
 ## Links
 

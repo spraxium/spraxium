@@ -654,6 +654,9 @@ importers:
       minimatch:
         specifier: ^11.0.5
         version: 11.0.5
+      semver:
+        specifier: ^7.8.5
+        version: 7.8.5
       shell-quote:
         specifier: ^1.11.0
         version: 1.12.0
@@ -661,6 +664,9 @@ importers:
       '@types/node':
         specifier: ^22.20.1
         version: 22.20.1
+      '@types/semver':
+        specifier: ^7.8.0
+        version: 7.8.0
       '@types/shell-quote':
         specifier: ^1.7.5
         version: 1.7.5
@@ -750,10 +756,16 @@ importers:
       reflect-metadata:
         specifier: ^0.2.2
         version: 0.2.2
+      semver:
+        specifier: ^7.8.5
+        version: 7.8.5
     devDependencies:
       '@types/node':
         specifier: ^22.20.1
         version: 22.20.1
+      '@types/semver':
+        specifier: ^7.8.0
+        version: 7.8.0
       discord.js:
         specifier: ^14.27.0
         version: 14.27.0
@@ -2245,6 +2257,9 @@ packages:
 
   '@types/pg@8.20.0':
     resolution: {integrity: sha512-bEPFOaMAHTEP1EzpvHTbmwR8UsFyHSKsRisLIHVMXnpNefSbGA1bD6CVy+qKjGSqmZqNqBDV2azOBo8TgkcVow==}
+
+  '@types/semver@7.8.0':
+    resolution: {integrity: sha512-1mAINjtQCXXeLkJ9ehXkwOcBpqtLxiVtKhpUf83DdRNdQKV0iXZpaHYqRr7nj+wvxuJzoAmAwXI+sCNMv1CzLQ==}
 
   '@types/shell-quote@1.7.5':
     resolution: {integrity: sha512-+UE8GAGRPbJVQDdxi16dgadcBfQ+KG2vgZhV1+3A1XmHbmwcdwhCUwIdy+d3pAGrbvgRoVSjeI9vOWyq376Yzw==}
@@ -5188,6 +5203,8 @@ snapshots:
       '@types/node': 22.20.1
       pg-protocol: 1.13.0
       pg-types: 2.2.0
+
+  '@types/semver@7.8.0': {}
 
   '@types/shell-quote@1.7.5': {}
 

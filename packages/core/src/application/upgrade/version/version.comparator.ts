@@ -1,15 +1,28 @@
-export class VersionComparator {
-  static isNewer(latest: string, current: string): boolean {
-    const [lMaj, lMin, lPatch] = VersionComparator.parse(latest);
-    const [cMaj, cMin, cPatch] = VersionComparator.parse(current);
+import semver from 'semver';
+import type { ReleaseTags } from '../interfaces/release-tags.interface';
 
-    if (lMaj !== cMaj) return lMaj > cMaj;
-    if (lMin !== cMin) return lMin > cMin;
-    return lPatch > cPatch;
+export class VersionComparator {
+  static isPreview(version: string): boolean {
+    return semver.prerelease(version) !== null;
   }
 
-  private static parse(version: string): [number, number, number] {
-    const [maj = 0, min = 0, patch = 0] = version.split('.').map(Number);
-    return [maj, min, patch];
+  static selectUpdate(current: string, tags: ReleaseTags): string | null {
+    const installed = semver.parse(current);
+    if (!installed) return null;
+
+    const stable = semver.parse(tags.latest ?? '');
+    if (stable && stable.prerelease.length === 0 && semver.gt(stable, installed)) return stable.version;
+    if (installed.prerelease.length === 0) return null;
+
+    const preview = semver.parse(tags.next ?? '');
+    if (!preview || preview.prerelease.length === 0) return null;
+    if (
+      preview.major !== installed.major ||
+      preview.minor !== installed.minor ||
+      preview.patch !== installed.patch
+    ) {
+      return null;
+    }
+    return semver.gt(preview, installed) ? preview.version : null;
   }
 }

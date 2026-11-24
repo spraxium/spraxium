@@ -1,5 +1,5 @@
 export interface PackageUpgrade {
   name: string;
   current: string;
-  latest: string;
+  available: string;
 }
