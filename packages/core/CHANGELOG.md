@@ -1,5 +1,13 @@
 # @spraxium/core
 
+## 0.9.1
+
+### Patch Changes
+
+- b5a4207: Add `spraxium use` to switch a bot's Spraxium dependencies between the next, stable, or an exact release. Show development builds and channel-aware update notices at startup.
+  - @spraxium/common@0.9.1
+  - @spraxium/logger@0.9.1
+
 ## 0.9.0
 
 Align the package version with the rest of the framework before the stable release.

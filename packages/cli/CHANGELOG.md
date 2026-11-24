@@ -1,5 +1,12 @@
 # @spraxium/cli
 
+## 0.9.1
+
+### Patch Changes
+
+- b5a4207: Add `spraxium use` to switch a bot's Spraxium dependencies between the next, stable, or an exact release. Show development builds and channel-aware update notices at startup.
+  - @spraxium/logger@0.9.1
+
 ## 0.9.0
 
 Update minimatch to fix globparts amplification denial of service.

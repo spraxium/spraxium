@@ -1,5 +1,14 @@
 # @spraxium/http
 
+## 0.9.1
+
+### Patch Changes
+
+- Updated dependencies [b5a4207]
+  - @spraxium/core@0.9.1
+  - @spraxium/common@0.9.1
+  - @spraxium/logger@0.9.1
+
 ## 0.9.0
 
 Mark the HTTP package as deprecated while its replacement is in development. Update the Node server adapter to fix double decoding in static paths.

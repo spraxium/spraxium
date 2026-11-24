@@ -1,5 +1,14 @@
 # @spraxium/schedule
 
+## 0.9.1
+
+### Patch Changes
+
+- Updated dependencies [b5a4207]
+  - @spraxium/core@0.9.1
+  - @spraxium/common@0.9.1
+  - @spraxium/logger@0.9.1
+
 ## 0.9.0
 
 Align the package version with the rest of the framework before the stable release.
