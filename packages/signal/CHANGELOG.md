@@ -1,5 +1,14 @@
 # @spraxium/signal
 
+## 0.9.1
+
+### Patch Changes
+
+- Updated dependencies [b5a4207]
+  - @spraxium/core@0.9.1
+  - @spraxium/common@0.9.1
+  - @spraxium/logger@0.9.1
+
 ## 0.9.0
 
 Fix SignalModule startup by preserving runtime dependency tokens and using the Discord Client class token. Declare reflect-metadata as a direct dependency.

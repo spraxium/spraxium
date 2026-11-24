@@ -1,5 +1,11 @@
 # @spraxium/env
 
+## 0.9.1
+
+### Patch Changes
+
+- @spraxium/logger@0.9.1
+
 ## 0.9.0
 
 Align the package version with the rest of the framework before the stable release.
