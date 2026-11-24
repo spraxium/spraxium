@@ -2,7 +2,7 @@
 
 ## 0.9.0
 
-Mark the HTTP package as deprecated while its replacement is in development. Update the Node server adapter to fix double decoding in static paths.
+Mark the HTTP package and its public APIs as deprecated. Update the Node server adapter to fix double decoding in static paths.
 
 ## 1.0.2
 

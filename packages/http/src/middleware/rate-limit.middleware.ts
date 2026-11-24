@@ -1,11 +1,6 @@
 import type { Context, Next } from 'hono';
 import type { HttpMiddleware, RateLimitConfig, WindowEntry } from '../interfaces';
 
-/**
- * Typing shim for the pieces of `ctx.env` that Hono's Node adapter (and a few
- * others) expose. Kept local to avoid a hard dependency on any particular
- * adapter's type surface.
- */
 interface HonoEnvShim {
   readonly incoming?: { readonly socket?: { readonly remoteAddress?: string } };
   readonly remoteAddr?: { readonly address?: string };
@@ -48,12 +43,6 @@ export class RateLimitMiddleware implements HttpMiddleware {
     clearInterval(this.cleanupInterval);
   }
 
-  /**
-   * Resolves the bucket key for the request. Direct peer IP is used by default;
-   * `X-Forwarded-For` is honoured only when the direct peer is explicitly listed
-   * as a trusted proxy. This prevents an unauthenticated client from bypassing
-   * the limiter by spoofing the header.
-   */
   private resolveClientIp(ctx: Context): string {
     const directIp = RateLimitMiddleware.getDirectIp(ctx);
     const normalizedDirectIp = directIp ? RateLimitMiddleware.normalizeIp(directIp) : undefined;

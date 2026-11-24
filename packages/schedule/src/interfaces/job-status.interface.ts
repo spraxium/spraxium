@@ -9,5 +9,6 @@ export interface JobStatus {
   lastRun?: Date;
   nextRun?: Date;
   runCount: number;
+  executing?: boolean;
   description?: string;
 }

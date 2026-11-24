@@ -2,7 +2,9 @@ import { Inject, Injectable } from '@spraxium/common';
 import { logger } from '@spraxium/logger';
 import type { Message } from 'discord.js';
 import { SIGNAL_MESSAGES } from '../constants';
-import type { SignalConfig, SignalEnvelope, SignalHandler } from '../interfaces';
+import type { SignalConfig } from '../interfaces/signal-config.interface';
+import type { SignalEnvelope } from '../interfaces/signal-envelope.interface';
+import type { SignalHandler } from '../interfaces/signal-handler.interface';
 import { NonceCache } from '../security/nonce-cache.service';
 import { SignalRouter } from './signal-router.service';
 import { SignalValidator } from './signal-validator.service';
@@ -31,7 +33,13 @@ export class SignalProcessor {
 
     const { envelope } = result;
 
-    const isNew = await this.nonceCache.addIfAbsent(envelope.nonce);
+    let isNew: boolean;
+    try {
+      isNew = await this.nonceCache.addIfAbsent(envelope.nonce);
+    } catch {
+      log.error(SIGNAL_MESSAGES.NONCE_RESERVATION_FAILED(message.id));
+      return;
+    }
     if (!isNew) {
       if (dbg) log.warn(SIGNAL_MESSAGES.NONCE_REPLAY(envelope.nonce));
       return;

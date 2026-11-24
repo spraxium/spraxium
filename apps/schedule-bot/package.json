@@ -17,7 +17,7 @@
     "@spraxium/env": "workspace:*",
     "@spraxium/logger": "workspace:*",
     "@spraxium/schedule": "workspace:*",
-    "discord.js": "^14.27.0",
+    "discord.js": "^14.28.1",
     "reflect-metadata": "^0.2.2"
   },
   "devDependencies": {

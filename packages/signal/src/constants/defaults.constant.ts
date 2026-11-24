@@ -1,2 +1,3 @@
 export const MAX_CLOCK_SKEW_MS = 5 * 60 * 1_000;
-export const NONCE_TTL_MS = 60_000;
+const NONCE_CLOCK_MARGIN_MS = 30_000;
+export const NONCE_TTL_MS = 2 * MAX_CLOCK_SKEW_MS + NONCE_CLOCK_MARGIN_MS;

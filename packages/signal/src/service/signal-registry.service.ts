@@ -5,7 +5,9 @@ import { ConfigStore, ModuleLoader } from '@spraxium/core';
 import { logger } from '@spraxium/logger';
 import { Client, type Message } from 'discord.js';
 import { SIGNAL_MESSAGES, SIGNAL_METADATA_KEYS } from '../constants';
-import type { OnSignalMetadata, SignalConfig, SignalEnvelope } from '../interfaces';
+import type { OnSignalMetadata } from '../interfaces/on-signal-metadata.interface';
+import type { SignalConfig } from '../interfaces/signal-config.interface';
+import type { SignalEnvelope } from '../interfaces/signal-envelope.interface';
 import { NonceCache } from '../security/nonce-cache.service';
 import { defineSignal } from '../signal.config';
 import { MethodSignalHandler } from './method-signal-handler';
@@ -23,6 +25,8 @@ const log = logger.child(CTX);
 export class SignalRegistry implements SpraxiumOnBoot, SpraxiumOnShutdown {
   private readonly scannerFn: (instance: unknown) => void;
   private messageHandler: ((message: Message) => void) | undefined;
+  private bootPromise?: Promise<void>;
+  private shutdownPromise?: Promise<void>;
 
   constructor(
     @Inject(Client) private readonly client: Client,
@@ -34,7 +38,18 @@ export class SignalRegistry implements SpraxiumOnBoot, SpraxiumOnShutdown {
     ModuleLoader.instanceScanners.add(this.scannerFn);
   }
 
-  async onBoot(): Promise<void> {
+  onBoot(): Promise<void> {
+    if (this.shutdownPromise) return Promise.resolve();
+    this.bootPromise ??= this.start();
+    return this.bootPromise;
+  }
+
+  onShutdown(): Promise<void> {
+    this.shutdownPromise ??= this.stop();
+    return this.shutdownPromise;
+  }
+
+  private async start(): Promise<void> {
     const config: SignalConfig | undefined = ConfigStore.getPluginConfig(defineSignal);
 
     if (!config) {
@@ -42,19 +57,17 @@ export class SignalRegistry implements SpraxiumOnBoot, SpraxiumOnShutdown {
       return;
     }
 
-    this.nonceCache.configure(config);
+    await this.nonceCache.configure(config);
+    if (this.shutdownPromise) return;
 
-    this.messageHandler = (message: Message): void => {
-      this.processor.process(message, config).catch(() => {});
-    };
-
+    this.messageHandler = this.handleMessage.bind(this, config);
     this.client.on('messageCreate', this.messageHandler);
 
     const channels = Array.isArray(config.channelId) ? config.channelId.join(', ') : config.channelId;
     log.info(SIGNAL_MESSAGES.LISTENING(channels));
   }
 
-  async onShutdown(): Promise<void> {
+  private async stop(): Promise<void> {
     ModuleLoader.instanceScanners.delete(this.scannerFn);
 
     if (this.messageHandler) {
@@ -62,7 +75,16 @@ export class SignalRegistry implements SpraxiumOnBoot, SpraxiumOnShutdown {
       this.messageHandler = undefined;
     }
 
+    if (this.bootPromise) await Promise.allSettled([this.bootPromise]);
     await this.nonceCache.destroy();
+  }
+
+  private handleMessage(config: SignalConfig, message: Message): void {
+    void this.processor.process(message, config).catch(this.reportProcessingError);
+  }
+
+  private reportProcessingError(): void {
+    log.error(SIGNAL_MESSAGES.PROCESSING_FAILED);
   }
 
   private scan(instance: unknown): void {
