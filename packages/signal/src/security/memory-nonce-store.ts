@@ -16,8 +16,7 @@ export class MemoryNonceStore implements NonceStore {
   }
 
   async add(nonce: string): Promise<void> {
-    // First-seen wins: do not refresh an existing TTL.
-    if (!this.seen.has(nonce)) this.seen.set(nonce, Date.now());
+    await this.addIfAbsent(nonce);
   }
 
   async addIfAbsent(nonce: string): Promise<boolean> {

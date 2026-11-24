@@ -6,10 +6,11 @@ export { FileNonceStore, MemoryNonceStore } from './security';
 
 export type {
   OnSignalOptions,
-  PersistNoncesOption,
+  RedisNonceStoreOptions,
   SignalConfig,
   SignalEnvelope,
   SignalHandler,
 } from './interfaces';
 export type { NonceStore } from './security';
 export type { UnsignedEnvelope, ValidationResult } from './types';
+export type { PersistNoncesOption } from './types/persist-nonces-option.type';

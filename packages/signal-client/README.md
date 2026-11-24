@@ -26,6 +26,12 @@ const client = new SignalClient({
 await client.send('config.update', '123456789', { prefix: '!' });
 ```
 
+The package also supports CommonJS applications, including NestJS projects that emit CommonJS. Both entry points share the same classes and provide TypeScript declarations.
+
+```javascript
+const { SignalClient } = require('@spraxium/signal-client');
+```
+
 ```typescript
 // With Redis fallback for resilience
 import { SignalClient } from '@spraxium/signal-client';
