@@ -42,13 +42,15 @@
     "@spraxium/common": "workspace:*",
     "@spraxium/logger": "workspace:*",
     "cli-table3": "^0.6.5",
-    "reflect-metadata": "^0.2.2"
+    "reflect-metadata": "^0.2.2",
+    "semver": "^7.8.5"
   },
   "peerDependencies": {
     "discord.js": "^14.28.1"
   },
   "devDependencies": {
     "@types/node": "^22.20.1",
+    "@types/semver": "^7.8.0",
     "discord.js": "^14.28.1",
     "tsdown": "^0.12.0",
     "typescript": "^5.7.0",

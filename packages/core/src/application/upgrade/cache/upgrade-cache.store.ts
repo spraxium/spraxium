@@ -1,9 +1,11 @@
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { randomUUID } from 'node:crypto';
+import { mkdir, readFile, rename, rm, writeFile } from 'node:fs/promises';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
-import type { UpgradeCache } from '../interfaces';
+import type { UpgradeCache } from '../interfaces/upgrade-cache.interface';
 
 export class UpgradeCacheStore {
+  static readonly SCHEMA = 2;
   private static readonly DIR = join(homedir(), '.spraxium');
   private static readonly FILE = join(UpgradeCacheStore.DIR, 'upgrade-check.json');
 
@@ -11,29 +13,37 @@ export class UpgradeCacheStore {
     return UpgradeCacheStore.FILE;
   }
 
-  static read(): UpgradeCache | null {
+  static async read(): Promise<UpgradeCache | null> {
     try {
-      if (!existsSync(UpgradeCacheStore.FILE)) return null;
-      const raw = readFileSync(UpgradeCacheStore.FILE, 'utf8');
-      const parsed = JSON.parse(raw) as Partial<UpgradeCache>;
-      if (typeof parsed.checkedAt !== 'number') return null;
-      if (typeof parsed.packages !== 'object' || parsed.packages === null) return null;
+      const raw = await readFile(UpgradeCacheStore.FILE, 'utf8');
+      const parsed = JSON.parse(raw) as Partial<UpgradeCache> | null;
+      if (parsed?.schema !== UpgradeCacheStore.SCHEMA || !Number.isFinite(parsed.checkedAt)) return null;
+      if (!parsed.packages || typeof parsed.packages !== 'object' || Array.isArray(parsed.packages))
+        return null;
+      for (const tags of Object.values(parsed.packages)) {
+        if (!tags || typeof tags !== 'object' || Array.isArray(tags)) return null;
+        if (tags.latest !== undefined && typeof tags.latest !== 'string') return null;
+        if (tags.next !== undefined && typeof tags.next !== 'string') return null;
+      }
       return parsed as UpgradeCache;
     } catch {
       return null;
     }
   }
 
-  static write(cache: UpgradeCache): void {
+  static async write(cache: UpgradeCache): Promise<void> {
+    const temp = `${UpgradeCacheStore.FILE}.${randomUUID()}.tmp`;
     try {
-      if (!existsSync(UpgradeCacheStore.DIR)) mkdirSync(UpgradeCacheStore.DIR, { recursive: true });
-      writeFileSync(UpgradeCacheStore.FILE, JSON.stringify(cache, null, 2), 'utf8');
+      await mkdir(UpgradeCacheStore.DIR, { recursive: true });
+      await writeFile(temp, JSON.stringify(cache, null, 2), 'utf8');
+      await rename(temp, UpgradeCacheStore.FILE);
     } catch {
-      // Read-only filesystem (e.g. CI container): caching becomes a no-op.
+      await rm(temp, { force: true }).catch(() => undefined);
     }
   }
 
   static isFresh(cache: UpgradeCache, ttlMs: number): boolean {
-    return Date.now() - cache.checkedAt < ttlMs;
+    const age = Date.now() - cache.checkedAt;
+    return age >= 0 && age < ttlMs;
   }
 }

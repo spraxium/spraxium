@@ -7,6 +7,7 @@ import { GenerateCommand } from './commands/generate.command';
 import { InfoCommand } from './commands/info.command';
 import { NewCommand } from './commands/new.command';
 import { StartCommand } from './commands/start.command';
+import { UseCommand } from './commands/use.command';
 import { CommandRegistry } from './core/command.registry';
 import { SchematicRegistry } from './schematics/schematic.registry';
 import { ConfigReader } from './service/config-reader.service';
@@ -21,6 +22,8 @@ import { ScaffoldService } from './service/scaffold.service';
 import { SchematicLoader } from './service/schematic-loader.service';
 import { TemplateService } from './service/template.service';
 import { CliLogger } from './ui/cli.logger';
+import { SpraxiumReleaseRegistry } from './version-switch/spraxium-release.registry';
+import { VersionSwitchInstaller } from './version-switch/version-switch.installer';
 
 const logger = new CliLogger();
 const detector = new ProjectDetector();
@@ -43,8 +46,9 @@ const registry = new CommandRegistry([
   new GenerateCommand(logger, schematicRegistry, fs, detector, registrar, schematicLoader),
   new InfoCommand(logger, infoCollector),
   new NewCommand(logger, scaffolder, installer, runner),
+  new UseCommand(logger, new SpraxiumReleaseRegistry(runner), new VersionSwitchInstaller(runner)),
   new DatabaseCommand(logger, detector, fs, installer, runner, registrar, dbTemplateService),
 ]);
 
 registry.registerAll();
-registry.parse();
+await registry.parse();

@@ -1,23 +1,37 @@
 import { ANSI, nativeLog } from '@spraxium/logger';
-import type { PackageUpgrade } from '../interfaces';
+import type { PackageUpgrade } from '../interfaces/package-upgrade.interface';
+import { VersionComparator } from '../version/version.comparator';
 
 // biome-ignore lint/suspicious/noControlCharactersInRegex: intentional ANSI escape strip
 const ANSI_RE = /\u001b\[[0-9;]*m/g;
 
 export class UpgradeNoticePrinter {
-  static print(upgrades: ReadonlyArray<PackageUpgrade>): void {
-    const nameWidth = Math.max(...upgrades.map((u) => u.name.length));
-    const boxWidth = Math.max(54, nameWidth + 24);
-
-    UpgradeNoticePrinter.renderBox(upgrades, nameWidth, boxWidth);
-    UpgradeNoticePrinter.renderCommand(upgrades);
+  static printPreview(version: string): void {
+    nativeLog(`  ${ANSI.yellow(`Spraxium ${version} is a development build (next).`)}`);
   }
 
-  private static renderBox(
+  static print(upgrades: ReadonlyArray<PackageUpgrade>): void {
+    const stable: Array<PackageUpgrade> = [];
+    const previews: Array<PackageUpgrade> = [];
+    for (const upgrade of upgrades) {
+      const group = VersionComparator.isPreview(upgrade.available) ? previews : stable;
+      group.push(upgrade);
+    }
+    UpgradeNoticePrinter.printGroup(stable, 'stable', 'Spraxium stable release available');
+    UpgradeNoticePrinter.printGroup(previews, 'next', 'Spraxium preview update available');
+  }
+
+  private static printGroup(
     upgrades: ReadonlyArray<PackageUpgrade>,
-    nameWidth: number,
-    boxWidth: number,
+    channel: 'stable' | 'next',
+    title: string,
   ): void {
+    if (upgrades.length === 0) return;
+    const nameWidth = Math.max(...upgrades.map(({ name }) => name.length));
+    const versionWidth = Math.max(
+      ...upgrades.map(({ current, available }) => current.length + available.length),
+    );
+    const boxWidth = Math.max(54, nameWidth + versionWidth + 7);
     const top = `  \u250c${'\u2500'.repeat(boxWidth + 2)}\u2510`;
     const bot = `  \u2514${'\u2500'.repeat(boxWidth + 2)}\u2518`;
     const empty = `  \u2502${' '.repeat(boxWidth + 2)}\u2502`;
@@ -25,26 +39,19 @@ export class UpgradeNoticePrinter {
     nativeLog('');
     nativeLog(ANSI.yellow(top));
     nativeLog(ANSI.yellow(empty));
-    nativeLog(UpgradeNoticePrinter.yellowRow(ANSI.bold('\u2726  Spraxium upgrade available'), boxWidth));
+    nativeLog(UpgradeNoticePrinter.yellowRow(ANSI.bold(`\u2726  ${title}`), boxWidth));
     nativeLog(ANSI.yellow(empty));
 
-    for (const { name, current, latest } of upgrades) {
-      // dim current version (NORM restores intensity without resetting yellow),
-      // then switch to bold-green for latest (restore yellow afterwards).
-      const line = `${name.padEnd(nameWidth + 2)}${ANSI.dim(current)}  >  ${ANSI.bold(ANSI.green(latest))}`;
+    for (const { name, current, available } of upgrades) {
+      const line = `${name.padEnd(nameWidth + 2)}${ANSI.dim(current)}  >  ${ANSI.bold(ANSI.green(available))}`;
       nativeLog(UpgradeNoticePrinter.yellowRow(line, boxWidth));
     }
 
     nativeLog(ANSI.yellow(empty));
     nativeLog(ANSI.yellow(bot));
-  }
-
-  private static renderCommand(upgrades: ReadonlyArray<PackageUpgrade>): void {
-    const command = `pnpm add ${upgrades.map((u) => `${u.name}@${u.latest}`).join(' ')}`;
 
     nativeLog('');
-    nativeLog(ANSI.dim('  Run to upgrade:'));
-    nativeLog(ANSI.cyan(`  ${command}`));
+    nativeLog(ANSI.cyan(`  spraxium use ${channel}`));
     nativeLog('');
   }
 
