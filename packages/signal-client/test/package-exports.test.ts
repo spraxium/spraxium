@@ -47,7 +47,7 @@ afterAll(async () => {
 it('loads the same public classes through native CommonJS and ESM', async () => {
   if (!directory) throw new Error('Signal Client build is unavailable.');
   await expect(
-    execute(process.execPath, ['--no-require-module', 'check.mjs'], { cwd: directory, timeout: 10_000 }),
+    execute(process.execPath, ['check.mjs'], { cwd: directory, timeout: 10_000 }),
   ).resolves.toBeDefined();
 }, 15_000);
 
