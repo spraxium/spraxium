@@ -1,6 +1,6 @@
 {
   "name": "@spraxium/http",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "private": false,
   "description": "Deprecated REST integration. Use @spraxium/rpc for calls from your backend to a Spraxium bot.",
   "homepage": "https://spraxium.com/en/guide/rpc-http-migration",

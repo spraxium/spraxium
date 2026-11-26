@@ -4,6 +4,18 @@
 
 ### Minor Changes
 
+- 1b0a4f9: Introduce native RPC integration through `@spraxium/rpc` and `@spraxium/rpc-client`, enabling secure backend-to-bot communication with service authentication, request deadlines, and native shard-aware routing. Deprecate `@spraxium/http` in favor of dedicated backend frameworks, with migration guides and integration examples. Update discord.js to 14.28.1 and refresh Hono dependencies. Improve versioned documentation, correct API references and configuration examples, introduce reusable skills for coding agents, and enhance the website with redesigned layouts, navigation, package discovery, accessibility, and localization improvements.
+
+### Patch Changes
+
+- Updated dependencies [1b0a4f9]
+  - @spraxium/common@0.10.0
+  - @spraxium/logger@0.10.0
+
+## 0.10.0
+
+### Minor Changes
+
 - 6bb7eb7: Add module integrations for features that need to follow a bot's lifecycle. The RPC adapter starts the gateway after the bot is ready. In a sharded deployment the parent can host the gateway, forward a guild call to its shard, and drain pending calls when the bot shuts down. See the [RPC guide](https://spraxium.com/en/guide/rpc-overview).
 
 ### Patch Changes
