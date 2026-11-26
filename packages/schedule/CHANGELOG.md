@@ -2,6 +2,19 @@
 
 ## 0.10.0
 
+### Minor Changes
+
+- 1b0a4f9: Introduce native RPC integration through `@spraxium/rpc` and `@spraxium/rpc-client`, enabling secure backend-to-bot communication with service authentication, request deadlines, and native shard-aware routing. Deprecate `@spraxium/http` in favor of dedicated backend frameworks, with migration guides and integration examples. Update discord.js to 14.28.1 and refresh Hono dependencies. Improve versioned documentation, correct API references and configuration examples, introduce reusable skills for coding agents, and enhance the website with redesigned layouts, navigation, package discovery, accessibility, and localization improvements.
+
+### Patch Changes
+
+- Updated dependencies [1b0a4f9]
+  - @spraxium/common@0.10.0
+  - @spraxium/core@0.10.0
+  - @spraxium/logger@0.10.0
+
+## 0.10.0
+
 ### Patch Changes
 
 - 6bb7eb7: Update the scheduler to cron-parser 5 and use the same parser to validate a cron expression and calculate its next run. Keep support for expressions with seconds and for schedules with a timezone.

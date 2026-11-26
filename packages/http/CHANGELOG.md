@@ -4,6 +4,19 @@
 
 ### Minor Changes
 
+- 1b0a4f9: Introduce native RPC integration through `@spraxium/rpc` and `@spraxium/rpc-client`, enabling secure backend-to-bot communication with service authentication, request deadlines, and native shard-aware routing. Deprecate `@spraxium/http` in favor of dedicated backend frameworks, with migration guides and integration examples. Update discord.js to 14.28.1 and refresh Hono dependencies. Improve versioned documentation, correct API references and configuration examples, introduce reusable skills for coding agents, and enhance the website with redesigned layouts, navigation, package discovery, accessibility, and localization improvements.
+
+### Patch Changes
+
+- Updated dependencies [1b0a4f9]
+  - @spraxium/common@0.10.0
+  - @spraxium/core@0.10.0
+  - @spraxium/logger@0.10.0
+
+## 0.10.0
+
+### Minor Changes
+
 - 6bb7eb7: Mark `@spraxium/http` as deprecated in the CLI, package documentation, and public API. Existing HTTP projects can move one route at a time by keeping the route and user authorization in their web framework and moving the call to the bot behind an RPC handler. The legacy server also updates its Hono dependency. See the [migration guide](https://spraxium.com/en/guide/rpc-http-migration).
 
 ### Patch Changes
