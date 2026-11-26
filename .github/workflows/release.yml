@@ -16,11 +16,14 @@ permissions:
 jobs:
   release:
     name: Version or publish stable
+
     permissions:
       contents: write
       pull-requests: write
       id-token: write
+
     if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
+
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
@@ -58,19 +61,22 @@ jobs:
       - name: Create Version PR or Publish
         uses: changesets/action@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2.1.2
         with:
-          version: pnpm run version
-          publish: pnpm run release
-          title: "🚀 release(repo): bump package versions"
-          commit: "🚀 release(repo): bump package versions"
+          version-script: pnpm run version
+          publish-script: pnpm run release
+          pr-title: "🚀 release(repo): bump package versions"
+          commit-message: "🚀 release(repo): bump package versions"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           HUSKY: "0"
 
   preview:
     name: Publish preview to npm
+
     if: startsWith(github.ref, 'refs/tags/preview-')
+
     runs-on: ubuntu-latest
     timeout-minutes: 15
+
     permissions:
       contents: read
       id-token: write
@@ -102,6 +108,7 @@ jobs:
           PREVIEW_TAG: ${{ github.ref_name }}
         run: |
           preview_version="${PREVIEW_TAG#preview-}"
+
           if ! [[ "$preview_version" =~ ^[0-9]+\.[0-9]+\.[0-9]+-dev\.(0|[1-9][0-9]*)$ ]]; then
             echo "Expected a tag like preview-1.0.0-dev.1."
             exit 1
@@ -109,7 +116,6 @@ jobs:
 
           PREVIEW_VERSION="$preview_version" node --input-type=module <<'NODE'
           import { readFileSync, writeFileSync } from 'node:fs';
-
           const path = '.changeset/config.json';
           const config = JSON.parse(readFileSync(path, 'utf8'));
           const build = process.env.PREVIEW_VERSION.split('.').at(-1);
@@ -130,12 +136,16 @@ jobs:
       - name: Pack and verify the preview
         run: |
           directory="$RUNNER_TEMP/spraxium-preview"
+
           mkdir -p "$directory"
+
           pnpm --filter './packages/*' -r pack --pack-destination "$directory"
 
           group="$(jq -c '.fixed[] | select(index("@spraxium/core"))' .changeset/config.json)"
           archives=("$directory"/*.tgz)
+
           test "${#archives[@]}" -eq "$(jq 'length' <<< "$group")"
+
           for archive in "${archives[@]}"; do
             tar -xOf "$archive" package/package.json | jq -e \
               --arg version "$PREVIEW_VERSION" --argjson group "$group" '
@@ -148,17 +158,25 @@ jobs:
 
           consumer="$RUNNER_TEMP/spraxium-preview-consumer"
           mkdir -p "$consumer"
+
           printf '{"name":"spraxium-preview-consumer","version":"0.0.0","private":true}\n' > "$consumer/package.json"
+
           npm install --prefix "$consumer" --no-save --no-audit "${archives[@]}"
+
           cd "$consumer"
+
           test "$(node node_modules/@spraxium/cli/dist/index.js --version)" = "$PREVIEW_VERSION"
+
           node node_modules/@spraxium/cli/dist/index.js use --help
+
           node --input-type=module -e "await import('@spraxium/core'); await import('@spraxium/signal-client');"
+
           node -e "require('@spraxium/signal-client')"
 
       - name: Publish next
         run: |
           current="$(npm view @spraxium/core dist-tags.next --prefer-online)"
+
           if [[ -n "$current" ]]; then
             CURRENT_PREVIEW="$current" pnpm --filter @spraxium/cli exec node -e '
               const semver = require("semver");
@@ -170,20 +188,26 @@ jobs:
 
           publish_package() {
             local archive="$1" name="$2" current
+
             current="$(npm view "$name" dist-tags.next --prefer-online)"
+
             if [[ "$current" != "$PREVIEW_VERSION" ]]; then
               npm publish "$archive" --tag next --access public --provenance
             fi
           }
 
           core_archive=
+
           for archive in "$RUNNER_TEMP/spraxium-preview"/*.tgz; do
             name="$(tar -xOf "$archive" package/package.json | jq -er '.name')"
+
             if [[ "$name" == "@spraxium/core" ]]; then
               core_archive="$archive"
             else
               publish_package "$archive" "$name"
             fi
           done
+
           test -n "$core_archive"
+
           publish_package "$core_archive" @spraxium/core
