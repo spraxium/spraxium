@@ -1,5 +1,19 @@
 # @spraxium/http
 
+## 0.10.0
+
+### Minor Changes
+
+- 6bb7eb7: Mark `@spraxium/http` as deprecated in the CLI, package documentation, and public API. Existing HTTP projects can move one route at a time by keeping the route and user authorization in their web framework and moving the call to the bot behind an RPC handler. The legacy server also updates its Hono dependency. See the [migration guide](https://spraxium.com/en/guide/rpc-http-migration).
+
+### Patch Changes
+
+- Updated dependencies [6bb7eb7]
+- Updated dependencies [6bb7eb7]
+  - @spraxium/core@0.10.0
+  - @spraxium/common@0.10.0
+  - @spraxium/logger@0.10.0
+
 ## 0.9.1
 
 ### Patch Changes

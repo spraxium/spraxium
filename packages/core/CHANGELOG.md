@@ -1,5 +1,18 @@
 # @spraxium/core
 
+## 0.10.0
+
+### Minor Changes
+
+- 6bb7eb7: Add module integrations for features that need to follow a bot's lifecycle. The RPC adapter starts the gateway after the bot is ready. In a sharded deployment the parent can host the gateway, forward a guild call to its shard, and drain pending calls when the bot shuts down. See the [RPC guide](https://spraxium.com/en/guide/rpc-overview).
+
+### Patch Changes
+
+- 6bb7eb7: Update Discord.js to 14.28.1 and refresh the compiler, build tools, test runner, and workspace dependencies. The published Spraxium packages advance together to keep their dependencies aligned.
+- Updated dependencies [6bb7eb7]
+  - @spraxium/common@0.10.0
+  - @spraxium/logger@0.10.0
+
 ## 0.9.1
 
 ### Patch Changes

@@ -1,5 +1,16 @@
 # @spraxium/schedule
 
+## 0.10.0
+
+### Patch Changes
+
+- 6bb7eb7: Update the scheduler to cron-parser 5 and use the same parser to validate a cron expression and calculate its next run. Keep support for expressions with seconds and for schedules with a timezone.
+- Updated dependencies [6bb7eb7]
+- Updated dependencies [6bb7eb7]
+  - @spraxium/core@0.10.0
+  - @spraxium/common@0.10.0
+  - @spraxium/logger@0.10.0
+
 ## 0.9.1
 
 ### Patch Changes
