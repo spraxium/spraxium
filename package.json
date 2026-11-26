@@ -13,7 +13,7 @@
     "format": "biome format . --write",
     "changeset": "changeset",
     "version": "changeset version",
-    "release": "pnpm run build && changeset publish --provenance --access public",
+    "release": "pnpm run build && changeset publish",
     "prepare": "husky",
     "typecheck": "pnpm -r --filter=\"./packages/*\" exec tsc --noEmit"
   },
