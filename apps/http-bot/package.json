@@ -21,17 +21,17 @@
     "@spraxium/i18n": "workspace:*",
     "@spraxium/logger": "workspace:*",
     "@spraxium/schedule": "workspace:*",
-    "discord.js": "^14.27.0",
-    "hono": "^4.13.13",
+    "discord.js": "^14.28.1",
+    "hono": "^4.13.22",
     "reflect-metadata": "^0.2.2"
   },
   "devDependencies": {
     "@spraxium/cli": "workspace:*",
-    "@types/better-sqlite3": "^7.6.13",
-    "@types/node": "^22.20.1",
-    "@types/pg": "^8.20.0",
-    "tsx": "^4.19.0",
-    "typescript": "^5.7.0",
-    "vitest": "^4.1.12"
+    "@types/better-sqlite3": "^9.6.0",
+    "@types/node": "22.20.5",
+    "@types/pg": "^8.23.1",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vitest": "^5.1.1"
   }
 }

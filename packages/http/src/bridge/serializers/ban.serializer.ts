@@ -1,6 +1,7 @@
 import type { GuildBan } from 'discord.js';
 import type { SerializedBan } from '../../types';
 
+/** @deprecated Use Spraxium RPC for bot calls. See https://spraxium.com/en/guide/rpc-http-migration. */
 export class BanSerializer {
   serialize(ban: GuildBan): SerializedBan {
     return {

@@ -1,3 +1,4 @@
+/** @deprecated Use Spraxium RPC for bot calls. See https://spraxium.com/en/guide/rpc-http-migration. */
 export const HTTP_MESSAGES = {
   noConfig: 'HttpModule instantiated but no configuration found. Call defineHttp() in spraxium.config.ts.',
   noClient: 'HttpServer: Discord Client not injected and sharding is disabled.',

@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import { HTTP_METADATA_KEYS } from '../constants';
 import type { Constructor, HttpMethod, RouteDefinition } from '../types';
 
+/** @deprecated Use Spraxium RPC for bot calls. See https://spraxium.com/en/guide/rpc-http-migration. */
 export function HttpController(prefix: string): ClassDecorator {
   return (target): void => {
     Reflect.defineMetadata(HTTP_METADATA_KEYS.PREFIX, prefix, target);
@@ -17,26 +18,32 @@ function createRouteDecorator(method: HttpMethod, path: string): MethodDecorator
   };
 }
 
+/** @deprecated Use Spraxium RPC for bot calls. See https://spraxium.com/en/guide/rpc-http-migration. */
 export function HttpGet(path = '/'): MethodDecorator {
   return createRouteDecorator('GET', path);
 }
 
+/** @deprecated Use Spraxium RPC for bot calls. See https://spraxium.com/en/guide/rpc-http-migration. */
 export function HttpPost(path = '/'): MethodDecorator {
   return createRouteDecorator('POST', path);
 }
 
+/** @deprecated Use Spraxium RPC for bot calls. See https://spraxium.com/en/guide/rpc-http-migration. */
 export function HttpPut(path = '/'): MethodDecorator {
   return createRouteDecorator('PUT', path);
 }
 
+/** @deprecated Use Spraxium RPC for bot calls. See https://spraxium.com/en/guide/rpc-http-migration. */
 export function HttpPatch(path = '/'): MethodDecorator {
   return createRouteDecorator('PATCH', path);
 }
 
+/** @deprecated Use Spraxium RPC for bot calls. See https://spraxium.com/en/guide/rpc-http-migration. */
 export function HttpDelete(path = '/'): MethodDecorator {
   return createRouteDecorator('DELETE', path);
 }
 
+/** @deprecated Use Spraxium RPC for bot calls. See https://spraxium.com/en/guide/rpc-http-migration. */
 export function HttpUseMiddleware(
   ...middlewareClasses: Array<Constructor>
 ): ClassDecorator & MethodDecorator {
@@ -57,12 +64,14 @@ export function HttpUseMiddleware(
   };
 }
 
+/** @deprecated Use Spraxium RPC for bot calls. See https://spraxium.com/en/guide/rpc-http-migration. */
 export function HttpStatus(code: number): MethodDecorator {
   return (target, propertyKey): void => {
     Reflect.defineMetadata(HTTP_METADATA_KEYS.STATUS_CODE, code, target, propertyKey as string);
   };
 }
 
+/** @deprecated Use Spraxium RPC for bot calls. See https://spraxium.com/en/guide/rpc-http-migration. */
 export function HttpGuards(...guardClasses: Array<Constructor>): ClassDecorator & MethodDecorator {
   return (target: object, propertyKey?: string | symbol): void => {
     if (propertyKey !== undefined) {

@@ -4,6 +4,7 @@ import { BanSerializer } from '../serializers/ban.serializer';
 
 const banSerializer = new BanSerializer();
 
+/** @deprecated Use Spraxium RPC for bot calls. See https://spraxium.com/en/guide/rpc-http-migration. */
 export async function directGetBan(
   client: Client,
   guildId: string,
@@ -19,6 +20,7 @@ export async function directGetBan(
   }
 }
 
+/** @deprecated Use Spraxium RPC for bot calls. See https://spraxium.com/en/guide/rpc-http-migration. */
 export async function directGetBans(client: Client, guildId: string): Promise<Array<SerializedBan>> {
   const guild = client.guilds.cache.get(guildId);
   if (!guild) return [];
@@ -30,6 +32,7 @@ export async function directGetBans(client: Client, guildId: string): Promise<Ar
   }
 }
 
+/** @deprecated Use Spraxium RPC for bot calls. See https://spraxium.com/en/guide/rpc-http-migration. */
 export async function directBanMember(
   client: Client,
   guildId: string,
@@ -47,6 +50,7 @@ export async function directBanMember(
   }
 }
 
+/** @deprecated Use Spraxium RPC for bot calls. See https://spraxium.com/en/guide/rpc-http-migration. */
 export async function directUnbanMember(client: Client, guildId: string, userId: string): Promise<boolean> {
   const guild = client.guilds.cache.get(guildId);
   if (!guild) return false;

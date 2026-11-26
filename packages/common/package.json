@@ -41,14 +41,14 @@
     "reflect-metadata": "^0.2.2"
   },
   "peerDependencies": {
-    "discord.js": "^14.27.0"
+    "discord.js": "^14.28.1"
   },
   "devDependencies": {
-    "@types/node": "^22.20.1",
-    "discord.js": "^14.27.0",
-    "tsdown": "^0.12.0",
-    "typescript": "^5.7.0",
-    "vitest": "^4.1.12"
+    "@types/node": "22.20.5",
+    "discord.js": "^14.28.1",
+    "tsdown": "^0.23.7",
+    "typescript": "^7.0.2",
+    "vitest": "^5.1.1"
   },
   "files": ["dist"],
   "license": "Apache-2.0",

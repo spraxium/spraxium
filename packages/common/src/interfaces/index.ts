@@ -1,4 +1,9 @@
 export type { ModuleMetadata } from './module-metadata.interface';
+export type {
+  ModuleIntegration,
+  ModuleIntegrationContext,
+  ModuleIntegrationInstance,
+} from './module-integration.interface';
 export type { SpraxiumOnBoot, SpraxiumOnReady, SpraxiumOnShutdown } from './lifecycle.interface';
 export { ReadonlyContainer } from './readonly-container.interface';
 export type { ExecutionContext } from './execution-context.interface';

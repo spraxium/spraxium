@@ -27,6 +27,7 @@ import { HttpRegistry } from './http-registry.service';
 import { RouteBuilder } from './route-builder.service';
 import { RouteRegistry } from './route-registry.service';
 
+/** @deprecated Use Spraxium RPC for bot calls. See https://spraxium.com/en/guide/rpc-http-migration. */
 @Injectable()
 export class HttpServer implements SpraxiumOnBoot, SpraxiumOnShutdown {
   static {

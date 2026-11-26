@@ -1,5 +1,6 @@
 import type { ShardingManager } from 'discord.js';
 
+/** @deprecated Use Spraxium RPC for bot calls. See https://spraxium.com/en/guide/rpc-http-migration. */
 export async function shardedKickMember(
   manager: ShardingManager,
   guildId: string,
@@ -28,6 +29,7 @@ export async function shardedKickMember(
   }
 }
 
+/** @deprecated Use Spraxium RPC for bot calls. See https://spraxium.com/en/guide/rpc-http-migration. */
 export async function shardedTimeoutMember(
   manager: ShardingManager,
   guildId: string,
@@ -57,6 +59,7 @@ export async function shardedTimeoutMember(
   }
 }
 
+/** @deprecated Use Spraxium RPC for bot calls. See https://spraxium.com/en/guide/rpc-http-migration. */
 export async function shardedRemoveTimeoutMember(
   manager: ShardingManager,
   guildId: string,

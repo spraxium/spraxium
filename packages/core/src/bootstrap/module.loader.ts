@@ -1,5 +1,7 @@
 import type {
   Constructor,
+  ModuleIntegration,
+  ModuleIntegrationInstance,
   ModuleMetadata,
   SpraxiumOnBoot,
   SpraxiumOnReady,
@@ -31,6 +33,7 @@ export class ModuleLoader {
   private readonly slashDispatcher = new SlashDispatcher();
   private readonly contextMenuDispatcher = new ContextMenuDispatcher();
   private readonly moduleRows: Array<ModuleRow> = [];
+  private readonly integrations: Array<ModuleIntegrationInstance> = [];
 
   load(rootModule: Constructor, client: Client, globalProviders: Map<unknown, unknown> = new Map()): void {
     for (const [token, instance] of globalProviders) {
@@ -42,8 +45,32 @@ export class ModuleLoader {
     this.rootContainer.set(ContextMenuDispatcher, this.contextMenuDispatcher);
     this.rootContainer.set(Client, client);
     this.rootContainer.set(ReadonlyContainer, this.rootContainer);
+    this.installIntegrations(rootModule);
     this.loadModule(rootModule, this.rootContainer);
     this.log.debug('Module tree loaded');
+  }
+
+  private installIntegrations(rootModule: Constructor): void {
+    const visited = new Set<Constructor>();
+    const declarations = new Map<string, ModuleIntegration>();
+    const collect = (module: Constructor): void => {
+      if (visited.has(module)) return;
+      visited.add(module);
+      const metadata: ModuleMetadata = Reflect.getOwnMetadata(METADATA_KEYS.MODULE, module) ?? {};
+      for (const declaration of metadata.integrations ?? []) {
+        const previous = declarations.get(declaration.name);
+        if (previous && previous !== declaration) {
+          throw new Error(`Declare integration ${declaration.name} once per Spraxium application.`);
+        }
+        declarations.set(declaration.name, declaration);
+      }
+      for (const imported of metadata.imports ?? []) collect(imported);
+    };
+    collect(rootModule);
+    for (const declaration of declarations.values()) {
+      const integration = declaration.setup({ container: this.rootContainer });
+      this.integrations.push(integration);
+    }
   }
 
   private loadModule(moduleCtor: Constructor, parentContainer: SpraxiumContainer): void {
@@ -141,8 +168,9 @@ export class ModuleLoader {
       args.push(resolved);
     }
 
+    let instance: T;
     try {
-      return new ctor(...args);
+      instance = new ctor(...args);
     } catch (err) {
       spraxiumError(
         'ModuleLoader',
@@ -157,6 +185,8 @@ export class ModuleLoader {
         ],
       );
     }
+    for (const integration of this.integrations) integration.onInstance?.(instance);
+    return instance;
   }
 
   private sortProviders(providers: Array<Constructor>, container: SpraxiumContainer): Array<Constructor> {
@@ -228,19 +258,23 @@ export class ModuleLoader {
   }
 
   async runBootHooks(): Promise<void> {
+    for (const integration of this.integrations) await integration.onBoot?.();
     for (const hook of this.bootHooks) {
       await hook.onBoot();
     }
   }
 
   async runShutdownHooks(): Promise<void> {
-    await Promise.allSettled(this.shutdownHooks.map((h) => h.onShutdown()));
+    await Promise.allSettled(this.integrations.map(async (integration) => integration.onShutdown?.()));
+    await Promise.allSettled(this.shutdownHooks.map(async (hook) => hook.onShutdown()));
   }
 
   async runReadyHooks(client: Client<true>): Promise<void> {
+    for (const integration of this.integrations) await integration.onReady?.(client);
     for (const hook of this.readyHooks) {
       await hook.onReady(client);
     }
+    for (const integration of this.integrations) await integration.onApplicationReady?.();
   }
 
   getContainer(): SpraxiumContainer {

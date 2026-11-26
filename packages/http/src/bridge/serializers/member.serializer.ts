@@ -1,6 +1,7 @@
 import type { GuildMember } from 'discord.js';
 import type { SerializedMember } from '../../types';
 
+/** @deprecated Use Spraxium RPC for bot calls. See https://spraxium.com/en/guide/rpc-http-migration. */
 export class MemberSerializer {
   serialize(member: GuildMember): SerializedMember {
     return {

@@ -1,6 +1,7 @@
 import type { ShardingManager } from 'discord.js';
 import type { BanOptions, SerializedBan } from '../../types';
 
+/** @deprecated Use Spraxium RPC for bot calls. See https://spraxium.com/en/guide/rpc-http-migration. */
 export async function shardedGetBan(
   manager: ShardingManager,
   guildId: string,
@@ -36,6 +37,7 @@ export async function shardedGetBan(
   }
 }
 
+/** @deprecated Use Spraxium RPC for bot calls. See https://spraxium.com/en/guide/rpc-http-migration. */
 export async function shardedGetBans(
   manager: ShardingManager,
   guildId: string,
@@ -70,6 +72,7 @@ export async function shardedGetBans(
   }
 }
 
+/** @deprecated Use Spraxium RPC for bot calls. See https://spraxium.com/en/guide/rpc-http-migration. */
 export async function shardedBanMember(
   manager: ShardingManager,
   guildId: string,
@@ -100,6 +103,7 @@ export async function shardedBanMember(
   }
 }
 
+/** @deprecated Use Spraxium RPC for bot calls. See https://spraxium.com/en/guide/rpc-http-migration. */
 export async function shardedUnbanMember(
   manager: ShardingManager,
   guildId: string,

@@ -5,12 +5,14 @@ import type { HttpMiddleware, RateLimitConfig, WindowEntry } from '../interfaces
  * Typing shim for the pieces of `ctx.env` that Hono's Node adapter (and a few
  * others) expose. Kept local to avoid a hard dependency on any particular
  * adapter's type surface.
+ * @deprecated Use Spraxium RPC for bot calls. See https://spraxium.com/en/guide/rpc-http-migration.
  */
 interface HonoEnvShim {
   readonly incoming?: { readonly socket?: { readonly remoteAddress?: string } };
   readonly remoteAddr?: { readonly address?: string };
 }
 
+/** @deprecated Use Spraxium RPC for bot calls. See https://spraxium.com/en/guide/rpc-http-migration. */
 export class RateLimitMiddleware implements HttpMiddleware {
   private readonly store = new Map<string, WindowEntry>();
   private readonly cleanupInterval: ReturnType<typeof setInterval>;
@@ -53,6 +55,7 @@ export class RateLimitMiddleware implements HttpMiddleware {
    * `X-Forwarded-For` is honoured only when the direct peer is explicitly listed
    * as a trusted proxy. This prevents an unauthenticated client from bypassing
    * the limiter by spoofing the header.
+   * @deprecated Use Spraxium RPC for bot calls. See https://spraxium.com/en/guide/rpc-http-migration.
    */
   private resolveClientIp(ctx: Context): string {
     const directIp = RateLimitMiddleware.getDirectIp(ctx);

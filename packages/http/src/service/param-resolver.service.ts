@@ -5,6 +5,7 @@ import { ValidationError } from '../errors/validation.error';
 import type { ParamDefinition } from '../types';
 import { ValidationPipe } from './validation-pipe.service';
 
+/** @deprecated Use Spraxium RPC for bot calls. See https://spraxium.com/en/guide/rpc-http-migration. */
 export class ParamResolver {
   private readonly validation = new ValidationPipe();
 

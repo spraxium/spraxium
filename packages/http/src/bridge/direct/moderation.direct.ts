@@ -1,5 +1,6 @@
 import type { Client } from 'discord.js';
 
+/** @deprecated Use Spraxium RPC for bot calls. See https://spraxium.com/en/guide/rpc-http-migration. */
 export async function directKickMember(
   client: Client,
   guildId: string,
@@ -16,6 +17,7 @@ export async function directKickMember(
   }
 }
 
+/** @deprecated Use Spraxium RPC for bot calls. See https://spraxium.com/en/guide/rpc-http-migration. */
 export async function directTimeoutMember(
   client: Client,
   guildId: string,
@@ -33,6 +35,7 @@ export async function directTimeoutMember(
   }
 }
 
+/** @deprecated Use Spraxium RPC for bot calls. See https://spraxium.com/en/guide/rpc-http-migration. */
 export async function directRemoveTimeoutMember(
   client: Client,
   guildId: string,

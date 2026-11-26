@@ -8,16 +8,24 @@ import type { SecurityConfig } from './security-config.interface';
  * - `true` / omit - default behaviour (info on success, warn on 4xx/5xx)
  * - `false` - disable all request logging
  * - object - override the log level used for successful or error responses
+ * @deprecated Use Spraxium RPC for bot calls. See https://spraxium.com/en/guide/rpc-http-migration.
  */
 export type AccessLogConfig =
   | boolean
   | {
-      /** Level used for 2xx/3xx responses. `'off'` silences them. Defaults to `'info'`. */
+      /**
+       * Level used for 2xx/3xx responses. `'off'` silences them. Defaults to `'info'`.
+       * @deprecated Use Spraxium RPC for bot calls. See https://spraxium.com/en/guide/rpc-http-migration.
+       */
       successLevel?: 'info' | 'debug' | 'off';
-      /** Level used for 4xx/5xx responses. Defaults to `'warn'`. */
+      /**
+       * Level used for 4xx/5xx responses. Defaults to `'warn'`.
+       * @deprecated Use Spraxium RPC for bot calls. See https://spraxium.com/en/guide/rpc-http-migration.
+       */
       errorLevel?: 'warn' | 'error';
     };
 
+/** @deprecated Use Spraxium RPC for bot calls. See https://spraxium.com/en/guide/rpc-http-migration. */
 export interface HttpConfig {
   readonly enabled: boolean;
   readonly port: number;
@@ -30,6 +38,7 @@ export interface HttpConfig {
   /**
    * Controls request-level access logging for `LoggerMiddleware`.
    * Pass the value through to `new LoggerMiddleware(config.accessLog)`.
+   * @deprecated Use Spraxium RPC for bot calls. See https://spraxium.com/en/guide/rpc-http-migration.
    */
   readonly accessLog?: AccessLogConfig;
 }

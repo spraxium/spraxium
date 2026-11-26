@@ -1,12 +1,16 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.0/schema.json",
-  "organizeImports": {
-    "enabled": true
+  "$schema": "https://biomejs.dev/schemas/2.6.9/schema.json",
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "off"
+      }
+    }
   },
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true,
+      "preset": "recommended",
       "suspicious": {
         "noExplicitAny": "warn"
       },
@@ -36,22 +40,23 @@
     }
   },
   "files": {
-    "ignore": [
-      "**/dist/**",
-      "**/node_modules/**",
-      "**/.spraxium/**",
-      "**/local/**",
-      "**/*.d.ts",
-      "_old/**",
-      "web/.next/**",
-      "templates/**",
-      "apps/sandbox/*",
-      "vscode-extension/**"
+    "includes": [
+      "**",
+      "!**/dist",
+      "!**/node_modules",
+      "!**/.spraxium",
+      "!**/local",
+      "!**/*.d.ts",
+      "!**/_old",
+      "!**/web/.next",
+      "!**/templates",
+      "!**/apps/sandbox/**/*",
+      "!**/vscode-extension"
     ]
   },
   "overrides": [
     {
-      "include": ["apps/**/*.ts"],
+      "includes": ["**/apps/**/*.ts"],
       "linter": {
         "rules": {
           "style": {
@@ -60,5 +65,25 @@
         }
       }
     }
-  ]
+  ],
+  "markdown": {
+    "formatter": {
+      "enabled": false
+    }
+  },
+  "yaml": {
+    "formatter": {
+      "enabled": false
+    }
+  },
+  "json": {
+    "formatter": {
+      "expand": "auto"
+    }
+  },
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  }
 }

@@ -1,6 +1,7 @@
 import type { ShardingManager } from 'discord.js';
 import type { SerializedMember, SerializedRole } from '../../types';
 
+/** @deprecated Use Spraxium RPC for bot calls. See https://spraxium.com/en/guide/rpc-http-migration. */
 export async function shardedGetMember(
   manager: ShardingManager,
   guildId: string,
@@ -46,6 +47,7 @@ export async function shardedGetMember(
   }
 }
 
+/** @deprecated Use Spraxium RPC for bot calls. See https://spraxium.com/en/guide/rpc-http-migration. */
 export async function shardedGetMembers(
   manager: ShardingManager,
   guildId: string,

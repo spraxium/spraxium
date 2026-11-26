@@ -8,6 +8,7 @@ import type { Constructor } from '../types';
 import { ParamResolver } from './param-resolver.service';
 import { RouteRegistry } from './route-registry.service';
 
+/** @deprecated Use Spraxium RPC for bot calls. See https://spraxium.com/en/guide/rpc-http-migration. */
 export class RouteBuilder {
   private static readonly paramResolver = new ParamResolver();
 

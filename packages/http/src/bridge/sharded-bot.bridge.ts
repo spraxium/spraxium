@@ -11,6 +11,7 @@ import {
 } from './sharded/moderation.sharded';
 import { shardedAddRole, shardedRemoveRole } from './sharded/role.sharded';
 
+/** @deprecated Use Spraxium RPC for bot calls. See https://spraxium.com/en/guide/rpc-http-migration. */
 export class ShardedBotBridge extends BotBridge {
   constructor(private readonly manager: ShardingManager) {
     super();

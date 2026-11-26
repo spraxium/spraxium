@@ -6,6 +6,7 @@ import type { CorsConfig, HttpMiddleware } from '../interfaces';
 
 const log = logger.child('CorsMiddleware');
 
+/** @deprecated Use Spraxium RPC for bot calls. See https://spraxium.com/en/guide/rpc-http-migration. */
 export class CorsMiddleware implements HttpMiddleware {
   private readonly handler: ReturnType<typeof cors>;
 

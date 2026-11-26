@@ -4,6 +4,7 @@ import { MemberSerializer } from '../serializers/member.serializer';
 
 const memberSerializer = new MemberSerializer();
 
+/** @deprecated Use Spraxium RPC for bot calls. See https://spraxium.com/en/guide/rpc-http-migration. */
 export async function directGetMember(
   client: Client,
   guildId: string,
@@ -15,6 +16,7 @@ export async function directGetMember(
   return member ? memberSerializer.serialize(member) : null;
 }
 
+/** @deprecated Use Spraxium RPC for bot calls. See https://spraxium.com/en/guide/rpc-http-migration. */
 export async function directGetMembers(
   client: Client,
   guildId: string,

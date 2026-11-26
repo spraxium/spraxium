@@ -286,38 +286,44 @@ export class SpraxiumApplication {
 
       client.once('clientReady', async (readyClient) => {
         clearTimeout(timeout);
-        PresenceManager.initialize(readyClient, this.state.presence);
-        await this.state.moduleLoader?.runReadyHooks(readyClient);
+        try {
+          PresenceManager.initialize(readyClient, this.state.presence);
+          await this.state.moduleLoader?.runReadyHooks(readyClient);
 
-        const slashDispatcher = this.state.moduleLoader?.getSlashDispatcher();
-        const contextMenuDispatcher = this.state.moduleLoader?.getContextMenuDispatcher();
-        const slashCount = slashDispatcher?.commandCount ?? 0;
-        const contextMenuCount = contextMenuDispatcher?.commandCount ?? 0;
+          const slashDispatcher = this.state.moduleLoader?.getSlashDispatcher();
+          const contextMenuDispatcher = this.state.moduleLoader?.getContextMenuDispatcher();
+          const slashCount = slashDispatcher?.commandCount ?? 0;
+          const contextMenuCount = contextMenuDispatcher?.commandCount ?? 0;
 
-        if (slashDispatcher && slashCount + contextMenuCount > 0) {
-          const token = this.state.token ?? process.env.DISCORD_TOKEN;
-          if (token) {
-            const extraPayloads = contextMenuDispatcher?.buildPayloads() ?? [];
-            const extraGuildPayloads = contextMenuDispatcher?.buildGuildGroupedPayloads() ?? new Map();
-            await slashDispatcher.register(
-              token,
-              readyClient.user.id,
-              undefined,
-              false,
-              extraPayloads,
-              extraGuildPayloads,
+          if (slashDispatcher && slashCount + contextMenuCount > 0) {
+            const token = this.state.token ?? process.env.DISCORD_TOKEN;
+            if (token) {
+              const extraPayloads = contextMenuDispatcher?.buildPayloads() ?? [];
+              const extraGuildPayloads = contextMenuDispatcher?.buildGuildGroupedPayloads() ?? new Map();
+              await slashDispatcher.register(
+                token,
+                readyClient.user.id,
+                undefined,
+                false,
+                extraPayloads,
+                extraGuildPayloads,
+              );
+            }
+          }
+
+          if (!isShardChild()) {
+            const ms = Date.now() - this.startedAt;
+            logger.success(
+              `Logged in as ${readyClient.user.tag} (${readyClient.guilds.cache.size} guilds) in ${ms}ms`,
             );
           }
-        }
 
-        if (!isShardChild()) {
-          const ms = Date.now() - this.startedAt;
-          logger.success(
-            `Logged in as ${readyClient.user.tag} (${readyClient.guilds.cache.size} guilds) in ${ms}ms`,
-          );
+          resolve();
+        } catch (error) {
+          await this.state.moduleLoader?.runShutdownHooks();
+          await client.destroy();
+          reject(error);
         }
-
-        resolve();
       });
     });
   }
@@ -325,9 +331,7 @@ export class SpraxiumApplication {
   private async loginAndAwaitReady(client: Client, token: string): Promise<void> {
     const readyPromise = this.waitForReady(client);
 
-    try {
-      await client.login(token);
-    } catch (err: unknown) {
+    const login = client.login(token).catch((err: unknown) => {
       const message = err instanceof Error ? err.message : String(err);
       client.destroy();
       spraxiumFatal(
@@ -341,8 +345,8 @@ export class SpraxiumApplication {
           'Get a fresh token at: discord.com/developers/applications',
         ],
       );
-    }
+    });
 
-    await readyPromise;
+    await Promise.all([login, readyPromise]);
   }
 }

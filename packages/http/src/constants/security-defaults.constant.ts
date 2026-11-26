@@ -5,6 +5,7 @@ import type {
   TrustedProxyConfig,
 } from '../interfaces';
 
+/** @deprecated Use Spraxium RPC for bot calls. See https://spraxium.com/en/guide/rpc-http-migration. */
 export const SECURITY_DEFAULTS: Required<Pick<SecurityConfig, 'hidePoweredBy'>> & {
   headers: Required<SecurityHeadersConfig>;
   cors: null;

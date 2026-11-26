@@ -3,6 +3,7 @@ import { bodyLimit } from 'hono/body-limit';
 import { SECURITY_DEFAULTS } from '../constants';
 import type { BodyLimitConfig, HttpMiddleware } from '../interfaces';
 
+/** @deprecated Use Spraxium RPC for bot calls. See https://spraxium.com/en/guide/rpc-http-migration. */
 export class BodyLimitMiddleware implements HttpMiddleware {
   private readonly handler: ReturnType<typeof bodyLimit>;
 

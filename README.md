@@ -20,7 +20,7 @@
 
 Spraxium sits on top of discord.js and brings modules, dependency injection, decorators, and lifecycle hooks to Discord bot development. It is meant for bots that have outgrown a collection of event handlers but do not need a pile of custom infrastructure.
 
-The framework gives each feature a clear place. Modules keep related code together, services can depend on one another without manual setup, and optional packages cover common needs such as scheduled jobs, translations, HTTP APIs, components, and webhooks.
+The framework gives each feature a clear place. Modules keep related code together, services can depend on one another without manual setup, and optional packages cover common needs such as scheduled jobs, translations, RPC, components, and webhooks.
 
 You only install the packages your bot uses. Configuration lives in a typed `spraxium.config.ts` file, while discord.js remains available whenever you need to work with it directly.
 
@@ -28,7 +28,7 @@ You only install the packages your bot uses. Configuration lives in a typed `spr
 
 A Spraxium application is made of modules. Each module declares its providers, and the framework resolves their dependencies when the application starts. Lifecycle hooks such as `onBoot`, `onReady`, and `onShutdown` let services react to the application and Discord client state without putting everything in the entry file.
 
-Packages such as `@spraxium/http` and `@spraxium/schedule` plug into the same configuration layer through their own `define*` helpers. This keeps setup in one place and lets TypeScript catch configuration mistakes early.
+Packages such as `@spraxium/rpc` and `@spraxium/schedule` plug into the same configuration layer through their own `define*` helpers. This keeps setup in one place and lets TypeScript catch configuration mistakes early.
 
 ## Example Apps
 
@@ -41,7 +41,8 @@ Runnable examples live in [apps/](./apps/). They are also used to test how the p
 | `@spraxium/core` | Application factory, DI container, lifecycle hooks, and the slash and prefix command pipeline |
 | `@spraxium/common` | Shared decorators (`@Injectable`, `@Module`, `@Global`) and base interfaces used across all packages |
 | `@spraxium/components` | Decorator-based system for Discord UI components: buttons, select menus, modals, embeds, and V2 container layouts |
-| `@spraxium/http` | Decorator-based REST API layer over Hono that exposes bot state through a secured HTTP interface with guards, rate limiting, and CORS |
+| [`@spraxium/rpc`](https://github.com/spraxium/rpc) | Calls from a backend to named handlers in your bot |
+| `@spraxium/http` | Deprecated. See the [RPC migration guide](https://spraxium.com/en/guide/rpc-http-migration). |
 | `@spraxium/i18n` | Internationalization with variable interpolation, plural resolution via `Intl.PluralRules`, and locale fallback |
 | `@spraxium/schedule` | Cron-based job scheduler with an optional Redis driver for distributed and sharded environments |
 | `@spraxium/signal` | Async unidirectional event signals dispatched through Discord webhooks with schema validation |
@@ -53,7 +54,7 @@ Runnable examples live in [apps/](./apps/). They are also used to test how the p
 
 ## Sharding
 
-Spraxium supports Discord sharding through `ShardingManager`. When sharding is enabled, `@spraxium/http` runs the HTTP server in the manager process and communicates with the shards through its bridge layer. API consumers still get one view of the bot, regardless of which shard owns the requested data.
+Spraxium uses Discord.js sharding. The RPC gateway runs in the manager process and forwards calls to the shard that owns the guild.
 
 ## Requirements
 

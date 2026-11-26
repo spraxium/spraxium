@@ -39,7 +39,7 @@
   },
   "dependencies": {
     "@spraxium/logger": "workspace:*",
-    "discord.js": "^14.27.0",
+    "discord.js": "^14.28.1",
     "reflect-metadata": "^0.2.2"
   },
   "peerDependencies": {
@@ -58,10 +58,10 @@
     "@spraxium/components": "workspace:*",
     "@spraxium/core": "workspace:*",
     "@spraxium/logger": "workspace:*",
-    "@types/node": "^22.20.1",
-    "tsdown": "^0.12.0",
-    "typescript": "^5.7.0",
-    "vitest": "^4.1.12"
+    "@types/node": "22.20.5",
+    "tsdown": "^0.23.7",
+    "typescript": "^7.0.2",
+    "vitest": "^5.1.1"
   },
   "files": ["dist"],
   "license": "Apache-2.0",

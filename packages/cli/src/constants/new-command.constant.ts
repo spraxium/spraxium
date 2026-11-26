@@ -15,7 +15,7 @@ export const NewCommandConstant = {
 
   EXTRA_PACKAGES: [
     { pkg: '@spraxium/components', label: 'components', module: 'ComponentsModule' },
-    { pkg: '@spraxium/http', label: 'http', module: 'HttpModule' },
+    { pkg: '@spraxium/http', label: 'http (deprecated)', module: 'HttpModule' },
     { pkg: '@spraxium/schedule', label: 'schedule', module: 'ScheduleModule' },
     { pkg: '@spraxium/i18n', label: 'i18n', module: 'I18nModule' },
     { pkg: '@spraxium/signal', label: 'signal', module: null },
@@ -39,7 +39,7 @@ export const NewCommandConstant = {
     {
       id: 'http-bot',
       label: 'http-bot',
-      description: 'Discord bot bundled with a lightweight REST API',
+      description: 'Legacy REST API example. Use Spraxium RPC for new bot integrations.',
       extraPackages: ['@spraxium/http'],
     },
   ] satisfies ReadonlyArray<TemplateDefinition>,

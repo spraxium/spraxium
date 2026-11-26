@@ -1,5 +1,6 @@
 import type { BanOptions, SerializedBan, SerializedGuild, SerializedMember } from '../types';
 
+/** @deprecated Use Spraxium RPC for bot calls. See https://spraxium.com/en/guide/rpc-http-migration. */
 export abstract class BotBridge {
   abstract getGuild(guildId: string): Promise<SerializedGuild | null>;
   abstract getMember(guildId: string, userId: string): Promise<SerializedMember | null>;

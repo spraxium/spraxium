@@ -66,7 +66,13 @@ export class SpraxiumShardManager {
     }
 
     await Promise.all(readyPromises);
-    await ParentHookRegistry.run(manager);
+    try {
+      await ParentHookRegistry.run(manager);
+    } catch (error) {
+      await ParentHookRegistry.shutdown();
+      for (const shard of manager.shards.values()) shard.kill();
+      throw error;
+    }
 
     nativeLog();
     for (const [shardId, { guildCount, ready }] of [...statuses.entries()].sort(([a], [b]) => a - b)) {
@@ -182,8 +188,12 @@ export class SpraxiumShardManager {
   }
 
   private registerShutdownHandlers(): void {
+    let shuttingDown = false;
     const shutdown = async (signal: string): Promise<void> => {
+      if (shuttingDown) return;
+      shuttingDown = true;
       logger.info(`Received ${signal} , killing all shards`);
+      await ParentHookRegistry.shutdown();
       if (this.manager) {
         for (const [, shard] of this.manager.shards) {
           shard.kill();

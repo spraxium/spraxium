@@ -6,4 +6,5 @@ import { HttpServer } from './service/http-server.service';
   providers: [HttpServer],
   exports: [HttpServer],
 })
+/** @deprecated Use Spraxium RPC for bot calls. See https://spraxium.com/en/guide/rpc-http-migration. */
 export class HttpModule {}

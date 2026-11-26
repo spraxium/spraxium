@@ -75,7 +75,9 @@ export class DescriptionBuilder {
 
   /** Appends a numbered list. */
   numberedList(items: Array<string>): this {
-    items.forEach((item, i) => this.line(`${i + 1}. ${item}`));
+    items.forEach((item, i) => {
+      this.line(`${i + 1}. ${item}`);
+    });
     return this;
   }
 

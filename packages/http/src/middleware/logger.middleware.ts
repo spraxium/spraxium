@@ -4,6 +4,7 @@ import type { AccessLogConfig, HttpMiddleware } from '../interfaces';
 
 const log = logger.child('HttpLogger');
 
+/** @deprecated Use Spraxium RPC for bot calls. See https://spraxium.com/en/guide/rpc-http-migration. */
 export class LoggerMiddleware implements HttpMiddleware {
   constructor(private readonly config?: AccessLogConfig) {}
 

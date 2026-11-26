@@ -1,7 +1,14 @@
+/** @deprecated Use Spraxium RPC for bot calls. See https://spraxium.com/en/guide/rpc-http-migration. */
 export interface RateLimitConfig {
-  /** Sliding-window duration in milliseconds. */
+  /**
+   * Sliding-window duration in milliseconds.
+   * @deprecated Use Spraxium RPC for bot calls. See https://spraxium.com/en/guide/rpc-http-migration.
+   */
   readonly windowMs: number;
-  /** Maximum requests allowed per client within `windowMs`. */
+  /**
+   * Maximum requests allowed per client within `windowMs`.
+   * @deprecated Use Spraxium RPC for bot calls. See https://spraxium.com/en/guide/rpc-http-migration.
+   */
   readonly max: number;
   /**
    * IPs of reverse proxies you trust to set the `X-Forwarded-For` header.
@@ -16,6 +23,7 @@ export interface RateLimitConfig {
    * `defineHttp()`.
    *
    * @default []
+   * @deprecated Use Spraxium RPC for bot calls. See https://spraxium.com/en/guide/rpc-http-migration.
    */
   readonly trustedProxies?: ReadonlyArray<string>;
 }

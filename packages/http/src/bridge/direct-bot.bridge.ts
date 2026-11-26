@@ -7,6 +7,7 @@ import { directGetMember, directGetMembers } from './direct/member.direct';
 import { directKickMember, directRemoveTimeoutMember, directTimeoutMember } from './direct/moderation.direct';
 import { directAddRole, directRemoveRole } from './direct/role.direct';
 
+/** @deprecated Use Spraxium RPC for bot calls. See https://spraxium.com/en/guide/rpc-http-migration. */
 export class DirectBotBridge extends BotBridge {
   constructor(private readonly client: Client) {
     super();

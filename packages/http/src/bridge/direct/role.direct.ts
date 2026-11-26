@@ -1,5 +1,6 @@
 import type { Client } from 'discord.js';
 
+/** @deprecated Use Spraxium RPC for bot calls. See https://spraxium.com/en/guide/rpc-http-migration. */
 export async function directAddRole(
   client: Client,
   guildId: string,
@@ -16,6 +17,7 @@ export async function directAddRole(
   }
 }
 
+/** @deprecated Use Spraxium RPC for bot calls. See https://spraxium.com/en/guide/rpc-http-migration. */
 export async function directRemoveRole(
   client: Client,
   guildId: string,

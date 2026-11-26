@@ -20,20 +20,20 @@
     "@spraxium/i18n": "workspace:*",
     "@spraxium/logger": "workspace:*",
     "@spraxium/schedule": "workspace:*",
-    "class-validator": "^0.14.2",
-    "discord.js": "^14.27.0",
-    "drizzle-orm": "^0.45.2",
-    "pg": "^8.20.0",
+    "class-validator": "^0.15.1",
+    "discord.js": "^14.28.1",
+    "drizzle-orm": "^0.45.4",
+    "pg": "^8.23.1",
     "reflect-metadata": "^0.2.2",
-    "typeorm": "^0.3.29"
+    "typeorm": "^1.1.3"
   },
   "devDependencies": {
     "@spraxium/cli": "workspace:*",
-    "@types/better-sqlite3": "^7.6.13",
-    "@types/node": "^22.20.1",
-    "@types/pg": "^8.20.0",
-    "tsx": "^4.19.0",
-    "typescript": "^5.7.0",
-    "vitest": "^4.1.12"
+    "@types/better-sqlite3": "^9.6.0",
+    "@types/node": "22.20.5",
+    "@types/pg": "^8.23.1",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vitest": "^5.1.1"
   }
 }

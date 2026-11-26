@@ -5,6 +5,7 @@ import { HTTP_METADATA_KEYS } from '../constants';
 import type { RegisteredController } from '../interfaces';
 import type { AnyConstructor, Constructor, RouteDefinition } from '../types';
 
+/** @deprecated Use Spraxium RPC for bot calls. See https://spraxium.com/en/guide/rpc-http-migration. */
 export class RouteRegistry {
   resolveServices(
     serviceCls: Array<Constructor>,

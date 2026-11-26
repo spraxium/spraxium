@@ -15,7 +15,7 @@ If the documentation is not enough for a specific use case, start from one of th
 | components-bot | UI components | Buttons, selects, modals, FlowContext, and V2 container layouts |
 | guard-bot | Guards | Unified guard pipeline across slash commands and component handlers (buttons, selects, modals) |
 | i18n-components-bot | i18n + UI components | buildLocalized* builders, per-user locale resolution, dual-locale support (en-US / pt-BR) |
-| http-bot | HTTP integration | HTTP controllers/services and API plugin setup |
+| http-bot | Deprecated HTTP integration | HTTP controllers/services and API plugin setup |
 | i18n-bot | Internationalization | Locale files, per-user translation, and locale management commands |
 | schedule-bot | Scheduled tasks | AfterOnline, Timeout, Interval, Cron, and RunOnce usage |
 | signal-bot | Async signals | Webhook-driven events with SignalListener, OnSignal, and Zod schemas |
