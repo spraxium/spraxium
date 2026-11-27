@@ -13,6 +13,7 @@ export class {{PASCAL_NAME}}Service implements SpraxiumOnBoot, SpraxiumOnShutdow
 
   constructor(private readonly env: AppEnv) {}
 
+  /** Opens the database connection before the application handles interactions. */
   async onBoot(): Promise<void> {
     this.pool = new Pool({ connectionString: this.env.DATABASE_URL });
     this.db = drizzle(this.pool, { schema });
@@ -20,6 +21,7 @@ export class {{PASCAL_NAME}}Service implements SpraxiumOnBoot, SpraxiumOnShutdow
     this.logger.info('Drizzle connected to PostgreSQL');
   }
 
+  /** Releases the database connection when the application shuts down. */
   async onShutdown(): Promise<void> {
     if (this.pool) {
       await this.pool.end();
@@ -28,6 +30,7 @@ export class {{PASCAL_NAME}}Service implements SpraxiumOnBoot, SpraxiumOnShutdow
     }
   }
 
+  /** Returns the initialized query client, or throws when the service has not booted. */
   getDb(): NodePgDatabase<typeof schema> {
     if (!this.db) throw new Error('Database is not initialized');
     return this.db;

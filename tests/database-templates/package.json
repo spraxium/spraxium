@@ -1,0 +1,46 @@
+{
+  "name": "spraxium-orm-validation",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@mikro-orm/core": "7.2.12",
+    "@mikro-orm/migrations": "7.2.12",
+    "@mikro-orm/mysql": "7.2.12",
+    "@mikro-orm/postgresql": "7.2.12",
+    "@mikro-orm/sqlite": "7.2.12",
+    "@prisma/adapter-better-sqlite3": "7.10.1",
+    "@prisma/adapter-mariadb": "7.10.1",
+    "@prisma/adapter-pg": "7.10.1",
+    "@prisma/client": "7.10.1",
+    "better-sqlite3": "12.11.1",
+    "dotenv": "18.0.10",
+    "drizzle-orm": "0.45.4",
+    "mongoose": "9.13.1",
+    "mysql2": "3.24.6",
+    "pg": "8.23.1",
+    "reflect-metadata": "0.2.2",
+    "typeorm": "1.1.3"
+  },
+  "devDependencies": {
+    "@mikro-orm/cli": "7.2.12",
+    "@types/better-sqlite3": "9.6.0",
+    "@types/node": "22.20.1",
+    "@types/pg": "8.23.1",
+    "drizzle-kit": "0.31.11",
+    "embedded-postgres": "^18.4.0-beta.17",
+    "mongodb-memory-server-core": "^11.3.0",
+    "prisma": "7.10.1",
+    "tsx": "4.23.15",
+    "typescript": "7.0.2"
+  },
+  "scripts": {
+    "test": "node --import ../../packages/cli/dist/swc.loader.js run.mjs"
+  },
+  "allowScripts": {
+    "better-sqlite3": true,
+    "prisma": true,
+    "@prisma/engines": true,
+    "esbuild": true,
+    "@embedded-postgres/windows-x64": true
+  }
+}

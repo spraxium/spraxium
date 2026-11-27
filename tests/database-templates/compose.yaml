@@ -1,0 +1,36 @@
+services:
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: spraxium
+      POSTGRES_PASSWORD: template-test
+      POSTGRES_DB: spraxium
+    ports:
+      - "127.0.0.1:55437:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U spraxium"]
+      interval: 2s
+      timeout: 3s
+      retries: 40
+  mysql:
+    image: mysql:8.4
+    environment:
+      MYSQL_ROOT_PASSWORD: template-test
+      MYSQL_ROOT_HOST: "%"
+      MYSQL_DATABASE: spraxium
+    ports:
+      - "127.0.0.1:53317:3306"
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -ptemplate-test --silent"]
+      interval: 2s
+      timeout: 3s
+      retries: 60
+  mongo:
+    image: mongo:8
+    ports:
+      - "127.0.0.1:57027:27017"
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 2s
+      timeout: 3s
+      retries: 40

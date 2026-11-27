@@ -1,5 +1,4 @@
-import { type EntityManager, MikroORM } from '@mikro-orm/core';
-import { SqliteDriver } from '@mikro-orm/sqlite';
+import { type EntityManager, MikroORM } from '@mikro-orm/sqlite';
 import { Injectable, type SpraxiumOnBoot, type SpraxiumOnShutdown } from '@spraxium/common';
 import { Logger } from '@spraxium/logger';
 import { AppEnv } from '../../app.env';
@@ -12,21 +11,24 @@ export class {{PASCAL_NAME}}Service implements SpraxiumOnBoot, SpraxiumOnShutdow
 
   constructor(private readonly env: AppEnv) {}
 
+  /** Creates an isolated entity manager for one unit of work. */
   get em(): EntityManager {
     return this.orm.em.fork();
   }
 
+  /** Opens the database connection before the application handles interactions. */
   async onBoot(): Promise<void> {
     this.orm = await MikroORM.init({
-      driver: SqliteDriver,
       dbName: this.env.DATABASE_PATH,
       entities: [User],
     });
+    await this.orm.connect();
     this.logger.info('MikroORM initialized');
   }
 
+  /** Releases the database connection when the application shuts down. */
   async onShutdown(): Promise<void> {
-    await this.orm.close();
+    await this.orm?.close();
     this.logger.info('MikroORM connection closed');
   }
 }

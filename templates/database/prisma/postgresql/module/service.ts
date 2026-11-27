@@ -9,10 +9,12 @@ export class {{PASCAL_NAME}}Service extends PrismaClient implements SpraxiumOnBo
     super({ adapter: new PrismaPg({ connectionString: env.DATABASE_URL }) });
   }
 
+  /** Opens the database connection before the application handles interactions. */
   async onBoot(): Promise<void> {
     await this.$connect();
   }
 
+  /** Releases the database connection when the application shuts down. */
   async onShutdown(): Promise<void> {
     await this.$disconnect();
   }

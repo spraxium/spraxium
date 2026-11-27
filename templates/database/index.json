@@ -8,11 +8,16 @@
         {
           "id": "postgresql",
           "label": "PostgreSQL",
-          "runtimePackages": ["@prisma/client", "@prisma/adapter-pg", "pg"],
-          "devPackages": ["prisma", "@types/pg"],
+          "runtimePackages": ["@prisma/client@~7.10.1", "@prisma/adapter-pg@~7.10.1", "pg@^8.23.1"],
+          "devPackages": ["prisma@~7.10.1", "@types/pg"],
           "postInstall": ["npx prisma generate"],
-          "envKeys": [{ "key": "DATABASE_URL" }],
+          "envKeys": [
+            {
+              "key": "DATABASE_URL"
+            }
+          ],
           "nextSteps": [
+            "Set DATABASE_URL in your .env file before running migrations",
             "Run `npx prisma migrate dev --name init` to apply the schema",
             "Import the generated module in your AppModule imports array",
             "Inject DatabaseService wherever you need database access"
@@ -21,11 +26,16 @@
         {
           "id": "mysql",
           "label": "MySQL",
-          "runtimePackages": ["@prisma/client", "mysql2"],
-          "devPackages": ["prisma", "@types/mysql2"],
+          "runtimePackages": ["@prisma/client@~7.10.1", "@prisma/adapter-mariadb@~7.10.1"],
+          "devPackages": ["prisma@~7.10.1"],
           "postInstall": ["npx prisma generate"],
-          "envKeys": [{ "key": "DATABASE_URL" }],
+          "envKeys": [
+            {
+              "key": "DATABASE_URL"
+            }
+          ],
           "nextSteps": [
+            "Set DATABASE_URL in your .env file before running migrations",
             "Run `npx prisma migrate dev --name init` to apply the schema",
             "Import the generated module in your AppModule imports array",
             "Inject DatabaseService wherever you need database access"
@@ -34,11 +44,21 @@
         {
           "id": "sqlite",
           "label": "SQLite",
-          "runtimePackages": ["@prisma/client", "@prisma/adapter-better-sqlite3", "better-sqlite3"],
-          "devPackages": ["prisma", "@types/better-sqlite3"],
-          "postInstall": ["npx prisma generate"],
-          "envKeys": [{ "key": "DATABASE_URL", "default": "file:./dev.db" }],
+          "runtimePackages": [
+            "@prisma/client@~7.10.1",
+            "@prisma/adapter-better-sqlite3@~7.10.1",
+            "better-sqlite3@^12.11.1"
+          ],
+          "devPackages": ["prisma@~7.10.1", "@types/better-sqlite3"],
+          "postInstall": ["npx prisma generate", "npx prisma db execute --file prisma/init.sql"],
+          "envKeys": [
+            {
+              "key": "DATABASE_URL",
+              "default": "file:./dev.db"
+            }
+          ],
           "nextSteps": [
+            "Run `npx prisma db execute --file prisma/init.sql` if you skipped automatic installation or changed DATABASE_URL",
             "Run `npx prisma migrate dev --name init` to apply the schema",
             "Import the generated module in your AppModule imports array",
             "Inject DatabaseService wherever you need database access"
@@ -54,10 +74,14 @@
         {
           "id": "postgresql",
           "label": "PostgreSQL",
-          "runtimePackages": ["drizzle-orm", "pg"],
-          "devPackages": ["drizzle-kit", "@types/pg"],
+          "runtimePackages": ["drizzle-orm@^0.45.4", "pg@^8.23.1", "dotenv@^18.0.10"],
+          "devPackages": ["drizzle-kit@^0.31.11", "@types/pg"],
           "postInstall": [],
-          "envKeys": [{ "key": "DATABASE_URL" }],
+          "envKeys": [
+            {
+              "key": "DATABASE_URL"
+            }
+          ],
           "nextSteps": [
             "Run `npx drizzle-kit push` to sync the schema to your database",
             "Import the generated module in your AppModule imports array",
@@ -67,10 +91,14 @@
         {
           "id": "mysql",
           "label": "MySQL",
-          "runtimePackages": ["drizzle-orm", "mysql2"],
-          "devPackages": ["drizzle-kit"],
+          "runtimePackages": ["drizzle-orm@^0.45.4", "mysql2@^3.24.6", "dotenv@^18.0.10"],
+          "devPackages": ["drizzle-kit@^0.31.11"],
           "postInstall": [],
-          "envKeys": [{ "key": "DATABASE_URL" }],
+          "envKeys": [
+            {
+              "key": "DATABASE_URL"
+            }
+          ],
           "nextSteps": [
             "Run `npx drizzle-kit push` to sync the schema to your database",
             "Import the generated module in your AppModule imports array",
@@ -80,10 +108,15 @@
         {
           "id": "sqlite",
           "label": "SQLite",
-          "runtimePackages": ["drizzle-orm", "better-sqlite3"],
-          "devPackages": ["drizzle-kit", "@types/better-sqlite3"],
+          "runtimePackages": ["drizzle-orm@^0.45.4", "better-sqlite3@^12.11.1", "dotenv@^18.0.10"],
+          "devPackages": ["drizzle-kit@^0.31.11", "@types/better-sqlite3"],
           "postInstall": [],
-          "envKeys": [{ "key": "DATABASE_PATH", "default": "./dev.db" }],
+          "envKeys": [
+            {
+              "key": "DATABASE_PATH",
+              "default": "./dev.db"
+            }
+          ],
           "nextSteps": [
             "Run `npx drizzle-kit push` to sync the schema to your database",
             "Import the generated module in your AppModule imports array",
@@ -100,12 +133,16 @@
         {
           "id": "postgresql",
           "label": "PostgreSQL",
-          "runtimePackages": ["typeorm", "reflect-metadata", "pg"],
+          "runtimePackages": ["typeorm@^1.1.3", "reflect-metadata", "pg@^8.23.1"],
           "devPackages": ["@types/pg"],
           "postInstall": [],
-          "envKeys": [{ "key": "DATABASE_URL" }],
+          "envKeys": [
+            {
+              "key": "DATABASE_URL"
+            }
+          ],
           "nextSteps": [
-            "With synchronize:true, tables are created automatically on first boot",
+            "During development, tables are synchronized automatically on boot; production disables synchronization",
             "For production, set synchronize:false and manage migrations with TypeORM CLI",
             "Import the generated module in your AppModule imports array",
             "Inject DatabaseService and use `.dataSource.getRepository(User)` for queries",
@@ -115,12 +152,16 @@
         {
           "id": "mysql",
           "label": "MySQL",
-          "runtimePackages": ["typeorm", "reflect-metadata", "mysql2"],
+          "runtimePackages": ["typeorm@^1.1.3", "reflect-metadata", "mysql2@^3.24.6"],
           "devPackages": [],
           "postInstall": [],
-          "envKeys": [{ "key": "DATABASE_URL" }],
+          "envKeys": [
+            {
+              "key": "DATABASE_URL"
+            }
+          ],
           "nextSteps": [
-            "With synchronize:true, tables are created automatically on first boot",
+            "During development, tables are synchronized automatically on boot; production disables synchronization",
             "For production, set synchronize:false and manage migrations with TypeORM CLI",
             "Import the generated module in your AppModule imports array",
             "Inject DatabaseService and use `.dataSource.getRepository(User)` for queries",
@@ -130,12 +171,17 @@
         {
           "id": "sqlite",
           "label": "SQLite",
-          "runtimePackages": ["typeorm", "reflect-metadata", "better-sqlite3"],
+          "runtimePackages": ["typeorm@^1.1.3", "reflect-metadata", "better-sqlite3@^12.11.1"],
           "devPackages": ["@types/better-sqlite3"],
           "postInstall": [],
-          "envKeys": [{ "key": "DATABASE_PATH", "default": "./dev.db" }],
+          "envKeys": [
+            {
+              "key": "DATABASE_PATH",
+              "default": "./dev.db"
+            }
+          ],
           "nextSteps": [
-            "With synchronize:true, tables are created automatically on first boot",
+            "During development, tables are synchronized automatically on boot; production disables synchronization",
             "For production, set synchronize:false and manage migrations with TypeORM CLI",
             "Import the generated module in your AppModule imports array",
             "Inject DatabaseService and use `.dataSource.getRepository(User)` for queries",
@@ -152,10 +198,14 @@
         {
           "id": "mongodb",
           "label": "MongoDB",
-          "runtimePackages": ["mongoose"],
+          "runtimePackages": ["mongoose@^9.13.1"],
           "devPackages": [],
           "postInstall": [],
-          "envKeys": [{ "key": "DATABASE_URL" }],
+          "envKeys": [
+            {
+              "key": "DATABASE_URL"
+            }
+          ],
           "nextSteps": [
             "Set DATABASE_URL to your MongoDB connection string (mongodb+srv://...)",
             "Import the generated module in your AppModule imports array",
@@ -172,11 +222,20 @@
         {
           "id": "postgresql",
           "label": "PostgreSQL",
-          "runtimePackages": ["@mikro-orm/core", "@mikro-orm/postgresql"],
-          "devPackages": ["@mikro-orm/cli"],
+          "runtimePackages": [
+            "@mikro-orm/core@~7.2.12",
+            "@mikro-orm/postgresql@~7.2.12",
+            "@mikro-orm/migrations@~7.2.12"
+          ],
+          "devPackages": ["@mikro-orm/cli@~7.2.12", "tsx"],
           "postInstall": [],
-          "envKeys": [{ "key": "DATABASE_URL" }],
+          "envKeys": [
+            {
+              "key": "DATABASE_URL"
+            }
+          ],
           "nextSteps": [
+            "Set DATABASE_URL in your .env file before running migrations",
             "Run `npx mikro-orm migration:create --initial` to generate your first migration",
             "Run `npx mikro-orm migration:up` to apply pending migrations",
             "Import the generated module in your AppModule imports array",
@@ -186,11 +245,20 @@
         {
           "id": "mysql",
           "label": "MySQL",
-          "runtimePackages": ["@mikro-orm/core", "@mikro-orm/mysql"],
-          "devPackages": ["@mikro-orm/cli"],
+          "runtimePackages": [
+            "@mikro-orm/core@~7.2.12",
+            "@mikro-orm/mysql@~7.2.12",
+            "@mikro-orm/migrations@~7.2.12"
+          ],
+          "devPackages": ["@mikro-orm/cli@~7.2.12", "tsx"],
           "postInstall": [],
-          "envKeys": [{ "key": "DATABASE_URL" }],
+          "envKeys": [
+            {
+              "key": "DATABASE_URL"
+            }
+          ],
           "nextSteps": [
+            "Set DATABASE_URL in your .env file before running migrations",
             "Run `npx mikro-orm migration:create --initial` to generate your first migration",
             "Run `npx mikro-orm migration:up` to apply pending migrations",
             "Import the generated module in your AppModule imports array",
@@ -200,11 +268,21 @@
         {
           "id": "sqlite",
           "label": "SQLite",
-          "runtimePackages": ["@mikro-orm/core", "@mikro-orm/sqlite"],
-          "devPackages": ["@mikro-orm/cli"],
+          "runtimePackages": [
+            "@mikro-orm/core@~7.2.12",
+            "@mikro-orm/sqlite@~7.2.12",
+            "@mikro-orm/migrations@~7.2.12"
+          ],
+          "devPackages": ["@mikro-orm/cli@~7.2.12", "tsx"],
           "postInstall": [],
-          "envKeys": [{ "key": "DATABASE_PATH", "default": "./dev.db" }],
+          "envKeys": [
+            {
+              "key": "DATABASE_PATH",
+              "default": "./dev.db"
+            }
+          ],
           "nextSteps": [
+            "Set DATABASE_PATH in your .env file before running migrations",
             "Run `npx mikro-orm migration:create --initial` to generate your first migration",
             "Run `npx mikro-orm migration:up` to apply pending migrations",
             "Import the generated module in your AppModule imports array",

@@ -12,6 +12,7 @@ export class {{PASCAL_NAME}}Service implements SpraxiumOnBoot, SpraxiumOnShutdow
 
   constructor(private readonly env: AppEnv) {}
 
+  /** Opens the database connection before the application handles interactions. */
   async onBoot(): Promise<void> {
     this.dataSource = new DataSource({
       type: 'mysql',
@@ -23,6 +24,7 @@ export class {{PASCAL_NAME}}Service implements SpraxiumOnBoot, SpraxiumOnShutdow
     this.logger.info('TypeORM DataSource initialized');
   }
 
+  /** Releases the database connection when the application shuts down. */
   async onShutdown(): Promise<void> {
     if (this.dataSource?.isInitialized) {
       await this.dataSource.destroy();
