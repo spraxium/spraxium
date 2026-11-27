@@ -1,21 +1,4 @@
-import type { NonceStore } from '../security/nonce-store.interface';
-
-/**
- * Opt-in persistence for the nonce deduplication cache. Set to `true` to use
- * the default file-backed store at `.spraxium/signal-nonces.json`, or pass an
- * object to customise the location or plug a custom store implementation.
- */
-export type PersistNoncesOption =
-  | true
-  | {
-      /** Filesystem path for the default file-backed store. */
-      readonly path?: string;
-      /**
-       * Custom {@link NonceStore} implementation. When provided, `path` is
-       * ignored. Useful for Redis-backed or multi-process deployments.
-       */
-      readonly store?: NonceStore;
-    };
+import type { PersistNoncesOption } from '../types/persist-nonces-option.type';
 
 /**
  * Configuration for the Signal plugin.
@@ -54,21 +37,5 @@ export interface SignalConfig {
    */
   debug?: boolean;
 
-  /**
-   * Persist seen nonces across process restarts to prevent replay attacks
-   * that exploit the restart window. Defaults to `false` (in-memory only).
-   *
-   * @example
-   *   // Default file location (`.spraxium/signal-nonces.json`):
-   *   persistNonces: true
-   *
-   * @example
-   *   // Custom path:
-   *   persistNonces: { path: '/var/lib/mybot/nonces.json' }
-   *
-   * @example
-   *   // Custom store (Redis, SQL, etc.):
-   *   persistNonces: { store: new MyRedisNonceStore(redisClient) }
-   */
   persistNonces?: PersistNoncesOption;
 }

@@ -1,5 +1,15 @@
 # @spraxium/schedule
 
+## 0.10.1
+
+### Patch Changes
+
+- Use Redis to share Signal nonce checks and scheduled job leases across bot processes. Scheduled jobs keep their leases while they run, and only the process that acquired a lease can release it. Signal and Schedule discover their handlers within each application, including listeners registered before the package loads.
+- Updated dependencies
+  - @spraxium/core@0.10.1
+  - @spraxium/common@0.10.1
+  - @spraxium/logger@0.10.1
+
 ## 0.10.0
 
 ### Minor Changes

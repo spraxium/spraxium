@@ -1,8 +1,8 @@
 # Database template tests
 
-These tests generate a project from each database template, register its module, and check the code that a user actually receives. The matrix covers Prisma, Drizzle, TypeORM and MikroORM with PostgreSQL, MySQL and SQLite, plus Mongoose with MongoDB: 13 combinations.
+This suite generates a bot from each CLI database template, runs migrations where needed, and checks that the bot can create, read, update, and delete a record. It runs once through the dev loader and again through the production build. You can run it without a Discord token.
 
-Each case checks environment patching, TypeScript (including the ORM configuration), `spraxium build`, schema creation or migrations, dependency injection, CRUD and connection shutdown. The runtime checks run twice: once through the development loader and once through `spraxium start` with the compiled bundle. No Discord login or bot token is required.
+The matrix covers 13 combinations across Prisma, Drizzle, TypeORM, MikroORM, and Mongoose.
 
 ## Run the matrix
 

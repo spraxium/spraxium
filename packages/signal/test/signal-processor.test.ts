@@ -2,9 +2,11 @@ import { randomUUID } from 'node:crypto';
 import type { Message } from 'discord.js';
 import { describe, expect, it, vi } from 'vitest';
 import { z } from 'zod';
-import type { SignalConfig, SignalHandler } from '../src/interfaces';
+import type { SignalConfig } from '../src/interfaces/signal-config.interface';
+import type { SignalHandler } from '../src/interfaces/signal-handler.interface';
 import { HmacService } from '../src/security/hmac.service';
 import { NonceCache } from '../src/security/nonce-cache.service';
+import { RedisNonceStoreFactory } from '../src/security/redis-nonce-store.factory';
 import { SignalProcessor } from '../src/service/signal-processor.service';
 import { SignalRouter } from '../src/service/signal-router.service';
 import { SignalValidator } from '../src/service/signal-validator.service';
@@ -44,7 +46,8 @@ describe('SignalProcessor schema validation', () => {
       schema: z.object({ items: z.array(z.string().transform(transform)).max(2) }),
       execute,
     });
-    const processor = new SignalProcessor(new SignalValidator(), router, new NonceCache());
+    const cache = new NonceCache(new RedisNonceStoreFactory());
+    const processor = new SignalProcessor(new SignalValidator(), router, cache);
 
     await processor.process(createMessage({ items: Array.from({ length: 128 }, () => 'item') }), config);
 
@@ -68,10 +71,40 @@ describe('SignalProcessor schema validation', () => {
       schema: z.object({ items: z.array(z.string()).max(2) }),
       execute,
     });
-    const processor = new SignalProcessor(new SignalValidator(), router, new NonceCache());
+    const cache = new NonceCache(new RedisNonceStoreFactory());
+    const processor = new SignalProcessor(new SignalValidator(), router, cache);
 
     await processor.process(createMessage({ items: [42] }), config);
 
     expect(execute).not.toHaveBeenCalled();
   });
+});
+
+it('drops a signal when the nonce store is unavailable and processes later signals after recovery', async () => {
+  const execute = vi.fn<SignalHandler['execute']>().mockResolvedValue(undefined);
+  const cache = new NonceCache(new RedisNonceStoreFactory());
+  await cache.configure({
+    persistNonces: {
+      store: {
+        has: vi.fn().mockResolvedValue(false),
+        add: vi.fn().mockResolvedValue(undefined),
+        addIfAbsent: vi
+          .fn()
+          .mockRejectedValueOnce(new Error('Store unavailable'))
+          .mockResolvedValueOnce(true),
+      },
+    },
+  });
+  const router = new SignalRouter();
+  router.register('items.update', { event: 'items.update', execute });
+  const processor = new SignalProcessor(new SignalValidator(), router, cache);
+
+  await processor.process(createMessage({ items: ['first'] }), config);
+  expect(execute).not.toHaveBeenCalled();
+
+  await processor.process(createMessage({ items: ['second'] }), config);
+  expect(execute).toHaveBeenCalledExactlyOnceWith(
+    { items: ['second'] },
+    expect.objectContaining({ event: 'items.update' }),
+  );
 });

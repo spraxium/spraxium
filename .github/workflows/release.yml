@@ -3,6 +3,8 @@ name: Release
 on:
   workflow_dispatch:
   push:
+    branches:
+      - main
     tags:
       - "preview-*-dev.*"
 
@@ -22,7 +24,7 @@ jobs:
       pull-requests: write
       id-token: write
 
-    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main'
 
     runs-on: ubuntu-latest
     timeout-minutes: 15

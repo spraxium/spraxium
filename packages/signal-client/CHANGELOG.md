@@ -1,5 +1,9 @@
 # @spraxium/signal-client
 
+## 0.10.1
+
+No changes in this release.
+
 ## 0.10.0
 
 ### Minor Changes

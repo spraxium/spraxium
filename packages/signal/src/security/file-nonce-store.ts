@@ -37,10 +37,7 @@ export class FileNonceStore implements NonceStore {
   }
 
   async add(nonce: string): Promise<void> {
-    await this.ready;
-    if (this.seen.has(nonce)) return;
-    this.seen.set(nonce, Date.now());
-    await this.flush();
+    await this.addIfAbsent(nonce);
   }
 
   async addIfAbsent(nonce: string): Promise<boolean> {

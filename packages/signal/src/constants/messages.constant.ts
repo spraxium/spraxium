@@ -8,6 +8,10 @@ export const SIGNAL_MESSAGES = {
   PROCESSING: (id: string, webhookId: string) => `Processing message id=${id} from webhookId=${webhookId}`,
   REJECTED: (id: string) => `Message id=${id} rejected by validator`,
   NONCE_REPLAY: (nonce: string) => `Duplicate nonce "${nonce}" , dropping replay`,
+  NONCE_RESERVATION_FAILED: (id: string) =>
+    `Could not reserve a nonce for signal message "${id}". The signal was dropped.`,
+  REDIS_NONCE_CONNECTION_ERROR: 'Redis nonce connection failed.',
+  PROCESSING_FAILED: 'Signal message processing failed.',
   NONCE_OK: 'Nonce recorded',
   NO_HANDLER: (event: string) => `No handler found for event "${event}"`,
   HANDLER_FOUND: (event: string) => `Handler found for "${event}"`,

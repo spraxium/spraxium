@@ -1,203 +1,91 @@
-import 'reflect-metadata';
 import { ConfigurationException } from '@spraxium/core';
 import { logger } from '@spraxium/logger';
 import { MESSAGES } from '../constants/messages.constant';
-import { SCHEDULE_METADATA_KEYS } from '../constants/metadata-keys.constant';
-import type { AfterOnlineJobMetadata } from '../interfaces/after-online-job-metadata.interface';
-import type { CronJobMetadata } from '../interfaces/cron-job-metadata.interface';
-import type { IntervalJobMetadata } from '../interfaces/interval-job-metadata.interface';
 import type { JobEntry } from '../interfaces/job-entry.interface';
-import type { RunOnceJobMetadata } from '../interfaces/run-once-job-metadata.interface';
-import type { TimeoutJobMetadata } from '../interfaces/timeout-job-metadata.interface';
-import type { JobType } from '../types/job.type';
-import { getNextRunDate } from '../utils/cron.parser';
+import { JobMetadataReader } from '../metadata/job-metadata.reader';
+import type { JobMetadata } from '../types/job-metadata.type';
+import { CronParser } from '../utils/cron.parser';
+import { ScheduledMethodInvoker } from './scheduled-method.invoker';
 
 export class JobScanner {
-  private readonly log = logger.child('JobScanner');
-  private autoNameIdx = 0;
+  private readonly scanned = new WeakSet<object>();
 
   constructor(
     private readonly jobs: Map<string, JobEntry>,
-    private readonly pendingAfterOnline: Array<JobEntry>,
+    private readonly reader = new JobMetadataReader(),
   ) {}
 
-  private autoName(type: JobType): string {
-    return `${type}-${++this.autoNameIdx}`;
+  scan(instance: unknown): Array<JobEntry> {
+    if (!instance || typeof instance !== 'object' || this.scanned.has(instance)) return [];
+    const entries: Array<JobEntry> = [];
+    const names = new Set(this.jobs.keys());
+    for (const method of this.reader.read(instance)) {
+      const entry = this.createEntry(instance, method.methodName, method.metadata);
+      if (names.has(entry.name))
+        throw new ConfigurationException({
+          key: 'schedule',
+          reason: MESSAGES.DUPLICATE_JOB_NAME(entry.name),
+        });
+      names.add(entry.name);
+      entries.push(entry);
+    }
+    for (const entry of entries) {
+      this.jobs.set(entry.name, entry);
+      this.logRegistration(entry);
+    }
+    this.scanned.add(instance);
+    return entries;
   }
 
-  scan(instance: unknown): void {
-    if (!instance || typeof instance !== 'object') return;
-    const proto = Object.getPrototypeOf(instance) as object;
-    const methods = Object.getOwnPropertyNames(proto).filter((m) => m !== 'constructor');
-    for (const method of methods) {
-      this.scanMethod(instance, proto, method);
-    }
-  }
-
-  private scanMethod(instance: unknown, proto: object, method: string): void {
-    const cronMeta = Reflect.getMetadata(SCHEDULE_METADATA_KEYS.CRON, proto, method) as
-      | CronJobMetadata
-      | undefined;
-    if (cronMeta) {
-      this.registerCronJob(instance, method, cronMeta);
-      return;
-    }
-
-    const intervalMeta = Reflect.getMetadata(SCHEDULE_METADATA_KEYS.INTERVAL, proto, method) as
-      | IntervalJobMetadata
-      | undefined;
-    if (intervalMeta) {
-      this.registerIntervalJob(instance, method, intervalMeta);
-      return;
-    }
-
-    const timeoutMeta = Reflect.getMetadata(SCHEDULE_METADATA_KEYS.TIMEOUT, proto, method) as
-      | TimeoutJobMetadata
-      | undefined;
-    if (timeoutMeta) {
-      this.registerTimeoutJob(instance, method, timeoutMeta);
-      return;
-    }
-
-    const afterOnlineMeta = Reflect.getMetadata(SCHEDULE_METADATA_KEYS.AFTER_ONLINE, proto, method) as
-      | AfterOnlineJobMetadata
-      | undefined;
-    if (afterOnlineMeta) {
-      this.registerAfterOnlineJob(instance, method, afterOnlineMeta);
-      return;
-    }
-
-    const runOnceMeta = Reflect.getMetadata(SCHEDULE_METADATA_KEYS.RUN_ONCE, proto, method) as
-      | RunOnceJobMetadata
-      | undefined;
-    if (runOnceMeta) {
-      this.registerRunOnceJob(instance, method, runOnceMeta);
-    }
-  }
-
-  private registerCronJob(instance: unknown, method: string, meta: CronJobMetadata): void {
-    const name = meta.name ?? this.autoName('cron');
-    this.assertUniqueName(name);
+  private createEntry(instance: object, name: string | symbol, metadata: JobMetadata): JobEntry {
+    const method = new ScheduledMethodInvoker(instance, name);
     const entry: JobEntry = {
-      name,
-      type: 'cron',
-      expression: meta.expression,
-      timezone: meta.timezone,
-      fn: this.bindMethod(instance, method, name),
+      name: metadata.name ?? `${metadata.type}-${this.className(instance)}.${String(name)}`,
+      type: metadata.type,
+      fn: method.execute.bind(method),
+      disabled: metadata.disabled ?? false,
       running: false,
-      disabled: meta.disabled ?? false,
-      runOnInit: meta.runOnInit ?? false,
-      nextRun: getNextRunDate(meta.expression, meta.timezone),
+      paused: false,
+      executing: false,
+      runOnInit: 'runOnInit' in metadata && metadata.runOnInit === true,
       runCount: 0,
-      description: meta.description,
+      description: metadata.description,
     };
-    this.jobs.set(name, entry);
-    this.log.debug(MESSAGES.CRON_REGISTERED(name, meta.expression, meta.timezone));
+    if (metadata.type === 'cron') {
+      CronParser.validate(metadata.expression, metadata.timezone);
+      entry.expression = metadata.expression;
+      entry.timezone = metadata.timezone;
+    } else if (metadata.type === 'run-once') entry.runAt = new Date(metadata.date);
+    else entry.intervalMs = metadata.ms;
+    return entry;
   }
 
-  private registerIntervalJob(instance: unknown, method: string, meta: IntervalJobMetadata): void {
-    const name = meta.name ?? this.autoName('interval');
-    this.assertUniqueName(name);
-    const entry: JobEntry = {
-      name,
-      type: 'interval',
-      intervalMs: meta.ms,
-      fn: this.bindMethod(instance, method, name),
-      running: false,
-      disabled: meta.disabled ?? false,
-      runOnInit: meta.runOnInit ?? false,
-      nextRun: new Date(Date.now() + meta.ms),
-      runCount: 0,
-      description: meta.description,
-    };
-    this.jobs.set(name, entry);
-    this.log.debug(MESSAGES.INTERVAL_REGISTERED(name, meta.ms));
-  }
-
-  private registerTimeoutJob(instance: unknown, method: string, meta: TimeoutJobMetadata): void {
-    const name = meta.name ?? this.autoName('timeout');
-    this.assertUniqueName(name);
-    const entry: JobEntry = {
-      name,
-      type: 'timeout',
-      intervalMs: meta.ms,
-      fn: this.bindMethod(instance, method, name),
-      running: false,
-      disabled: meta.disabled ?? false,
-      runOnInit: false,
-      nextRun: new Date(Date.now() + meta.ms),
-      runCount: 0,
-      description: meta.description,
-    };
-    this.jobs.set(name, entry);
-    this.log.debug(MESSAGES.TIMEOUT_REGISTERED(name, meta.ms));
-  }
-
-  private registerAfterOnlineJob(instance: unknown, method: string, meta: AfterOnlineJobMetadata): void {
-    const name = meta.name ?? this.autoName('after-online');
-    this.assertUniqueName(name);
-    const entry: JobEntry = {
-      name,
-      type: 'after-online',
-      intervalMs: meta.ms,
-      fn: this.bindMethod(instance, method, name),
-      running: false,
-      disabled: meta.disabled ?? false,
-      runOnInit: false,
-      nextRun: new Date(Date.now() + meta.ms),
-      runCount: 0,
-      description: meta.description,
-    };
-    this.jobs.set(name, entry);
-    this.pendingAfterOnline.push(entry);
-    this.log.debug(MESSAGES.AFTER_ONLINE_REGISTERED(name, meta.ms));
-  }
-
-  private registerRunOnceJob(instance: unknown, method: string, meta: RunOnceJobMetadata): void {
-    const name = meta.name ?? this.autoName('run-once');
-    this.assertUniqueName(name);
-    const dateStr = meta.date.toISOString();
-    if (meta.date.getTime() <= Date.now()) {
-      const local = meta.date.toLocaleString();
-      const utc = meta.date.toUTCString();
-      const now = new Date().toUTCString();
-      this.log.warn(
-        `@RunOnce job "${name}" will never fire: scheduled for ${local} (${utc}) which is in the past (now: ${now})`,
-      );
-    }
-    const entry: JobEntry = {
-      name,
-      type: 'run-once',
-      runAt: meta.date,
-      fn: this.bindMethod(instance, method, name),
-      running: false,
-      disabled: meta.disabled ?? false,
-      runOnInit: false,
-      nextRun: meta.date,
-      runCount: 0,
-      description: meta.description,
-    };
-    this.jobs.set(name, entry);
-    this.log.debug(MESSAGES.RUN_ONCE_REGISTERED(name, dateStr));
-  }
-
-  private assertUniqueName(name: string): void {
-    if (this.jobs.has(name)) {
-      throw new ConfigurationException({ key: 'schedule', reason: MESSAGES.DUPLICATE_JOB_NAME(name) });
+  private logRegistration(job: JobEntry): void {
+    switch (job.type) {
+      case 'cron':
+        logger.debug(MESSAGES.CRON_REGISTERED(job.name, job.expression ?? '', job.timezone));
+        break;
+      case 'interval':
+        logger.debug(MESSAGES.INTERVAL_REGISTERED(job.name, job.intervalMs ?? 0));
+        break;
+      case 'timeout':
+        logger.debug(MESSAGES.TIMEOUT_REGISTERED(job.name, job.intervalMs ?? 0));
+        break;
+      case 'after-online':
+        logger.debug(MESSAGES.AFTER_ONLINE_REGISTERED(job.name, job.intervalMs ?? 0));
+        break;
+      case 'run-once':
+        logger.debug(MESSAGES.RUN_ONCE_REGISTERED(job.name, job.runAt?.toISOString() ?? ''));
+        break;
     }
   }
 
-  private bindMethod(instance: unknown, method: string, jobName: string): () => Promise<void> {
-    const obj = instance as Record<string, unknown>;
-    const fn = obj[method];
-    if (typeof fn !== 'function') {
-      const className = (Object.getPrototypeOf(instance as object) as { constructor: { name: string } })
-        .constructor.name;
-      throw new ConfigurationException({
-        key: 'schedule',
-        reason: MESSAGES.METHOD_NOT_FUNCTION(method, className, jobName),
-      });
-    }
-    return (fn as (...args: Array<unknown>) => unknown).bind(instance) as () => Promise<void>;
+  private className(instance: object): string {
+    const prototype = Object.getPrototypeOf(instance);
+    const instanceConstructor: unknown =
+      prototype && Object.getOwnPropertyDescriptor(prototype, 'constructor')?.value;
+    return typeof instanceConstructor === 'function' && instanceConstructor.name
+      ? instanceConstructor.name
+      : 'Object';
   }
 }

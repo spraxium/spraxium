@@ -45,7 +45,7 @@ export enum CronExpression {
   EVERY_WEEK = '0 0 * * 0',
   EVERY_1ST_OF_MONTH = '0 0 1 * *',
   EVERY_15TH_OF_MONTH = '0 0 15 * *',
-  EVERY_LAST_DAY_OF_MONTH = '0 0 28-31 * *',
+  EVERY_LAST_DAY_OF_MONTH = '0 0 L * *',
   EVERY_QUARTER = '0 0 1 */3 *',
   EVERY_6_MONTHS = '0 0 1 */6 *',
   EVERY_YEAR = '0 0 1 1 *',

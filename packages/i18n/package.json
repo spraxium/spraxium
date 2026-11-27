@@ -1,6 +1,6 @@
 {
   "name": "@spraxium/i18n",
-  "version": "0.10.0",
+  "version": "0.10.1",
   "private": false,
   "description": "Internationalization module with variable interpolation, plural resolution and Discord locale support",
   "keywords": [

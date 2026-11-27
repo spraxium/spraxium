@@ -3,6 +3,6 @@ export interface CronOptions {
   runOnInit?: boolean;
   disabled?: boolean;
   timezone?: string;
-  /** Optional human-readable description shown in `ScheduleService.getAll()`. */
+
   description?: string;
 }

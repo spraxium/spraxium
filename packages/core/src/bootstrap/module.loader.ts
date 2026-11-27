@@ -21,7 +21,7 @@ import type { ModuleRow } from './interfaces';
 import { SpraxiumContainer } from './spraxium.container';
 
 export class ModuleLoader {
-  static readonly instanceScanners: Set<(instance: unknown) => void> = new Set();
+  static readonly instanceScanners: Set<(instance: unknown, scope?: ModuleLoader) => void> = new Set();
   private readonly log = logger.child('ModuleLoader');
   private readonly rootContainer = new SpraxiumContainer();
   private readonly bootHooks: Array<SpraxiumOnBoot> = [];
@@ -33,6 +33,8 @@ export class ModuleLoader {
   private readonly slashDispatcher = new SlashDispatcher();
   private readonly contextMenuDispatcher = new ContextMenuDispatcher();
   private readonly moduleRows: Array<ModuleRow> = [];
+  private readonly scannedInstances: Array<unknown> = [];
+  private readonly activeScanners = new WeakSet<(instance: unknown, scope?: ModuleLoader) => void>();
   private readonly integrations: Array<ModuleIntegrationInstance> = [];
 
   load(rootModule: Constructor, client: Client, globalProviders: Map<unknown, unknown> = new Map()): void {
@@ -97,6 +99,7 @@ export class ModuleLoader {
       const instance = this.instantiate(listenerCtor, container);
       container.set(listenerCtor, instance);
       this.listenerDispatcher.registerListener(listenerCtor, instance);
+      this.registerLifecycle(instance);
     }
 
     for (const commandCtor of metadata.commands ?? []) {
@@ -252,8 +255,14 @@ export class ModuleLoader {
     if (instance && typeof (instance as SpraxiumOnReady).onReady === 'function') {
       this.readyHooks.push(instance as SpraxiumOnReady);
     }
+    this.scannedInstances.push(instance);
     for (const scanner of ModuleLoader.instanceScanners) {
-      scanner(instance);
+      if (this.activeScanners.has(scanner)) {
+        scanner(instance, this);
+      } else {
+        this.activeScanners.add(scanner);
+        for (const existing of this.scannedInstances) scanner(existing, this);
+      }
     }
   }
 
@@ -267,6 +276,7 @@ export class ModuleLoader {
   async runShutdownHooks(): Promise<void> {
     await Promise.allSettled(this.integrations.map(async (integration) => integration.onShutdown?.()));
     await Promise.allSettled(this.shutdownHooks.map(async (hook) => hook.onShutdown()));
+    this.scannedInstances.length = 0;
   }
 
   async runReadyHooks(client: Client<true>): Promise<void> {

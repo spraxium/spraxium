@@ -75,6 +75,35 @@ export default defineConfig({
 });
 ```
 
+## Nonce persistence
+
+Signal keeps nonces in memory by default. Use `persistNonces: true` to save them to `.spraxium/signal-nonces.json` or `persistNonces: { path }` to choose the file. You can also provide your own `NonceStore` with `persistNonces: { store }`.
+
+For multiple bot instances, install `ioredis` and configure Redis in `defineSignal`. In this example, `env` contains validated environment variables and `REDIS_PORT` is a number.
+
+```typescript
+import { defineSignal } from '@spraxium/signal';
+import { env } from './env';
+
+export const signal = defineSignal({
+  channelId: env.SIGNAL_CHANNEL_ID,
+  allowedWebhookIds: [env.SIGNAL_WEBHOOK_ID],
+  hmacSecret: env.SIGNAL_HMAC_SECRET,
+  persistNonces: {
+    type: 'redis',
+    host: env.REDIS_HOST,
+    port: env.REDIS_PORT,
+    username: env.REDIS_USERNAME,
+    password: env.REDIS_PASSWORD,
+    keyPrefix: 'my-bot:prod:signal:nonce:',
+  },
+});
+```
+
+Redis settings default to host `127.0.0.1`, port `6379`, database `0`, and prefix `spraxium:signal:nonce:`. Set `tls: true` if your provider requires TLS and `username` if it uses a named ACL user. Replicas of the same bot should use the same database and prefix. Use a separate prefix for each bot or deployment environment that shares a Redis server.
+
+Built-in stores retain each nonce for 10 minutes and 30 seconds to cover the timestamp acceptance window and allow for clock differences between receivers. Redis reserves each nonce atomically before dispatch. Signal checks its Redis connection at startup and drops signals that it cannot reserve. The Redis server's persistence and eviction settings determine whether it retains those keys across its own restarts or when memory runs low.
+
 ## Links
 
 [npm](https://www.npmjs.com/package/@spraxium/signal) · [GitHub](https://github.com/spraxium/spraxium) · [Zod](https://zod.dev) · [Documentation](https://spraxium.com)
